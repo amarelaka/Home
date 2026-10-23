@@ -151,7 +151,6 @@
             box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
         }
         
-        /* Adjusted icon button size for closer grouping */
         .top-app-icon-btn {
             width: 36px; height: 36px;
             border-radius: 50%;
@@ -387,7 +386,6 @@
         }
         .tab-view { animation: cardIn 0.35s ease-out; }
 
-        /* Premium Nav Button Specific - Fixed Padding */
         .premium-nav-btn {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             gap: 1px; background: transparent; border: none; cursor: pointer;
@@ -396,7 +394,7 @@
         }
         .premium-nav-btn svg { width: 22px; height: 22px; transition: all 0.3s; }
         .premium-nav-btn span { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .premium-nav-btn.is-premium { color: #3b82f6; /* blue-500 */ }
+        .premium-nav-btn.is-premium { color: #3b82f6; }
         .premium-nav-btn.is-premium span { color: #3b82f6; }
         .premium-nav-btn .check-badge {
             position: absolute; top: -4px; right: -2px;
@@ -406,7 +404,6 @@
         }
         .premium-nav-btn .check-badge svg { width: 8px; height: 8px; color: white; }
 
-        /* Subscription Package Card */
         .package-card {
             background: linear-gradient(145deg, rgba(30, 15, 48, 0.95), rgba(20, 10, 32, 0.95));
             border: 1.5px solid rgba(168, 85, 247, 0.3);
@@ -430,7 +427,6 @@
         .package-price { font-size: 24px; font-weight: 800; color: #fff; }
         .package-duration { font-size: 13px; color: #a855f7; font-weight: 600; }
 
-        /* Payment Method Card */
         .pay-method-card {
             background: #0f0518;
             border: 1.5px solid rgba(168, 85, 247, 0.2);
@@ -472,6 +468,12 @@
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -554,6 +556,19 @@
                         <button type="submit" id="loginBtn" class="btn-glow w-full text-white font-bold py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 touch-target">
                             <i data-lucide="log-in" class="w-4 h-4"></i><span>প্রবেশ করুন</span>
                         </button>
+                        
+                        <!-- Social Login Section for Login -->
+                        <div class="relative flex py-2 items-center mt-2">
+                            <div class="flex-grow border-t border-purple-900/40"></div>
+                            <span class="flex-shrink-0 mx-4 text-slate-500 text-[10px] uppercase font-bold">অথবা (OR)</span>
+                            <div class="flex-grow border-t border-purple-900/40"></div>
+                        </div>
+                        <button type="button" onclick="handleGithubLogin()" id="githubLoginBtn" class="w-full bg-[#24292e] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 touch-target hover:bg-[#1b1f23] transition shadow-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                            </svg>
+                            Continue with GitHub
+                        </button>
 
                         <p class="text-[11px] text-center text-slate-400 flex items-center justify-center gap-1.5 mt-2">
                             <i data-lucide="shield-check" class="w-3.5 h-3.5 text-purple-400"></i>
@@ -607,13 +622,6 @@
                             </div>
                         </div>
 
-                        <button type="button" id="liveLocationBtn" onclick="detectLiveLocation()"
-                                class="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 touch-target shadow-lg shadow-purple-600/30">
-                            <i data-lucide="crosshair" id="locationBtnIcon" class="w-4 h-4"></i>
-                            <span id="locationBtnText">লাইভ লোকেশন নিন</span>
-                        </button>
-                        <p id="locationStatus" class="text-[11px] text-center hidden px-2 leading-relaxed"></p>
-
                         <div>
                             <label class="block text-[11px] font-bold text-purple-300 uppercase tracking-wider mb-1.5 ml-1">ইমেইল *</label>
                             <div class="glass-input rounded-2xl flex items-center gap-3 px-4 py-3">
@@ -647,6 +655,19 @@
 
                         <button type="submit" id="registerBtn" class="btn-glow w-full text-white font-bold py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 touch-target mt-2">
                             <i data-lucide="user-plus" class="w-4 h-4"></i><span>রেজিস্ট্রেশন করুন</span>
+                        </button>
+
+                        <!-- Social Login Section for Register -->
+                        <div class="relative flex py-2 items-center mt-2">
+                            <div class="flex-grow border-t border-purple-900/40"></div>
+                            <span class="flex-shrink-0 mx-4 text-slate-500 text-[10px] uppercase font-bold">অথবা (OR)</span>
+                            <div class="flex-grow border-t border-purple-900/40"></div>
+                        </div>
+                        <button type="button" onclick="handleGithubLogin()" class="w-full bg-[#24292e] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 touch-target hover:bg-[#1b1f23] transition shadow-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                            </svg>
+                            Continue with GitHub
                         </button>
                     </form>
                 </div>
@@ -755,9 +776,7 @@
                         </div>
                     </div>
 
-                    <!-- Fixed Top Nav Icons Spacing -->
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                        <!-- Premium Nav Button -->
                         <button type="button" id="topNavPremiumBtn" onclick="switchTab('subscription')" class="premium-nav-btn" title="Premium Subscription">
                             <i data-lucide="crown" id="topNavPremiumIcon"></i>
                             <span id="topNavPremiumText">Free</span>
@@ -823,7 +842,7 @@
                         </div>
                         <span id="noticeCount" class="text-[10px] text-slate-500 font-medium"></span>
                     </div>
-                    <div id="noticesList" class="grid grid-cols-1 gap-3" aria-live="polite">
+                    <div id="noticesList" class="grid grid-cols-1 gap-2" aria-live="polite">
                         <div class="rounded-2xl border border-purple-900/40 bg-[#150a26] p-4 text-sm text-slate-400">
                             <i data-lucide="loader-circle" class="w-4 h-4 inline animate-spin mr-2"></i>নোটিশ লোড হচ্ছে...
                         </div>
@@ -1451,8 +1470,11 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, setDoc, getDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // 👇 পুশ নোটিফিকেশনের জন্য নতুন ফাংশনগুলো ইমপোর্ট করা হলো
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCQUjnlabQIa7kAaNnDaYvjyAf9eY_yoRo",
@@ -1534,6 +1556,11 @@
         let unsubscribeAdminStatus = null;
         let chatInitialLoadDone = false;
         let heartbeatInterval = null; 
+        
+        // 👇 পুশ নোটিফিকেশন ভ্যারিয়েবল
+        let messaging = null;
+        // 👇 এখানে Firebase Console থেকে পাওয়া আপনার VAPID Key বসান
+        const VAPID_PUBLIC_KEY = "BEqIzHv8EGO51Exv3PhQdygFql-wdz5S9Y6YpSanhuE9R3vKq1Sthl7mvUG4vDYWLlrhU2rKHD8NtzIdsmm-Bok"; 
 
         let selectedProfilePicFile = null; 
         const CLOUDINARY_CLOUD_NAME = "y2k19sbu"; 
@@ -1544,10 +1571,8 @@
         let selectedPaymentMethod = null;
         let isUserPremium = false;
 
-        // AI & Spam Control Variables
-        let isWaitingForAI = false;
-        // ⚠️ এখানে আপনার Gemini API Key বসান ⚠️
-        const GEMINI_API_KEY = "AQ.Ab8RN6KNu1vjdlFO_SDf9FwsOZwidMn9IbaIc8ed7rrbOXkEPQ"; 
+        // Admin Online State Tracker
+        let isAdminOnline = false;
 
         const RATE_LIMITS = {
             chat: 1000,
@@ -1910,6 +1935,49 @@
         });
 
         // ==========================================================
+        //  PUSH NOTIFICATION SETUP
+        // ==========================================================
+        async function setupPushNotifications() {
+            if (!currentUser || !firebaseReady) return;
+            try {
+                if (!('Notification' in window)) {
+                    console.log("This browser does not support desktop notification");
+                    return;
+                }
+
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    messaging = getMessaging(app);
+                    
+                    const token = await getToken(messaging, { vapidKey: VAPID_PUBLIC_KEY });
+                    
+                    if (token) {
+                        console.log("FCM Token generated:", token);
+                        // সেভ করা হচ্ছে ফায়ারস্টোরের users কালেকশনে
+                        await setDoc(doc(db, 'users', currentUser.uid), {
+                            fcmToken: token
+                        }, { merge: true });
+                    } else {
+                        console.log("No registration token available.");
+                    }
+                } else {
+                    console.log("Notification permission denied.");
+                }
+
+                // ফোরগ্রাউন্ডে (অ্যাপ ওপেন থাকা অবস্থায়) নোটিফিকেশন হ্যান্ডেল করা
+                onMessage(messaging, (payload) => {
+                    console.log("Foreground message received: ", payload);
+                    if(payload.notification) {
+                        showToast(`${payload.notification.title}: ${payload.notification.body}`, 'bell', 'text-purple-400');
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error setting up push notifications:", error);
+            }
+        }
+
+        // ==========================================================
         //  CHAT AUTO CLEAR: ১ ঘণ্টার পুরোনো চ্যাট ডিলিট
         // ==========================================================
         async function clearOldChatMessages() {
@@ -2052,7 +2120,13 @@
                 document.getElementById('subTrxId').value = '';
                 
             } catch (err) {
-                showToast('Failed to send request: ' + err.message, 'circle-x', 'text-rose-400');
+                let errorMsg = 'Failed to send request.';
+                if (err.code === 'permission-denied') {
+                    errorMsg = 'Permission denied. Please update your Firestore Security Rules.';
+                } else {
+                    errorMsg += ' ' + err.message;
+                }
+                showToast(errorMsg, 'circle-x', 'text-rose-400');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Send Request';
@@ -2061,89 +2135,35 @@
         };
 
         // ==========================================================
-        //  LIVE LOCATION & AUTH
+        //  AUTH METHODS (Email, Github)
         // ==========================================================
-        window.detectLiveLocation = async function () {
-            const btn = document.getElementById('liveLocationBtn');
-            const btnIcon = document.getElementById('locationBtnIcon');
-            const btnText = document.getElementById('locationBtnText');
-            const status = document.getElementById('locationStatus');
-            const districtInput = document.getElementById('regDistrict');
-            const upazilaInput = document.getElementById('regUpazila');
-
-            if (!navigator.geolocation) {
-                showToast('আপনার ব্রাউজার লোকেশন সাপোর্ট করে না', 'circle-x', 'text-rose-400');
-                return;
+        
+        // Helper Function to check/create user in Firestore
+        async function checkAndCreateUser(user, defaultName = null, defaultPhone = null) {
+            const userDocRef = doc(db, 'users', user.uid);
+            const userDoc = await getDoc(userDocRef);
+            
+            if (!userDoc.exists()) {
+                const profile = { 
+                    fullName: defaultName || user.displayName || 'নাগরিক', 
+                    email: user.email || '', 
+                    uid: user.uid,
+                    photoURL: user.photoURL || '',
+                    phone: defaultPhone || user.phoneNumber || '', 
+                    district: '', 
+                    upazila: '',
+                    isOnline: true, 
+                    lastSeen: serverTimestamp(), 
+                    createdAt: serverTimestamp(),
+                    subscriptionStatus: 'free'
+                };
+                await setDoc(userDocRef, profile);
+                userProfile = profile;
+                try { sessionStorage.setItem('amar-welcome-pending', 'register'); } catch (e) {}
+            } else {
+                try { sessionStorage.setItem('amar-welcome-pending', 'login'); } catch (e) {}
             }
-
-            btn.disabled = true;
-            btn.className = 'w-full bg-gradient-to-r from-slate-700 to-slate-800 text-white font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 cursor-wait touch-target';
-            btnIcon.setAttribute('data-lucide', 'loader-circle');
-            btnIcon.classList.add('animate-spin');
-            btnText.textContent = 'লোকেশন খোঁজা হচ্ছে...';
-            status.classList.remove('hidden');
-            status.className = 'text-[11px] text-center text-purple-300 px-2';
-            status.textContent = 'GPS থেকে আপনার অবস্থান নেওয়া হচ্ছে...';
-            refreshIcons();
-
-            try {
-                const position = await new Promise((resolve, reject) => {
-                    navigator.geolocation.getCurrentPosition(resolve, reject, {
-                        enableHighAccuracy: true, timeout: 15000, maximumAge: 0
-                    });
-                });
-
-                const { latitude, longitude } = position.coords;
-                status.textContent = 'ঠিকানা খোঁজা হচ্ছে...';
-
-                const res = await fetch(
-                    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&accept-language=bn,en`,
-                    { headers: { 'Accept': 'application/json' } }
-                );
-                if (!res.ok) throw new Error('ঠিকানা সার্ভার সাড়া দিচ্ছে না');
-                const data = await res.json();
-                const addr = data.address || {};
-
-                const district = addr.state_district || addr.county || addr.city || addr.town || addr.village || addr.state || '';
-                const upazila = addr.suburb || addr.town || addr.village || addr.municipality || addr.city_district || addr.neighbourhood || '';
-
-                if (district) districtInput.value = district;
-                if (upazila) upazilaInput.value = upazila;
-
-                btn.disabled = false;
-                btn.className = 'w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 touch-target';
-                btnIcon.setAttribute('data-lucide', 'circle-check');
-                btnIcon.classList.remove('animate-spin');
-                btnText.textContent = 'লোকেশন পাওয়া গেছে';
-                status.className = 'text-[11px] text-center text-emerald-400 px-2';
-                status.textContent = `${upazila || '?'}, ${district || '?'} — ইনপুটে বসানো হয়েছে`;
-                refreshIcons();
-                showToast('লোকেশন সফলভাবে সেট হয়েছে!', 'map-pin', 'text-purple-400');
-
-                setTimeout(() => {
-                    btn.className = 'w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 touch-target shadow-lg shadow-purple-600/30';
-                    btnIcon.setAttribute('data-lucide', 'crosshair');
-                    btnText.textContent = 'আবার লোকেশন নিন';
-                    refreshIcons();
-                }, 4000);
-            } catch (err) {
-                let msg = 'লোকেশন নিতে ব্যর্থ';
-                if (err.code === 1) msg = 'আপনি লোকেশন অনুমতি দেননি। ব্রাউজার সেটিংস থেকে অনুমতি দিন।';
-                else if (err.code === 2) msg = 'লোকেশন পাওয়া যাচ্ছে না। জিপিএস/ওয়াইফাই চালু করুন।';
-                else if (err.code === 3) msg = 'সময় শেষ! আবার চেষ্টা করুন।';
-                else if (err.message) msg = err.message;
-
-                btn.disabled = false;
-                btn.className = 'w-full bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 touch-target';
-                btnIcon.setAttribute('data-lucide', 'triangle-alert');
-                btnIcon.classList.remove('animate-spin');
-                btnText.textContent = 'আবার চেষ্টা করুন';
-                status.className = 'text-[11px] text-center text-rose-400 px-2';
-                status.textContent = msg;
-                refreshIcons();
-                showToast(msg, 'circle-x', 'text-rose-400');
-            }
-        };
+        }
 
         window.switchAuthTab = (tab) => {
             const loginTab = document.getElementById('authTabLogin');
@@ -2185,6 +2205,41 @@
                 btn.disabled = false;
                 btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i> <span>প্রবেশ করুন</span>';
                 refreshIcons();
+            }
+        };
+
+        window.handleGithubLogin = async () => {
+            if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
+            
+            const btn = document.getElementById('githubLoginBtn');
+            if(btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> Connecting...';
+                refreshIcons();
+            }
+
+            try {
+                const provider = new GithubAuthProvider();
+                const result = await signInWithPopup(auth, provider);
+                await checkAndCreateUser(result.user);
+                showToast('গিটহাব লগইন সফল হয়েছে!', 'check-circle', 'text-emerald-400');
+            } catch (error) {
+                console.error("GitHub Login Error:", error);
+                if (error.code === 'auth/popup-closed-by-user') {
+                    showToast('লগইন বাতিল করা হয়েছে।', 'x-circle', 'text-amber-400');
+                } else if (error.code === 'auth/popup-blocked') {
+                    showToast('ব্রাউজার পপআপ ব্লক করেছে! পপআপ অনুমতি দিন।', 'alert-circle', 'text-rose-400');
+                } else if (error.code === 'auth/account-exists-with-different-credential') {
+                    showToast('এই ইমেইল দিয়ে অন্য একাউন্ট আছে!', 'alert-circle', 'text-rose-400');
+                } else {
+                    showToast('গিটহাব লগইন ব্যর্থ হয়েছে!', 'x-circle', 'text-rose-400');
+                }
+            } finally {
+                if(btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" /></svg> Continue with GitHub`;
+                    refreshIcons();
+                }
             }
         };
 
@@ -2569,23 +2624,20 @@
                 const dateLabel = date ? date.toLocaleString('bn-BD', { dateStyle: 'medium', timeStyle: 'short' }) : '';
                 const safeId = esc(item.id);
 
-                return `<article class="rounded-2xl border ${p.card} bg-gradient-to-br from-[#1a0d2e] to-[#150a26] p-4 shadow-lg shadow-black/20">
-                    <div class="flex items-start gap-3">
-                        <span class="w-9 h-9 rounded-xl ${p.style} border flex items-center justify-center shrink-0">
-                            <i data-lucide="${p.icon}" class="w-4 h-4"></i>
+                return `<article onclick="openNoticeModal('${safeId}')" class="rounded-xl border ${p.card} bg-gradient-to-br from-[#1a0d2e] to-[#150a26] p-3 shadow-md shadow-black/20 cursor-pointer hover:border-purple-500 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg ${p.style} border flex items-center justify-center shrink-0">
+                            <i data-lucide="${p.icon}" class="w-3.5 h-3.5"></i>
                         </span>
                         <div class="min-w-0 flex-1">
-                            <div class="flex flex-wrap items-center gap-1.5 mb-1">
-                                <span class="text-[10px] px-2 py-0.5 rounded-full border ${p.style} font-bold">${p.label}</span>
-                                ${dateLabel ? `<span class="text-[10px] text-slate-500 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>${esc(dateLabel)}</span>` : ''}
+                            <div class="flex items-center justify-between gap-2">
+                                <h3 class="text-sm font-bold text-white truncate leading-tight">${title}</h3>
+                                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 shrink-0"></i>
                             </div>
-                            <h3 class="text-sm font-bold text-white leading-snug">${title}</h3>
-                            <p class="mt-1.5 text-xs text-slate-300 leading-relaxed">${body.length > 180 ? body.slice(0, 180) + '…' : body}</p>
-                            <div class="mt-2.5">
-                                <button type="button" onclick="openNoticeModal('${safeId}')"
-                                        class="text-xs font-bold text-purple-300 hover:text-purple-200 inline-flex items-center gap-1.5">
-                                    বিস্তারিত পড়ুন <i data-lucide="arrow-right" class="w-3 h-3"></i>
-                                </button>
+                            <p class="mt-0.5 text-[11px] text-slate-400 line-clamp-1">${body}</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-md border ${p.style} font-bold">${p.label}</span>
+                                ${dateLabel ? `<span class="text-[9px] text-slate-500 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${esc(dateLabel)}</span>` : ''}
                             </div>
                         </div>
                     </div>
@@ -2870,54 +2922,10 @@
             if (input) input.focus();
         };
 
-        // ==========================================================
-        //  AI AUTO-REPLY LOGIC (DISGUISED AS ADMIN)
-        // ==========================================================
-        async function getAIReply(userMessage) {
-            // ⚠️ API KEY যেখানে আছে সেখানে বসানো হয়েছে ⚠️
-            if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
-                return "দুঃখিত, এই মুহূর্তে সিস্টেমে ত্রুটি রয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।";
-            }
-
-            const prompt = `You are a helpful assistant for 'আমার এলাকা' (Amar Elaka) service portal in Bangladesh.
-            Answer the user's message politely in Bengali.
-            If the user asks something outside the scope of local services, emergency, blood donation, or app features, politely say that you will forward the message to the human admin.
-            Keep your answers concise and helpful.
-            User message: ${userMessage}`;
-
-            try {
-                // Using the standard model endpoint
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }]
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.text();
-                    console.error('API Error Response:', response.status, errorData);
-                    throw new Error(`API request failed with status ${response.status}`);
-                }
-
-                const data = await response.json();
-                return data.candidates[0].content.parts[0].text;
-            } catch (error) {
-                console.error('AI Error:', error);
-                return "দুঃখিত, এই মুহূর্তে আমি উত্তর দিতে পারছি না। আপনার বার্তাটি অ্যাডমিনের কাছে পাঠানো হয়েছে, তিনি শীঘ্রই যোগাযোগ করবেন।";
-            }
-        }
-
         window.handleSendChatMessage = async (e) => {
             e.preventDefault();
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
-
-            // 🛑 স্প্যাম প্রোটেকশন: এআই উত্তর দেওয়ার আগে নতুন মেসেজ পাঠানো যাবে না
-            if (isWaitingForAI) {
-                return showToast('অনুগ্রহ করে অ্যাডমিনের উত্তর পাওয়া পর্যন্ত অপেক্ষা করুন।', 'clock', 'text-amber-400');
-            }
 
             const rate = checkRateLimit('chat');
             if (!rate.allowed) {
@@ -2931,8 +2939,6 @@
 
             const time = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
             
-            // UI লক করুন
-            isWaitingForAI = true;
             btn.disabled = true;
             btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i>';
             refreshIcons();
@@ -2951,27 +2957,34 @@
                 input.value = '';
                 setRateLimit('chat');
 
-                // ২. এআই-এর কাছে উত্তর চাওয়া
-                const aiReplyText = await getAIReply(text);
+                // ২. অটোমেটিক অফলাইন মেসেজ লজিক (প্রতি ১ ঘন্টায় একবার)
+                if (!isAdminOnline) {
+                    const lastReplyKey = `autoReply_${currentUser.uid}`;
+                    const lastReplyTime = parseInt(lsGet(lastReplyKey, '0'), 10);
+                    const now = Date.now();
+                    const oneHour = 60 * 60 * 1000; // 3600000 ms
 
-                // ৩. এআই-এর উত্তর সেভ (যাতে ইউজার মনে করে অ্যাডমিন উত্তর দিয়েছে)
-                await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
-                    sender: 'admin',
-                    text: aiReplyText,
-                    time: new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }),
-                    uid: currentUser.uid,
-                    userName: 'অ্যাডমিন', // মাস্কিং করা হচ্ছে
-                    readByUser: false,
-                    createdAt: serverTimestamp()
-                });
+                    if (now - lastReplyTime > oneHour) {
+                        // Send auto reply
+                        await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
+                            sender: 'admin',
+                            text: 'বর্তমানে অ্যাডমিন অফলাইনে আছেন, খুব শীঘ্রই আপনার মেসেজের জবাব দেওয়া হবে।',
+                            time: new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }),
+                            uid: currentUser.uid,
+                            userName: 'অ্যাডমিন',
+                            readByUser: false,
+                            createdAt: serverTimestamp()
+                        });
+                        // Update Local Storage
+                        lsSet(lastReplyKey, String(now));
+                    }
+                }
 
             } catch (err) {
                 let msg = 'মেসেজ পাঠানো যায়নি';
                 if (err.code === 'permission-denied') msg = 'অনুমতি নেই — Firestore rules চেক করুন';
                 showToast(msg + ': ' + (err.code || err.message), 'circle-x', 'text-rose-400');
             } finally {
-                // UI আনলক করুন
-                isWaitingForAI = false;
                 btn.disabled = false;
                 btn.innerHTML = '<span class="hidden sm:inline">পাঠান</span><i data-lucide="send" class="w-4 h-4"></i>';
                 refreshIcons();
@@ -3384,13 +3397,15 @@
                 if (snap.exists()) {
                     const data = snap.data();
                     const lastSeen = data.lastSeen?.toDate?.() || null;
-                    const isOnline = data.online === true && lastSeen && (Date.now() - lastSeen.getTime() < 5 * 60 * 1000);
-                    updateAdminStatus(isOnline, lastSeen);
+                    isAdminOnline = data.online === true && lastSeen && (Date.now() - lastSeen.getTime() < 5 * 60 * 1000);
+                    updateAdminStatus(isAdminOnline, lastSeen);
                 } else {
+                    isAdminOnline = false;
                     updateAdminStatus(false, null);
                 }
             }, (err) => {
                 console.warn('adminStatus listener:', err.code || err.message);
+                isAdminOnline = false;
                 updateAdminStatus(false, null);
             });
         }
@@ -3431,10 +3446,12 @@
                                 userProfile = docSnap.data();
                                 updateProfileUI();
                             }
+                        }, (error) => {
+                            console.warn("User profile listener error:", error);
                         });
 
                         const snap = await getDoc(doc(db, 'users', user.uid));
-                        userProfile = snap.exists() ? snap.data() : { email: user.email, fullName: user.email.split('@')[0] };
+                        userProfile = snap.exists() ? snap.data() : { email: user.email, fullName: user.displayName || user.email?.split('@')[0] || 'নাগরিক' };
                         updateProfileUI();
                         hideAuthScreen();
                         attachRealtimeListeners();
@@ -3443,6 +3460,9 @@
                         startUserHeartbeat();
                         // 🔥 ১ ঘণ্টার চ্যাট অটো-ক্লিয়ার চালু করা হলো
                         startChatAutoClear();
+
+                        // 👇 পুশ নোটিফিকেশন সেটআপ চালু করা হলো
+                        setupPushNotifications();
 
                         let pendingKind = null;
                         try {

@@ -793,7 +793,7 @@
                         </button>
                     </div>
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                        <!-- ✅ হেডার থেকে প্রিমিয়াম বাটন সরানো হয়েছে -->
+                        <!-- ✅ হেডার থেকে প্রিমিয়াম বাটন সরানো হয়েছে -->
                         <button type="button" onclick="openNotifPanel()" class="top-app-icon-btn" title="নোটিফিকেশন" aria-label="নোটিফিকেশন">
                             <i data-lucide="bell" class="w-5 h-5"></i>
                             <span id="notifBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 ring-2 ring-[#0a1e14]">0</span>
@@ -989,7 +989,7 @@
                 </div>
             </div>
 
-            <!-- SUBSCRIPTION VIEW -->
+            <!-- SUBSCRIPTION VIEW (✅ আপডেট করা হয়েছে) -->
             <div id="view-subscription" class="tab-view hidden space-y-6 pb-10">
                 <div id="currentPlanCard" class="glass-card rounded-2xl p-4 sm:p-5 max-w-2xl mx-auto border-2 border-emerald-500/40">
                     <div class="flex items-start justify-between gap-3">
@@ -1002,6 +1002,7 @@
                     </div>
                     <div id="currentPlanProgress" class="mt-3"></div>
                 </div>
+                
                 <div class="text-center space-y-2 mt-4">
                     <div class="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-amber-500/30">
                         <i data-lucide="crown" class="w-8 h-8 text-white"></i>
@@ -1009,17 +1010,76 @@
                     <h2 class="text-2xl font-extrabold text-white">Go Premium</h2>
                     <p class="text-sm text-slate-400 max-w-xs mx-auto">Upgrade your account to unlock exclusive features and support our platform.</p>
                 </div>
+
+                <!-- ✅ নতুন ফিচার কম্পারিজন টেবিল -->
                 <div class="glass-card rounded-2xl p-4 sm:p-5 max-w-2xl mx-auto">
-                    <h3 class="text-white font-bold mb-3 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i> Premium Benefits</h3>
-                    <ul class="space-y-3">
-                        <li class="flex items-start gap-3 text-sm text-slate-300"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i><span>Admin advance enhance support</span></li>
-                        <li class="flex items-start gap-3 text-sm text-slate-300"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i><span>Daily 3 promotion post</span></li>
-                        <li class="flex items-start gap-3 text-sm text-slate-300"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i><span>Account verified</span></li>
-                        <li class="flex items-start gap-3 text-sm text-slate-300"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i><span>Blue verification badge</span></li>
-                    </ul>
+                    <div class="text-center mb-5">
+                        <div class="flex items-center justify-center gap-2 mb-1">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-blue-400"></i>
+                            <h2 class="text-xl font-extrabold text-white">Amar Elaka</h2>
+                        </div>
+                        <p class="text-xs text-emerald-300 font-medium">সকল সেবা এখন হাতের মুঠোয়</p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <!-- Table Header -->
+                        <div class="grid grid-cols-3 gap-2 pb-2 border-b border-emerald-500/30 text-sm font-bold text-slate-300">
+                            <div>ফিচারসমূহ</div>
+                            <div class="text-center">ফ্রি</div>
+                            <div class="text-center text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">প্রিমিয়াম</div>
+                        </div>
+                        
+                        <!-- Row 1 -->
+                        <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
+                            <div class="text-slate-200 font-medium">সেবা যোগ করা</div>
+                            <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
+                            <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
+                        </div>
+                        
+                        <!-- Row 2 -->
+                        <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
+                            <div class="text-slate-200 font-medium">এডমিন চ্যাট</div>
+                            <div class="text-center text-slate-400 text-xs">সাধারণ</div>
+                            <div class="text-center text-amber-400 text-xs font-bold">উন্নতমানের</div>
+                        </div>
+                        
+                        <!-- Row 3 -->
+                        <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
+                            <div class="text-slate-200 font-medium">অ্যাড ব্লক</div>
+                            <!-- ✅ এখানে ফ্রি-এর ঘরেও টিক (✓) দেওয়া হয়েছে -->
+                            <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
+                            <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
+                        </div>
+                        
+                        <!-- Row 4 -->
+                        <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
+                            <div class="text-slate-200 font-medium">প্রমোশন পোস্ট</div>
+                            <div class="text-center text-slate-500">—</div>
+                            <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
+                        </div>
+                        
+                        <!-- Row 5 -->
+                        <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
+                            <div class="text-slate-200 font-medium">প্রোফাইল ভেরিফাইড</div>
+                            <div class="text-center text-slate-500">—</div>
+                            <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
+                        </div>
+                        
+                        <!-- Row 6 -->
+                        <div class="grid grid-cols-3 gap-2 py-2 text-sm items-center">
+                            <div class="text-slate-200 font-medium">ব্লু ভেরিফাই ব্যাজ</div>
+                            <div class="text-center text-slate-500">—</div>
+                            <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="document.getElementById('packagesSectionTitle').scrollIntoView({behavior: 'smooth'})" class="mt-6 w-full bg-[#051008] hover:bg-[#0a1e14] border border-emerald-900/50 text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
+                        আপডেট নাও <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                    </button>
                 </div>
-                <div class="max-w-4xl mx-auto">
-                    <h3 id="packagesSectionTitle" class="text-white font-bold mb-4 px-1">Select a Package</h3>
+
+                <div class="max-w-4xl mx-auto pt-4" id="packagesSectionTitleContainer">
+                    <h3 id="packagesSectionTitle" class="text-white font-bold mb-4 px-1 scroll-mt-24">Select a Package</h3>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                         <div class="package-card" onclick="selectPackage('1 Month', 50, this)"><div class="package-duration">1 Month</div><div class="package-price">৳50</div><button class="mt-3 w-full bg-emerald-900/50 text-emerald-300 text-xs font-bold py-2 rounded-lg border border-emerald-700/50">Get Subscription</button></div>
                         <div class="package-card" onclick="selectPackage('2 Months', 80, this)"><div class="package-duration">2 Months</div><div class="package-price">৳80</div><button class="mt-3 w-full bg-emerald-900/50 text-emerald-300 text-xs font-bold py-2 rounded-lg border border-emerald-700/50">Get Subscription</button></div>

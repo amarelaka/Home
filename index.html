@@ -483,7 +483,7 @@
             max-width: 100vw !important;
             width: 100vw !important;
             padding: 0 !important;
-            padding-bottom: 80px !important; /* Space for bottom nav */
+            padding-bottom: 80px !important;
             margin: 0 !important;
             overflow: hidden !important;
             display: flex !important;
@@ -541,7 +541,7 @@
 
 <body class="text-slate-100 min-h-[100dvh]">
 
-    <!-- ✅ SPLASH SCREEN (রিফ্রেশে লগইন ফর্ম ফ্ল্যাশ আটকাতে) -->
+    <!-- ✅ SPLASH SCREEN -->
     <div id="splashScreen" class="fixed inset-0 z-[110] flex flex-col items-center justify-center" style="background:linear-gradient(180deg,#03100a 0%,#0a1e14 50%,#000 100%);">
         <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center mb-4 shadow-2xl shadow-emerald-600/40 animate-pulse">
             <i data-lucide="house" class="w-10 h-10 text-white"></i>
@@ -724,7 +724,6 @@
         <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-1 hide-scrollbar">
             <button type="button" onclick="sidebarNav('profile')" class="sidebar-item"><i data-lucide="user"></i><span>প্রোফাইল</span></button>
             <button type="button" onclick="sidebarNav('services')" class="sidebar-item"><i data-lucide="layout-grid"></i><span>সকল সেবা সমূহ</span></button>
-            <!-- ✅ নতুন: আমার পছন্দ (My Favorites) অপশন -->
             <button type="button" onclick="sidebarNav('favorites')" class="sidebar-item"><i data-lucide="heart"></i><span>আমার পছন্দ</span></button>
             <button type="button" onclick="sidebarNav('subscription')" class="sidebar-item"><i data-lucide="crown"></i><span>প্রিমিয়াম</span></button>
             <button type="button" onclick="sidebarNav('emergency')" class="sidebar-item"><i data-lucide="phone-call"></i><span>জরুরী হেল্পলাইন</span></button>
@@ -790,6 +789,10 @@
                         <button id="addEmergencyBtnDesktop" onclick="openUserEmergencyRequestModal()" class="hidden w-9 h-9 shrink-0 bg-gradient-to-br from-emerald-600 to-teal-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/30 transition-transform active:scale-95" title="জরুরি তথ্য যোগ করুন">
                             <i data-lucide="plus" class="w-4 h-4"></i>
                         </button>
+                        <!-- ✅ নতুন: ব্লাড ডোনার যোগ করার লাল প্লাস বাটন (ডেস্কটপ) -->
+                        <button id="addBloodBtnDesktop" onclick="openUserBloodRequestModal()" class="hidden w-9 h-9 shrink-0 bg-gradient-to-br from-rose-600 to-red-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-rose-600/30 transition-transform active:scale-95" title="রক্তদাতা হিসেবে যোগ করুন">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
                     </div>
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                         <button type="button" onclick="openNotifPanel()" class="top-app-icon-btn" title="নোটিফিকেশন" aria-label="নোটিফিকেশন">
@@ -836,6 +839,10 @@
                 <button id="addEmergencyBtnMobile" onclick="openUserEmergencyRequestModal()" class="hidden w-12 h-12 shrink-0 bg-gradient-to-br from-emerald-600 to-teal-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-600/30 transition-transform active:scale-95" title="জরুরি তথ্য যোগ করুন">
                     <i data-lucide="plus" class="w-6 h-6"></i>
                 </button>
+                <!-- ✅ নতুন: ব্লাড ডোনার যোগ করার লাল প্লাস বাটন (মোবাইল) -->
+                <button id="addBloodBtnMobile" onclick="openUserBloodRequestModal()" class="hidden w-12 h-12 shrink-0 bg-gradient-to-br from-rose-600 to-red-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-rose-600/30 transition-transform active:scale-95" title="রক্তদাতা হিসেবে যোগ করুন">
+                    <i data-lucide="plus" class="w-6 h-6"></i>
+                </button>
             </div>
 
             <!-- SERVICES VIEW -->
@@ -880,7 +887,7 @@
                 </div>
             </div>
 
-            <!-- ✅ FAVORITES VIEW (আমার পছন্দ) -->
+            <!-- FAVORITES VIEW -->
             <div id="view-favorites" class="tab-view hidden space-y-4">
                 <div class="flex items-center gap-3 mb-2 px-1 border-b border-emerald-900/40 pb-3">
                     <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/30">
@@ -1228,7 +1235,7 @@
         </nav>
     </div>
 
-    <!-- PROVIDER MODAL (EXTENDED) -->
+    <!-- PROVIDER MODAL -->
     <div id="providerModal" class="fixed inset-0 z-[150] bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 modal-sheet-parent hidden overflow-y-auto">
         <div class="bg-[#0d2818] text-slate-100 rounded-3xl shadow-2xl w-full max-w-lg border border-emerald-800/50 modal-sheet my-4 sm:my-0 overflow-hidden flex flex-col max-h-[92dvh]">
             <div class="bg-gradient-to-r from-emerald-800 via-teal-800 to-emerald-900 p-4 px-5 text-white flex items-center justify-between shrink-0">
@@ -1544,6 +1551,54 @@
         </div>
     </div>
 
+    <!-- ✅ নতুন: USER BLOOD DONOR REQUEST MODAL -->
+    <div id="userBloodRequestModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
+        <div class="w-full max-w-lg rounded-3xl border border-rose-800/50 bg-[#0d2818] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
+            <div class="bg-gradient-to-r from-rose-700 via-red-700 to-rose-800 p-4 px-5 text-white flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="droplet" class="w-4 h-4"></i> রক্তদাতা হিসেবে যোগ দিন</h3>
+                    <p class="text-[10px] text-rose-100">অ্যাডমিন যাচাই করে রক্তদাতা তালিকায় যোগ করবেন</p>
+                </div>
+                <button onclick="closeUserBloodRequestModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form id="userBloodForm" onsubmit="handleUserBloodSubmit(event)" class="p-4 space-y-3.5 overflow-y-auto">
+                <div class="bg-rose-950/40 border border-rose-800/50 rounded-xl p-2.5 flex items-start gap-2 text-rose-200 text-[11px]">
+                    <i data-lucide="info" class="w-3.5 h-3.5 text-rose-400 mt-0.5 shrink-0"></i>
+                    <span>আপনার তথ্য যাচাইয়ের পর অ্যাডমিন অনুমোদন করলে তালিকায় প্রকাশিত হবে।</span>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-rose-300 uppercase tracking-wider mb-1.5">নাম *</label>
+                    <input type="text" id="bldReqName" required maxlength="60" placeholder="আপনার পুরো নাম" class="w-full bg-[#051008] border border-rose-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-rose-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-rose-300 uppercase tracking-wider mb-1.5">রক্তের গ্রুপ *</label>
+                    <select id="bldReqGroup" required class="w-full bg-[#051008] border border-rose-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-rose-500">
+                        <option value="">-- গ্রুপ নির্বাচন করুন --</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-rose-300 uppercase tracking-wider mb-1.5">মোবাইল নাম্বার *</label>
+                    <input type="tel" id="bldReqPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#051008] border border-rose-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-rose-500 placeholder:text-slate-500 font-mono">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-rose-300 uppercase tracking-wider mb-1.5">এলাকা (গ্রাম/বাজার/শহর) *</label>
+                    <input type="text" id="bldReqLocation" required maxlength="100" placeholder="যেমন: শাহবাজপুর বাজার, চাঁদপুর" class="w-full bg-[#051008] border border-rose-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-rose-500 placeholder:text-slate-500">
+                </div>
+                <button type="submit" id="userBloodSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
+                    <i data-lucide="send" class="w-4 h-4"></i> অনুরোধ পাঠান
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div id="toast" class="fixed bottom-24 md:bottom-5 right-3 sm:right-5 left-3 sm:left-auto z-[200] bg-[#0d2818] border border-emerald-700/60 text-white px-4 py-3 rounded-2xl shadow-2xl shadow-emerald-900/40 flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <span id="toastIconWrap" class="shrink-0 flex items-center justify-center"><i data-lucide="circle-check" class="w-5 h-5 text-emerald-400"></i></span>
@@ -1661,7 +1716,6 @@
         let unsubscribeChat = null;
         let unsubscribeAdminStatus = null;
         
-        // ✅ Listener Cleanup Variables
         let unsubCategories = null;
         let unsubEmergency = null;
         let unsubBlood = null;
@@ -1698,7 +1752,7 @@
         let servicesRequestSeq = 0; 
 
         let userFavorites = new Set();
-        let favoritesCache = []; // ✅ নতুন: ফেভারিট করা সার্ভিসগুলোর ডেটা এখানে থাকবে
+        let favoritesCache = [];
         let favoritesLoaded = false;
         let activeServiceId = null;
         let selectedProviderImage = null;
@@ -2035,7 +2089,7 @@
         async function clearOldChatMessages() {
             if (!currentUser || !firebaseReady) return;
             try {
-                const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); // ✅ ১ ঘন্টায় আপডেট করা হলো
+                const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
                 const q = query(collection(db, `chats/${currentUser.uid}/messages`), where('createdAt', '<=', oneHourAgo));
                 const snap = await getDocs(q);
                 if (snap.empty) return;
@@ -2436,13 +2490,11 @@
 
         // ========== TAB SWITCH ==========
         window.switchTab = (tabName) => {
-            // ✅ Guest Guard (লগইন ছাড়া অন্য পেজে ঢুকতে পারবে না)
             if (!currentUser && !['services', 'emergency', 'blood'].includes(tabName)) {
                 return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             }
             currentTab = tabName;
 
-            // Chat full-screen mode toggle
             if (tabName === 'chat') {
                 document.body.classList.add('chat-active');
             } else {
@@ -2466,7 +2518,7 @@
             document.getElementById('searchContainerDesktop')?.classList.toggle('show', showSearch);
             document.getElementById('searchContainerMobile')?.classList.toggle('hidden', !showSearch);
 
-            // ✅ প্লাস বাটন কেবল মাত্র ইমার্জেন্সি ট্যাবে দেখাবে
+            // ✅ ইমার্জেন্সি প্লাস বাটন
             const addBtnDesktop = document.getElementById('addEmergencyBtnDesktop');
             const addBtnMobile = document.getElementById('addEmergencyBtnMobile');
             if (tabName === 'emergency') {
@@ -2477,6 +2529,17 @@
                 addBtnMobile?.classList.add('hidden');
             }
 
+            // ✅ নতুন: ব্লাড ডোনার প্লাস বাটন
+            const addBloodBtnDesktop = document.getElementById('addBloodBtnDesktop');
+            const addBloodBtnMobile = document.getElementById('addBloodBtnMobile');
+            if (tabName === 'blood') {
+                addBloodBtnDesktop?.classList.remove('hidden');
+                addBloodBtnMobile?.classList.remove('hidden');
+            } else {
+                addBloodBtnDesktop?.classList.add('hidden');
+                addBloodBtnMobile?.classList.add('hidden');
+            }
+
             const si = document.getElementById('searchInput'); if (si) si.value = '';
             const sm = document.getElementById('searchInputMobile'); if (sm) sm.value = '';
             
@@ -2485,7 +2548,6 @@
             if (tabName === 'chat') setTimeout(async () => { await markMessagesAsRead(); updateUnreadBadge(); }, 400);
             else updateUnreadBadge();
             
-            // ✅ Favorites পেজে ঢোকার সময় ডেটা রিফ্রেশ করা
             if (tabName === 'favorites') {
                 loadUserFavorites();
             }
@@ -2629,7 +2691,6 @@
                 
                 let favServices = [];
                 if (favIds.length > 0) {
-                    // ✅ ফায়ারবেজের 'in' কোয়েরি একসাথে সর্বোচ্চ ১০টি আইডি নিতে পারে, তাই ১০টি করে চাঙ্ক করা হচ্ছে
                     for (let i = 0; i < favIds.length; i += 10) {
                         const chunk = favIds.slice(i, i + 10);
                         const q = query(collection(db, 'services'), where('__name__', 'in', chunk));
@@ -2639,7 +2700,6 @@
                         });
                     }
                 }
-                // ✅ এখানে যেসব সার্ভিস ডেটাবেসে নেই (অ্যাডমিন ডিলিট করেছে) সেগুলো স্বাভাবিকভাবেই বাদ পড়ে যাবে
                 favoritesCache = favServices; 
             } catch (e) { 
                 console.warn('Load favorites failed', e); 
@@ -2680,7 +2740,7 @@
                 grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#0d2818] rounded-2xl border border-dashed border-rose-900/50 p-6 space-y-2">
                     <div class="w-16 h-16 bg-rose-950/60 text-rose-400 rounded-full flex items-center justify-center mx-auto border border-rose-800/60"><i data-lucide="heart-off" class="w-7 h-7"></i></div>
                     <h3 class="text-sm font-bold text-slate-200">কোনো সংরক্ষিত সেবা নেই</h3>
-                    <p class="text-xs text-slate-400 max-w-sm mx-auto">আপনি এখনো কোনো সেবা "আমার পছন্দ" তালিকায় যুক্ত করেননি। সেবার উপরে থাকা হার্ট আইকনে ক্লিক করে সেভ করুন।</p>
+                    <p class="text-xs text-slate-400 max-w-sm mx-auto">আপনি এখনো কোনো সেবা "আমার পছন্দ" তালিকায় যুক্ত করেননি। সেবার উপরে থাকা হার্ট আইকনে ক্লিক করে সেভ করুন।</p>
                 </div>`;
                 refreshIcons(); 
                 return;
@@ -2699,13 +2759,13 @@
                 if (isFav) {
                     await deleteDoc(doc(db, 'users', currentUser.uid, 'favorites', serviceId));
                     userFavorites.delete(serviceId);
-                    favoritesCache = favoritesCache.filter(s => s.id !== serviceId); // লোকাল ক্যাশ থেকেও বাদ
+                    favoritesCache = favoritesCache.filter(s => s.id !== serviceId);
                     showToast('ফেভারিট থেকে সরানো হয়েছে', 'heart-off', 'text-slate-400');
                 } else {
                     await setDoc(doc(db, 'users', currentUser.uid, 'favorites', serviceId), { serviceId, addedAt: serverTimestamp() });
                     userFavorites.add(serviceId);
-                    const srv = servicesCache.find(s => s.id === serviceId); // সার্ভিস ক্যাশ থেকে বের করা
-                    if (srv) favoritesCache.unshift(srv); // লোকাল ক্যাশে যোগ করা
+                    const srv = servicesCache.find(s => s.id === serviceId);
+                    if (srv) favoritesCache.unshift(srv);
                     showToast('ফেভারিটে যোগ হয়েছে', 'heart', 'text-rose-400');
                 }
                 updateFavoriteUI(serviceId, !isFav);
@@ -2729,7 +2789,6 @@
             await toggleFavorite(sid, btn);
         };
 
-        // ✅ External URL opener (XSS Fix)
         window.openExternalUrl = (el) => {
             const url = el.getAttribute('data-url');
             if (/^https?:\/\//i.test(url)) {
@@ -3073,7 +3132,6 @@
             btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> যাচাই করা হচ্ছে...'; refreshIcons();
 
             try {
-                // Check Daily Limit (Max 2 per day)
                 const startOfDay = new Date();
                 startOfDay.setHours(0, 0, 0, 0);
                 
@@ -3109,6 +3167,98 @@
                 
                 showToast('অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে যোগ করবেন।', 'check-circle', 'text-emerald-400');
                 closeUserEmergencyRequestModal();
+            } catch (err) {
+                showToast('পাঠাতে ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
+            } finally {
+                btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> অনুরোধ পাঠান'; refreshIcons();
+            }
+        };
+
+        // ========== ✅ নতুন: USER BLOOD DONOR REQUEST ==========
+        window.openUserBloodRequestModal = () => {
+            if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            document.getElementById('userBloodForm').reset();
+            // Auto-fill user's name if available
+            if (userProfile && userProfile.fullName) {
+                document.getElementById('bldReqName').value = userProfile.fullName;
+            }
+            if (userProfile && userProfile.phone) {
+                document.getElementById('bldReqPhone').value = userProfile.phone;
+            }
+            const m = document.getElementById('userBloodRequestModal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+            refreshIcons();
+        };
+
+        window.closeUserBloodRequestModal = () => {
+            const m = document.getElementById('userBloodRequestModal');
+            m.classList.add('hidden'); m.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        };
+
+        window.handleUserBloodSubmit = async (e) => {
+            e.preventDefault();
+            if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
+
+            const name = document.getElementById('bldReqName').value.trim();
+            const group = document.getElementById('bldReqGroup').value;
+            const phone = document.getElementById('bldReqPhone').value.trim();
+            const location = document.getElementById('bldReqLocation').value.trim();
+
+            if (name.length < 2) return showToast('সঠিক নাম দিন', 'circle-x', 'text-rose-400');
+            if (!group) return showToast('রক্তের গ্রুপ নির্বাচন করুন', 'circle-x', 'text-rose-400');
+            if (!/^01[3-9]\d{8}$/.test(phone)) return showToast('সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন', 'circle-x', 'text-rose-400');
+            if (location.length < 3) return showToast('সঠিক এলাকা লিখুন', 'circle-x', 'text-rose-400');
+
+            const btn = document.getElementById('userBloodSubmitBtn');
+            btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> যাচাই করা হচ্ছে...'; refreshIcons();
+
+            try {
+                // Check Daily Limit (Max 2 per day - same as emergency)
+                const startOfDay = new Date();
+                startOfDay.setHours(0, 0, 0, 0);
+                
+                const q = query(
+                    collection(db, 'bloodDonorRequests'),
+                    where('submitterUid', '==', currentUser.uid)
+                );
+                const snap = await getDocs(q);
+                
+                let todayCount = 0;
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    if (data.createdAt) {
+                        const createdAtDate = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt.seconds * 1000);
+                        if (createdAtDate >= startOfDay) {
+                            todayCount++;
+                        }
+                    }
+                });
+
+                if (todayCount >= 2) {
+                    btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> অনুরোধ পাঠান'; refreshIcons();
+                    return showToast('আপনি আজ ইতিমধ্যে ২টি অনুরোধ পাঠিয়েছেন। আগামীকাল আবার চেষ্টা করুন।', 'alert-circle', 'text-rose-400');
+                }
+
+                btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> পাঠানো হচ্ছে...'; refreshIcons();
+
+                await addDoc(collection(db, 'bloodDonorRequests'), {
+                    name,
+                    group,
+                    phone,
+                    location,
+                    submitterUid: currentUser.uid,
+                    submitterName: userProfile?.fullName || '',
+                    submitterPhone: userProfile?.phone || '',
+                    submitterEmail: userProfile?.email || '',
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+                
+                showToast('অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে রক্তদাতা তালিকায় যোগ করবেন।', 'check-circle', 'text-emerald-400');
+                closeUserBloodRequestModal();
             } catch (err) {
                 showToast('পাঠাতে ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
             } finally {
@@ -3186,7 +3336,7 @@
             try {
                 await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
                     sender: 'user', text, time, uid: currentUser.uid, userName: userProfile?.fullName || 'ইউজার', readByUser: true, createdAt: serverTimestamp(),
-                    expiresAt: new Date(Date.now() + 60 * 60 * 1000) // ✅ ১ ঘন্টা TTL
+                    expiresAt: new Date(Date.now() + 60 * 60 * 1000)
                 });
                 input.value = '';
                 setRateLimit('chat');
@@ -3197,7 +3347,7 @@
                         await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
                             sender: 'admin', text: 'অ্যাডমিন অফলাইনে আছেন, শীঘ্রই উত্তর দেবেন।', time,
                             uid: currentUser.uid, userName: 'অ্যাডমিন', readByUser: false, createdAt: serverTimestamp(),
-                            expiresAt: new Date(Date.now() + 60 * 60 * 1000) // ✅ ১ ঘন্টা TTL
+                            expiresAt: new Date(Date.now() + 60 * 60 * 1000)
                         });
                         lsSet(key, String(Date.now()));
                     }
@@ -3413,7 +3563,7 @@
         window.closeAboutModal = () => { document.getElementById('aboutModal').classList.add('hidden'); document.getElementById('aboutModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
         window.openTermsModal = () => { document.getElementById('termsModal').classList.remove('hidden'); document.getElementById('termsModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
         window.closeTermsModal = () => { document.getElementById('termsModal').classList.add('hidden'); document.getElementById('termsModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
-        ['feedbackModal', 'aboutModal', 'termsModal', 'settingsModal', 'providerModal', 'categoryModal', 'userEmergencyRequestModal'].forEach(id => {
+        ['feedbackModal', 'aboutModal', 'termsModal', 'settingsModal', 'providerModal', 'categoryModal', 'userEmergencyRequestModal', 'userBloodRequestModal'].forEach(id => {
             document.getElementById(id)?.addEventListener('click', (e) => {
                 if (e.target.id === id) {
                     if (id === 'feedbackModal') closeFeedbackModal();
@@ -3423,6 +3573,7 @@
                     else if (id === 'providerModal') closeProviderModal();
                     else if (id === 'categoryModal') closeCategoryModal();
                     else if (id === 'userEmergencyRequestModal') closeUserEmergencyRequestModal();
+                    else if (id === 'userBloodRequestModal') closeUserBloodRequestModal();
                 }
             });
         });
@@ -3432,6 +3583,7 @@
                 closeProviderModal(); closeCategoryModal(); closeEditProfileModal();
                 closeSidebar(); closeNotifPanel(); closeSettingsModal(); closeServiceDetailModal();
                 closeUserEmergencyRequestModal();
+                closeUserBloodRequestModal();
             }
         });
 
@@ -3559,7 +3711,6 @@
                         updateNotifBadge();
                         renderNotifications();
 
-                        // ✅ ফেভারিট লোড করা হচ্ছে
                         await loadUserFavorites(); 
                         await loadServiceBatch(true);
 
@@ -3601,7 +3752,7 @@
                     lastActivityTimestamp = null;
                     chatMessages = [];
                     userFavorites = new Set(); favoritesLoaded = false;
-                    favoritesCache = []; // ✅ লগআউটে ফেভারিট ক্লিয়ার
+                    favoritesCache = [];
                     servicesCache = []; servicesLastDoc = null; servicesSeenIds = new Set();
                     servicesHasMore = true; servicesWrapped = false; servicesFirstLoadDone = false; servicesRandomStart = Math.random(); servicesUsingFallback = false;
                     const grid = document.getElementById('servicesGrid'); if (grid) grid.innerHTML = '';

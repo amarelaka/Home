@@ -715,7 +715,6 @@
                 <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-1.5">
                         <h3 class="font-bold text-white text-sm truncate" id="sidebarUserName">অতিথি ব্যবহারকারী</h3>
-                        <!-- ✅ নতুন: প্রিমিয়ামদের জন্য সাইডবারে ব্লু ভেরিফাই ব্যাজ -->
                         <i data-lucide="badge-check" id="sidebarBlueBadge" class="w-4 h-4 fill-blue-500 text-white hidden shrink-0" title="Verified"></i>
                     </div>
                     <p class="text-[11px] text-emerald-300 truncate" id="sidebarUserEmail">লগইন করুন</p>
@@ -725,7 +724,8 @@
         <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-1 hide-scrollbar">
             <button type="button" onclick="sidebarNav('profile')" class="sidebar-item"><i data-lucide="user"></i><span>প্রোফাইল</span></button>
             <button type="button" onclick="sidebarNav('services')" class="sidebar-item"><i data-lucide="layout-grid"></i><span>সকল সেবা সমূহ</span></button>
-            <!-- ✅ নতুন যুক্ত করা প্রিমিয়াম অপশন -->
+            <!-- ✅ নতুন: আমার পছন্দ (My Favorites) অপশন -->
+            <button type="button" onclick="sidebarNav('favorites')" class="sidebar-item"><i data-lucide="heart"></i><span>আমার পছন্দ</span></button>
             <button type="button" onclick="sidebarNav('subscription')" class="sidebar-item"><i data-lucide="crown"></i><span>প্রিমিয়াম</span></button>
             <button type="button" onclick="sidebarNav('emergency')" class="sidebar-item"><i data-lucide="phone-call"></i><span>জরুরী হেল্পলাইন</span></button>
             <button type="button" onclick="sidebarNav('blood')" class="sidebar-item"><i data-lucide="droplet"></i><span>রক্ত</span></button>
@@ -787,13 +787,11 @@
                             <input type="text" id="searchInput" oninput="handleSearch(this)" placeholder="সেবা, হাসপাতাল বা টেকনিশিয়ান খুঁজুন..." class="w-full pl-10 pr-4 py-2 text-sm bg-[#0d2818] text-white border border-emerald-900/50 rounded-full focus:border-emerald-500 outline-none placeholder:text-slate-500">
                             <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-2.5 text-slate-500 pointer-events-none"></i>
                         </div>
-                        <!-- প্লাস বাটন (শুধুমাত্র জরুরি ট্যাবে দেখা যাবে) -->
                         <button id="addEmergencyBtnDesktop" onclick="openUserEmergencyRequestModal()" class="hidden w-9 h-9 shrink-0 bg-gradient-to-br from-emerald-600 to-teal-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/30 transition-transform active:scale-95" title="জরুরি তথ্য যোগ করুন">
                             <i data-lucide="plus" class="w-4 h-4"></i>
                         </button>
                     </div>
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                        <!-- ✅ হেডার থেকে প্রিমিয়াম বাটন সরানো হয়েছে -->
                         <button type="button" onclick="openNotifPanel()" class="top-app-icon-btn" title="নোটিফিকেশন" aria-label="নোটিফিকেশন">
                             <i data-lucide="bell" class="w-5 h-5"></i>
                             <span id="notifBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 ring-2 ring-[#0a1e14]">0</span>
@@ -810,6 +808,9 @@
             <div class="max-w-7xl mx-auto px-3 sm:px-6 flex gap-2 py-2 overflow-x-auto hide-scrollbar w-full">
                 <button id="tab-services" onclick="switchTab('services')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-600/40">
                     <i data-lucide="layout-grid" class="w-4 h-4"></i> নাগরিক সেবা
+                </button>
+                <button id="tab-favorites" onclick="switchTab('favorites')" class="tab-btn px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-emerald-950/60 transition flex items-center gap-2 border border-transparent">
+                    <i data-lucide="heart" class="w-4 h-4 text-rose-400"></i> আমার পছন্দ
                 </button>
                 <button id="tab-emergency" onclick="switchTab('emergency')" class="tab-btn px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-emerald-950/60 transition flex items-center gap-2 border border-transparent">
                     <i data-lucide="phone-call" class="w-4 h-4 text-rose-400"></i> জরুরি হেল্পলাইন
@@ -832,7 +833,6 @@
                     <input type="text" id="searchInputMobile" oninput="handleSearch(this)" placeholder="সেবা, হাসপাতাল বা টেকনিশিয়ান খুঁজুন..." class="w-full pl-10 pr-4 py-3 text-sm bg-[#0d2818] border border-emerald-900/50 text-white rounded-2xl focus:border-emerald-500 outline-none placeholder:text-slate-500">
                     <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500 pointer-events-none"></i>
                 </div>
-                <!-- প্লাস বাটন (শুধুমাত্র জরুরি ট্যাবে দেখা যাবে) -->
                 <button id="addEmergencyBtnMobile" onclick="openUserEmergencyRequestModal()" class="hidden w-12 h-12 shrink-0 bg-gradient-to-br from-emerald-600 to-teal-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-600/30 transition-transform active:scale-95" title="জরুরি তথ্য যোগ করুন">
                     <i data-lucide="plus" class="w-6 h-6"></i>
                 </button>
@@ -880,7 +880,26 @@
                 </div>
             </div>
 
-            <!-- EMERGENCY VIEW (✅ Compact Admin Request Banner) -->
+            <!-- ✅ FAVORITES VIEW (আমার পছন্দ) -->
+            <div id="view-favorites" class="tab-view hidden space-y-4">
+                <div class="flex items-center gap-3 mb-2 px-1 border-b border-emerald-900/40 pb-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/30">
+                        <i data-lucide="heart" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-100">আমার পছন্দ</h2>
+                        <p class="text-[11px] text-slate-400">আপনার সংরক্ষিত সকল সেবার তালিকা</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+                    <span id="favCountText" class="font-medium">লোড হচ্ছে...</span>
+                </div>
+
+                <div id="favoritesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- EMERGENCY VIEW -->
             <div id="view-emergency" class="tab-view hidden space-y-4">
                 <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 border border-emerald-500/40 shadow-xl shadow-emerald-900/40">
                     <div class="absolute inset-0 w-1/3 bg-gradient-to-r from-transparent via-white/8 to-transparent -skew-x-12 animate-[shimmer_3.5s_infinite] pointer-events-none"></div>
@@ -989,7 +1008,7 @@
                 </div>
             </div>
 
-            <!-- SUBSCRIPTION VIEW (✅ আপডেট করা হয়েছে) -->
+            <!-- SUBSCRIPTION VIEW -->
             <div id="view-subscription" class="tab-view hidden space-y-6 pb-10">
                 <div id="currentPlanCard" class="glass-card rounded-2xl p-4 sm:p-5 max-w-2xl mx-auto border-2 border-emerald-500/40">
                     <div class="flex items-start justify-between gap-3">
@@ -1011,7 +1030,6 @@
                     <p class="text-sm text-slate-400 max-w-xs mx-auto">Upgrade your account to unlock exclusive features and support our platform.</p>
                 </div>
 
-                <!-- ✅ নতুন ফিচার কম্পারিজন টেবিল -->
                 <div class="glass-card rounded-2xl p-4 sm:p-5 max-w-2xl mx-auto">
                     <div class="text-center mb-5">
                         <div class="flex items-center justify-center gap-2 mb-1">
@@ -1022,50 +1040,42 @@
                     </div>
                     
                     <div class="space-y-3">
-                        <!-- Table Header -->
                         <div class="grid grid-cols-3 gap-2 pb-2 border-b border-emerald-500/30 text-sm font-bold text-slate-300">
                             <div>ফিচারসমূহ</div>
                             <div class="text-center">ফ্রি</div>
                             <div class="text-center text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">প্রিমিয়াম</div>
                         </div>
                         
-                        <!-- Row 1 -->
                         <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
                             <div class="text-slate-200 font-medium">সেবা যোগ করা</div>
                             <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
                             <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
                         </div>
                         
-                        <!-- Row 2 -->
                         <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
                             <div class="text-slate-200 font-medium">এডমিন চ্যাট</div>
                             <div class="text-center text-slate-400 text-xs">সাধারণ</div>
                             <div class="text-center text-amber-400 text-xs font-bold">উন্নতমানের</div>
                         </div>
                         
-                        <!-- Row 3 -->
                         <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
                             <div class="text-slate-200 font-medium">অ্যাড ব্লক</div>
-                            <!-- ✅ এখানে ফ্রি-এর ঘরেও টিক (✓) দেওয়া হয়েছে -->
                             <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
                             <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
                         </div>
                         
-                        <!-- Row 4 -->
                         <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
                             <div class="text-slate-200 font-medium">প্রমোশন পোস্ট</div>
                             <div class="text-center text-slate-500">—</div>
                             <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
                         </div>
                         
-                        <!-- Row 5 -->
                         <div class="grid grid-cols-3 gap-2 py-2 text-sm border-b border-emerald-900/30 items-center">
                             <div class="text-slate-200 font-medium">প্রোফাইল ভেরিফাইড</div>
                             <div class="text-center text-slate-500">—</div>
                             <div class="text-center text-emerald-400 flex justify-center"><i data-lucide="check" class="w-4 h-4"></i></div>
                         </div>
                         
-                        <!-- Row 6 -->
                         <div class="grid grid-cols-3 gap-2 py-2 text-sm items-center">
                             <div class="text-slate-200 font-medium">ব্লু ভেরিফাই ব্যাজ</div>
                             <div class="text-center text-slate-500">—</div>
@@ -1688,6 +1698,7 @@
         let servicesRequestSeq = 0; 
 
         let userFavorites = new Set();
+        let favoritesCache = []; // ✅ নতুন: ফেভারিট করা সার্ভিসগুলোর ডেটা এখানে থাকবে
         let favoritesLoaded = false;
         let activeServiceId = null;
         let selectedProviderImage = null;
@@ -2024,8 +2035,8 @@
         async function clearOldChatMessages() {
             if (!currentUser || !firebaseReady) return;
             try {
-                const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-                const q = query(collection(db, `chats/${currentUser.uid}/messages`), where('createdAt', '<=', oneDayAgo));
+                const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); // ✅ ১ ঘন্টায় আপডেট করা হলো
+                const q = query(collection(db, `chats/${currentUser.uid}/messages`), where('createdAt', '<=', oneHourAgo));
                 const snap = await getDocs(q);
                 if (snap.empty) return;
                 const batch = writeBatch(db);
@@ -2367,7 +2378,6 @@
                 if (bBadge) bBadge.classList.add('hidden');
                 if (sBadge) sBadge.classList.add('hidden');
             }
-            // Top nav premium button logic removed as requested
             if (nameEl) nameEl.textContent = userProfile.fullName || 'নাগরিক';
             if (emailEl) emailEl.textContent = userProfile.email || '—';
             updateCurrentPlanDisplay();
@@ -2452,7 +2462,7 @@
             if (fab) fab.classList.toggle('active', tabName === 'chat');
             const fabWrap = fab?.closest('.relative');
             if (fabWrap) fabWrap.classList.toggle('active', tabName === 'chat');
-            const showSearch = ['services', 'emergency', 'blood'].includes(tabName);
+            const showSearch = ['services', 'emergency', 'blood', 'favorites'].includes(tabName);
             document.getElementById('searchContainerDesktop')?.classList.toggle('show', showSearch);
             document.getElementById('searchContainerMobile')?.classList.toggle('hidden', !showSearch);
 
@@ -2469,10 +2479,17 @@
 
             const si = document.getElementById('searchInput'); if (si) si.value = '';
             const sm = document.getElementById('searchInputMobile'); if (sm) sm.value = '';
+            
             renderNotices();
             if (tabName === 'subscription' || tabName === 'payment') updateCurrentPlanDisplay();
             if (tabName === 'chat') setTimeout(async () => { await markMessagesAsRead(); updateUnreadBadge(); }, 400);
             else updateUnreadBadge();
+            
+            // ✅ Favorites পেজে ঢোকার সময় ডেটা রিফ্রেশ করা
+            if (tabName === 'favorites') {
+                loadUserFavorites();
+            }
+
             refreshIcons();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
@@ -2488,6 +2505,7 @@
             if (currentTab === 'services') renderServices();
             else if (currentTab === 'emergency') renderEmergency();
             else if (currentTab === 'blood') filterBloodDonors();
+            else if (currentTab === 'favorites') renderFavorites();
         };
         window.filterCategory = (catId) => {
             if (activeCategory === catId) return;
@@ -2597,13 +2615,81 @@
 
         // ========== SERVICES: FAVORITES ==========
         async function loadUserFavorites() {
-            if (!currentUser || !firebaseReady) { userFavorites = new Set(); favoritesLoaded = true; return; }
+            if (!currentUser || !firebaseReady) { 
+                userFavorites = new Set(); 
+                favoritesCache = [];
+                favoritesLoaded = true; 
+                renderFavorites();
+                return; 
+            }
             try {
-                const snap = await getDocs(collection(db, 'users', currentUser.uid, 'favorites'));
-                userFavorites = new Set(snap.docs.map(d => d.id));
-            } catch (e) { console.warn('Load favorites failed', e); userFavorites = new Set(); }
+                const favSnap = await getDocs(collection(db, 'users', currentUser.uid, 'favorites'));
+                const favIds = favSnap.docs.map(d => d.id);
+                userFavorites = new Set(favIds);
+                
+                let favServices = [];
+                if (favIds.length > 0) {
+                    // ✅ ফায়ারবেজের 'in' কোয়েরি একসাথে সর্বোচ্চ ১০টি আইডি নিতে পারে, তাই ১০টি করে চাঙ্ক করা হচ্ছে
+                    for (let i = 0; i < favIds.length; i += 10) {
+                        const chunk = favIds.slice(i, i + 10);
+                        const q = query(collection(db, 'services'), where('__name__', 'in', chunk));
+                        const snap = await getDocs(q);
+                        snap.forEach(doc => {
+                            favServices.push({ id: doc.id, ...doc.data() });
+                        });
+                    }
+                }
+                // ✅ এখানে যেসব সার্ভিস ডেটাবেসে নেই (অ্যাডমিন ডিলিট করেছে) সেগুলো স্বাভাবিকভাবেই বাদ পড়ে যাবে
+                favoritesCache = favServices; 
+            } catch (e) { 
+                console.warn('Load favorites failed', e); 
+                userFavorites = new Set(); 
+                favoritesCache = [];
+            }
             favoritesLoaded = true;
+            renderFavorites();
         }
+
+        function renderFavorites() {
+            const grid = document.getElementById('favoritesGrid');
+            const countEl = document.getElementById('favCountText');
+            if (!grid) return;
+            
+            if (!favoritesLoaded) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10"><i data-lucide="loader-circle" class="w-8 h-8 animate-spin mx-auto text-emerald-500"></i></div>`;
+                if (countEl) countEl.textContent = 'লোড হচ্ছে...';
+                refreshIcons();
+                return;
+            }
+
+            const search = getSearchValue();
+            const filtered = favoritesCache.filter(s => {
+                const matchSearch = !search ||
+                    (s.title || '').toLowerCase().includes(search) ||
+                    (s.description || '').toLowerCase().includes(search) ||
+                    (s.district || '').toLowerCase().includes(search) ||
+                    (s.upazila || '').toLowerCase().includes(search) ||
+                    (s.location || '').toLowerCase().includes(search) ||
+                    (s.providerName || '').toLowerCase().includes(search);
+                return matchSearch;
+            });
+
+            if (countEl) countEl.textContent = `${filtered.length} টি সংরক্ষিত সেবা`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#0d2818] rounded-2xl border border-dashed border-rose-900/50 p-6 space-y-2">
+                    <div class="w-16 h-16 bg-rose-950/60 text-rose-400 rounded-full flex items-center justify-center mx-auto border border-rose-800/60"><i data-lucide="heart-off" class="w-7 h-7"></i></div>
+                    <h3 class="text-sm font-bold text-slate-200">কোনো সংরক্ষিত সেবা নেই</h3>
+                    <p class="text-xs text-slate-400 max-w-sm mx-auto">আপনি এখনো কোনো সেবা "আমার পছন্দ" তালিকায় যুক্ত করেননি। সেবার উপরে থাকা হার্ট আইকনে ক্লিক করে সেভ করুন।</p>
+                </div>`;
+                refreshIcons(); 
+                return;
+            }
+
+            grid.innerHTML = filtered.map(buildServiceCard).join('');
+            refreshIcons();
+        }
+
         window.toggleFavorite = async (serviceId, btnEl) => {
             if (!currentUser) return showToast('ফেভারিট করতে আগে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
@@ -2613,13 +2699,17 @@
                 if (isFav) {
                     await deleteDoc(doc(db, 'users', currentUser.uid, 'favorites', serviceId));
                     userFavorites.delete(serviceId);
+                    favoritesCache = favoritesCache.filter(s => s.id !== serviceId); // লোকাল ক্যাশ থেকেও বাদ
                     showToast('ফেভারিট থেকে সরানো হয়েছে', 'heart-off', 'text-slate-400');
                 } else {
                     await setDoc(doc(db, 'users', currentUser.uid, 'favorites', serviceId), { serviceId, addedAt: serverTimestamp() });
                     userFavorites.add(serviceId);
+                    const srv = servicesCache.find(s => s.id === serviceId); // সার্ভিস ক্যাশ থেকে বের করা
+                    if (srv) favoritesCache.unshift(srv); // লোকাল ক্যাশে যোগ করা
                     showToast('ফেভারিটে যোগ হয়েছে', 'heart', 'text-rose-400');
                 }
                 updateFavoriteUI(serviceId, !isFav);
+                if (currentTab === 'favorites') renderFavorites();
             } catch (e) {
                 showToast('আপডেট ব্যর্থ', 'circle-x', 'text-rose-400');
             } finally { if (btnEl) btnEl.disabled = false; }
@@ -2842,7 +2932,7 @@
 
         // ========== SERVICE DETAIL MODAL ==========
         window.openServiceDetail = (serviceId) => {
-            const service = servicesCache.find(s => s.id === serviceId);
+            const service = servicesCache.find(s => s.id === serviceId) || favoritesCache.find(s => s.id === serviceId);
             if (!service) return;
             activeServiceId = serviceId;
             const title = service.title || 'সেবা';
@@ -3095,7 +3185,8 @@
             btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i>'; refreshIcons();
             try {
                 await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
-                    sender: 'user', text, time, uid: currentUser.uid, userName: userProfile?.fullName || 'ইউজার', readByUser: true, createdAt: serverTimestamp()
+                    sender: 'user', text, time, uid: currentUser.uid, userName: userProfile?.fullName || 'ইউজার', readByUser: true, createdAt: serverTimestamp(),
+                    expiresAt: new Date(Date.now() + 60 * 60 * 1000) // ✅ ১ ঘন্টা TTL
                 });
                 input.value = '';
                 setRateLimit('chat');
@@ -3105,7 +3196,8 @@
                     if (Date.now() - last > 3600000) {
                         await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
                             sender: 'admin', text: 'অ্যাডমিন অফলাইনে আছেন, শীঘ্রই উত্তর দেবেন।', time,
-                            uid: currentUser.uid, userName: 'অ্যাডমিন', readByUser: false, createdAt: serverTimestamp()
+                            uid: currentUser.uid, userName: 'অ্যাডমিন', readByUser: false, createdAt: serverTimestamp(),
+                            expiresAt: new Date(Date.now() + 60 * 60 * 1000) // ✅ ১ ঘন্টা TTL
                         });
                         lsSet(key, String(Date.now()));
                     }
@@ -3467,7 +3559,8 @@
                         updateNotifBadge();
                         renderNotifications();
 
-                        await loadUserFavorites();
+                        // ✅ ফেভারিট লোড করা হচ্ছে
+                        await loadUserFavorites(); 
                         await loadServiceBatch(true);
 
                         if (unsubscribeChat) unsubscribeChat();
@@ -3508,14 +3601,16 @@
                     lastActivityTimestamp = null;
                     chatMessages = [];
                     userFavorites = new Set(); favoritesLoaded = false;
+                    favoritesCache = []; // ✅ লগআউটে ফেভারিট ক্লিয়ার
                     servicesCache = []; servicesLastDoc = null; servicesSeenIds = new Set();
                     servicesHasMore = true; servicesWrapped = false; servicesFirstLoadDone = false; servicesRandomStart = Math.random(); servicesUsingFallback = false;
                     const grid = document.getElementById('servicesGrid'); if (grid) grid.innerHTML = '';
+                    const favGrid = document.getElementById('favoritesGrid'); if (favGrid) favGrid.innerHTML = '';
                     
                     isUserPremium = false;
                     activeCategory = 'all';
 
-                    renderChatMessages(); renderNotifications(); updateNotifBadge(); updateCurrentPlanDisplay();
+                    renderChatMessages(); renderNotifications(); updateNotifBadge(); updateCurrentPlanDisplay(); renderFavorites();
                     showAuthScreen(); switchAuthTab('login');
                 }
             });

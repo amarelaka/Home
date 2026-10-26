@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -1767,7 +1767,13 @@
           appId: "1:84410073493:web:cf26a68ff4073748fe369c",
           measurementId: "G-EHGHRXL28J"
         };
-
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+OneSignalDeferred.push(async function(OneSignal) {
+  await OneSignal.init({
+    appId: "34b3a448-0879-4dce-b8e1-4fc5df7a2066", // আপনার App ID
+    allowLocalhostAsSecureOrigin: true,
+  });
+});
         let app, db, auth, firebaseReady = false;
         try {
             if (firebaseConfig.apiKey && firebaseConfig.apiKey !== 'YOUR_API_KEY') {
@@ -4182,6 +4188,12 @@
                 if (user) {
                     hideAuthScreen();
 
+                    // ✅ OneSignal Login Setup
+                    window.OneSignalDeferred = window.OneSignalDeferred || [];
+                    window.OneSignalDeferred.push(async function(OneSignal) {
+                        await OneSignal.login(user.uid);
+                    });
+
                     try {
                         onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
                             if (docSnap.exists()) { userProfile = docSnap.data(); updateProfileUI(); }
@@ -4257,6 +4269,12 @@
                     
                     isUserPremium = false;
                     activeCategory = 'all';
+
+                    // ✅ OneSignal Logout Setup
+                    window.OneSignalDeferred = window.OneSignalDeferred || [];
+                    window.OneSignalDeferred.push(async function(OneSignal) {
+                        await OneSignal.logout();
+                    });
 
                     renderChatMessages(); renderNotifications(); updateNotifBadge(); updateCurrentPlanDisplay(); renderFavorites();
                     showAuthScreen(); switchAuthTab('login');

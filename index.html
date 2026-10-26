@@ -536,6 +536,21 @@
             flex-shrink: 0 !important;
             margin-bottom: 0 !important;
         }
+
+        /* ===== PROMOTION / AD CARD ===== */
+        .promotion-card { position: relative; display: flex; flex-direction: column; justify-content: space-between; border-radius: 1rem; overflow: hidden; border: 1.5px solid rgba(251,191,36,0.45); background: linear-gradient(145deg, rgba(50,35,10,0.94), rgba(15,10,5,0.96)); transition: border-color .2s, box-shadow .2s, transform .2s; }
+        .promotion-card:hover { border-color: rgba(251,191,36,0.85); box-shadow: 0 8px 28px rgba(251,191,36,0.28); transform: translateY(-2px); }
+        .promo-ad-badge { position: absolute; top: 8px; left: 8px; z-index: 2; background: #000; color: #fbbf24; font-size: 9px; font-weight: 800; letter-spacing: .08em; padding: 2px 7px; border-radius: 6px; border: 1px solid rgba(251,191,36,.6); }
+        .promo-sponsored-badge { position: absolute; top: 8px; right: 8px; z-index: 2; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1c1203; font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 999px; box-shadow: 0 2px 8px rgba(245,158,11,.45); }
+        .promo-type-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; color: #fff; }
+        .promo-cta-small { width: 36px; height: 36px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.35); color: #fbbf24; transition: transform .15s, background .2s; }
+        .promo-cta-small:active { transform: scale(.9); }
+        .promo-cta-main { flex: 1; min-width: 0; height: 36px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; border-radius: 12px; font-size: 12px; font-weight: 700; color: #1c1203; background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 4px 14px rgba(245,158,11,.3); }
+        .promo-type-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px; border-radius: 14px; border: 1.5px solid rgba(255,255,255,.1); background: #051008; color: #cbd5e1; font-size: 11px; font-weight: 700; transition: all .15s; }
+        .promo-type-btn.selected { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 18%, #051008); color: #fff; box-shadow: 0 0 0 2px color-mix(in srgb, var(--pc) 35%, transparent); }
+        .promo-input { width: 100%; background: #051008; border: 1px solid rgba(251,191,36,.25); border-radius: 12px; padding: 10px 12px; font-size: 13px; color: #f1f5f9; outline: none; }
+        .promo-input:focus { border-color: #fbbf24; }
+        .promo-label { display: block; font-size: 11px; font-weight: 700; color: #fcd34d; margin: 0 0 6px 4px; }
     </style>
 </head>
 
@@ -795,6 +810,10 @@
                         </button>
                     </div>
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                        <!-- ✅ নতুন: বেগুনি প্লাস বাটন (প্রিমিয়াম অ্যাকশন) -->
+                        <button type="button" id="headerPlusBtn" onclick="openPremiumActionModal()" class="top-app-icon-btn text-purple-400 hover:bg-purple-500/15" title="প্রিমিয়াম অ্যাকশন" aria-label="প্রিমিয়াম অ্যাকশন">
+                            <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                        </button>
                         <button type="button" onclick="openNotifPanel()" class="top-app-icon-btn" title="নোটিফিকেশন" aria-label="নোটিফিকেশন">
                             <i data-lucide="bell" class="w-5 h-5"></i>
                             <span id="notifBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 ring-2 ring-[#0a1e14]">0</span>
@@ -1599,6 +1618,126 @@
         </div>
     </div>
 
+
+    <!-- ✅ নতুন: PROMOTION FORM MODAL -->
+    <div id="promotionFormModal" class="fixed inset-0 z-[190] bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 modal-sheet-parent hidden overflow-y-auto">
+        <div class="bg-[#1a1206] text-slate-100 rounded-3xl shadow-2xl w-full max-w-lg border border-amber-700/50 modal-sheet my-4 sm:my-0 overflow-hidden flex flex-col max-h-[92dvh]">
+            <div class="bg-gradient-to-r from-amber-700 via-amber-600 to-orange-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-bold text-base flex items-center gap-1.5"><i data-lucide="megaphone" class="w-4 h-4"></i> বিজ্ঞাপন চালান</h3>
+                    <p id="promoStepLabel" class="text-[10px] text-amber-100">ধাপ ১/৪ — প্রমোশনের ধরন</p>
+                </div>
+                <button type="button" onclick="closePromotionFormModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center touch-target"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div class="flex gap-1.5 px-5 pt-3 shrink-0" id="promoStepBar">
+                <div class="h-1 flex-1 rounded-full bg-amber-500"></div><div class="h-1 flex-1 rounded-full bg-white/10"></div><div class="h-1 flex-1 rounded-full bg-white/10"></div><div class="h-1 flex-1 rounded-full bg-white/10"></div>
+            </div>
+            <div class="p-4 sm:p-5 overflow-y-auto flex-1">
+                <!-- Step 1 -->
+                <div id="promoStep1">
+                    <p class="text-xs text-slate-400 mb-3">আপনি কী প্রমোট করতে চান?</p>
+                    <div id="promoTypeGrid" class="grid grid-cols-3 sm:grid-cols-5 gap-2"></div>
+                </div>
+                <!-- Step 2 -->
+                <div id="promoStep2" class="hidden space-y-3.5">
+                    <div>
+                        <label class="promo-label">📷 ছবি *</label>
+                        <div id="promoImageZone" class="img-upload-zone" onclick="document.getElementById('promoImageInput').click()">
+                            <img id="promoImagePreview" src="" class="hidden" alt="">
+                            <div id="promoImagePrompt">
+                                <i data-lucide="image-plus" class="w-7 h-7 text-amber-400 mx-auto mb-1"></i>
+                                <p class="text-xs text-slate-300 font-semibold">ছবি আপলোড করতে ক্লিক করুন</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">JPG/PNG, সর্বোচ্চ ৩MB</p>
+                            </div>
+                        </div>
+                        <input type="file" id="promoImageInput" accept="image/jpeg,image/png" class="hidden" onchange="previewPromoImage(this)">
+                    </div>
+                    <div><label class="promo-label">শিরোনাম * (৩-৮০ অক্ষর)</label><input id="promoTitle" type="text" maxlength="80" class="promo-input" placeholder="যেমন: রহমান টেলিকম — ঈদ অফার"></div>
+                    <div><label class="promo-label">সংক্ষিপ্ত বিবরণ * (৫-১৫০) — কার্ডে দেখাবে <span id="promoShortCount" class="text-slate-500">0/150</span></label><textarea id="promoShortDesc" rows="2" maxlength="150" class="promo-input" placeholder="কার্ডে যা দেখাবে"></textarea></div>
+                    <div><label class="promo-label">বিস্তারিত বর্ণনা * (১০-৬০০) <span id="promoFullCount" class="text-slate-500">0/600</span></label><textarea id="promoFullDesc" rows="4" maxlength="600" class="promo-input" placeholder="বিস্তারিত লিখুন"></textarea></div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div><label class="promo-label">জেলা</label><input id="promoDistrict" type="text" class="promo-input"></div>
+                        <div><label class="promo-label">উপজেলা</label><input id="promoUpazila" type="text" class="promo-input"></div>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div id="promoStep3" class="hidden space-y-3.5"><div id="promoExtraFields" class="space-y-3.5"></div></div>
+                <!-- Step 4 -->
+                <div id="promoStep4" class="hidden space-y-3">
+                    <p class="text-xs text-slate-400">কমপক্ষে ১টি বাটন বেছে নিন</p>
+                    <div id="promoCtaList" class="space-y-2"></div>
+                    <div class="pt-2">
+                        <p class="promo-label">👁️ লাইভ প্রিভিউ</p>
+                        <div id="promoPreviewBox" class="max-w-xs mx-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 pt-3 border-t border-amber-900/40 flex gap-2 shrink-0">
+                <button type="button" id="promoBackBtn" onclick="promoPrevStep()" class="hidden px-4 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm font-bold text-slate-200">পিছনে</button>
+                <button type="button" id="promoNextBtn" onclick="promoNextStep()" class="flex-1 h-11 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-[#1c1203] text-sm font-bold flex items-center justify-center gap-1.5">পরের ধাপ <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                <button type="button" id="promoSubmitBtn" onclick="handlePromotionSubmit()" class="hidden flex-1 h-11 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-[#1c1203] text-sm font-bold flex items-center justify-center gap-1.5"><i data-lucide="send" class="w-4 h-4"></i> বিজ্ঞাপন জমা দিন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ নতুন: PREMIUM ACTION MODAL -->
+    <div id="premiumActionModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
+        <div class="w-full max-w-lg rounded-3xl border border-purple-800/50 bg-[#0d2818] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
+            
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-purple-800 via-fuchsia-800 to-purple-900 p-4 px-5 text-white flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="sparkles" class="w-4 h-4"></i> প্রিমিয়াম অ্যাকশন</h3>
+                    <p class="text-[10px] text-purple-200">আপনার পছন্দমতো অপশন বেছে নিন</p>
+                </div>
+                <button onclick="closePremiumActionModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-4 sm:p-5 overflow-y-auto space-y-4">
+                
+                <!-- Option 1: সেবা যোগ করুন (Free) -->
+                <button onclick="closePremiumActionModal(); openProviderModal();" class="w-full flex items-center justify-between p-4 bg-[#051008] border border-emerald-900/50 hover:border-emerald-500/60 rounded-2xl transition group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="briefcase" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">সেবা যোগ করুন</h4>
+                            <p class="text-[10px] text-slate-400">সেবাদাতা হিসেবে আবেদন করুন</p>
+                        </div>
+                    </div>
+                    <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
+                </button>
+
+                <!-- Option 2: বিজ্ঞাপন চালান (Premium) -->
+                <button onclick="handleRunAdClick()" class="w-full flex items-center justify-between p-4 bg-[#051008] border border-purple-900/50 hover:border-purple-500/60 rounded-2xl transition group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="megaphone" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">বিজ্ঞাপন চালান</h4>
+                            <p class="text-[10px] text-slate-400">আপনার পোস্ট প্রমোট করুন</p>
+                        </div>
+                    </div>
+                    <span class="bg-gradient-to-r from-amber-400 to-orange-500 text-black border border-amber-500/30 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider">প্রিমিয়াম</span>
+                </button>
+
+                <!-- Info Text -->
+                <div class="mt-4 p-4 bg-[#051008] border border-purple-900/40 rounded-2xl space-y-2">
+                    <h4 class="text-sm font-bold text-amber-400 flex items-center gap-1.5">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i> কেন আপনি বিজ্ঞাপন চালাবেন ?
+                    </h4>
+                    <p class="text-[11px] text-slate-300 leading-relaxed text-justify">
+                        আমাদের ওয়েবসাইটে সেবাগুলো রেনডমলি ভাবে হোম পেজে দেখা যায়। এর মানে আপনি এই মাত্র যে সেবাটি দেখেছেন সেটা একটু পর আবার নাও দেখতে পারেন যদি না আপনি সংরক্ষণ করে রাখেন। বিজ্ঞাপনের সুবিধাটি হলো যত বেশি সম্ভব বিজ্ঞাপন করা পোস্টটি হোমপেজে দেখানো। আপনি প্রতিদিন একটি প্রমোশন পোস্ট করতে পারবেন যার মেয়াদ থাকবে ২৪ ঘন্টা অর্থাৎ একদিন। তাহলে আর দেরি কেন এখনই করুন আপনার প্রমোশন পোস্ট।
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div id="toast" class="fixed bottom-24 md:bottom-5 right-3 sm:right-5 left-3 sm:left-auto z-[200] bg-[#0d2818] border border-emerald-700/60 text-white px-4 py-3 rounded-2xl shadow-2xl shadow-emerald-900/40 flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <span id="toastIconWrap" class="shrink-0 flex items-center justify-center"><i data-lucide="circle-check" class="w-5 h-5 text-emerald-400"></i></span>
@@ -1720,6 +1859,8 @@
         let unsubEmergency = null;
         let unsubBlood = null;
         let unsubNotices = null;
+        let unsubPromotions = null;
+        let promotionsCache = [];
 
         let chatInitialLoadDone = false;
         let heartbeatInterval = null;
@@ -1735,7 +1876,7 @@
         let isUserPremium = false;
         let isAdminOnline = false;
         const PLAN_DAYS_MAP = { '1 Month':30,'2 Months':60,'3 Months':90,'6 Months':180,'12 Months':365 };
-        const RATE_LIMITS = { chat: 1000, feedback: 60000, provider: 300000, subscription: 60000 };
+        const RATE_LIMITS = { chat: 1000, feedback: 60000, provider: 300000, subscription: 60000, promotion: 86400000 };
         const CHAT_READ_MAX = 500;
 
         const SERVICES_BATCH_SIZE = 12;
@@ -2906,6 +3047,334 @@
             }
         }
 
+
+        // ========== PROMOTIONS / ADS ==========
+        const PROMO_TYPES = {
+            youtube:   { label: 'YouTube',   icon: 'circle-play',  color: '#ef4444' },
+            facebook:  { label: 'Facebook',  icon: 'thumbs-up',    color: '#3b82f6' },
+            tiktok:    { label: 'TikTok',    icon: 'music',        color: '#ec4899' },
+            instagram: { label: 'Instagram', icon: 'camera',       color: '#d946ef' },
+            telegram:  { label: 'Telegram',  icon: 'send',         color: '#0ea5e9' },
+            shop:      { label: 'দোকান',     icon: 'store',        color: '#f97316' },
+            product:   { label: 'পণ্য',      icon: 'shopping-bag', color: '#22c55e' },
+            car:       { label: 'গাড়ি',     icon: 'car',          color: '#6366f1' },
+            service:   { label: 'সার্ভিস',    icon: 'wrench',       color: '#14b8a6' },
+            other:     { label: 'অন্যান্য',   icon: 'sparkles',     color: '#94a3b8' }
+        };
+        const PROMO_EXTRA_FIELDS = {
+            youtube:   [{ k: 'channelUrl', l: 'চ্যানেল লিংক', req: 1, url: 1 }, { k: 'subscriberCount', l: 'সাবস্ক্রাইবার সংখ্যা' }, { k: 'category', l: 'ক্যাটাগরি' }],
+            facebook:  [{ k: 'pageUrl', l: 'পেজ লিংক', req: 1, url: 1 }, { k: 'followerCount', l: 'ফলোয়ার সংখ্যা' }, { k: 'category', l: 'ক্যাটাগরি' }],
+            tiktok:    [{ k: 'profileUrl', l: 'প্রোফাইল লিংক', req: 1, url: 1 }, { k: 'followerCount', l: 'ফলোয়ার সংখ্যা' }, { k: 'contentType', l: 'কনটেন্টের ধরন' }],
+            instagram: [{ k: 'profileUrl', l: 'প্রোফাইল লিংক', req: 1, url: 1 }, { k: 'followerCount', l: 'ফলোয়ার সংখ্যা' }, { k: 'category', l: 'ক্যাটাগরি' }],
+            telegram:  [{ k: 'channelUrl', l: 'চ্যানেল/গ্রুপ লিংক', req: 1, url: 1 }, { k: 'memberCount', l: 'মেম্বার সংখ্যা' }, { k: 'category', l: 'ক্যাটাগরি' }],
+            shop:      [{ k: 'shopAddress', l: 'দোকানের ঠিকানা', req: 1 }, { k: 'openingHours', l: 'খোলার সময়' }, { k: 'businessType', l: 'ব্যবসার ধরন' }],
+            product:   [{ k: 'price', l: 'মূল্য (৳)', req: 1, num: 1 }, { k: 'discount', l: 'ডিসকাউন্ট' }, { k: 'productType', l: 'পণ্যের ধরন' }],
+            car:       [{ k: 'model', l: 'মডেল', req: 1 }, { k: 'year', l: 'সাল' }, { k: 'price', l: 'মূল্য (৳)', req: 1, num: 1 }, { k: 'condition', l: 'অবস্থা (নতুন/ব্যবহৃত)' }],
+            service:   [{ k: 'serviceType', l: 'সার্ভিসের ধরন', req: 1 }, { k: 'serviceTime', l: 'সার্ভিসের সময়' }],
+            other:     []
+        };
+        const PROMO_CTA_OPTIONS = {
+            call:      { label: '📞 কল করুন',  icon: 'phone',          kind: 'phone', ph: '01XXXXXXXXX', btn: 'কল করুন' },
+            website:   { label: '🌐 ওয়েবসাইট', icon: 'globe',          kind: 'url',   ph: 'https://...', btn: 'ওয়েবসাইটে যান' },
+            whatsapp:  { label: '💬 WhatsApp',  icon: 'message-circle', kind: 'phone', ph: '01XXXXXXXXX', btn: 'WhatsApp-এ মেসেজ' },
+            facebook:  { label: '📘 Facebook',  icon: 'thumbs-up',      kind: 'url',   ph: 'https://facebook.com/...', btn: 'Facebook-এ যান' },
+            youtube:   { label: '📺 YouTube',   icon: 'circle-play',    kind: 'url',   ph: 'https://youtube.com/...', btn: 'YouTube-এ দেখুন' },
+            tiktok:    { label: '🎵 TikTok',    icon: 'music',          kind: 'url',   ph: 'https://tiktok.com/...', btn: 'TikTok-এ দেখুন' },
+            instagram: { label: '📷 Instagram', icon: 'camera',         kind: 'url',   ph: 'https://instagram.com/...', btn: 'Instagram-এ যান' },
+            telegram:  { label: '✈️ Telegram',  icon: 'send',           kind: 'url',   ph: 'https://t.me/...', btn: 'Telegram-এ যোগ দিন' },
+            custom:    { label: '🔗 কাস্টম বাটন', icon: 'link',         kind: 'custom', btn: 'দেখুন' }
+        };
+        const PROMO_STEP_LABELS = ['প্রমোশনের ধরন', 'সাধারণ তথ্য', 'অতিরিক্ত তথ্য', 'বাটন ও প্রিভিউ'];
+        let promoStep = 1, promoType = null, promoImageFile = null, promoImageObjUrl = '', promoCtaChecked = new Set(), promoSubmitting = false;
+
+        const isHttpUrl = (v) => /^https?:\/\/\S+$/i.test(String(v || '').trim());
+        const isBdPhone = (v) => /^01[3-9]\d{8}$/.test(String(v || '').trim());
+
+        function renderPromoTypeGrid() {
+            const g = document.getElementById('promoTypeGrid'); if (!g) return;
+            g.innerHTML = Object.entries(PROMO_TYPES).map(([k, t]) => `<button type="button" class="promo-type-btn ${promoType === k ? 'selected' : ''}" style="--pc:${t.color}" onclick="selectPromoType('${k}')"><span class="w-9 h-9 rounded-xl flex items-center justify-center text-white" style="background:${t.color}"><i data-lucide="${t.icon}" class="w-4 h-4"></i></span>${esc(t.label)}</button>`).join('');
+            refreshIcons();
+        }
+        window.selectPromoType = (k) => {
+            if (!PROMO_TYPES[k]) return;
+            promoType = k; renderPromoTypeGrid(); renderPromoExtraFields();
+        };
+        function renderPromoExtraFields() {
+            const box = document.getElementById('promoExtraFields'); if (!box) return;
+            const fields = PROMO_EXTRA_FIELDS[promoType] || [];
+            if (!promoType || fields.length === 0) { box.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">${promoType ? 'এই ধরনের জন্য অতিরিক্ত তথ্য লাগবে না। পরের ধাপে যান।' : 'প্রথমে প্রমোশনের ধরন বেছে নিন।'}</p>`; return; }
+            const prev = {}; fields.forEach(f => { const el = document.getElementById('pxf_' + f.k); if (el) prev[f.k] = el.value; });
+            box.innerHTML = fields.map(f => `<div><label class="promo-label">${esc(f.l)}${f.req ? ' *' : ''}</label><input id="pxf_${f.k}" type="${f.num ? 'number' : (f.url ? 'url' : 'text')}" ${f.num ? 'min="0" inputmode="numeric"' : ''} class="promo-input" value="${esc(prev[f.k] || '')}" ${f.url ? 'placeholder="https://..."' : ''}></div>`).join('');
+        }
+        function collectPromoExtra() {
+            const out = {}; (PROMO_EXTRA_FIELDS[promoType] || []).forEach(f => { out[f.k] = (document.getElementById('pxf_' + f.k)?.value || '').trim(); }); return out;
+        }
+        function renderPromoCtaList() {
+            const box = document.getElementById('promoCtaList'); if (!box) return;
+            box.innerHTML = Object.entries(PROMO_CTA_OPTIONS).map(([k, o]) => `<div class="rounded-xl border border-amber-900/40 bg-[#051008] p-2.5">
+                <label class="flex items-center gap-2.5 cursor-pointer text-sm font-semibold text-slate-200"><input type="checkbox" class="accent-amber-500 w-4 h-4" id="pcta_chk_${k}" onchange="togglePromoCta('${k}', this.checked)"> ${o.label}</label>
+                <div id="pcta_wrap_${k}" class="hidden mt-2 space-y-2">${o.kind === 'custom'
+                    ? `<input id="pcta_custom_label" class="promo-input" maxlength="20" placeholder="বাটনের লেখা (যেমন: অফার দেখুন)"><input id="pcta_custom_url" class="promo-input" placeholder="https://...">`
+                    : `<input id="pcta_val_${k}" class="promo-input" ${o.kind === 'phone' ? 'inputmode="tel"' : ''} placeholder="${esc(o.ph)}">`}</div></div>`).join('');
+            box.querySelectorAll('input.promo-input').forEach(i => i.addEventListener('input', updatePromoPreview));
+        }
+        window.togglePromoCta = (k, on) => {
+            if (on) promoCtaChecked.add(k); else promoCtaChecked.delete(k);
+            document.getElementById('pcta_wrap_' + k)?.classList.toggle('hidden', !on);
+            updatePromoPreview();
+        };
+        function collectPromoCtas(strict) {
+            const cta = {};
+            if (promoCtaChecked.size === 0) { if (strict) throw new Error('কমপক্ষে ১টি বাটন বেছে নিন'); return cta; }
+            for (const k of promoCtaChecked) {
+                const o = PROMO_CTA_OPTIONS[k];
+                if (k === 'custom') {
+                    const label = (document.getElementById('pcta_custom_label')?.value || '').trim();
+                    const url = (document.getElementById('pcta_custom_url')?.value || '').trim();
+                    if (strict) { if (label.length < 2) throw new Error('কাস্টম বাটনের লেখা দিন'); if (!isHttpUrl(url)) throw new Error('কাস্টম বাটনের সঠিক লিংক দিন (http/https)'); }
+                    if (label && isHttpUrl(url)) cta.custom = { label, url };
+                    continue;
+                }
+                const v = (document.getElementById('pcta_val_' + k)?.value || '').trim();
+                if (strict) {
+                    if (o.kind === 'phone' && !isBdPhone(v)) throw new Error(`${o.btn}: সঠিক মোবাইল নম্বর দিন`);
+                    if (o.kind === 'url' && !isHttpUrl(v)) throw new Error(`${o.btn}: সঠিক লিংক দিন (http/https)`);
+                }
+                if (v) cta[k] = v;
+            }
+            return cta;
+        }
+        window.previewPromoImage = (input) => {
+            const f = input.files && input.files[0]; if (!f) return;
+            if (!/^image\/(jpeg|png)$/i.test(f.type)) { input.value = ''; return showToast('শুধু JPG/PNG ছবি দিন', 'circle-x', 'text-rose-400'); }
+            if (f.size > 3 * 1024 * 1024) { input.value = ''; return showToast('ছবি সর্বোচ্চ ৩MB হতে পারবে', 'circle-x', 'text-rose-400'); }
+            promoImageFile = f;
+            if (promoImageObjUrl) URL.revokeObjectURL(promoImageObjUrl);
+            promoImageObjUrl = URL.createObjectURL(f);
+            const img = document.getElementById('promoImagePreview'); img.src = promoImageObjUrl; img.classList.remove('hidden');
+            document.getElementById('promoImagePrompt').classList.add('hidden');
+            document.getElementById('promoImageZone').classList.add('has-image');
+        };
+        function draftPromotion() {
+            return {
+                type: promoType || 'other',
+                title: document.getElementById('promoTitle')?.value.trim() || 'আপনার বিজ্ঞাপনের শিরোনাম',
+                shortDescription: document.getElementById('promoShortDesc')?.value.trim() || 'সংক্ষিপ্ত বিবরণ এখানে দেখাবে',
+                userName: userProfile?.fullName || 'বিজ্ঞাপনদাতা',
+                district: document.getElementById('promoDistrict')?.value.trim() || '',
+                upazila: document.getElementById('promoUpazila')?.value.trim() || '',
+                image: promoImageObjUrl, cta: collectPromoCtas(false)
+            };
+        }
+        function updatePromoPreview() {
+            const box = document.getElementById('promoPreviewBox'); if (!box) return;
+            box.innerHTML = buildPromotionCard(draftPromotion(), true); refreshIcons();
+        }
+
+        function setPromoStep(n) {
+            promoStep = n;
+            for (let i = 1; i <= 4; i++) document.getElementById('promoStep' + i)?.classList.toggle('hidden', i !== n);
+            document.getElementById('promoStepLabel').textContent = `ধাপ ${n}/৪ — ${PROMO_STEP_LABELS[n - 1]}`;
+            document.querySelectorAll('#promoStepBar > div').forEach((d, i) => { d.classList.toggle('bg-amber-500', i < n); d.classList.toggle('bg-white/10', i >= n); });
+            document.getElementById('promoBackBtn').classList.toggle('hidden', n === 1);
+            document.getElementById('promoNextBtn').classList.toggle('hidden', n === 4);
+            document.getElementById('promoSubmitBtn').classList.toggle('hidden', n !== 4);
+            if (n === 3) renderPromoExtraFields();
+            if (n === 4) updatePromoPreview();
+            document.querySelector('#promotionFormModal .overflow-y-auto')?.scrollTo?.(0, 0);
+            refreshIcons();
+        }
+        function validatePromoStep(n) {
+            const bad = (m) => { showToast(m, 'circle-x', 'text-rose-400'); return false; };
+            if (n === 1) return promoType ? true : bad('প্রমোশনের ধরন বেছে নিন');
+            if (n === 2) {
+                const t = document.getElementById('promoTitle').value.trim(), s = document.getElementById('promoShortDesc').value.trim(), d = document.getElementById('promoFullDesc').value.trim();
+                if (!promoImageFile) return bad('ছবি আপলোড করুন');
+                if (t.length < 3 || t.length > 80) return bad('শিরোনাম ৩-৮০ অক্ষরের হতে হবে');
+                if (s.length < 5 || s.length > 150) return bad('সংক্ষিপ্ত বিবরণ ৫-১৫০ অক্ষরের হতে হবে');
+                if (d.length < 10 || d.length > 600) return bad('বিস্তারিত বর্ণনা ১০-৬০০ অক্ষরের হতে হবে');
+                return true;
+            }
+            if (n === 3) {
+                const ex = collectPromoExtra();
+                for (const f of (PROMO_EXTRA_FIELDS[promoType] || [])) {
+                    const v = ex[f.k];
+                    if (f.req && !v) return bad(`${f.l} দিন`);
+                    if (f.url && v && !isHttpUrl(v)) return bad(`${f.l} সঠিক নয় (http/https দিয়ে শুরু করুন)`);
+                    if (f.num && v && !(Number(v) >= 0)) return bad(`${f.l} সঠিক সংখ্যা দিন`);
+                }
+                return true;
+            }
+            return true;
+        }
+        window.promoNextStep = () => { if (validatePromoStep(promoStep)) setPromoStep(Math.min(4, promoStep + 1)); };
+        window.promoPrevStep = () => setPromoStep(Math.max(1, promoStep - 1));
+
+        async function getPromoServerCooldownMs() {
+            try {
+                if (!firebaseReady || !currentUser) return 0;
+                const snap = await getDocs(query(collection(db, 'promotions'), where('uid', '==', currentUser.uid)));
+                let last = 0;
+                snap.forEach(d => { const c = d.data().createdAt; const ms = c && typeof c.toDate === 'function' ? c.toDate().getTime() : 0; if (ms > last) last = ms; });
+                return last ? Math.max(0, RATE_LIMITS.promotion - (Date.now() - last)) : 0;
+            } catch (e) { return 0; }
+        }
+        function formatPromoWait(ms) { const h = Math.floor(ms / 3600000), m = Math.ceil((ms % 3600000) / 60000); return h > 0 ? `${h} ঘণ্টা ${m} মিনিট` : `${m} মিনিট`; }
+
+        window.openPromotionFormModal = async () => {
+            if (!currentUser || !userProfile) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            const rate = checkRateLimit('promotion');
+            if (!rate.allowed) return showToast(`২৪ ঘণ্টায় ১টি বিজ্ঞাপন দেওয়া যায়। ${formatPromoWait(rate.remaining * 1000)} পর আবার চেষ্টা করুন`, 'clock', 'text-amber-400');
+            const wait = await getPromoServerCooldownMs();
+            if (wait > 0) return showToast(`২৪ ঘণ্টায় ১টি বিজ্ঞাপন দেওয়া যায়। ${formatPromoWait(wait)} পর আবার চেষ্টা করুন`, 'clock', 'text-amber-400');
+            promoType = null; promoImageFile = null; promoCtaChecked = new Set();
+            if (promoImageObjUrl) { URL.revokeObjectURL(promoImageObjUrl); promoImageObjUrl = ''; }
+            ['promoTitle', 'promoShortDesc', 'promoFullDesc'].forEach(id => { document.getElementById(id).value = ''; });
+            document.getElementById('promoDistrict').value = userProfile.district || '';
+            document.getElementById('promoUpazila').value = userProfile.upazila || '';
+            document.getElementById('promoImagePreview').classList.add('hidden');
+            document.getElementById('promoImagePrompt').classList.remove('hidden');
+            document.getElementById('promoImageZone').classList.remove('has-image');
+            document.getElementById('promoImageInput').value = '';
+            const sc = document.getElementById('promoShortDesc'), fc = document.getElementById('promoFullDesc');
+            sc.oninput = () => { document.getElementById('promoShortCount').textContent = `${sc.value.length}/150`; };
+            fc.oninput = () => { document.getElementById('promoFullCount').textContent = `${fc.value.length}/600`; };
+            sc.oninput(); fc.oninput();
+            ['promoTitle', 'promoShortDesc', 'promoDistrict', 'promoUpazila'].forEach(id => { document.getElementById(id).addEventListener('input', () => { if (promoStep === 4) updatePromoPreview(); }); });
+            renderPromoTypeGrid(); renderPromoExtraFields(); renderPromoCtaList(); setPromoStep(1);
+            document.getElementById('promotionFormModal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            refreshIcons();
+        };
+        window.closePromotionFormModal = () => {
+            const m = document.getElementById('promotionFormModal'); if (!m || m.classList.contains('hidden')) return;
+            m.classList.add('hidden'); document.body.classList.remove('overflow-hidden');
+        };
+        window.handleRunAdClick = () => {
+            closePremiumActionModal();
+            if (!isUserPremium) {
+                showToast('বিজ্ঞাপন চালাতে প্রিমিয়াম সাবস্ক্রিপশন কিনতে হবে', 'crown', 'text-amber-400');
+                setTimeout(() => switchTab('subscription'), 800);
+                return;
+            }
+            openPromotionFormModal();
+        };
+        window.handlePromotionSubmit = async () => {
+            if (promoSubmitting) return;
+            if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
+            if (!isUserPremium) return showToast('প্রিমিয়াম সাবস্ক্রিপশন প্রয়োজন', 'crown', 'text-amber-400');
+            const rate = checkRateLimit('promotion');
+            if (!rate.allowed) return showToast('২৪ ঘণ্টায় ১টি বিজ্ঞাপন দেওয়া যায়', 'clock', 'text-amber-400');
+            for (let i = 1; i <= 3; i++) if (!validatePromoStep(i)) return setPromoStep(i);
+            let cta; try { cta = collectPromoCtas(true); } catch (e) { return showToast(e.message, 'circle-x', 'text-rose-400'); }
+            const btn = document.getElementById('promoSubmitBtn');
+            promoSubmitting = true; btn.disabled = true; btn.classList.add('opacity-60');
+            try {
+                btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> ছবি আপলোড...'; refreshIcons();
+                const imageUrl = await uploadToCloudinary(promoImageFile);
+                btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> পাঠানো হচ্ছে...'; refreshIcons();
+                await addDoc(collection(db, 'promotions'), {
+                    uid: currentUser.uid,
+                    userName: userProfile?.fullName || '', userPhone: userProfile?.phone || '', userEmail: userProfile?.email || currentUser.email || '',
+                    type: promoType,
+                    title: document.getElementById('promoTitle').value.trim(),
+                    shortDescription: document.getElementById('promoShortDesc').value.trim(),
+                    fullDescription: document.getElementById('promoFullDesc').value.trim(),
+                    image: imageUrl,
+                    district: document.getElementById('promoDistrict').value.trim(),
+                    upazila: document.getElementById('promoUpazila').value.trim(),
+                    extraFields: collectPromoExtra(),
+                    cta,
+                    status: 'pending', createdAt: serverTimestamp(), reviewedAt: null, expiresAt: null, rejectionReason: null
+                });
+                setRateLimit('promotion');
+                showToast('বিজ্ঞাপন জমা হয়েছে! অ্যাডমিন অনুমোদনের অপেক্ষায়।', 'circle-check', 'text-emerald-400');
+                closePromotionFormModal();
+            } catch (err) {
+                showToast('জমা ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
+            } finally {
+                promoSubmitting = false; btn.disabled = false; btn.classList.remove('opacity-60');
+                btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> বিজ্ঞাপন জমা দিন'; refreshIcons();
+            }
+        };
+
+        function promoCtaHref(k, v) {
+            if (k === 'call') return 'tel:' + String(v).replace(/[^0-9+]/g, '');
+            if (k === 'whatsapp') { let d = String(v).replace(/[^0-9]/g, ''); if (d.startsWith('0')) d = '88' + d; return 'https://wa.me/' + d; }
+            if (k === 'custom') return isHttpUrl(v.url) ? v.url : '';
+            return isHttpUrl(v) ? v : '';
+        }
+        function getPromoPrimaryCTA(promo) {
+            const cta = promo.cta || {};
+            const has = (k) => k === 'custom' ? !!(cta.custom && cta.custom.label && promoCtaHref('custom', cta.custom)) : !!(cta[k] && promoCtaHref(k, cta[k]));
+            const typeMatch = ['youtube', 'facebook', 'tiktok', 'instagram', 'telegram'].includes(promo.type) ? promo.type : null;
+            const order = ['custom', typeMatch, 'call', 'website', 'whatsapp', 'facebook', 'youtube', 'tiktok', 'instagram', 'telegram'].filter(Boolean);
+            const key = order.find(has);
+            if (!key) return null;
+            return { key, label: key === 'custom' ? cta.custom.label : PROMO_CTA_OPTIONS[key].btn, icon: PROMO_CTA_OPTIONS[key].icon, href: promoCtaHref(key, key === 'custom' ? cta.custom : cta[key]) };
+        }
+        function buildPromotionCard(promo, preview = false) {
+            const t = PROMO_TYPES[promo.type] || PROMO_TYPES.other;
+            const loc = esc([promo.upazila, promo.district].filter(Boolean).join(', ') || '—');
+            const img = /^(https?:|blob:)/i.test(promo.image || '') ? promo.image : '';
+            const primary = getPromoPrimaryCTA(promo);
+            const cta = promo.cta || {};
+            const smallKeys = ['call', 'website', 'whatsapp', 'facebook', 'youtube', 'tiktok', 'instagram', 'telegram', 'custom'].filter(k => k !== (primary && primary.key) && (k === 'custom' ? (cta.custom && promoCtaHref('custom', cta.custom)) : (cta[k] && promoCtaHref(k, cta[k])))).slice(0, 3);
+            const link = (href, cls, inner, title) => preview ? `<span class="${cls}" title="${esc(title || '')}">${inner}</span>` : `<a href="${esc(href)}" ${href.startsWith('tel:') ? '' : 'target="_blank" rel="noopener noreferrer"'} onclick="event.stopPropagation()" class="${cls}" title="${esc(title || '')}">${inner}</a>`;
+            const smalls = smalls_(smallKeys);
+            function smalls_(keys) { return keys.map(k => link(promoCtaHref(k, k === 'custom' ? cta.custom : cta[k]), 'promo-cta-small', `<i data-lucide="${PROMO_CTA_OPTIONS[k].icon}" class="w-4 h-4"></i>`, k === 'custom' ? cta.custom.label : PROMO_CTA_OPTIONS[k].btn)).join(''); }
+            return `<div class="promotion-card" data-promo-id="${esc(promo.id || '')}">
+                <div>
+                    <div class="h-40 bg-[#0f0a03] overflow-hidden relative">
+                        ${img ? `<img src="${esc(img)}" alt="${esc(promo.title || '')}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-900/40 to-orange-900/20"><i data-lucide="megaphone" class="w-10 h-10 text-amber-400/60"></i></div>`}
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#1a1206]/85 via-transparent to-transparent pointer-events-none"></div>
+                        <span class="promo-ad-badge">AD</span>
+                        <span class="promo-sponsored-badge">⭐ স্পন্সরড</span>
+                    </div>
+                    <div class="p-4">
+                        <span class="promo-type-tag mb-1.5" style="background:${t.color}"><i data-lucide="${t.icon}" class="w-3 h-3"></i> ${esc(t.label)}</span>
+                        <h4 class="font-bold text-slate-100 text-sm sm:text-base leading-snug mb-1.5">${esc(promo.title || '')}</h4>
+                        <p class="text-[11px] text-amber-300 font-bold mb-1.5 flex items-center gap-1 truncate"><i data-lucide="megaphone" class="w-3 h-3 shrink-0"></i> বিজ্ঞাপনদাতা: ${esc(promo.userName || 'অজানা')}</p>
+                        <p class="text-[11px] text-slate-400 mb-2 flex items-center gap-1 truncate"><i data-lucide="map-pin" class="w-3 h-3 text-rose-400 shrink-0"></i> ${loc}</p>
+                        <p class="text-xs text-slate-300 line-clamp-2">${esc(promo.shortDescription || '')}</p>
+                    </div>
+                </div>
+                <div class="p-3 pt-0 flex items-center gap-1.5">
+                    ${smalls}
+                    ${primary ? link(primary.href, 'promo-cta-main', `<i data-lucide="${primary.icon}" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">${esc(primary.label)}</span>`, primary.label) : ''}
+                </div>
+            </div>`;
+        }
+        function promoTimeMs(v) { return v && typeof v.toDate === 'function' ? v.toDate().getTime() : (v ? new Date(v).getTime() : 0); }
+        function getActivePromotions() {
+            const now = Date.now();
+            return promotionsCache.filter(p => p.status === 'approved' && promoTimeMs(p.expiresAt) > now)
+                .sort((a, b) => promoTimeMs(b.reviewedAt) - promoTimeMs(a.reviewedAt));
+        }
+        // প্যাটার্ন: AD, S1, S2, S3, AD, S4, S5, S6, AD, ... (বিজ্ঞাপন শেষ হলে শুধু সেবা)
+        function mixAdsWithServices(services, search) {
+            const cards = services.map(buildServiceCard);
+            if (search) return cards;
+            const ads = getActivePromotions().map(buildPromotionCard);
+            if (!ads.length) return cards;
+            const out = []; let ai = 0, si = 0;
+            while (si < cards.length || ai < ads.length) {
+                if (ai < ads.length) out.push(ads[ai++]);
+                for (let k = 0; k < 3 && si < cards.length; k++) out.push(cards[si++]);
+                if (ai >= ads.length) { while (si < cards.length) out.push(cards[si++]); }
+            }
+            return out;
+        }
+        // মেয়াদ শেষ হলে ক্লায়েন্ট সাইডে অটো-হাইড
+        let lastActivePromoCount = -1;
+        setInterval(() => {
+            if (!promotionsCache.length) return;
+            const n = getActivePromotions().length;
+            if (lastActivePromoCount !== -1 && n !== lastActivePromoCount && currentTab === 'services') renderServices();
+            lastActivePromoCount = n;
+        }, 60000);
+
         // ========== SERVICES: RENDER CARDS ==========
         function buildServiceCard(item) {
             const id = esc(item.id);
@@ -2978,14 +3447,15 @@
             if (count) count.textContent = filtered.length === servicesCache.length ? `${filtered.length} টি সেবা` : `${filtered.length} / ${servicesCache.length} টি`;
             if (!servicesFirstLoadDone) return;
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#0d2818] rounded-2xl border border-dashed border-emerald-900/50 p-6 space-y-2">
+                const _adsOnly = search ? '' : getActivePromotions().map(buildPromotionCard).join('');
+                grid.innerHTML = _adsOnly + `<div class="col-span-full text-center py-10 bg-[#0d2818] rounded-2xl border border-dashed border-emerald-900/50 p-6 space-y-2">
                     <div class="w-16 h-16 bg-emerald-950/60 text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-800/60"><i data-lucide="folder-open" class="w-7 h-7"></i></div>
                     <h3 class="text-sm font-bold text-slate-200">কোনো সেবা পাওয়া যায়নি</h3>
                     <p class="text-xs text-slate-400 max-w-sm mx-auto">${activeCategory !== 'all' ? 'অন্য ক্যাটাগরি বেছে নিন বা "সকল সেবা" দেখুন।' : 'অ্যাডমিন সেবা অনুমোদন করলে এখানে দেখা যাবে।'}</p>
                 </div>`;
                 refreshIcons(); return;
             }
-            grid.innerHTML = filtered.map(buildServiceCard).join('');
+            grid.innerHTML = mixAdsWithServices(filtered, search).join('');
             refreshIcons();
         }
 
@@ -3563,7 +4033,23 @@
         window.closeAboutModal = () => { document.getElementById('aboutModal').classList.add('hidden'); document.getElementById('aboutModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
         window.openTermsModal = () => { document.getElementById('termsModal').classList.remove('hidden'); document.getElementById('termsModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
         window.closeTermsModal = () => { document.getElementById('termsModal').classList.add('hidden'); document.getElementById('termsModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
-        ['feedbackModal', 'aboutModal', 'termsModal', 'settingsModal', 'providerModal', 'categoryModal', 'userEmergencyRequestModal', 'userBloodRequestModal'].forEach(id => {
+        
+        // ✅ নতুন: Premium Action Modal Logic
+        window.openPremiumActionModal = () => {
+            if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            const m = document.getElementById('premiumActionModal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+            refreshIcons();
+        };
+
+        window.closePremiumActionModal = () => {
+            const m = document.getElementById('premiumActionModal');
+            m.classList.add('hidden'); m.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        };
+
+        ['feedbackModal', 'aboutModal', 'termsModal', 'settingsModal', 'providerModal', 'categoryModal', 'userEmergencyRequestModal', 'userBloodRequestModal', 'premiumActionModal'].forEach(id => {
             document.getElementById(id)?.addEventListener('click', (e) => {
                 if (e.target.id === id) {
                     if (id === 'feedbackModal') closeFeedbackModal();
@@ -3574,6 +4060,7 @@
                     else if (id === 'categoryModal') closeCategoryModal();
                     else if (id === 'userEmergencyRequestModal') closeUserEmergencyRequestModal();
                     else if (id === 'userBloodRequestModal') closeUserBloodRequestModal();
+                    else if (id === 'premiumActionModal') closePremiumActionModal();
                 }
             });
         });
@@ -3584,6 +4071,8 @@
                 closeSidebar(); closeNotifPanel(); closeSettingsModal(); closeServiceDetailModal();
                 closeUserEmergencyRequestModal();
                 closeUserBloodRequestModal();
+                closePremiumActionModal(); // ✅ new
+                closePromotionFormModal();
             }
         });
 
@@ -3613,6 +4102,13 @@
         function attachRealtimeListeners() {
             if (!firebaseReady) return;
             
+            if (unsubPromotions) unsubPromotions();
+            unsubPromotions = onSnapshot(query(collection(db, 'promotions'), where('status', '==', 'approved')), snap => {
+                promotionsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                lastActivePromoCount = getActivePromotions().length;
+                if (typeof renderServices === 'function' && servicesFirstLoadDone) renderServices();
+            }, err => console.warn('promotions listener:', err.code || err.message));
+
             if (unsubCategories) unsubCategories();
             unsubCategories = onSnapshot(collection(db, 'categories'), snap => {
                 const adminCats = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -3743,8 +4239,9 @@
                     userProfile = null; currentUser = null; chatInitialLoadDone = false;
                     if (unsubscribeChat) { unsubscribeChat(); unsubscribeChat = null; }
                     if (unsubscribeAdminStatus) { unsubscribeAdminStatus(); unsubscribeAdminStatus = null; }
-                    [unsubCategories, unsubEmergency, unsubBlood, unsubNotices].forEach(fn => { try { fn?.(); } catch(e){} });
-                    unsubCategories = unsubEmergency = unsubBlood = unsubNotices = null;
+                    [unsubCategories, unsubEmergency, unsubBlood, unsubNotices, unsubPromotions].forEach(fn => { try { fn?.(); } catch(e){} });
+                    unsubCategories = unsubEmergency = unsubBlood = unsubNotices = unsubPromotions = null;
+                    promotionsCache = []; closePromotionFormModal();
 
                     if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
                     if (activityUpdateInterval) { clearInterval(activityUpdateInterval); activityUpdateInterval = null; }

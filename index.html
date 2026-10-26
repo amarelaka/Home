@@ -263,6 +263,7 @@
         }
         .notif-item .notif-icon svg { width: 18px; height: 18px; }
 
+        /* ========== AUTO-HIDE BOTTOM NAV ========== */
         .bottom-nav {
             background: rgba(10, 30, 20, 0.96);
             -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -270,8 +271,17 @@
             border-top: 1px solid rgba(16, 185, 129, 0.22);
             box-shadow: 0 -8px 30px rgba(0,0,0,0.5), 0 -1px 0 rgba(16,185,129,0.15);
             animation: navSlideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; /* Added smooth transition */
         }
         @keyframes navSlideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        /* Class to hide the nav with the FAB */
+        .bottom-nav.nav-hidden {
+            transform: translateY(120%) !important;
+            opacity: 0;
+            pointer-events: none;
+        }
+
         .bottom-nav-btn {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             gap: 3px; padding: 8px 4px; border-radius: 12px; color: #71717a;
@@ -2699,6 +2709,11 @@ OneSignalDeferred.push(async function(OneSignal) {
                 loadUserFavorites();
             }
 
+            // ✅ নতুন: ট্যাব পরিবর্তন করলে নেভিগেশন বার শো করবে
+            const bottomNav = document.getElementById('bottomNav');
+            if (bottomNav) bottomNav.classList.remove('nav-hidden');
+            lastScrollTop = 0;
+
             refreshIcons();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
@@ -4178,6 +4193,37 @@ OneSignalDeferred.push(async function(OneSignal) {
         updateNotifBadge();
         updateCurrentPlanDisplay();
         refreshIcons();
+
+        // ========== AUTO-HIDING BOTTOM NAVIGATION ==========
+        let lastScrollTop = 0;
+        const scrollThreshold = 50; // pixels to scroll before hiding
+        let ticking = false;
+        const bottomNavElement = document.getElementById('bottomNav');
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    // Don't trigger if modal is open
+                    if (document.body.classList.contains('overflow-hidden')) {
+                        ticking = false;
+                        return;
+                    }
+
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                    if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+                        // Scroll Down -> Hide Nav
+                        bottomNavElement?.classList.add('nav-hidden');
+                    } else {
+                        // Scroll Up -> Show Nav
+                        bottomNavElement?.classList.remove('nav-hidden');
+                    }
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
 
         // ========== AUTH STATE LISTENER ==========
         if (firebaseReady) {

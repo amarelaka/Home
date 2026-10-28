@@ -153,6 +153,37 @@
         body.light-mode .admin-fab-label { color: #047857 !important; }
         body.light-mode .service-card { background: #ffffff !important; border-color: #e2e8f0 !important; }
 
+        /* ✅ নতুন: নোটিশ কার্ডের লাইট মোড ফিক্স */
+        body.light-mode .notice-card {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        }
+        body.light-mode .notice-card h3 {
+            color: #0f172a !important;
+        }
+        body.light-mode .notice-card p {
+            color: #475569 !important;
+        }
+        body.light-mode .notice-card .text-rose-300 {
+            color: #be123c !important;
+            background-color: rgba(244, 63, 94, 0.1) !important;
+            border-color: rgba(244, 63, 94, 0.3) !important;
+        }
+        body.light-mode .notice-card .text-amber-300 {
+            color: #b45309 !important;
+            background-color: rgba(245, 158, 11, 0.1) !important;
+            border-color: rgba(245, 158, 11, 0.3) !important;
+        }
+        body.light-mode .notice-card .text-emerald-300 {
+            color: #047857 !important;
+            background-color: rgba(16, 185, 129, 0.1) !important;
+            border-color: rgba(16, 185, 129, 0.3) !important;
+        }
+        body.light-mode .notice-card .text-slate-500 {
+            color: #94a3b8 !important;
+        }
+
         /* ========== auth bg ========== */
         .auth-bg {
             background-color: #03100a;
@@ -595,6 +626,11 @@
         .promo-input { width: 100%; background: #051008; border: 1px solid rgba(251,191,36,.25); border-radius: 12px; padding: 10px 12px; font-size: 13px; color: #f1f5f9; outline: none; }
         .promo-input:focus { border-color: #fbbf24; }
         .promo-label { display: block; font-size: 11px; font-weight: 700; color: #fcd34d; margin: 0 0 6px 4px; }
+        
+        /* ✅ নতুন: নোটিশ ফেইড অ্যানিমেশনের জন্য ক্লাস */
+        #noticesList {
+            transition: opacity 0.5s ease-in-out;
+        }
     </style>
 </head>
 
@@ -923,7 +959,8 @@
                         </div>
                         <span id="noticeCount" class="text-[10px] text-slate-500 font-medium"></span>
                     </div>
-                    <div id="noticesList" class="grid grid-cols-1 gap-2" aria-live="polite"></div>
+                    <!-- ✅ আপডেট: এখানে শুধু একটি নোটিশ থাকবে, যা অটো চেঞ্জ হবে -->
+                    <div id="noticesList" class="grid grid-cols-1 gap-2 min-h-[76px]" aria-live="polite"></div>
                 </section>
 
                 <div class="flex items-center justify-between gap-2 overflow-x-auto pb-1 hide-scrollbar w-full">
@@ -1950,6 +1987,11 @@ OneSignalDeferred.push(async function(OneSignal) {
         let servicesUsingFallback = false;
         let servicesRequestSeq = 0; 
 
+        // ✅ নতুন: নোটিশ স্লাইডার ভেরিয়েবল
+        let noticeSliderInterval = null;
+        let currentNoticeIndex = 0;
+        let currentVisibleNotices = [];
+
         let userFavorites = new Set();
         let favoritesCache = [];
         let favoritesLoaded = false;
@@ -2830,43 +2872,104 @@ OneSignalDeferred.push(async function(OneSignal) {
             if (['important', 'গুরুত্বপূর্ণ'].includes(raw)) return { label: 'গুরুত্বপূর্ণ', style: 'bg-amber-500/15 text-amber-300 border-amber-500/40', icon: 'circle-alert', card: 'border-amber-500/35' };
             return { label: 'সাধারণ', style: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40', icon: 'megaphone', card: 'border-emerald-500/30' };
         }
+        
+        // ✅ নতুন: একটি নির্দিষ্ট নোটিশের HTML তৈরি করা
+        function buildNoticeCardHTML(item) {
+            const p = noticePriority(item);
+            const title = esc(item.title || item.heading || 'নোটিশ');
+            const body = esc(item.description || item.details || item.message || 'বিস্তারিত দেওয়া হয়নি।');
+            const date = noticeDate(item.publishAt || item.startsAt || item.createdAt);
+            const dl = date ? date.toLocaleString('bn-BD', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+            return `<article onclick="openNoticeModal('${esc(item.id)}')" class="notice-card rounded-xl border ${p.card} bg-gradient-to-br from-[#0d2818] to-[#051008] p-3 shadow-md shadow-black/20 cursor-pointer hover:border-emerald-500 transition-colors w-full">
+                <div class="flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-lg ${p.style} border flex items-center justify-center shrink-0"><i data-lucide="${p.icon}" class="w-3.5 h-3.5"></i></span>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between gap-2"><h3 class="text-sm font-bold text-white truncate leading-tight">${title}</h3><i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
+                        <p class="mt-0.5 text-[11px] text-slate-400 line-clamp-1">${body}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-[9px] px-1.5 py-0.5 rounded-md border ${p.style} font-bold">${p.label}</span>
+                            ${dl ? `<span class="text-[9px] text-slate-500 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${esc(dl)}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </article>`;
+        }
+
+        // ✅ নতুন: বর্তমানে অ্যাক্টিভ নোটিশটি রেন্ডার করা
+        function updateActiveNoticeCard() {
+            const list = document.getElementById('noticesList');
+            if (!list || currentVisibleNotices.length === 0) return;
+            if (currentNoticeIndex >= currentVisibleNotices.length) currentNoticeIndex = 0;
+            const item = currentVisibleNotices[currentNoticeIndex];
+            list.innerHTML = buildNoticeCardHTML(item);
+            refreshIcons();
+        }
+
+        // ✅ নতুন: অটো স্লাইডার সেটআপ
+        function setupNoticeAutoSlide() {
+            if (noticeSliderInterval) clearInterval(noticeSliderInterval);
+            if (currentVisibleNotices.length <= 1) return; // ১টি বা ০টি নোটিশ থাকলে স্ক্রল লাগবে না
+
+            const listEl = document.getElementById('noticesList');
+            if (!listEl) return;
+
+            let isHovered = false;
+            listEl.onmouseenter = () => { isHovered = true; };
+            listEl.onmouseleave = () => { isHovered = false; };
+            listEl.ontouchstart = () => { isHovered = true; };
+            listEl.ontouchend = () => { isHovered = false; };
+
+            noticeSliderInterval = setInterval(() => {
+                if (isHovered) return;
+
+                // ফেইড আউট
+                listEl.style.opacity = '0';
+                
+                setTimeout(() => {
+                    currentNoticeIndex = (currentNoticeIndex + 1) % currentVisibleNotices.length;
+                    updateActiveNoticeCard();
+                    // ফেইড ইন
+                    listEl.style.opacity = '1';
+                }, 500); // ৫০০ মিলি সেকেন্ড (সিএসএস ট্রানজিশনের সাথে মিল রেখে)
+            }, 5000); // ৫ সেকেন্ড পর পর পরিবর্তন হবে
+        }
+
         function renderNotices() {
             const section = document.getElementById('noticesSection');
-            const list = document.getElementById('noticesList');
             const count = document.getElementById('noticeCount');
-            if (!section || !list) return;
-            if (currentTab !== 'services') { section.classList.add('hidden'); return; }
+            if (!section) return;
+
+            if (currentTab !== 'services') { 
+                section.classList.add('hidden'); 
+                if (noticeSliderInterval) clearInterval(noticeSliderInterval);
+                return; 
+            }
+
             const now = new Date();
-            const visible = notices.filter(n => isNoticeVisible(n, now)).sort((a, b) => {
+            currentVisibleNotices = notices.filter(n => isNoticeVisible(n, now)).sort((a, b) => {
                 const score = v => ['urgent', 'জরুরি'].includes(String(v).toLowerCase()) ? 3 : (['important', 'গুরুত্বপূর্ণ'].includes(String(v).toLowerCase()) ? 2 : 1);
                 return score(b.priority || b.importance) - score(a.priority || a.importance) ||
                     ((noticeDate(b.publishAt || b.startsAt)?.getTime() || 0) - (noticeDate(a.publishAt || a.startsAt)?.getTime() || 0));
             });
-            if (!visible.length) { section.classList.add('hidden'); list.innerHTML = ''; if (count) count.textContent = ''; return; }
+
+            if (!currentVisibleNotices.length) { 
+                section.classList.add('hidden'); 
+                document.getElementById('noticesList').innerHTML = ''; 
+                if (count) count.textContent = ''; 
+                if (noticeSliderInterval) clearInterval(noticeSliderInterval);
+                return; 
+            }
+
             section.classList.remove('hidden');
-            if (count) count.textContent = `${visible.length}টি`;
-            list.innerHTML = visible.map(item => {
-                const p = noticePriority(item);
-                const title = esc(item.title || item.heading || 'নোটিশ');
-                const body = esc(item.description || item.details || item.message || 'বিস্তারিত দেওয়া হয়নি।');
-                const date = noticeDate(item.publishAt || item.startsAt || item.createdAt);
-                const dl = date ? date.toLocaleString('bn-BD', { dateStyle: 'medium', timeStyle: 'short' }) : '';
-                return `<article onclick="openNoticeModal('${esc(item.id)}')" class="rounded-xl border ${p.card} bg-gradient-to-br from-[#0d2818] to-[#051008] p-3 shadow-md shadow-black/20 cursor-pointer hover:border-emerald-500 transition-colors">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-lg ${p.style} border flex items-center justify-center shrink-0"><i data-lucide="${p.icon}" class="w-3.5 h-3.5"></i></span>
-                        <div class="min-w-0 flex-1">
-                            <div class="flex items-center justify-between gap-2"><h3 class="text-sm font-bold text-white truncate leading-tight">${title}</h3><i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
-                            <p class="mt-0.5 text-[11px] text-slate-400 line-clamp-1">${body}</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="text-[9px] px-1.5 py-0.5 rounded-md border ${p.style} font-bold">${p.label}</span>
-                                ${dl ? `<span class="text-[9px] text-slate-500 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${esc(dl)}</span>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                </article>`;
-            }).join('');
-            refreshIcons();
+            if (count) count.textContent = `${currentVisibleNotices.length}টি`;
+
+            // ইনডেক্স ঠিক করা
+            if (currentNoticeIndex >= currentVisibleNotices.length) currentNoticeIndex = 0;
+
+            updateActiveNoticeCard();
+            setupNoticeAutoSlide();
         }
+
         window.openNoticeModal = (id) => {
             const item = notices.find(n => n.id === id && isNoticeVisible(n));
             if (!item) { showToast('নোটিশটি আর সক্রিয় নেই', 'info', 'text-amber-400'); renderNotices(); return; }
@@ -4362,6 +4465,7 @@ OneSignalDeferred.push(async function(OneSignal) {
                     if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
                     if (activityUpdateInterval) { clearInterval(activityUpdateInterval); activityUpdateInterval = null; }
                     if (servicesObserver) { servicesObserver.disconnect(); servicesObserver = null; }
+                    if (noticeSliderInterval) { clearInterval(noticeSliderInterval); noticeSliderInterval = null; }
                     lastActivityTimestamp = null;
                     chatMessages = [];
                     userFavorites = new Set(); favoritesLoaded = false;

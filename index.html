@@ -84,6 +84,27 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 8px); }
 
+        /* ========== offline banner ========== */
+        #offlineBanner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            padding: 8px 12px;
+            box-shadow: 0 2px 12px rgba(245,158,11,0.4);
+            animation: bannerSlideDown 0.3s ease-out;
+        }
+        @keyframes bannerSlideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
         /* ========== light mode ========== */
         body.light-mode { background: #f8fafc !important; color: #1e293b !important; background-attachment: fixed; }
         body.light-mode .glass-card,
@@ -361,7 +382,7 @@
         }
         .info-card:hover { border-color: rgba(16, 185, 129, 0.35); box-shadow: 0 8px 24px rgba(16,185,129,0.15); }
 
-        /* ========== SERVICE CARD (animation moved to wrapper) ========== */
+        /* ========== SERVICE CARD ========== */
         .service-card {
             background: linear-gradient(145deg, rgba(10, 30, 20, 0.92), rgba(5, 16, 10, 0.92));
             border: 1px solid rgba(16, 185, 129, 0.18);
@@ -393,7 +414,7 @@
         .modal-fav-btn.is-favorite { color: #f43f5e !important; border-color: rgba(244,63,94,0.55) !important; background: rgba(244,63,94,0.15) !important; }
         .modal-fav-btn.is-favorite svg { fill: #f43f5e; }
 
-        /* ===== NEW: Service Card Stagger Animation ===== */
+        /* ===== Service Card Stagger Animation ===== */
         @keyframes cardInStagger {
             0% { opacity: 0; transform: translateY(28px) scale(0.94); }
             60% { opacity: 1; transform: translateY(-3px) scale(1.015); }
@@ -415,7 +436,7 @@
             height: 100%;
         }
 
-        /* ===== NEW: Infinity Counter ===== */
+        /* ===== Infinity Counter ===== */
         @keyframes infinityPulse {
             0%, 100% { transform: scale(1); opacity: 0.9; text-shadow: 0 0 6px rgba(16,185,129,0.4); }
             50% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 14px rgba(16,185,129,0.8), 0 0 24px rgba(16,185,129,0.4); }
@@ -618,6 +639,22 @@
 </head>
 
 <body class="text-slate-100 min-h-[100dvh]">
+
+    <!-- ✅ NEW: OFFLINE BANNER -->
+    <div id="offlineBanner" class="hidden">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="1" y1="1" x2="23" y2="23"/>
+                <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+                <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+                <path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
+                <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                <line x1="12" y1="20" x2="12.01" y2="20"/>
+            </svg>
+            <span>📡 অফলাইন মোড — সংযোগ ফিরলে সব আপডেট হবে</span>
+        </div>
+    </div>
 
     <!-- ✅ SPLASH SCREEN -->
     <div id="splashScreen" class="fixed inset-0 z-[110] flex flex-col items-center justify-center" style="background:linear-gradient(180deg,#03100a 0%,#0a1e14 50%,#000 100%);">
@@ -949,7 +986,6 @@
                     </button>
                 </div>
 
-                <!-- ✅ NEW: Infinity Counter -->
                 <div class="flex items-center justify-between text-xs text-slate-400 px-1">
                     <span id="itemCountText" class="font-medium text-emerald-300">
                         <span class="inline-flex items-center gap-1.5">
@@ -1797,7 +1833,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // ✅ UPDATED: added enableIndexedDbPersistence for offline support
+        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
 
         // ========== ANTI-ZOOM ==========
@@ -1832,6 +1869,17 @@
                 auth = getAuth(app);
                 firebaseReady = true;
                 console.log('✅ Firebase connected');
+
+                // ✅ NEW: Enable offline persistence
+                enableIndexedDbPersistence(db).catch((err) => {
+                    if (err.code === 'failed-precondition') {
+                        console.warn('⚠️ একাধিক tab — offline cache কাজ করবে না');
+                    } else if (err.code === 'unimplemented') {
+                        console.warn('⚠️ এই browser offline সাপোর্ট দেয় না');
+                    } else {
+                        console.warn('Offline setup:', err);
+                    }
+                });
             } else {
                 document.getElementById('firebaseWarning').classList.remove('hidden');
             }
@@ -1934,7 +1982,7 @@
         const RATE_LIMITS = { chat: 1000, feedback: 60000, provider: 300000, subscription: 60000, promotion: 86400000 };
         const CHAT_READ_MAX = 500;
 
-        // ===== ✅ NEW STATE: Infinite Random Shuffle Loader =====
+        // ===== Infinite Random Shuffle Loader =====
         const SERVICES_BATCH_SIZE = 12;
         let servicesCache = [];
         let servicesSeenIds = new Set();
@@ -1942,19 +1990,17 @@
         let servicesObserver = null;
         let servicesFirstLoadDone = false;
 
-        let allServiceIds = [];           // Category-filtered service IDs
-        let shuffledIds = [];             // Current shuffled order
-        let currentBatchIndex = 0;        // Progress through shuffledIds
-        let servicesLoopCount = 0;        // How many loops completed
-        let allServicesFullCache = null;  // For search: full services data
+        let allServiceIds = [];
+        let shuffledIds = [];
+        let currentBatchIndex = 0;
+        let servicesLoopCount = 0;
+        let allServicesFullCache = null;
 
-        // Animation trackers
         let lastRenderedCount = 0;
         let lastAdCountAtRender = -1;
         let animationQueueCounter = 0;
         let wasInSearchMode = false;
 
-        // Notice slider
         let noticeSliderInterval = null;
         let currentNoticeIndex = 0;
         let currentVisibleNotices = [];
@@ -2276,6 +2322,29 @@
             }
         });
 
+        // ========== ✅ NEW: ONLINE / OFFLINE UI HANDLERS ==========
+        function updateOnlineUI() {
+            const banner = document.getElementById('offlineBanner');
+            if (!banner) return;
+            if (navigator.onLine) {
+                banner.classList.add('hidden');
+            } else {
+                banner.classList.remove('hidden');
+            }
+        }
+        window.addEventListener('online', () => {
+            updateOnlineUI();
+            showToast('✅ ইন্টারনেট ফিরেছে — sync হচ্ছে', 'wifi', 'text-emerald-400');
+            setTimeout(() => {
+                if (currentTab === 'chat') markMessagesAsRead();
+                updateUnreadBadge();
+            }, 1500);
+        });
+        window.addEventListener('offline', () => {
+            updateOnlineUI();
+            showToast('📡 অফলাইন — ক্যাশ থেকে দেখছেন', 'wifi-off', 'text-amber-400');
+        });
+
         // ========== PUSH ==========
         async function setupPushNotifications() {
             if (!currentUser || !firebaseReady) return;
@@ -2293,18 +2362,21 @@
             } catch (e) {}
         }
 
-        // ========== CHAT AUTO CLEAR ==========
+        // ========== ✅ UPDATED: CHAT AUTO CLEAR (7 days + offline-safe) ==========
         async function clearOldChatMessages() {
-            if (!currentUser || !firebaseReady) return;
+            if (!currentUser || !firebaseReady || !navigator.onLine) return;
             try {
-                const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-                const q = query(collection(db, `chats/${currentUser.uid}/messages`), where('createdAt', '<=', oneHourAgo));
+                const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                const q = query(
+                    collection(db, `chats/${currentUser.uid}/messages`),
+                    where('deliveredAt', '<=', sevenDaysAgo)
+                );
                 const snap = await getDocs(q);
                 if (snap.empty) return;
                 const batch = writeBatch(db);
                 snap.forEach(d => batch.delete(d.ref));
                 await batch.commit();
-            } catch (e) {}
+            } catch (e) { console.warn('Chat cleanup:', e); }
         }
         function startChatAutoClear() { clearOldChatMessages(); setInterval(clearOldChatMessages, 600000); }
 
@@ -3007,7 +3079,6 @@
                 refreshIcons(); 
                 return;
             }
-            // ✅ With stagger animation
             const html = filtered.map((card, idx) => {
                 const delay = Math.min(idx * 65, 500);
                 return `<div class="service-card-in" data-card-wrapper style="animation-delay:${delay}ms">${buildServiceCard(card)}</div>`;
@@ -3062,7 +3133,7 @@
             }
         };
 
-        // ========== ✅ NEW: SERVICE LOADER HELPERS ==========
+        // ========== SERVICE LOADER HELPERS ==========
         function shuffleArray(arr) {
             const a = [...arr];
             for (let i = a.length - 1; i > 0; i--) {
@@ -3120,7 +3191,7 @@
             grid.innerHTML = Array.from({ length: 4 }).map(() => `<div class="svc-skeleton"></div>`).join('');
         }
 
-        // ========== ✅ NEW: INFINITE SCROLL (MODE A) ==========
+        // ========== INFINITE SCROLL (MODE A) ==========
         function setupInfiniteScroll() {
             const sentinel = document.getElementById('servicesSentinel');
             if (!sentinel) return;
@@ -3138,7 +3209,7 @@
             servicesObserver.observe(sentinel);
         }
 
-        // ========== ✅ NEW: LOAD SERVICE BATCH (Mode A - truly infinite) ==========
+        // ========== LOAD SERVICE BATCH (Mode A) ==========
         async function loadServiceBatch(reset = false) {
             if (!firebaseReady || servicesLoading) return;
             servicesLoading = true;
@@ -3162,7 +3233,6 @@
                     allServiceIds = await fetchServiceIds();
                     allServicesFullCache = await fetchServicesByIds(allServiceIds);
 
-                    // New services first (7 days), then shuffled old
                     const now = Date.now();
                     const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
                     const newOnes = [];
@@ -3195,7 +3265,6 @@
                 let remaining = shuffledIds.length - currentBatchIndex;
 
                 if (remaining <= 0) {
-                    // ✅ MODE A: Auto reshuffle and continue (truly infinite)
                     servicesLoopCount++;
                     servicesSeenIds = new Set();
                     shuffledIds = shuffleArray(allServiceIds);
@@ -3568,7 +3637,7 @@
             lastActivePromoCount = n;
         }, 60000);
 
-        // ========== SERVICES: BUILD CARD (with NEW badge) ==========
+        // ========== SERVICES: BUILD CARD ==========
         function buildServiceCard(item) {
             const id = esc(item.id);
             const title = esc(item.title || 'সেবা');
@@ -3622,7 +3691,7 @@
             </div>`;
         }
 
-        // ========== ✅ NEW: RENDER SERVICES (Mode A - infinite + ∞ counter + stagger) ==========
+        // ========== RENDER SERVICES ==========
         function renderServices(reset = false) {
             const grid = document.getElementById('servicesGrid');
             const count = document.getElementById('itemCountText');
@@ -3634,7 +3703,6 @@
             const source = search && allServicesFullCache ? allServicesFullCache : servicesCache;
             const filtered = search ? source.filter(s => matchesServiceSearch(s, search)) : source;
 
-            // ✅ ∞ counter
             if (count) {
                 if (search) {
                     count.textContent = `${filtered.length} টি মিলেছে`;
@@ -3652,7 +3720,6 @@
             const currentAdCount = getActivePromotions().length;
             const adCountChanged = currentAdCount !== lastAdCountAtRender;
 
-            // Search mode full re-render
             if (isSearchMode) {
                 if (filtered.length === 0) {
                     grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#0d2818] rounded-2xl border border-dashed border-emerald-900/50 p-6 space-y-2">
@@ -3672,7 +3739,6 @@
                 return;
             }
 
-            // Reset grid when needed
             if (reset || adCountChanged || searchModeChanged) {
                 grid.innerHTML = '';
                 lastRenderedCount = 0;
@@ -3680,7 +3746,6 @@
                 animationQueueCounter = 0;
             }
 
-            // Mode A: infinite - always appends new services
             const allCards = mixAdsWithServices(filtered, search);
             const newCards = allCards.slice(lastRenderedCount);
 
@@ -3964,7 +4029,7 @@
             refreshIcons();
         };
 
-        // ========== CHAT ==========
+        // ========== ✅ UPDATED: CHAT RENDERING WITH OFFLINE/PENDING STATES ==========
         function renderChatMessages() {
             const box = document.getElementById('chatMessages');
             if (!box) return;
@@ -3977,12 +4042,21 @@
                 refreshIcons(); return;
             }
             box.innerHTML = chatMessages.map(msg => {
-                if (msg.sender === 'user') return `<div class="flex gap-2 max-w-[85%] ml-auto justify-end">
-                    <div class="bg-gradient-to-br from-emerald-600 to-teal-600 text-white p-2.5 sm:p-3 rounded-2xl rounded-tr-none shadow-lg shadow-emerald-600/30">
-                        <p class="text-sm leading-relaxed">${esc(msg.text)}</p>
-                        <span class="text-[9px] text-emerald-200 mt-1 block text-right">${esc(msg.time || '')}</span>
-                    </div>
-                </div>`;
+                if (msg.sender === 'user') {
+                    const pending = msg.pending === true;
+                    const wasOffline = msg.offlineSent === true;
+                    return `<div class="flex gap-2 max-w-[85%] ml-auto justify-end">
+                        <div class="bg-gradient-to-br from-emerald-600 to-teal-600 text-white p-2.5 sm:p-3 rounded-2xl rounded-tr-none shadow-lg shadow-emerald-600/30 ${pending ? 'opacity-70' : ''}">
+                            <p class="text-sm leading-relaxed">${esc(msg.text)}</p>
+                            <div class="flex items-center justify-end gap-1 mt-1">
+                                ${pending
+                                    ? `<span class="text-[9px] text-amber-200 flex items-center gap-0.5"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${wasOffline ? 'অফলাইন — net এলে যাবে' : 'পাঠানো হচ্ছে...'}</span>`
+                                    : `<span class="text-[9px] text-emerald-200 flex items-center gap-0.5"><i data-lucide="check-check" class="w-2.5 h-2.5"></i>${esc(msg.time || '')}</span>`
+                                }
+                            </div>
+                        </div>
+                    </div>`;
+                }
                 const an = msg.userName || msg.adminName || 'অ্যাডমিন';
                 return `<div class="flex gap-2 max-w-[85%]">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30"><i data-lucide="headset" class="w-3.5 h-3.5"></i></div>
@@ -3997,40 +4071,86 @@
             refreshIcons();
         }
         window.focusChatInput = () => { const i = document.getElementById('chatInput'); if (i) i.focus(); };
+
+        // ========== ✅ UPDATED: CHAT SEND WITH OFFLINE OPTIMISTIC UI ==========
         window.handleSendChatMessage = async (e) => {
             e.preventDefault();
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
+
             const rate = checkRateLimit('chat');
             if (!rate.allowed) return showToast(`${rate.remaining} সেকেন্ড অপেক্ষা করুন`, 'clock', 'text-amber-400');
+
             const input = document.getElementById('chatInput');
-            const btn = document.getElementById('chatSendBtn');
             const text = input.value.trim();
             if (!text) return;
+
+            const isOnline = navigator.onLine;
             const time = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
-            btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i>'; refreshIcons();
+            const tempId = 'temp-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+
+            // ✅ Optimistic UI — instantly show
+            const optimisticMsg = {
+                id: tempId, sender: 'user', text, time,
+                uid: currentUser.uid,
+                userName: userProfile?.fullName || 'ইউজার',
+                readByUser: true, pending: true, offline: !isOnline
+            };
+            chatMessages.push(optimisticMsg);
+            renderChatMessages();
+            input.value = '';
+
+            const btn = document.getElementById('chatSendBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i>';
+            refreshIcons();
+
             try {
+                // ✅ Firestore write — offline-এ locally queue হবে
                 await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
-                    sender: 'user', text, time, uid: currentUser.uid, userName: userProfile?.fullName || 'ইউজার', readByUser: true, createdAt: serverTimestamp(),
-                    expiresAt: new Date(Date.now() + 60 * 60 * 1000)
+                    sender: 'user', text, time,
+                    uid: currentUser.uid,
+                    userName: userProfile?.fullName || 'ইউজার',
+                    readByUser: true,
+                    createdAt: serverTimestamp(),
+                    deliveredAt: isOnline ? serverTimestamp() : null,
+                    offlineSent: !isOnline,
+                    tempId: tempId
                 });
-                input.value = '';
                 setRateLimit('chat');
-                if (!isAdminOnline) {
+
+                if (!isOnline) {
+                    showToast('📡 অফলাইন — net ফিরলে auto যাবে', 'wifi-off', 'text-amber-400');
+                } else if (!isAdminOnline) {
+                    showToast('মেসেজ পাঠানো হয়েছে (অ্যাডমিন অফলাইনে)', 'check-circle', 'text-emerald-400');
+                    // Auto-reply when admin offline
                     const key = `autoReply_${currentUser.uid}`;
                     const last = parseInt(lsGet(key, '0'), 10);
                     if (Date.now() - last > 3600000) {
-                        await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
-                            sender: 'admin', text: 'অ্যাডমিন অফলাইনে আছেন, শীঘ্রই উত্তর দেবেন।', time,
-                            uid: currentUser.uid, userName: 'অ্যাডমিন', readByUser: false, createdAt: serverTimestamp(),
-                            expiresAt: new Date(Date.now() + 60 * 60 * 1000)
-                        });
-                        lsSet(key, String(Date.now()));
+                        try {
+                            await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
+                                sender: 'admin', text: 'অ্যাডমিন অফলাইনে আছেন, শীঘ্রই উত্তর দেবেন।', time,
+                                uid: currentUser.uid, userName: 'অ্যাডমিন', readByUser: false, createdAt: serverTimestamp(),
+                                deliveredAt: serverTimestamp()
+                            });
+                            lsSet(key, String(Date.now()));
+                        } catch (e) { console.warn('Auto reply failed', e); }
                     }
+                } else {
+                    showToast('মেসেজ পাঠানো হয়েছে', 'check-circle', 'text-emerald-400');
                 }
-            } catch (err) { showToast('পাঠানো যায়নি: ' + (err.code || err.message), 'circle-x', 'text-rose-400'); }
-            finally { btn.disabled = false; btn.innerHTML = '<span class="hidden sm:inline">পাঠান</span><i data-lucide="send" class="w-4 h-4"></i>'; refreshIcons(); }
+            } catch (err) {
+                // ❌ fail হলে optimistic মেসেজ সরান
+                chatMessages = chatMessages.filter(m => m.id !== tempId);
+                renderChatMessages();
+                showToast('পাঠানো যায়নি: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span class="hidden sm:inline">পাঠান</span><i data-lucide="send" class="w-4 h-4"></i>';
+                refreshIcons();
+            }
         };
+
         function getLocallyReadMessageIds() { const arr = lsGetJSON(`amar-chat-read-${currentUid()}`, []); return new Set(Array.isArray(arr) ? arr : []); }
         function markMessagesAsReadLocally() {
             const s = getLocallyReadMessageIds();
@@ -4382,6 +4502,7 @@
         updateNotifBadge();
         updateCurrentPlanDisplay();
         refreshIcons();
+        updateOnlineUI(); // ✅ Initial offline banner state
 
         // ========== AUTO-HIDING BOTTOM NAVIGATION ==========
         let lastScrollTop = 0;
@@ -4492,7 +4613,6 @@
                     chatMessages = [];
                     userFavorites = new Set(); favoritesLoaded = false;
                     favoritesCache = [];
-                    // Reset service state
                     servicesCache = []; servicesSeenIds = new Set();
                     allServiceIds = []; shuffledIds = []; currentBatchIndex = 0;
                     servicesFirstLoadDone = false; servicesLoopCount = 0;

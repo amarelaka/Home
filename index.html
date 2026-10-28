@@ -3202,7 +3202,7 @@
                     currentBatchIndex = 0;
                     remaining = shuffledIds.length;
                     if (servicesLoopCount <= 3) {
-                        showToast('🔄 আরো সেবা লোড হচ্ছে...', 'sparkles', 'text-emerald-400');
+                        showToast('🔄 please wait...', 'sparkles', 'text-emerald-400');
                     }
                 }
 
@@ -3583,18 +3583,6 @@
             const whatsapp = String(item.whatsapp || '').replace(/[^0-9]/g, '');
             const isAdminPost = item.isAdminPost === true || item.source === 'admin';
             const isFav = userFavorites.has(item.id);
-
-            // ✅ NEW badge check (7 days)
-            let isNew = false;
-            if (item.createdAt) {
-                const createdMs = typeof item.createdAt.toDate === 'function'
-                    ? item.createdAt.toDate().getTime()
-                    : new Date(item.createdAt).getTime();
-                if (createdMs > 0 && (Date.now() - createdMs) < 7 * 24 * 60 * 60 * 1000) {
-                    isNew = true;
-                }
-            }
-
             return `<div class="service-card" onclick="openServiceDetail('${id}')" data-service-id="${id}">
                 <div>
                     <div class="h-40 bg-[#051008] overflow-hidden relative">
@@ -3611,7 +3599,7 @@
                     <div class="p-4">
                         <div class="flex items-center flex-wrap gap-2 mb-1.5">
                             <h4 class="font-bold text-slate-100 text-sm sm:text-base leading-snug flex-1 min-w-0">${title}</h4>
-                            ${isNew ? `<span class="bg-gradient-to-r from-rose-500 to-orange-500 text-white px-2 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow-sm border border-rose-400/60 shrink-0">🆕 NEW</span>` : ''}
+                            
                             ${isAdminPost ? `<span class="bg-emerald-600/90 text-white px-2 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow-sm border border-emerald-500/50 shrink-0">এডমিন <i data-lucide="shield-check" class="w-2.5 h-2.5 text-white"></i></span>` : ''}
                         </div>
                         <p class="text-[11px] text-emerald-300 font-bold mb-1.5 flex items-center gap-1 truncate">

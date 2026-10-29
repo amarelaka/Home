@@ -30,7 +30,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- OneSignal Script Removed -->
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -175,6 +175,20 @@
         body.light-mode .notice-card .text-slate-500 { color: #94a3b8 !important; }
         body.light-mode #itemCountText .infinity-symbol { color: #059669; }
         body.light-mode #itemCountText { color: #047857 !important; }
+
+        /* ========== Light Mode Social Buttons ========== */
+        body.light-mode #githubLoginBtn {
+            background-color: #24292e !important;
+            color: #ffffff !important;
+            border: 1px solid #444c56 !important;
+        }
+        body.light-mode #googleLoginBtn {
+            background-color: #ffffff !important;
+            color: #1f2937 !important;
+            border: 1px solid #d1d5db !important;
+        }
+        body.light-mode #googleLoginBtn:hover { background-color: #f9fafb !important; }
+        body.light-mode #githubLoginBtn:hover { background-color: #1b1f23 !important; }
 
         /* ========== auth bg ========== */
         .auth-bg {
@@ -635,6 +649,24 @@
         .promo-label { display: block; font-size: 11px; font-weight: 700; color: #fcd34d; margin: 0 0 6px 4px; }
         
         #noticesList { transition: opacity 0.5s ease-in-out; }
+
+        /* ========== FORCE PROFILE MODE ========== */
+        body.force-profile-mode #appContent {
+            display: none !important;
+        }
+        body.force-profile-mode #editProfileModal {
+            background: #03100a;
+            backdrop-filter: none;
+            z-index: 9999 !important;
+        }
+        body.force-profile-mode #editProfileModal > div {
+            height: 100dvh;
+            max-height: 100dvh;
+            border-radius: 0;
+            border: none;
+            width: 100%;
+            max-width: 100%;
+        }
     </style>
 </head>
 
@@ -707,6 +739,7 @@
                 </div>
 
                 <div class="flex-1 overflow-y-auto px-5 py-5 hide-scrollbar">
+                    <!-- লগইন ফর্ম -->
                     <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4">
                         <div class="text-center mb-2">
                             <h2 class="text-white font-bold text-xl">স্বাগতম!</h2>
@@ -729,21 +762,9 @@
                         <button type="submit" id="loginBtn" class="btn-glow w-full text-white font-bold py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 touch-target">
                             <i data-lucide="log-in" class="w-4 h-4"></i><span>প্রবেশ করুন</span>
                         </button>
-                        <div class="relative flex py-2 items-center mt-2">
-                            <div class="flex-grow border-t border-emerald-900/40"></div>
-                            <span class="flex-shrink-0 mx-4 text-slate-500 text-[10px] uppercase font-bold">অথবা (OR)</span>
-                            <div class="flex-grow border-t border-emerald-900/40"></div>
-                        </div>
-                        <button type="button" onclick="handleGithubLogin()" id="githubLoginBtn" class="w-full bg-[#24292e] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 touch-target hover:bg-[#1b1f23] transition shadow-lg">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
-                            Continue with GitHub
-                        </button>
-                        <p class="text-[11px] text-center text-slate-400 flex items-center justify-center gap-1.5 mt-2">
-                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
-                            প্রবেশ করতে লগইন করা বাধ্যতামূলক
-                        </p>
                     </form>
 
+                    <!-- রেজিস্ট্রেশন ফর্ম -->
                     <form id="registerForm" onsubmit="handleRegisterSubmit(event)" class="hidden space-y-3">
                         <div class="text-center mb-2">
                             <h2 class="text-white font-bold text-xl">নতুন অ্যাকাউন্ট</h2>
@@ -806,6 +827,37 @@
                             <i data-lucide="user-plus" class="w-4 h-4"></i><span>রেজিস্ট্রেশন করুন</span>
                         </button>
                     </form>
+
+                    <!-- ✅ গুগল ও গিটহাব বাটন (উভয় ফর্মের নিচে শেয়ারড) -->
+                    <div class="mt-6">
+                        <div class="relative flex py-2 items-center mb-3">
+                            <div class="flex-grow border-t border-emerald-900/40"></div>
+                            <span class="flex-shrink-0 mx-4 text-slate-500 text-[10px] uppercase font-bold">অথবা (OR)</span>
+                            <div class="flex-grow border-t border-emerald-900/40"></div>
+                        </div>
+                        
+                        <!-- Google Button -->
+                        <button type="button" onclick="handleGoogleLogin()" id="googleLoginBtn" class="w-full bg-white text-gray-800 border border-gray-300 font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 touch-target hover:bg-gray-50 transition shadow-lg mb-2.5">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Continue with Google
+                        </button>
+                        
+                        <!-- GitHub Button -->
+                        <button type="button" onclick="handleGithubLogin()" id="githubLoginBtn" class="w-full bg-[#24292e] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 touch-target hover:bg-[#1b1f23] transition shadow-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
+                            Continue with GitHub
+                        </button>
+                        
+                        <p class="text-[11px] text-center text-slate-400 flex items-center justify-center gap-1.5 mt-4">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                            প্রবেশ করতে লগইন করা বাধ্যতামূলক
+                        </p>
+                    </div>
                 </div>
 
                 <div class="shrink-0 px-5 py-3 border-t border-emerald-500/15 text-center">
@@ -1598,11 +1650,16 @@
         </div>
     </div>
 
-    <!-- EDIT PROFILE MODAL -->
+    <!-- EDIT PROFILE MODAL (Now with Force Mode) -->
     <div id="editProfileModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
         <div class="w-full max-w-lg rounded-3xl border border-emerald-800/50 bg-[#0d2818] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
             <div class="bg-gradient-to-r from-emerald-700 to-teal-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
-                <div><h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="pencil" class="w-4 h-4"></i> প্রোফাইল এডিট</h3><p class="text-[10px] text-emerald-200">আপনার তথ্য আপডেট করুন</p></div>
+                <div>
+                    <h3 class="font-bold text-sm flex items-center gap-1.5">
+                        <i data-lucide="pencil" class="w-4 h-4"></i> প্রোফাইল এডিট
+                    </h3>
+                    <p class="text-[10px] text-emerald-200">আপনার তথ্য আপডেট করুন</p>
+                </div>
                 <button onclick="closeEditProfileModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
             <form id="editProfileForm" onsubmit="handleEditProfileSubmit(event)" class="p-4 space-y-3 overflow-y-auto">
@@ -1832,8 +1889,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // ✅ UPDATED: added enableIndexedDbPersistence for offline support
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, setDoc, getDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
 
@@ -1863,7 +1919,6 @@
                 firebaseReady = true;
                 console.log('✅ Firebase connected');
 
-                // ✅ NEW: Enable offline persistence
                 enableIndexedDbPersistence(db).catch((err) => {
                     if (err.code === 'failed-precondition') {
                         console.warn('⚠️ একাধিক tab — offline cache কাজ করবে না');
@@ -1941,6 +1996,7 @@
         // ========== STATE ==========
         let currentUser = null;
         let userProfile = null;
+        let isForcedProfileMode = false; // ✅ NEW STATE FOR FORCE MODE
         let categories = [{ id: 'all', name: 'সকল সেবা', icon: 'fa-border-all' }];
         let emergencyList = [];
         let bloodDonors = [];
@@ -2004,6 +2060,15 @@
         let activeServiceId = null;
         let selectedProviderImage = null;
 
+        // ✅ NEW HELPER FUNCTION
+        function isProfileComplete(profile) {
+            if (!profile) return false;
+            const hasPhone = profile.phone && /^01[3-9]\d{8}$/.test(profile.phone);
+            const hasDistrict = profile.district && profile.district.trim().length > 0;
+            const hasUpazila = profile.upazila && profile.upazila.trim().length > 0;
+            return hasPhone && hasDistrict && hasUpazila;
+        }
+
         function checkRateLimit(action) {
             const cooldown = RATE_LIMITS[action];
             if (!cooldown) return { allowed: true, remaining: 0 };
@@ -2058,6 +2123,7 @@
 
         // ========== SIDEBAR ==========
         window.openSidebar = () => {
+            if (isForcedProfileMode) return;
             const b = document.getElementById('sidebarBackdrop');
             const d = document.getElementById('sidebarDrawer');
             b.classList.remove('hidden'); void b.offsetWidth;
@@ -2087,11 +2153,12 @@
         window.sidebarLogout = () => { closeSidebar(); setTimeout(() => logoutUser(), 200); };
         document.getElementById('sidebarBackdrop')?.addEventListener('click', closeSidebar);
 
-        window.openSettingsModal = () => { document.getElementById('settingsModal').classList.remove('hidden'); document.getElementById('settingsModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
+        window.openSettingsModal = () => { if (isForcedProfileMode) return; document.getElementById('settingsModal').classList.remove('hidden'); document.getElementById('settingsModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
         window.closeSettingsModal = () => { document.getElementById('settingsModal').classList.add('hidden'); document.getElementById('settingsModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
 
         // ========== NOTIF PANEL ==========
         window.openNotifPanel = () => {
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             renderNotifications();
             const b = document.getElementById('notifBackdrop');
@@ -2315,7 +2382,7 @@
             }
         });
 
-        // ========== ✅ NEW: ONLINE / OFFLINE UI HANDLERS ==========
+        // ========== ONLINE / OFFLINE UI HANDLERS ==========
         function updateOnlineUI() {
             const banner = document.getElementById('offlineBanner');
             if (!banner) return;
@@ -2355,7 +2422,7 @@
             } catch (e) {}
         }
 
-        // ========== ✅ UPDATED: CHAT AUTO CLEAR (7 days + offline-safe) ==========
+        // ========== CHAT AUTO CLEAR ==========
         async function clearOldChatMessages() {
             if (!currentUser || !firebaseReady || !navigator.onLine) return;
             try {
@@ -2375,6 +2442,7 @@
 
         // ========== IMAGE UPLOAD ==========
         window.previewProfilePic = (e) => {
+            if (isForcedProfileMode) return;
             const file = e.target.files[0];
             if (!file) return;
             if (file.size > 5 * 1024 * 1024) return showToast('ছবির সাইজ ৫MB এর কম হতে হবে', 'circle-x', 'text-rose-400');
@@ -2427,6 +2495,7 @@
 
         // ========== SUBSCRIPTION ==========
         window.selectPackage = (name, amount, el) => {
+            if (isForcedProfileMode) return;
             selectedPackage = { name, amount };
             document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
             el.classList.add('selected');
@@ -2442,15 +2511,18 @@
             setTimeout(() => switchTab('payment'), 150);
         };
         window.selectPaymentMethod = (m, el) => {
+            if (isForcedProfileMode) return;
             selectedPaymentMethod = m;
             document.querySelectorAll('.pay-method-card').forEach(c => c.classList.remove('selected'));
             el.classList.add('selected');
         };
         window.copyPaymentNumber = () => {
+            if (isForcedProfileMode) return;
             navigator.clipboard.writeText("01754285309").then(() => showToast('Number copied!', 'copy', 'text-emerald-400')).catch(() => showToast('Copy failed', 'alert-circle', 'text-rose-400'));
         };
         window.submitSubscriptionRequest = async (e) => {
             e.preventDefault();
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('Please login first.', 'circle-x', 'text-rose-400');
             if (!selectedPaymentMethod) return showToast('Select payment method.', 'alert-circle', 'text-amber-400');
             const trxId = document.getElementById('subTrxId').value.trim();
@@ -2591,6 +2663,25 @@
                 btn.disabled = false; btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i> <span>প্রবেশ করুন</span>'; refreshIcons();
             }
         };
+        window.handleGoogleLogin = async () => {
+            if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
+            const btns = document.querySelectorAll('[onclick="handleGoogleLogin()"]');
+            btns.forEach(b => { b.disabled = true; });
+            try {
+                try { sessionStorage.setItem('amar-welcome-pending', 'login'); } catch (e) {}
+                const provider = new GoogleAuthProvider();
+                const result = await signInWithPopup(auth, provider);
+                await checkAndCreateUser(result.user);
+                showToast('গুগল লগইন সফল!', 'check-circle', 'text-emerald-400');
+            } catch (err) {
+                if (err.code === 'auth/popup-closed-by-user') showToast('লগইন বাতিল', 'x-circle', 'text-amber-400');
+                else if (err.code === 'auth/popup-blocked') showToast('পপআপ ব্লক! অনুমতি দিন।', 'alert-circle', 'text-rose-400');
+                else if (err.code === 'auth/account-exists-with-different-credential') showToast('এই ইমেইলে অন্য অ্যাকাউন্ট আছে!', 'alert-circle', 'text-rose-400');
+                else showToast('গুগল লগইন ব্যর্থ', 'x-circle', 'text-rose-400');
+            } finally {
+                btns.forEach(b => { b.disabled = false; });
+            }
+        };
         window.handleGithubLogin = async () => {
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
             const btns = document.querySelectorAll('[onclick="handleGithubLogin()"]');
@@ -2648,6 +2739,7 @@
             }
         };
         window.logoutUser = async () => {
+            if (isForcedProfileMode) return showToast('প্রোফাইল সম্পূর্ণ না করে লগআউট করা যাবে না!', 'shield-alert', 'text-rose-400');
             if (!confirm('আপনি কি সত্যিই লগআউট করতে চান?')) return;
             try {
                 stopUserHeartbeat(); stopActivityTracking();
@@ -2716,9 +2808,13 @@
             updateCurrentPlanDisplay();
             refreshIcons();
         }
-        window.openSupportFromProfile = () => { closeEditProfileModal(); switchTab('chat'); setTimeout(() => focusChatInput(), 400); };
-        window.openEditProfileModal = () => {
+        window.openSupportFromProfile = () => { if (isForcedProfileMode) return; closeEditProfileModal(); switchTab('chat'); setTimeout(() => focusChatInput(), 400); };
+        
+        window.openEditProfileModal = (force = false) => {
             if (!userProfile) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            
+            isForcedProfileMode = force;
+            
             document.getElementById('editFullName').value = userProfile.fullName || '';
             document.getElementById('editPhone').value = userProfile.phone || '';
             document.getElementById('editDistrict').value = userProfile.district || '';
@@ -2729,16 +2825,35 @@
             else { pv.src = ''; pv.classList.add('hidden'); ph.classList.remove('hidden'); }
             selectedProfilePicFile = null;
             document.getElementById('profilePicInput').value = '';
+            
             const m = document.getElementById('editProfileModal');
             m.classList.remove('hidden'); m.classList.add('flex');
             document.body.classList.add('overflow-hidden');
+            
+            const closeBtn = m.querySelector('button[onclick="closeEditProfileModal()"]');
+            const headerText = m.querySelector('.bg-gradient-to-r h3');
+            
+            if (isForcedProfileMode) {
+                if (closeBtn) closeBtn.style.display = 'none';
+                if (headerText) headerText.innerHTML = '<i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i> প্রোফাইল সম্পূর্ণ করুন';
+            } else {
+                if (closeBtn) closeBtn.style.display = 'flex';
+                if (headerText) headerText.innerHTML = '<i data-lucide="pencil" class="w-4 h-4"></i> প্রোফাইল এডিট';
+            }
+            
             refreshIcons();
         };
+        
         window.closeEditProfileModal = () => {
+            if (isForcedProfileMode) {
+                showToast('হোমপেজে যেতে হলে আগে আপনার প্রোফাইল সম্পূর্ণ করুন!', 'lock', 'text-rose-400');
+                return; 
+            }
             const m = document.getElementById('editProfileModal');
             m.classList.add('hidden'); m.classList.remove('flex');
             document.body.classList.remove('overflow-hidden');
         };
+        
         window.handleEditProfileSubmit = async (e) => {
             e.preventDefault();
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
@@ -2749,6 +2864,9 @@
             const upazila = document.getElementById('editUpazila').value.trim();
             if (fullName.length < 2) return showToast('সঠিক নাম দিন', 'circle-x', 'text-rose-400');
             if (!/^01[3-9]\d{8}$/.test(phone)) return showToast('সঠিক মোবাইল নম্বর দিন', 'circle-x', 'text-rose-400');
+            if (!district) return showToast('জেলা লিখুন', 'circle-x', 'text-rose-400');
+            if (!upazila) return showToast('উপজেলা লিখুন', 'circle-x', 'text-rose-400');
+            
             const btn = document.getElementById('editProfileSaveBtn');
             btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> সংরক্ষণ...'; refreshIcons();
             try {
@@ -2760,15 +2878,39 @@
                 await setDoc(doc(db, 'users', currentUser.uid), { fullName, phone, district, upazila, photoURL }, { merge: true });
                 userProfile = { ...userProfile, fullName, phone, district, upazila, photoURL };
                 updateProfileUI();
-                showToast('প্রোফাইল আপডেট হয়েছে!', 'circle-check', 'text-emerald-400');
-                closeEditProfileModal();
+                
+                if (isForcedProfileMode) {
+                    if (isProfileComplete(userProfile)) {
+                        isForcedProfileMode = false;
+                        document.body.classList.remove('force-profile-mode');
+                        
+                        const m = document.getElementById('editProfileModal');
+                        const closeBtn = m.querySelector('button[onclick="closeEditProfileModal()"]');
+                        if (closeBtn) closeBtn.style.display = 'flex';
+                        
+                        closeEditProfileModal();
+                        switchTab('services');
+                        showToast('অভিনন্দন! আপনার প্রোফাইল সম্পূর্ণ হয়েছে।', 'sparkles', 'text-emerald-400');
+                    } else {
+                        showToast('মোবাইল, জেলা ও উপজেলা সঠিকভাবে পূরণ করুন!', 'circle-x', 'text-rose-400');
+                    }
+                } else {
+                    showToast('প্রোফাইল আপডেট হয়েছে!', 'circle-check', 'text-emerald-400');
+                    closeEditProfileModal();
+                }
+                
             } catch (err) { showToast('ব্যর্থ: ' + (err.message || err), 'circle-x', 'text-rose-400'); }
             finally { btn.disabled = false; btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> সংরক্ষণ করুন'; refreshIcons(); }
         };
+        
         document.getElementById('editProfileModal')?.addEventListener('click', (e) => { if (e.target.id === 'editProfileModal') closeEditProfileModal(); });
 
         // ========== TAB SWITCH ==========
         window.switchTab = (tabName) => {
+            if (isForcedProfileMode && tabName !== 'profile') {
+                showToast('অনুগ্রহ করে আগে প্রোফাইল সম্পূর্ণ করুন!', 'shield-alert', 'text-rose-400');
+                return;
+            }
             if (!currentUser && !['services', 'emergency', 'blood'].includes(tabName)) {
                 return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             }
@@ -2840,6 +2982,7 @@
             return String((si && si.value) || (sm && sm.value) || '').toLowerCase().trim();
         }
         window.handleSearch = async (el) => {
+            if (isForcedProfileMode) return;
             const val = el.value;
             const si = document.getElementById('searchInput'); if (si && si !== el) si.value = val;
             const sm = document.getElementById('searchInputMobile'); if (sm && sm !== el) sm.value = val;
@@ -2863,6 +3006,7 @@
             else if (currentTab === 'favorites') renderFavorites();
         };
         window.filterCategory = (catId) => {
+            if (isForcedProfileMode) return;
             if (activeCategory === catId) return;
             activeCategory = catId;
             renderCategoryChips();
@@ -2954,6 +3098,7 @@
             }, 5000);
         }
         function renderNotices() {
+            if (isForcedProfileMode) return;
             const section = document.getElementById('noticesSection');
             const count = document.getElementById('noticeCount');
             if (!section) return;
@@ -2982,6 +3127,7 @@
             setupNoticeAutoSlide();
         }
         window.openNoticeModal = (id) => {
+            if (isForcedProfileMode) return;
             const item = notices.find(n => n.id === id && isNoticeVisible(n));
             if (!item) { showToast('নোটিশটি আর সক্রিয় নেই', 'info', 'text-amber-400'); renderNotices(); return; }
             const p = noticePriority(item);
@@ -3042,6 +3188,7 @@
         }
 
         function renderFavorites() {
+            if (isForcedProfileMode) return;
             const grid = document.getElementById('favoritesGrid');
             const countEl = document.getElementById('favCountText');
             if (!grid) return;
@@ -3081,6 +3228,7 @@
         }
 
         window.toggleFavorite = async (serviceId, btnEl) => {
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('ফেভারিট করতে আগে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
             const isFav = userFavorites.has(serviceId);
@@ -3112,6 +3260,7 @@
             });
         }
         window.handleModalFavClick = async (e) => {
+            if (isForcedProfileMode) return;
             e.stopPropagation();
             const btn = e.currentTarget;
             const sid = btn.getAttribute('data-fav-id');
@@ -3120,6 +3269,7 @@
         };
 
         window.openExternalUrl = (el) => {
+            if (isForcedProfileMode) return;
             const url = el.getAttribute('data-url');
             if (/^https?:\/\//i.test(url)) {
                 window.open(url, '_blank', 'noopener,noreferrer');
@@ -3204,6 +3354,7 @@
 
         // ========== LOAD SERVICE BATCH (Mode A) ==========
         async function loadServiceBatch(reset = false) {
+            if (isForcedProfileMode) return;
             if (!firebaseReady || servicesLoading) return;
             servicesLoading = true;
 
@@ -3347,15 +3498,18 @@
         const isBdPhone = (v) => /^01[3-9]\d{8}$/.test(String(v || '').trim());
 
         function renderPromoTypeGrid() {
+            if (isForcedProfileMode) return;
             const g = document.getElementById('promoTypeGrid'); if (!g) return;
             g.innerHTML = Object.entries(PROMO_TYPES).map(([k, t]) => `<button type="button" class="promo-type-btn ${promoType === k ? 'selected' : ''}" style="--pc:${t.color}" onclick="selectPromoType('${k}')"><span class="w-9 h-9 rounded-xl flex items-center justify-center text-white" style="background:${t.color}"><i data-lucide="${t.icon}" class="w-4 h-4"></i></span>${esc(t.label)}</button>`).join('');
             refreshIcons();
         }
         window.selectPromoType = (k) => {
+            if (isForcedProfileMode) return;
             if (!PROMO_TYPES[k]) return;
             promoType = k; renderPromoTypeGrid(); renderPromoExtraFields();
         };
         function renderPromoExtraFields() {
+            if (isForcedProfileMode) return;
             const box = document.getElementById('promoExtraFields'); if (!box) return;
             const fields = PROMO_EXTRA_FIELDS[promoType] || [];
             if (!promoType || fields.length === 0) { box.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">${promoType ? 'এই ধরনের জন্য অতিরিক্ত তথ্য লাগবে না। পরের ধাপে যান।' : 'প্রথমে প্রমোশনের ধরন বেছে নিন।'}</p>`; return; }
@@ -3366,6 +3520,7 @@
             const out = {}; (PROMO_EXTRA_FIELDS[promoType] || []).forEach(f => { out[f.k] = (document.getElementById('pxf_' + f.k)?.value || '').trim(); }); return out;
         }
         function renderPromoCtaList() {
+            if (isForcedProfileMode) return;
             const box = document.getElementById('promoCtaList'); if (!box) return;
             box.innerHTML = Object.entries(PROMO_CTA_OPTIONS).map(([k, o]) => `<div class="rounded-xl border border-amber-900/40 bg-[#051008] p-2.5">
                 <label class="flex items-center gap-2.5 cursor-pointer text-sm font-semibold text-slate-200"><input type="checkbox" class="accent-amber-500 w-4 h-4" id="pcta_chk_${k}" onchange="togglePromoCta('${k}', this.checked)"> ${o.label}</label>
@@ -3375,6 +3530,7 @@
             box.querySelectorAll('input.promo-input').forEach(i => i.addEventListener('input', updatePromoPreview));
         }
         window.togglePromoCta = (k, on) => {
+            if (isForcedProfileMode) return;
             if (on) promoCtaChecked.add(k); else promoCtaChecked.delete(k);
             document.getElementById('pcta_wrap_' + k)?.classList.toggle('hidden', !on);
             updatePromoPreview();
@@ -3401,6 +3557,7 @@
             return cta;
         }
         window.previewPromoImage = (input) => {
+            if (isForcedProfileMode) return;
             const f = input.files && input.files[0]; if (!f) return;
             if (!/^image\/(jpeg|png)$/i.test(f.type)) { input.value = ''; return showToast('শুধু JPG/PNG ছবি দিন', 'circle-x', 'text-rose-400'); }
             if (f.size > 3 * 1024 * 1024) { input.value = ''; return showToast('ছবি সর্বোচ্চ ৩MB হতে পারবে', 'circle-x', 'text-rose-400'); }
@@ -3423,11 +3580,13 @@
             };
         }
         function updatePromoPreview() {
+            if (isForcedProfileMode) return;
             const box = document.getElementById('promoPreviewBox'); if (!box) return;
             box.innerHTML = buildPromotionCard(draftPromotion(), true); refreshIcons();
         }
 
         function setPromoStep(n) {
+            if (isForcedProfileMode) return;
             promoStep = n;
             for (let i = 1; i <= 4; i++) document.getElementById('promoStep' + i)?.classList.toggle('hidden', i !== n);
             document.getElementById('promoStepLabel').textContent = `ধাপ ${n}/৪ — ${PROMO_STEP_LABELS[n - 1]}`;
@@ -3463,8 +3622,8 @@
             }
             return true;
         }
-        window.promoNextStep = () => { if (validatePromoStep(promoStep)) setPromoStep(Math.min(4, promoStep + 1)); };
-        window.promoPrevStep = () => setPromoStep(Math.max(1, promoStep - 1));
+        window.promoNextStep = () => { if (isForcedProfileMode) return; if (validatePromoStep(promoStep)) setPromoStep(Math.min(4, promoStep + 1)); };
+        window.promoPrevStep = () => { if (isForcedProfileMode) return; setPromoStep(Math.max(1, promoStep - 1)); };
 
         async function getPromoServerCooldownMs() {
             try {
@@ -3478,6 +3637,7 @@
         function formatPromoWait(ms) { const h = Math.floor(ms / 3600000), m = Math.ceil((ms % 3600000) / 60000); return h > 0 ? `${h} ঘণ্টা ${m} মিনিট` : `${m} মিনিট`; }
 
         window.openPromotionFormModal = async () => {
+            if (isForcedProfileMode) return;
             if (!currentUser || !userProfile) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             const rate = checkRateLimit('promotion');
             if (!rate.allowed) return showToast(`২৪ ঘণ্টায় ১টি বিজ্ঞাপন দেওয়া যায়। ${formatPromoWait(rate.remaining * 1000)} পর আবার চেষ্টা করুন`, 'clock', 'text-amber-400');
@@ -3503,11 +3663,13 @@
             refreshIcons();
         };
         window.closePromotionFormModal = () => {
+            if (isForcedProfileMode) return;
             const m = document.getElementById('promotionFormModal'); if (!m || m.classList.contains('hidden')) return;
             m.classList.add('hidden'); document.body.classList.remove('overflow-hidden');
             if (promoImageObjUrl) { URL.revokeObjectURL(promoImageObjUrl); promoImageObjUrl = ''; }
         };
         window.handleRunAdClick = () => {
+            if (isForcedProfileMode) return;
             closePremiumActionModal();
             if (!isUserPremium) {
                 showToast('বিজ্ঞাপন চালাতে প্রিমিয়াম সাবস্ক্রিপশন কিনতে হবে', 'crown', 'text-amber-400');
@@ -3517,6 +3679,7 @@
             openPromotionFormModal();
         };
         window.handlePromotionSubmit = async () => {
+            if (isForcedProfileMode) return;
             if (promoSubmitting) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
@@ -3624,7 +3787,7 @@
         }
         let lastActivePromoCount = -1;
         setInterval(() => {
-            if (!promotionsCache.length) return;
+            if (!promotionsCache.length || isForcedProfileMode) return;
             const n = getActivePromotions().length;
             if (lastActivePromoCount !== -1 && n !== lastActivePromoCount && currentTab === 'services') renderServices(true);
             lastActivePromoCount = n;
@@ -3686,6 +3849,7 @@
 
         // ========== RENDER SERVICES ==========
         function renderServices(reset = false) {
+            if (isForcedProfileMode) return;
             const grid = document.getElementById('servicesGrid');
             const count = document.getElementById('itemCountText');
             if (!grid) return;
@@ -3761,6 +3925,7 @@
 
         // ========== SERVICE DETAIL MODAL ==========
         window.openServiceDetail = (serviceId) => {
+            if (isForcedProfileMode) return;
             const service = servicesCache.find(s => s.id === serviceId)
                 || favoritesCache.find(s => s.id === serviceId)
                 || (allServicesFullCache || []).find(s => s.id === serviceId);
@@ -3820,6 +3985,7 @@
 
         // ========== EMERGENCY ==========
         function renderEmergency() {
+            if (isForcedProfileMode) return;
             const list = document.getElementById('emergencyList');
             if (!list) return;
             const search = getSearchValue();
@@ -3870,6 +4036,7 @@
 
         // ========== USER EMERGENCY REQUEST ==========
         window.openUserEmergencyRequestModal = () => {
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             document.getElementById('userEmergencyForm').reset();
             if (userProfile && userProfile.phone) {
@@ -3889,6 +4056,7 @@
 
         window.handleUserEmergencySubmit = async (e) => {
             e.preventDefault();
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
             const title = document.getElementById('reqTitle').value.trim();
@@ -3933,6 +4101,7 @@
 
         // ========== USER BLOOD DONOR REQUEST ==========
         window.openUserBloodRequestModal = () => {
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             document.getElementById('userBloodForm').reset();
             if (userProfile && userProfile.fullName) {
@@ -3955,6 +4124,7 @@
 
         window.handleUserBloodSubmit = async (e) => {
             e.preventDefault();
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
             const name = document.getElementById('bldReqName').value.trim();
@@ -4002,6 +4172,7 @@
 
         // ========== BLOOD ==========
         window.filterBloodDonors = () => {
+            if (isForcedProfileMode) return;
             const grid = document.getElementById('bloodDonorsGrid');
             if (!grid) return;
             const group = document.getElementById('bloodGroupFilter').value;
@@ -4022,8 +4193,9 @@
             refreshIcons();
         };
 
-        // ========== ✅ UPDATED: CHAT RENDERING WITH OFFLINE/PENDING STATES ==========
+        // ========== CHAT RENDERING WITH OFFLINE/PENDING STATES ==========
         function renderChatMessages() {
+            if (isForcedProfileMode) return;
             const box = document.getElementById('chatMessages');
             if (!box) return;
             if (chatMessages.length === 0) {
@@ -4063,11 +4235,12 @@
             box.scrollTop = box.scrollHeight;
             refreshIcons();
         }
-        window.focusChatInput = () => { const i = document.getElementById('chatInput'); if (i) i.focus(); };
+        window.focusChatInput = () => { if (isForcedProfileMode) return; const i = document.getElementById('chatInput'); if (i) i.focus(); };
 
-        // ========== ✅ UPDATED: CHAT SEND WITH OFFLINE OPTIMISTIC UI ==========
+        // ========== CHAT SEND WITH OFFLINE OPTIMISTIC UI ==========
         window.handleSendChatMessage = async (e) => {
             e.preventDefault();
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
 
@@ -4082,7 +4255,6 @@
             const time = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
             const tempId = 'temp-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
 
-            // ✅ Optimistic UI — instantly show
             const optimisticMsg = {
                 id: tempId, sender: 'user', text, time,
                 uid: currentUser.uid,
@@ -4099,7 +4271,6 @@
             refreshIcons();
 
             try {
-                // ✅ Firestore write — offline-এ locally queue হবে
                 await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
                     sender: 'user', text, time,
                     uid: currentUser.uid,
@@ -4116,7 +4287,6 @@
                     showToast('📡 অফলাইন — net ফিরলে auto যাবে', 'wifi-off', 'text-amber-400');
                 } else if (!isAdminOnline) {
                     showToast('মেসেজ পাঠানো হয়েছে (অ্যাডমিন অফলাইনে)', 'check-circle', 'text-emerald-400');
-                    // Auto-reply when admin offline
                     const key = `autoReply_${currentUser.uid}`;
                     const last = parseInt(lsGet(key, '0'), 10);
                     if (Date.now() - last > 3600000) {
@@ -4133,7 +4303,6 @@
                     showToast('মেসেজ পাঠানো হয়েছে', 'check-circle', 'text-emerald-400');
                 }
             } catch (err) {
-                // ❌ fail হলে optimistic মেসেজ সরান
                 chatMessages = chatMessages.filter(m => m.id !== tempId);
                 renderChatMessages();
                 showToast('পাঠানো যায়নি: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
@@ -4152,7 +4321,7 @@
             lsSetJSON(`amar-chat-read-${currentUid()}`, arr.length > CHAT_READ_MAX ? arr.slice(-CHAT_READ_MAX) : arr);
         }
         async function markMessagesAsRead() {
-            if (!currentUser || !firebaseReady) return;
+            if (!currentUser || !firebaseReady || isForcedProfileMode) return;
             markMessagesAsReadLocally();
             const unread = chatMessages.filter(m => m.sender === 'admin' && m.readByUser !== true);
             if (!unread.length) { updateUnreadBadge(); return; }
@@ -4191,6 +4360,7 @@
 
         // ========== PROVIDER FORM ==========
         window.previewProviderImage = (e) => {
+            if (isForcedProfileMode) return;
             const file = e.target.files[0];
             if (!file) return;
             if (file.size > 3 * 1024 * 1024) { showToast('ছবির সাইজ ৩MB এর কম হতে হবে', 'circle-x', 'text-rose-400'); e.target.value = ''; return; }
@@ -4206,6 +4376,7 @@
             r.readAsDataURL(file);
         };
         window.openProviderModal = () => {
+            if (isForcedProfileMode) return;
             if (!userProfile) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             document.getElementById('provServiceTitle').value = '';
             document.getElementById('provProviderName').value = userProfile.fullName || '';
@@ -4253,6 +4424,7 @@
         }
         window.handleProviderSubmit = async (e) => {
             e.preventDefault();
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
             const rate = checkRateLimit('provider');
@@ -4302,6 +4474,7 @@
 
         // ========== FEEDBACK ==========
         window.openFeedbackModal = () => {
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             document.getElementById('feedbackForm').reset();
             updateFeedbackCooldownUI();
@@ -4326,6 +4499,7 @@
         }
         window.handleFeedbackSubmit = async (e) => {
             e.preventDefault();
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
             const rate = checkRateLimit('feedback');
@@ -4348,12 +4522,13 @@
         };
 
         // ========== ABOUT/TERMS ==========
-        window.openAboutModal = () => { document.getElementById('aboutModal').classList.remove('hidden'); document.getElementById('aboutModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
+        window.openAboutModal = () => { if (isForcedProfileMode) return; document.getElementById('aboutModal').classList.remove('hidden'); document.getElementById('aboutModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
         window.closeAboutModal = () => { document.getElementById('aboutModal').classList.add('hidden'); document.getElementById('aboutModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
-        window.openTermsModal = () => { document.getElementById('termsModal').classList.remove('hidden'); document.getElementById('termsModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
+        window.openTermsModal = () => { if (isForcedProfileMode) return; document.getElementById('termsModal').classList.remove('hidden'); document.getElementById('termsModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
         window.closeTermsModal = () => { document.getElementById('termsModal').classList.add('hidden'); document.getElementById('termsModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
         
         window.openPremiumActionModal = () => {
+            if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             const m = document.getElementById('premiumActionModal');
             m.classList.remove('hidden'); m.classList.add('flex');
@@ -4395,6 +4570,7 @@
 
         // ========== CATEGORY MODAL ==========
         window.openCategoryModal = () => {
+            if (isForcedProfileMode) return;
             const searchInput = document.getElementById('modalCategorySearch');
             if (searchInput) searchInput.value = '';
             document.getElementById('categoryModal').classList.remove('hidden');
@@ -4404,6 +4580,7 @@
         };
         window.closeCategoryModal = () => { document.getElementById('categoryModal').classList.add('hidden'); document.body.classList.remove('overflow-hidden'); };
         function renderModalCategories(list) {
+            if (isForcedProfileMode) return;
             const c = document.getElementById('modalCategoriesList');
             if (!c) return;
             if (!list.length) { c.innerHTML = '<div class="col-span-full text-center py-8 text-slate-400 text-xs">কোনো ক্যাটাগরি নেই।</div>'; refreshIcons(); return; }
@@ -4417,10 +4594,11 @@
             refreshIcons();
         }
         window.filterModalCategories = () => {
+            if (isForcedProfileMode) return;
             const q = document.getElementById('modalCategorySearch').value.toLowerCase().trim();
             renderModalCategories(categories.filter(c => (c.name || '').toLowerCase().includes(q)));
         };
-        window.selectCategoryFromModal = (id) => { filterCategory(id); closeCategoryModal(); };
+        window.selectCategoryFromModal = (id) => { if (isForcedProfileMode) return; filterCategory(id); closeCategoryModal(); };
 
         // ========== REALTIME LISTENERS ==========
         function attachRealtimeListeners() {
@@ -4504,6 +4682,7 @@
         const bottomNavElement = document.getElementById('bottomNav');
 
         window.addEventListener('scroll', () => {
+            if (isForcedProfileMode) return;
             if (!ticking) {
                 window.requestAnimationFrame(() => {
                     if (document.body.classList.contains('overflow-hidden')) {
@@ -4534,13 +4713,38 @@
 
                     try {
                         onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
-                            if (docSnap.exists()) { userProfile = docSnap.data(); updateProfileUI(); }
+                            if (docSnap.exists()) { 
+                                userProfile = docSnap.data(); 
+                                updateProfileUI(); 
+                                // Re-check if profile becomes complete/incomplete dynamically
+                                if (!isForcedProfileMode && !isProfileComplete(userProfile)) {
+                                    isForcedProfileMode = true;
+                                    document.body.classList.add('force-profile-mode');
+                                    setTimeout(() => {
+                                        openEditProfileModal(true);
+                                        showToast('শর্টকাট লগইনের জন্য অনুগ্রহ করে প্রোফাইল সম্পূর্ণ করুন!', 'shield-alert', 'text-amber-400');
+                                    }, 500);
+                                }
+                            }
                         }, (e) => console.warn('User profile listener', e));
 
                         const snap = await getDoc(doc(db, 'users', user.uid));
                         userProfile = snap.exists() ? snap.data() : { email: user.email, fullName: user.displayName || user.email?.split('@')[0] || 'নাগরিক' };
                         updateProfileUI();
                         attachRealtimeListeners();
+
+                        // ✅ NEW FORCE PROFILE CHECK
+                        if (!isProfileComplete(userProfile)) {
+                            isForcedProfileMode = true;
+                            document.body.classList.add('force-profile-mode');
+                            setTimeout(() => {
+                                openEditProfileModal(true);
+                                showToast('শর্টকাট লগইনের জন্য অনুগ্রহ করে প্রোফাইল সম্পূর্ণ করুন!', 'shield-alert', 'text-amber-400');
+                            }, 500);
+                        } else {
+                            isForcedProfileMode = false;
+                            document.body.classList.remove('force-profile-mode');
+                        }
 
                         try { await setDoc(doc(db, 'users', user.uid), { lastLogin: serverTimestamp() }, { merge: true }); } catch (e) {}
 
@@ -4587,6 +4791,8 @@
                     }
                 } else {
                     userProfile = null; currentUser = null; chatInitialLoadDone = false;
+                    isForcedProfileMode = false;
+                    document.body.classList.remove('force-profile-mode');
                     if (unsubscribeChat) { unsubscribeChat(); unsubscribeChat = null; }
                     if (unsubscribeAdminStatus) { unsubscribeAdminStatus(); unsubscribeAdminStatus = null; }
                     [unsubCategories, unsubEmergency, unsubBlood, unsubNotices, unsubPromotions].forEach(fn => { try { fn?.(); } catch(e){} });
@@ -4629,7 +4835,6 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // ✅ এটি আপনার নোটিফিকেশন সার্ভিস ওয়ার্কার ফাইল
                 navigator.serviceWorker.register('/firebase-messaging-sw.js')
                 .then((registration) => {
                     console.log('SW Registered with scope: ', registration.scope);

@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "shop.amarelaka.www.twa",
+    "sha256_cert_fingerprints": ["DE:D9:6A:07:23:09:CC:2B:05:3A:E6:73:B6:D5:BD:95:D3:E0:78:5D:C3:DB:61:95:5E:62:2E:5C:2C:E9:ED:EA"]
+  }
+}]

@@ -1,8 +1,8 @@
 // ==========================================
 // ১. Firebase Setup for Push Notification
 // ==========================================
-importScripts('https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging-compat.js');
 
 const firebaseConfig = {
   apiKey: "AIzaSyCQUjnlabQIa7kAaNnDaYvjyAf9eY_yoRo",
@@ -20,7 +20,7 @@ const messaging = firebase.messaging();
 // ব্যাকগ্রাউন্ডে নোটিফিকেশন আসলে কী দেখাবে
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  
+
   const notificationTitle = payload.notification?.title || "আমার এলাকা";
   const notificationOptions = {
     body: payload.notification?.body || "নতুন নোটিফিকেশন এসেছে",
@@ -34,9 +34,7 @@ messaging.onBackgroundMessage((payload) => {
 // ==========================================
 // ২. PWA Offline Caching (আপনার আগের sw.js থেকে)
 // ==========================================
-// ওয়ানসিগনাল আগে থেকে থাকলে সেটি বাদ দেওয়া হয়েছে
-
-const CACHE_NAME = 'amar-elaka-v4'; // ভার্সন আপডেট করা হলো (v3 থেকে v4)
+const CACHE_NAME = 'amar-elaka-v4';
 const CACHE_URLS = [
   '/',
   '/index.html',
@@ -70,10 +68,9 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// ফেচ (নেটওয়ার্ক না থাকলে ক্যাশ থেকে দেখানো)
+// ফেচ (নেটওয়ার্ক না থাকলে ক্যাশ থেকে দেখানো)
 self.addEventListener('fetch', (event) => {
-  // ফায়ারবেস এবং এপিআই রিকোয়েস্টগুলো ক্যাশ করবো না
-  if (event.request.url.includes('firestore.googleapis.com') || 
+  if (event.request.url.includes('firestore.googleapis.com') ||
       event.request.url.includes('identitytoolkit') ||
       event.request.url.includes('googleapis.com')) {
     return;

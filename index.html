@@ -84,6 +84,16 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 8px); }
 
+        /* ========== premium launch off ========== */
+        body.premium-off .premium-feature { display: none !important; }
+        body.premium-off #sidebarPremiumBtn { display: none !important; }
+        body.premium-off #headerPlusBtn { display: none !important; }
+        body.premium-off #profileBlueBadge,
+        body.premium-off #sidebarBlueBadge { display: none !important; }
+        body.premium-off #profileVerifyBtn { display: none !important; }
+        body.premium-off #currentPlanCard { display: none !important; }
+        body.premium-off #profilePlanMiniCard { display: none !important; }
+
         /* ========== offline banner ========== */
         #offlineBanner {
             position: fixed;
@@ -1013,7 +1023,7 @@
                 <div class="space-y-0.5">
                     <button type="button" onclick="sidebarNav('profile')" class="sidebar-item"><i data-lucide="user"></i><span>প্রোফাইল</span></button>
                     <button type="button" onclick="sidebarNav('favorites')" class="sidebar-item"><i data-lucide="heart"></i><span>আমার পছন্দ</span></button>
-                    <button type="button" onclick="sidebarNav('subscription')" class="sidebar-item"><i data-lucide="crown"></i><span>প্রিমিয়াম</span></button>
+                    <button type="button" id="sidebarPremiumBtn" onclick="sidebarNav('subscription')" class="sidebar-item premium-feature"><i data-lucide="crown"></i><span>প্রিমিয়াম</span></button>
                 </div>
             </div>
 
@@ -1110,7 +1120,7 @@
                         </button>
                     </div>
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                        <button type="button" id="headerPlusBtn" onclick="openPremiumActionModal()" class="top-app-icon-btn text-purple-400 hover:bg-purple-500/15" title="প্রিমিয়াম অ্যাকশন" aria-label="প্রিমিয়াম অ্যাকশন">
+                        <button type="button" id="headerPlusBtn" onclick="openPremiumActionModal()" class="top-app-icon-btn text-purple-400 hover:bg-purple-500/15 premium-feature" title="প্রিমিয়াম অ্যাকশন" aria-label="প্রিমিয়াম অ্যাকশন">
                             <i data-lucide="plus-circle" class="w-5 h-5"></i>
                         </button>
                         <button type="button" onclick="openNotifPanel()" class="top-app-icon-btn" title="নোটিফিকেশন" aria-label="নোটিফিকেশন">
@@ -1325,7 +1335,7 @@
             </div>
 
             <!-- SUBSCRIPTION VIEW -->
-            <div id="view-subscription" class="tab-view hidden space-y-6 pb-10">
+            <div id="view-subscription" class="tab-view hidden premium-feature space-y-6 pb-10">
                 <div id="currentPlanCard" class="glass-card rounded-2xl p-4 sm:p-5 max-w-2xl mx-auto border-2 border-emerald-500/40">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
@@ -1406,18 +1416,14 @@
 
                 <div class="max-w-4xl mx-auto pt-4" id="packagesSectionTitleContainer">
                     <h3 id="packagesSectionTitle" class="text-white font-bold mb-4 px-1 scroll-mt-24">Select a Package</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        <div class="package-card" onclick="selectPackage('1 Month', 50, this)"><div class="package-duration">1 Month</div><div class="package-price">৳50</div><button class="mt-3 w-full bg-emerald-900/50 text-emerald-300 text-xs font-bold py-2 rounded-lg border border-emerald-700/50">Get Subscription</button></div>
-                        <div class="package-card" onclick="selectPackage('2 Months', 80, this)"><div class="package-duration">2 Months</div><div class="package-price">৳80</div><button class="mt-3 w-full bg-emerald-900/50 text-emerald-300 text-xs font-bold py-2 rounded-lg border border-emerald-700/50">Get Subscription</button></div>
-                        <div class="package-card" onclick="selectPackage('3 Months', 120, this)"><div class="package-duration">3 Months</div><div class="package-price">৳120</div><button class="mt-3 w-full bg-emerald-900/50 text-emerald-300 text-xs font-bold py-2 rounded-lg border border-emerald-700/50">Get Subscription</button></div>
-                        <div class="package-card" onclick="selectPackage('6 Months', 200, this)"><div class="package-duration">6 Months</div><div class="package-price">৳200</div><button class="mt-3 w-full bg-emerald-900/50 text-emerald-300 text-xs font-bold py-2 rounded-lg border border-emerald-700/50">Get Subscription</button></div>
-                        <div class="package-card" onclick="selectPackage('12 Months', 400, this)"><div class="package-duration">12 Months</div><div class="package-price">৳400</div><button class="mt-3 w-full bg-emerald-900/50 text-emerald-300 text-xs font-bold py-2 rounded-lg border border-emerald-700/50">Get Subscription</button></div>
+                    <div id="packagesGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <p class="text-slate-500 text-sm col-span-full text-center py-6">প্যাকেজ লোড হচ্ছে...</p>
                     </div>
                 </div>
             </div>
 
             <!-- PAYMENT VIEW -->
-            <div id="view-payment" class="tab-view hidden space-y-6 pb-10">
+            <div id="view-payment" class="tab-view hidden premium-feature space-y-6 pb-10">
                 <div class="flex items-center gap-3 mb-2">
                     <button onclick="switchTab('subscription')" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-slate-700"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
                     <h2 class="text-xl font-bold text-white">Complete Payment</h2>
@@ -1443,7 +1449,7 @@
                         <div>
                             <label class="block text-[11px] font-bold text-emerald-300 uppercase tracking-wider mb-1.5">Send Money To *</label>
                             <div class="bg-[#051008] border border-emerald-900/50 rounded-xl flex items-center justify-between px-4 py-3">
-                                <span class="text-sm font-mono text-white tracking-widest">01754285309</span>
+                                <span id="paymentNumberDisplay" class="text-sm font-mono text-white tracking-widest">01754285309</span>
                                 <button type="button" onclick="copyPaymentNumber()" class="flex items-center gap-1.5 bg-emerald-900/50 hover:bg-emerald-800 text-emerald-300 px-3 py-1.5 rounded-lg transition"><i data-lucide="copy" class="w-4 h-4"></i><span class="text-xs font-bold">Copy</span></button>
                             </div>
                         </div>
@@ -1473,7 +1479,7 @@
                         <p class="text-xs text-slate-400 mt-0.5" id="profileLocation">—</p>
                     </div>
                     <div class="pt-4">
-                        <div id="profilePlanMiniCard" class="p-3 bg-gradient-to-br from-amber-950/40 to-orange-950/30 rounded-2xl border border-amber-700/40">
+                        <div id="profilePlanMiniCard" class="premium-feature p-3 bg-gradient-to-br from-amber-950/40 to-orange-950/30 rounded-2xl border border-amber-700/40">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center"><i data-lucide="crown" class="w-4 h-4 text-amber-400"></i></div>
@@ -2452,11 +2458,158 @@
         let selectedProfilePicFile = null;
         const CLOUDINARY_CLOUD_NAME = "y2k19sbu";
         const CLOUDINARY_UPLOAD_PRESET = "amar_elaka_preset";
-        let selectedPackage = { name: '1 Month', amount: 50 };
+        let selectedPackage = { name: '1 Month', amount: 50, days: 30 };
         let selectedPaymentMethod = null;
         let isUserPremium = false;
+        let premiumLaunchEnabled = true; // from appSettings/config — admin can hide entire premium system
+        let unsubAppSettings = null;
         let isAdminOnline = false;
-        const PLAN_DAYS_MAP = { '1 Month':30,'2 Months':60,'3 Months':90,'6 Months':180,'12 Months':365 };
+
+        const DEFAULT_PACKAGES = [
+            { id: 'pkg_1m', name: '1 Month', price: 50, days: 30, active: true },
+            { id: 'pkg_2m', name: '2 Months', price: 80, days: 60, active: true },
+            { id: 'pkg_3m', name: '3 Months', price: 120, days: 90, active: true },
+            { id: 'pkg_6m', name: '6 Months', price: 200, days: 180, active: true },
+            { id: 'pkg_12m', name: '12 Months', price: 400, days: 365, active: true }
+        ];
+        const DEFAULT_PAYMENT_NUMBERS = { bkash: '01754285309', nagad: '01754285309', rocket: '01754285309' };
+        let subscriptionPackages = DEFAULT_PACKAGES.map(p => ({ ...p }));
+        let paymentNumbers = { ...DEFAULT_PAYMENT_NUMBERS };
+
+        // Backward-compatible map built from live packages
+        let PLAN_DAYS_MAP = { '1 Month':30,'2 Months':60,'3 Months':90,'6 Months':180,'12 Months':365 };
+        function rebuildPlanDaysMap() {
+            const map = {};
+            (subscriptionPackages || []).forEach(p => {
+                if (p && p.name) map[p.name] = Number(p.days) || 30;
+            });
+            PLAN_DAYS_MAP = Object.keys(map).length ? map : { '1 Month':30,'2 Months':60,'3 Months':90,'6 Months':180,'12 Months':365 };
+        }
+
+        // ========== PREMIUM LAUNCH (admin controlled) ==========
+        function isPremiumSystemLive() {
+            return premiumLaunchEnabled !== false;
+        }
+        function applyPremiumLaunchUI() {
+            const live = isPremiumSystemLive();
+            document.body.classList.toggle('premium-off', !live);
+            // If currently on subscription/payment while system is off, leave those views
+            if (!live && (currentTab === 'subscription' || currentTab === 'payment')) {
+                try { switchTab('services'); } catch (e) {}
+            }
+            // Recompute premium UI (blue ticks etc.) from profile
+            if (typeof updateProfileUI === 'function' && userProfile) {
+                try { updateProfileUI(); } catch (e) {}
+            } else if (!live) {
+                // Force hide blue badges even without profile
+                const bBadge = document.getElementById('profileBlueBadge');
+                const sBadge = document.getElementById('sidebarBlueBadge');
+                if (bBadge) bBadge.classList.add('hidden');
+                if (sBadge) sBadge.classList.add('hidden');
+                isUserPremium = false;
+            }
+            if (typeof updateCurrentPlanDisplay === 'function') {
+                try { updateCurrentPlanDisplay(); } catch (e) {}
+            }
+            if (window.lucide) try { refreshIcons(); } catch (e) {}
+        }
+        function attachAppSettingsListener() {
+            if (!firebaseReady || typeof onSnapshot !== 'function') return;
+            if (unsubAppSettings) { try { unsubAppSettings(); } catch (e) {} unsubAppSettings = null; }
+            unsubAppSettings = onSnapshot(doc(db, 'appSettings', 'config'), (snap) => {
+                if (snap.exists()) {
+                    const d = snap.data() || {};
+                    // Missing field = treat as ON (backward compatible)
+                    premiumLaunchEnabled = d.premiumEnabled !== false;
+                    if (Array.isArray(d.packages) && d.packages.length) {
+                        subscriptionPackages = d.packages.map(p => ({
+                            id: p.id || ('pkg_' + Math.random().toString(36).slice(2, 8)),
+                            name: p.name || 'Package',
+                            price: Number(p.price) || 0,
+                            days: Number(p.days) || 30,
+                            active: p.active !== false
+                        }));
+                    } else {
+                        subscriptionPackages = DEFAULT_PACKAGES.map(p => ({ ...p }));
+                    }
+                    if (d.paymentNumbers && typeof d.paymentNumbers === 'object') {
+                        paymentNumbers = {
+                            bkash: d.paymentNumbers.bkash || DEFAULT_PAYMENT_NUMBERS.bkash,
+                            nagad: d.paymentNumbers.nagad || DEFAULT_PAYMENT_NUMBERS.nagad,
+                            rocket: d.paymentNumbers.rocket || DEFAULT_PAYMENT_NUMBERS.rocket
+                        };
+                    } else {
+                        paymentNumbers = { ...DEFAULT_PAYMENT_NUMBERS };
+                    }
+                } else {
+                    premiumLaunchEnabled = true;
+                    subscriptionPackages = DEFAULT_PACKAGES.map(p => ({ ...p }));
+                    paymentNumbers = { ...DEFAULT_PAYMENT_NUMBERS };
+                }
+                rebuildPlanDaysMap();
+                renderSubscriptionPackages();
+                updatePaymentNumberDisplay();
+                applyPremiumLaunchUI();
+            }, (err) => {
+                console.warn('appSettings listener:', err?.code || err?.message);
+                premiumLaunchEnabled = true;
+                subscriptionPackages = DEFAULT_PACKAGES.map(p => ({ ...p }));
+                paymentNumbers = { ...DEFAULT_PAYMENT_NUMBERS };
+                rebuildPlanDaysMap();
+                renderSubscriptionPackages();
+                updatePaymentNumberDisplay();
+                applyPremiumLaunchUI();
+            });
+        }
+
+        function renderSubscriptionPackages() {
+            const grid = document.getElementById('packagesGrid');
+            if (!grid) return;
+            const list = (subscriptionPackages || []).filter(p => p && p.active !== false && Number(p.price) > 0);
+            if (!list.length) {
+                grid.innerHTML = '<p class="text-slate-500 text-sm col-span-full text-center py-6">এখন কোনো প্যাকেজ উপলব্ধ নেই।</p>';
+                return;
+            }
+            // Keep selectedPackage in sync if still valid
+            const still = list.find(p => p.name === selectedPackage?.name && Number(p.price) === Number(selectedPackage?.amount));
+            if (!still && list[0]) {
+                selectedPackage = { name: list[0].name, amount: Number(list[0].price), days: Number(list[0].days) || 30 };
+                const n = document.getElementById('paySelectedPackageName');
+                const a = document.getElementById('paySelectedPackageAmount');
+                if (n) n.textContent = selectedPackage.name;
+                if (a) a.textContent = '৳' + selectedPackage.amount;
+            }
+            grid.innerHTML = list.map(p => {
+                const name = String(p.name || 'Package');
+                const price = Number(p.price) || 0;
+                const days = Number(p.days) || 30;
+                const safeName = name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                return `<div class="package-card" data-pkg-id="${esc(p.id || '')}" onclick="selectPackage('${safeName}', ${price}, this, ${days})">
+                    <div class="package-duration">${esc(name)}</div>
+                    <div class="package-price">৳${price}</div>
+                    <p class="text-[10px] text-slate-400 mt-1">${days} দিন</p>
+                    <button type="button" class="mt-3 w-full bg-emerald-900/50 text-emerald-300 text-xs font-bold py-2 rounded-lg border border-emerald-700/50">Get Subscription</button>
+                </div>`;
+            }).join('');
+            if (window.lucide) try { refreshIcons(); } catch (e) {}
+        }
+
+        function getPaymentNumberForMethod(method) {
+            const m = String(method || selectedPaymentMethod || '').toLowerCase();
+            if (m === 'bkash') return paymentNumbers.bkash || DEFAULT_PAYMENT_NUMBERS.bkash;
+            if (m === 'nagad') return paymentNumbers.nagad || DEFAULT_PAYMENT_NUMBERS.nagad;
+            if (m === 'rocket') return paymentNumbers.rocket || DEFAULT_PAYMENT_NUMBERS.rocket;
+            // fallback: first non-empty
+            return paymentNumbers.bkash || paymentNumbers.nagad || paymentNumbers.rocket || DEFAULT_PAYMENT_NUMBERS.bkash;
+        }
+
+        function updatePaymentNumberDisplay() {
+            const el = document.getElementById('paymentNumberDisplay');
+            if (!el) return;
+            el.textContent = getPaymentNumberForMethod(selectedPaymentMethod);
+        }
+
+
         const RATE_LIMITS = { chat: 1000, feedback: 60000, provider: 300000, subscription: 60000, promotion: 86400000 };
         const CHAT_READ_MAX = 500;
 
@@ -2601,6 +2754,10 @@
         window.sidebarNav = (action) => {
             closeSidebar();
             setTimeout(() => {
+                if (action === 'subscription' && !isPremiumSystemLive()) {
+                    showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
+                    return;
+                }
                 if (action === 'provider') openProviderModal();
                 else if (action === 'feedback') openFeedbackModal();
                 else if (action === 'about') openAboutModal();
@@ -2682,10 +2839,47 @@
             if (!notif || !notif.id || !currentUser) return;
             const list = getNotifStore();
             if (list.find(n => n.id === notif.id)) return;
-            list.unshift({ id: notif.id, type: notif.type || 'info', title: notif.title || 'নোটিফিকেশন', body: notif.body || '', icon: notif.icon || 'bell', read: false, time: new Date().toISOString() });
+            list.unshift({
+                id: notif.id,
+                type: notif.type || 'info',
+                title: notif.title || 'নোটিফিকেশন',
+                body: notif.body || '',
+                icon: notif.icon || 'bell',
+                image: notif.image || '',
+                clickAction: notif.clickAction || 'home',
+                read: false,
+                time: new Date().toISOString()
+            });
             saveNotifStore(list);
             renderNotifications();
             updateNotifBadge();
+        }
+
+        function handleNotificationClick(id) {
+            const list = getNotifStore();
+            const item = list.find(n => n.id === id);
+            if (item && !item.read) {
+                item.read = true;
+                saveNotifStore(list);
+                renderNotifications();
+                updateNotifBadge();
+            }
+            const action = (item && item.clickAction) || 'home';
+            navigateFromNotification(action);
+            closeNotifPanel();
+        }
+
+        function navigateFromNotification(action) {
+            const map = {
+                'subscription': 'subscription',
+                'chat': 'chat',
+                'home': 'services',
+                'services': 'services',
+                'notice': 'services',
+                'profile': 'profile'
+            };
+            const tab = map[action] || 'services';
+            try { switchTab(tab); } catch (e) { console.warn(e); }
         }
         function getUnreadNotifCount() { return getNotifStore().filter(n => !n.read).length; }
         function updateNotifBadge() {
@@ -2723,9 +2917,13 @@
                 </div>`;
                 refreshIcons(); return;
             }
-            list.innerHTML = items.map(n => `
-                <div class="notif-item ${n.read ? 'read' : 'unread'}" onclick="markNotificationRead('${esc(n.id)}')">
-                    <div class="notif-icon"><i data-lucide="${esc(n.icon || 'bell')}"></i></div>
+            list.innerHTML = items.map(n => {
+                const iconHtml = n.image
+                    ? `<div class="notif-icon overflow-hidden p-0"><img src="${esc(n.image)}" class="w-full h-full object-cover rounded-xl" alt=""></div>`
+                    : `<div class="notif-icon"><i data-lucide="${esc(n.icon || 'bell')}"></i></div>`;
+                return `
+                <div class="notif-item ${n.read ? 'read' : 'unread'}" onclick="handleNotificationClick('${esc(n.id)}')">
+                    ${iconHtml}
                     <div class="min-w-0 flex-1">
                         <div class="flex items-start justify-between gap-2">
                             <h4 class="text-xs font-bold text-slate-100 leading-snug">${esc(n.title)}</h4>
@@ -2734,7 +2932,8 @@
                         ${n.body ? `<p class="mt-0.5 text-[11px] text-slate-400 leading-relaxed line-clamp-2">${esc(n.body)}</p>` : ''}
                         <span class="text-[10px] text-slate-500 mt-1 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${esc(formatNotifTime(n.time))}</span>
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
             refreshIcons();
         }
         window.markNotificationRead = (id) => {
@@ -2907,9 +3106,25 @@
                     if (token) await setDoc(doc(db, 'users', currentUser.uid), { fcmToken: token }, { merge: true });
                 }
                 onMessage(messaging, (payload) => {
-                    if (payload.notification) showToast(`${payload.notification.title}: ${payload.notification.body}`, 'bell', 'text-emerald-400');
+                    const n = payload.notification || {};
+                    const d = payload.data || {};
+                    const title = n.title || d.title || 'Amar Elaka';
+                    const body = n.body || d.body || '';
+                    const clickAction = d.clickAction || d.click_action || 'home';
+                    const image = n.image || d.image || '';
+                    const id = `push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+                    addNotification({
+                        id,
+                        type: clickAction === 'chat' ? 'chat' : (clickAction === 'subscription' ? 'subscription' : 'info'),
+                        title,
+                        body,
+                        icon: clickAction === 'chat' ? 'headset' : (clickAction === 'subscription' ? 'crown' : 'bell'),
+                        image,
+                        clickAction
+                    });
+                    showToast(`${title}: ${body}`, 'bell', 'text-emerald-400');
                 });
-            } catch (e) {}
+            } catch (e) { console.warn('setupPushNotifications', e); }
         }
 
         // ========== CHAT AUTO CLEAR ==========
@@ -2984,11 +3199,13 @@
         }
 
         // ========== SUBSCRIPTION ==========
-        window.selectPackage = (name, amount, el) => {
+        window.selectPackage = (name, amount, el, days) => {
+            if (!isPremiumSystemLive()) return showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
             if (isForcedProfileMode) return;
-            selectedPackage = { name, amount };
+            const d = Number(days) || PLAN_DAYS_MAP[name] || 30;
+            selectedPackage = { name, amount: Number(amount), days: d };
             document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
+            if (el) el.classList.add('selected');
             document.getElementById('paySelectedPackageName').textContent = name;
             document.getElementById('paySelectedPackageAmount').textContent = `৳${amount}`;
             const banner = document.getElementById('payExistingPlanBanner');
@@ -3004,14 +3221,17 @@
             if (isForcedProfileMode) return;
             selectedPaymentMethod = m;
             document.querySelectorAll('.pay-method-card').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
+            if (el) el.classList.add('selected');
+            updatePaymentNumberDisplay();
         };
         window.copyPaymentNumber = () => {
             if (isForcedProfileMode) return;
-            navigator.clipboard.writeText("01754285309").then(() => showToast('Number copied!', 'copy', 'text-emerald-400')).catch(() => showToast('Copy failed', 'alert-circle', 'text-rose-400'));
+            const num = getPaymentNumberForMethod(selectedPaymentMethod);
+            navigator.clipboard.writeText(num).then(() => showToast('Number copied!', 'copy', 'text-emerald-400')).catch(() => showToast('Copy failed', 'alert-circle', 'text-rose-400'));
         };
         window.submitSubscriptionRequest = async (e) => {
             e.preventDefault();
+            if (!isPremiumSystemLive()) return showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
             if (isForcedProfileMode) return;
             if (!currentUser) return showToast('Please login first.', 'circle-x', 'text-rose-400');
             if (!selectedPaymentMethod) return showToast('Select payment method.', 'alert-circle', 'text-amber-400');
@@ -3025,12 +3245,12 @@
                 await addDoc(collection(db, 'subscriptionRequests'), {
                     userId: currentUser.uid, userName: userProfile?.fullName || 'Unknown', userPhone: userProfile?.phone || '',
                     userEmail: userProfile?.email || '', packageName: selectedPackage.name,
-                    packageDays: PLAN_DAYS_MAP[selectedPackage.name] || 30, amount: selectedPackage.amount,
+                    packageDays: selectedPackage.days || PLAN_DAYS_MAP[selectedPackage.name] || 30, amount: selectedPackage.amount,
                     paymentMethod: selectedPaymentMethod, transactionId: trxId, status: 'pending', createdAt: serverTimestamp()
                 });
                 await setDoc(doc(db, 'users', currentUser.uid), {
                     subscriptionStatus: 'pending', pendingPremiumPlan: selectedPackage.name,
-                    pendingPremiumAmount: selectedPackage.amount, pendingPremiumDays: PLAN_DAYS_MAP[selectedPackage.name] || 30,
+                    pendingPremiumAmount: selectedPackage.amount, pendingPremiumDays: selectedPackage.days || PLAN_DAYS_MAP[selectedPackage.name] || 30,
                     pendingRequestAt: serverTimestamp()
                 }, { merge: true });
                 userProfile.subscriptionStatus = 'pending';
@@ -3279,7 +3499,8 @@
             
             let et = 0;
             if (userProfile.premiumExpiry) et = typeof userProfile.premiumExpiry.toDate === 'function' ? userProfile.premiumExpiry.toDate().getTime() : new Date(userProfile.premiumExpiry).getTime();
-            isUserPremium = et > Date.now();
+            // When admin turns OFF premium launch, treat everyone as non-premium (no blue tick / plan UI)
+            isUserPremium = isPremiumSystemLive() && et > Date.now();
             const statusEl = document.getElementById('profileVerifyStatus');
             const verifyBtn = document.getElementById('profileVerifyBtn');
             const bBadge = document.getElementById('profileBlueBadge');
@@ -3404,6 +3625,11 @@
         window.switchTab = (tabName) => {
             if (isForcedProfileMode && tabName !== 'profile') {
                 showToast('অনুগ্রহ করে আগে প্রোফাইল সম্পূর্ণ করুন!', 'shield-alert', 'text-rose-400');
+                return;
+            }
+            // Premium system hidden by admin
+            if (!isPremiumSystemLive() && (tabName === 'subscription' || tabName === 'payment')) {
+                showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
                 return;
             }
             if (!currentUser && !['services', 'emergency', 'blood'].includes(tabName)) {
@@ -4179,6 +4405,10 @@
         window.handleRunAdClick = () => {
             if (isForcedProfileMode) return;
             closePremiumActionModal();
+            if (!isPremiumSystemLive()) {
+                showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
+                return;
+            }
             if (!isUserPremium) {
                 showToast('বিজ্ঞাপন চালাতে প্রিমিয়াম সাবস্ক্রিপশন কিনতে হবে', 'crown', 'text-amber-400');
                 setTimeout(() => switchTab('subscription'), 800);
@@ -4191,6 +4421,7 @@
             if (promoSubmitting) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
+            if (!isPremiumSystemLive()) return showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
             if (!isUserPremium) return showToast('প্রিমিয়াম সাবস্ক্রিপশন প্রয়োজন', 'crown', 'text-amber-400');
             const rate = checkRateLimit('promotion');
             if (!rate.allowed) return showToast('২৪ ঘণ্টায় ১টি বিজ্ঞাপন দেওয়া যায়', 'clock', 'text-amber-400');
@@ -5036,6 +5267,7 @@
         window.closeTermsModal = () => { document.getElementById('termsModal').classList.add('hidden'); document.getElementById('termsModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
         
         window.openPremiumActionModal = () => {
+            if (!isPremiumSystemLive()) return showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
             if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             const m = document.getElementById('premiumActionModal');
@@ -5113,6 +5345,7 @@
         // ========== REALTIME LISTENERS ==========
         function attachRealtimeListeners() {
             if (!firebaseReady) return;
+            attachAppSettingsListener();
             if (unsubPromotions) unsubPromotions();
             unsubPromotions = onSnapshot(query(collection(db, 'promotions'), where('status', '==', 'approved')), snap => {
                 promotionsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -5125,22 +5358,24 @@
                 const adminCats = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 categories = [{ id: 'all', name: 'সকল সেবা', icon: 'fa-border-all' }, ...adminCats];
                 renderCategoryChips();
-                if (currentUser) {
-                    trackCollectionUpdates('categories', categories, (item) => {
-                        addNotification({ id: `cat-${item.id}`, type: 'category', title: 'নতুন ক্যাটাগরি যোগ হয়েছে', body: item.name || 'নতুন ক্যাটাগরি', icon: 'layers' });
-                    });
-                }
+                // Category in-app notification disabled (too noisy for users)
+                // if (currentUser) {
+                //     trackCollectionUpdates('categories', categories, (item) => {
+                //         addNotification({ id: `cat-${item.id}`, type: 'category', title: 'নতুন ক্যাটাগরি যোগ হয়েছে', body: item.name || 'নতুন ক্যাটাগরি', icon: 'layers' });
+                //     });
+                // }
             }, err => console.warn('categories listener:', err.code || err.message));
 
             if (unsubEmergency) unsubEmergency();
             unsubEmergency = onSnapshot(collection(db, 'emergency'), snap => {
                 emergencyList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 renderEmergency();
-                if (currentUser) {
-                    trackCollectionUpdates('emergency', emergencyList, (item) => {
-                        addNotification({ id: `emg-${item.id}`, type: 'emergency', title: 'নতুন জরুরি নম্বর', body: `${item.title || ''} — ${item.number || ''}`, icon: 'phone-call' });
-                    });
-                }
+                // Emergency number in-app notification disabled (too noisy for users)
+                // if (currentUser) {
+                //     trackCollectionUpdates('emergency', emergencyList, (item) => {
+                //         addNotification({ id: `emg-${item.id}`, type: 'emergency', title: 'নতুন জরুরি নম্বর', body: `${item.title || ''} — ${item.number || ''}`, icon: 'phone-call' });
+                //     });
+                // }
             }, err => console.warn('emergency listener:', err.code || err.message));
 
             if (unsubBlood) unsubBlood();
@@ -5155,7 +5390,7 @@
                 renderNotices();
                 if (currentUser) {
                     trackCollectionUpdates('notices', notices, (item) => {
-                        addNotification({ id: `ntc-${item.id}`, type: 'notice', title: 'নতুন নোটিশ প্রকাশিত', body: item.title || item.heading || 'নতুন ঘোষণা', icon: 'megaphone' });
+                        addNotification({ id: `ntc-${item.id}`, type: 'notice', title: 'নতুন নোটিশ প্রকাশিত', body: item.title || item.heading || 'নতুন ঘোষণা', icon: 'megaphone', clickAction: 'home' });
                     });
                 }
             }, err => console.warn('notices listener:', err.code || err.message));
@@ -5185,6 +5420,9 @@
         updateThemeButtonsUI(); // Added to set initial UI state for theme buttons
         refreshIcons();
         updateOnlineUI(); // ✅ Initial offline banner state
+        // Show default packages immediately; Firestore will override when ready
+        try { renderSubscriptionPackages(); updatePaymentNumberDisplay(); } catch (e) {}
+        if (firebaseReady) attachAppSettingsListener(); // Premium launch + packages + payment numbers
 
         // ========== AUTO-HIDING BOTTOM NAVIGATION ==========
         let lastScrollTop = 0;
@@ -5290,7 +5528,7 @@
                                     if (change.type === 'added') {
                                         const msg = change.doc.data();
                                         if (msg.sender === 'admin' && currentTab !== 'chat') {
-                                            addNotification({ id: `adminreply-${change.doc.id}`, type: 'chat', title: 'অ্যাডমিন সাপোর্টের উত্তর', body: (msg.text || '').substring(0, 100), icon: 'headset' });
+                                            addNotification({ id: `adminreply-${change.doc.id}`, type: 'chat', title: 'অ্যাডমিন সাপোর্টের উত্তর', body: (msg.text || '').substring(0, 100), icon: 'headset', clickAction: 'chat' });
                                         }
                                     }
                                 });
@@ -5308,6 +5546,8 @@
                     if (unsubscribeAdminStatus) { unsubscribeAdminStatus(); unsubscribeAdminStatus = null; }
                     [unsubCategories, unsubEmergency, unsubBlood, unsubNotices, unsubPromotions].forEach(fn => { try { fn?.(); } catch(e){} });
                     unsubCategories = unsubEmergency = unsubBlood = unsubNotices = unsubPromotions = null;
+                    // Keep appSettings listener alive for guests after logout
+                    if (!unsubAppSettings && firebaseReady) attachAppSettingsListener();
                     promotionsCache = []; closePromotionFormModal();
 
                     if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }

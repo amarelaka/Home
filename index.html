@@ -65,11 +65,12 @@
         /* ========== base ========== */
         html, body {
             background-color: #090510;
-            overflow-x: hidden;
             max-width: 100vw;
             width: 100%;
             touch-action: pan-y;
         }
+        html { overflow-x: hidden; }
+        body { overflow-x: clip; }
         body {
             font-family: 'Hind Siliguri', sans-serif;
             -webkit-tap-highlight-color: transparent;
@@ -1841,6 +1842,76 @@ body.light-mode a:focus-visible {
 
 /* End Amar Elaka Light Mode Contrast Patch */
 
+
+        /* ========== AMAR ELAKA: SECTION-AWARE PULL TO REFRESH ========== */
+        html, body { overscroll-behavior-y: none; }
+        #amarElakaPullRefresh {
+            --ptr-accent: #a78bfa;
+            position: fixed;
+            z-index: 9999;
+            top: 8px;
+            left: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, -72px) scale(.82);
+            transition: opacity .18s ease, transform .22s cubic-bezier(.2,.8,.2,1), top .08s linear;
+            background: rgba(28, 17, 49, .94);
+            border: 1px solid rgba(196,181,253,.24);
+            box-shadow: 0 8px 24px rgba(0,0,0,.24), 0 0 22px rgba(139,92,246,.22);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+        #amarElakaPullRefresh.ptr-visible {
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
+        }
+        #amarElakaPullRefresh.ptr-refreshing {
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
+        }
+        #amarElakaPullRefresh .ptr-ring {
+            position: absolute;
+            inset: 3px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent 0 18%, var(--ptr-accent) 38%, #7c3aed 68%, #ddd6fe 88%, transparent 100%);
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+            opacity: .25;
+            transform: rotate(0deg);
+        }
+        #amarElakaPullRefresh.ptr-refreshing .ptr-ring {
+            opacity: 1;
+            animation: amarElakaPtrSpin .78s linear infinite;
+        }
+        #amarElakaPullRefresh .ptr-icon {
+            width: 19px;
+            height: 19px;
+            color: #ede9fe;
+            stroke-width: 2.15;
+            filter: drop-shadow(0 0 5px rgba(167,139,250,.45));
+        }
+        #amarElakaPullRefresh.ptr-blood {
+            --ptr-accent: #fb7185;
+            background: rgba(55, 18, 36, .95);
+            border-color: rgba(251,113,133,.28);
+            box-shadow: 0 8px 24px rgba(0,0,0,.24), 0 0 22px rgba(244,63,94,.2);
+        }
+        #amarElakaPullRefresh.ptr-blood .ptr-icon {
+            color: #fecdd3;
+            filter: drop-shadow(0 0 5px rgba(251,113,133,.5));
+        }
+        #amarElakaPullRefresh.ptr-armed .ptr-ring { opacity: .95; }
+        @keyframes amarElakaPtrSpin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            #amarElakaPullRefresh, #amarElakaPullRefresh * { transition: none !important; animation-duration: 1.8s !important; }
+        }
+
 </style>
 
 <style id="amar-elaka-light-contrast-final-patch">
@@ -2910,7 +2981,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                         </div>
                     </div>
                     
-                    <button onclick="document.getElementById('packagesSectionTitle').scrollIntoView({behavior: 'smooth'})" class="mt-6 w-full bg-[#0b0715] hover:bg-[#160d29] border border-violet-900/50 text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
+                    <button onclick="scrollToPackages()" class="mt-6 w-full bg-[#0b0715] hover:bg-[#160d29] border border-violet-900/50 text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
                         আপগ্রেড নাও <i data-lucide="arrow-down" class="w-4 h-4"></i>
                     </button>
                 </div>
@@ -7956,7 +8027,245 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         window.addEventListener('load', refreshIcons);
         setTimeout(refreshIcons, 300);
         setTimeout(refreshIcons, 1200);
-    </script>
+    
+        // ========== AMAR ELAKA: SECTION-AWARE PULL TO REFRESH ==========
+        (() => {
+            const ICON_BY_TAB = {
+                services: 'house',
+                emergency: 'siren',
+                blood: 'droplet',
+                profile: 'user-round',
+                chat: 'headset'
+            };
+            const LABEL_BY_TAB = {
+                services: 'Home',
+                emergency: 'জরুরী',
+                blood: 'রক্ত',
+                profile: 'Profile',
+                chat: 'Admin Support'
+            };
+            const THRESHOLD = 78;
+            const MAX_PULL = 112;
+            let ptrStartY = 0;
+            let ptrStartX = 0;
+            let ptrPull = 0;
+            let ptrTracking = false;
+            let ptrRefreshing = false;
+            let ptrScrollTarget = null;
+            let ptrIndicator = null;
+
+            function ensurePtrIndicator() {
+                if (ptrIndicator) return ptrIndicator;
+                ptrIndicator = document.createElement('div');
+                ptrIndicator.id = 'amarElakaPullRefresh';
+                ptrIndicator.setAttribute('role', 'status');
+                ptrIndicator.setAttribute('aria-live', 'polite');
+                ptrIndicator.innerHTML = '<span class="ptr-ring"></span><i class="ptr-icon" data-lucide="house"></i>';
+                document.body.appendChild(ptrIndicator);
+                if (typeof refreshIcons === 'function') refreshIcons();
+                return ptrIndicator;
+            }
+
+            function getPtrTab() {
+                return ICON_BY_TAB[currentTab] ? currentTab : 'services';
+            }
+
+            function updatePtrIcon() {
+                const el = ensurePtrIndicator();
+                const tab = getPtrTab();
+                el.classList.toggle('ptr-blood', tab === 'blood');
+                const icon = ICON_BY_TAB[tab] || 'house';
+                const oldIcon = el.querySelector('.ptr-icon');
+                if (oldIcon && oldIcon.getAttribute('data-lucide') !== icon) {
+                    oldIcon.setAttribute('data-lucide', icon);
+                    oldIcon.innerHTML = '';
+                    if (typeof refreshIcons === 'function') refreshIcons();
+                }
+                el.setAttribute('aria-label', `${LABEL_BY_TAB[tab] || 'Home'} রিফ্রেশ হচ্ছে`);
+                return el;
+            }
+
+            function setPtrPull(distance) {
+                const el = updatePtrIcon();
+                ptrPull = Math.max(0, Math.min(MAX_PULL, distance));
+                const progress = Math.min(1, ptrPull / THRESHOLD);
+                const eased = Math.min(1, progress * (0.82 + progress * 0.18));
+                el.style.top = `${8 + eased * 37}px`;
+                el.style.opacity = String(Math.min(1, progress * 1.25));
+                el.style.transform = `translate(-50%, ${-20 + eased * 20}px) scale(${0.82 + eased * 0.18})`;
+                el.classList.add('ptr-visible');
+                el.classList.toggle('ptr-armed', ptrPull >= THRESHOLD);
+                const ring = el.querySelector('.ptr-ring');
+                if (ring) ring.style.opacity = String(0.22 + progress * 0.78);
+            }
+
+            function hidePtr() {
+                if (!ptrIndicator || ptrRefreshing) return;
+                ptrIndicator.classList.remove('ptr-visible', 'ptr-armed');
+                ptrIndicator.style.opacity = '0';
+                ptrIndicator.style.top = '8px';
+                ptrIndicator.style.transform = 'translate(-50%, -72px) scale(.82)';
+                const ring = ptrIndicator.querySelector('.ptr-ring');
+                if (ring) ring.style.opacity = '.25';
+                ptrPull = 0;
+            }
+
+            function findEligibleScrollTarget(target) {
+                if (currentTab === 'chat') {
+                    const chatBox = document.getElementById('chatMessages');
+                    if (chatBox && (target === chatBox || chatBox.contains(target))) {
+                        return chatBox.scrollTop <= 0 ? chatBox : null;
+                    }
+                    return null;
+                }
+                return (window.scrollY <= 0 || document.documentElement.scrollTop <= 0) ? window : null;
+            }
+
+            async function refreshCurrentSection() {
+                if (ptrRefreshing) return;
+                ptrRefreshing = true;
+                const tab = getPtrTab();
+                const el = updatePtrIcon();
+                el.classList.add('ptr-visible', 'ptr-refreshing');
+                el.classList.remove('ptr-armed');
+                el.style.opacity = '1';
+                el.style.top = '8px';
+                el.style.transform = 'translate(-50%, 0) scale(1)';
+
+                try {
+                    if (!firebaseReady || !navigator.onLine) {
+                        // Keep locally cached content visible when offline; no forced reload.
+                        if (tab === 'services') renderServices();
+                        else if (tab === 'emergency') renderEmergency();
+                        else if (tab === 'blood') filterBloodDonors();
+                        else if (tab === 'profile') updateProfileUI();
+                        else if (tab === 'chat') renderChatMessages();
+                        if (!navigator.onLine) {
+                            showToast('অফলাইন — সংরক্ষিত ডেটা দেখানো হচ্ছে', 'wifi-off', 'text-amber-400');
+                        }
+                    } else if (tab === 'services') {
+                        await loadServiceBatch(true);
+                        // Home also displays notices; refresh their snapshot without replacing listeners.
+                        const noticeSnap = await getDocs(collection(db, 'notices'));
+                        notices = noticeSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        renderNotices();
+                    } else if (tab === 'emergency') {
+                        const snap = await getDocs(collection(db, 'emergency'));
+                        emergencyList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        renderEmergency();
+                    } else if (tab === 'blood') {
+                        const snap = await getDocs(collection(db, 'bloodDonors'));
+                        bloodDonors = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        filterBloodDonors();
+                    } else if (tab === 'profile') {
+                        if (currentUser) {
+                            const snap = await getDoc(doc(db, 'users', currentUser.uid));
+                            if (snap.exists()) userProfile = snap.data();
+                        }
+                        updateProfileUI();
+                        updateCurrentPlanDisplay();
+                    } else if (tab === 'chat') {
+                        if (currentUser) {
+                            const q = query(collection(db, `chats/${currentUser.uid}/messages`), orderBy('createdAt', 'asc'));
+                            const snap = await getDocs(q);
+                            chatMessages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        }
+                        renderChatMessages();
+                        updateUnreadBadge();
+                    }
+                    if (typeof refreshIcons === 'function') refreshIcons();
+                } catch (err) {
+                    console.warn('Pull-to-refresh failed:', err);
+                    showToast('রিফ্রেশ করা যায়নি — আবার চেষ্টা করুন', 'wifi-off', 'text-rose-400');
+                } finally {
+                    // Keep the ring visible briefly so the completion feels deliberate.
+                    setTimeout(() => {
+                        ptrRefreshing = false;
+                        if (ptrIndicator) {
+                            ptrIndicator.classList.remove('ptr-refreshing', 'ptr-visible', 'ptr-armed');
+                            ptrIndicator.style.opacity = '0';
+                            ptrIndicator.style.top = '8px';
+                            ptrIndicator.style.transform = 'translate(-50%, -72px) scale(.82)';
+                        }
+                        ptrPull = 0;
+                    }, 380);
+                }
+            }
+
+            document.addEventListener('touchstart', (event) => {
+                if (ptrRefreshing || event.touches.length !== 1) return;
+                if (document.body.classList.contains('overflow-hidden')) return;
+                const target = event.target;
+                if (target.closest('input, textarea, select, button, a, [contenteditable="true"]')) return;
+                const scrollTarget = findEligibleScrollTarget(target);
+                if (!scrollTarget) return;
+                ptrScrollTarget = scrollTarget;
+                ptrStartY = event.touches[0].clientY;
+                ptrStartX = event.touches[0].clientX;
+                ptrPull = 0;
+                ptrTracking = true;
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (event) => {
+                if (!ptrTracking || ptrRefreshing || event.touches.length !== 1) return;
+                const dy = event.touches[0].clientY - ptrStartY;
+                const dx = event.touches[0].clientX - ptrStartX;
+                if (Math.abs(dx) > Math.abs(dy) * 1.15) {
+                    ptrTracking = false;
+                    hidePtr();
+                    return;
+                }
+                if (dy <= 0) {
+                    hidePtr();
+                    return;
+                }
+                if (ptrScrollTarget === window) {
+                    if (window.scrollY > 0 || document.documentElement.scrollTop > 0) {
+                        ptrTracking = false;
+                        hidePtr();
+                        return;
+                    }
+                } else if (ptrScrollTarget && ptrScrollTarget.scrollTop > 0) {
+                    ptrTracking = false;
+                    hidePtr();
+                    return;
+                }
+                // Keep native vertical touch scrolling enabled. The page-level overscroll
+                // behavior already suppresses browser pull-to-refresh where supported.
+                setPtrPull(Math.min(MAX_PULL, dy * 0.58));
+            }, { passive: false });
+
+            function finishPtrGesture() {
+                if (!ptrTracking) return;
+                ptrTracking = false;
+                if (ptrPull >= THRESHOLD) {
+                    refreshCurrentSection();
+                } else {
+                    hidePtr();
+                }
+                ptrScrollTarget = null;
+            }
+            document.addEventListener('touchend', finishPtrGesture, { passive: true });
+            document.addEventListener('touchcancel', () => {
+                ptrTracking = false;
+                ptrScrollTarget = null;
+                hidePtr();
+            }, { passive: true });
+
+            // Update the icon immediately whenever the existing tab switcher changes section.
+            const originalSwitchTab = window.switchTab;
+            if (typeof originalSwitchTab === 'function') {
+                window.switchTab = (...args) => {
+                    const result = originalSwitchTab(...args);
+                    updatePtrIcon();
+                    return result;
+                };
+            }
+            ensurePtrIndicator();
+            updatePtrIcon();
+        })();
+
+</script>
 
     <script>
         if ('serviceWorker' in navigator) {
@@ -7967,6 +8276,15 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 })
                 .catch(err => console.log('SW Error', err));
             });
+        }
+    </script>
+    <script>
+        function scrollToPackages() {
+            var el = document.getElementById('packagesSectionTitle');
+            if (!el) return;
+            var y = el.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0) - 90;
+            try { window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' }); }
+            catch (e) { window.scrollTo(0, Math.max(0, y)); }
         }
     </script>
 </body>

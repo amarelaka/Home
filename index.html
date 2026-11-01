@@ -201,6 +201,27 @@
         body.light-mode #userBloodRequestModal > div,
         body.light-mode #premiumActionModal > div,
         body.light-mode #providerModal > div,
+        
+        body.light-mode #changePasswordModal > div,
+        body.light-mode #chatInfoModal > div {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        body.light-mode #changePasswordModal .bg-\[\#0b0715\],
+        body.light-mode #chatInfoModal .bg-\[\#0b0715\] {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+        body.light-mode #changePasswordModal .text-slate-100,
+        body.light-mode #chatInfoModal .text-slate-100 {
+            color: #0f172a !important;
+        }
+        body.light-mode #changePasswordModal .text-slate-400,
+        body.light-mode #chatInfoModal .text-slate-400 {
+            color: #64748b !important;
+        }
+
         body.light-mode #contactModal > div {
             background: #ffffff !important;
             border-color: #e2e8f0 !important;
@@ -293,6 +314,75 @@
         body.light-mode #modalCategorySearch { background: #f8fafc !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
         body.light-mode #promoImageZone, body.light-mode #provImageZone { background: #f8fafc !important; border-color: #cbd5e1 !important; }
         
+        
+        
+        
+        
+        body.light-mode .pay-existing-banner {
+            background: #fffbeb !important;
+            border-color: #fbbf24 !important;
+            color: #92400e !important;
+        }
+        body.light-mode .pay-existing-banner .font-bold,
+        body.light-mode .pay-existing-banner p {
+            color: #b45309 !important;
+        }
+        body.light-mode .pay-existing-banner #payExistingPlanText {
+            color: #d97706 !important;
+        }
+        body.light-mode .pay-existing-banner i,
+        body.light-mode .pay-existing-banner svg {
+            color: #d97706 !important;
+            stroke: #d97706 !important;
+        }
+
+        body.light-mode .payment-back-btn {
+            background: #e2e8f0 !important;
+            color: #0f172a !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+        body.light-mode .payment-back-btn:hover {
+            background: #cbd5e1 !important;
+        }
+        body.light-mode .payment-back-btn i,
+        body.light-mode .payment-back-btn svg {
+            color: #0f172a !important;
+            stroke: #0f172a !important;
+        }
+
+        /* Blue profile ring (Messenger style) */
+        .profile-blue-ring {
+            box-shadow: 0 0 0 3px #3b82f6, 0 0 0 5px rgba(59,130,246,0.25) !important;
+        }
+        body.light-mode .profile-blue-ring {
+            box-shadow: 0 0 0 3px #2563eb, 0 0 0 5px rgba(37,99,235,0.2) !important;
+        }
+
+        /* Light mode Emergency section fixes */
+        body.light-mode .emergency-info-box {
+            background: #fef3c7 !important;
+            border-color: #fbbf24 !important;
+            color: #92400e !important;
+        }
+        body.light-mode .emergency-info-box p {
+            color: #92400e !important;
+        }
+        body.light-mode #emergencyList .text-slate-100 {
+            color: #0f172a !important;
+        }
+        body.light-mode #emergencyList .text-violet-300 {
+            color: #6d28d9 !important;
+        }
+        body.light-mode #emergencyList .border-violet-900\/40 {
+            border-color: #e2e8f0 !important;
+        }
+        body.light-mode #emergencyList .bg-violet-500\/20 {
+            background: #ede9fe !important;
+        }
+        body.light-mode #emergencyList .text-slate-500 {
+            color: #64748b !important;
+        }
+
         /* ========== Light Mode Social Buttons ========== */
         body.light-mode #githubLoginBtn {
             background-color: #24292e !important;
@@ -1822,6 +1912,9 @@ body.light-mode #servicesGrid + #servicesSentinel {
 body.light-mode .text-violet-400 {
   color: #6d28d9 !important;
 }
+body.light-mode .text-emerald-500 {
+  color: #059669 !important;
+}
 
 /* H. Modal category search is intentionally light in Light Mode. */
 body.light-mode #categoryModal #modalCategorySearch {
@@ -2565,7 +2658,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
     <aside id="sidebarDrawer" class="fixed top-0 left-0 h-full w-[80%] max-w-[330px] z-[95] -translate-x-full flex flex-col overflow-hidden">
         <div class="p-5 border-b border-violet-500/15 bg-gradient-to-br from-violet-900/40 to-transparent shrink-0">
             <div class="flex items-center gap-3">
-                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-violet-600/40 shrink-0 ring-2 ring-violet-400/30 overflow-hidden relative">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-violet-600/40 shrink-0 overflow-hidden relative profile-blue-ring">
                     <img id="sidebarProfilePic" src="" class="w-full h-full object-cover hidden absolute inset-0 z-10">
                     <i data-lucide="user" id="sidebarProfileIcon" class="w-7 h-7"></i>
                 </div>
@@ -2760,8 +2853,8 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                             <span class="text-violet-300 font-semibold">টি সেবা চলছে</span>
                         </span>
                     </span>
-                    <span class="text-violet-400 font-semibold flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse inline-block"></span> লাইভ
+                    <span class="text-emerald-500 font-semibold flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block"></span> লাইভ
                     </span>
                 </div>
 
@@ -2837,7 +2930,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                         </a>
                     </div>
                 </div>
-                <div class="bg-violet-950/40 border border-violet-800/50 rounded-2xl p-3.5 flex items-center gap-3 text-violet-200 text-xs sm:text-sm">
+                <div class="emergency-info-box bg-violet-950/40 border border-violet-800/50 rounded-2xl p-3.5 flex items-center gap-3 text-violet-200 text-xs sm:text-sm">
                     <i data-lucide="triangle-alert" class="w-5 h-5 text-amber-400 shrink-0"></i>
                     <p>জরুরি মুহূর্তে যেকোনো সহায়তা পেতে নিচের হটলাইনে ক্লিক করে সরাসরি কল করুন।</p>
                 </div>
@@ -2876,7 +2969,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                         <div class="flex items-center gap-2.5">
                             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center relative shrink-0 shadow-lg shadow-violet-600/30">
                                 <i data-lucide="headset" class="w-5 h-5 text-white"></i>
-                                <span id="adminStatusDot" class="w-2.5 h-2.5 bg-slate-500 border-2 border-[#1b1033] rounded-full absolute top-0 right-0"></span>
+                                <span id="adminStatusDot" class="w-2.5 h-2.5 bg-slate-500 border-2 border-white rounded-full absolute bottom-0 right-0"></span>
                             </div>
                             <div>
                                 <div class="flex items-center gap-1.5">
@@ -2886,13 +2979,13 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                                 <p id="adminStatusLabel" class="text-[10px] text-slate-400">অফলাইন</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button type="button" id="userVoiceCallBtn" onclick="startUserVoiceCall()" class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed border border-violet-400/20 px-3 py-2 text-[11px] sm:text-xs font-bold text-white shadow-lg shadow-violet-900/30 transition active:scale-95 touch-target">
-                                <i data-lucide="phone" class="w-4 h-4"></i><span>ভয়েস কল</span>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" id="userVoiceCallBtn" onclick="startUserVoiceCall()" class="w-10 h-10 rounded-full bg-violet-600/30 hover:bg-violet-600/50 border border-violet-400/30 flex items-center justify-center text-white transition active:scale-95 touch-target" title="ভয়েস কল">
+                                <i data-lucide="phone" class="w-5 h-5"></i>
                             </button>
-                            <span class="hidden sm:inline-flex bg-violet-950/80 text-violet-300 border border-violet-800/60 text-[10px] font-bold px-2.5 py-1 rounded-full items-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse"></span> সাপোর্ট
-                            </span>
+                            <button type="button" id="chatInfoBtn" onclick="openChatInfoModal()" class="w-10 h-10 rounded-full bg-violet-600/30 hover:bg-violet-600/50 border border-violet-400/30 flex items-center justify-center text-white transition active:scale-95 touch-target" title="তথ্য">
+                                <i data-lucide="info" class="w-5 h-5"></i>
+                            </button>
                         </div>
                     </div>
                     <div id="chatMessages" class="p-3 sm:p-4 flex-1 overflow-y-auto space-y-3 bg-[#0b0715] text-xs"></div>
@@ -2997,12 +3090,12 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             <!-- PAYMENT VIEW -->
             <div id="view-payment" class="tab-view hidden premium-feature space-y-6 pb-10">
                 <div class="flex items-center gap-3 mb-2">
-                    <button onclick="switchTab('subscription')" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-slate-700"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <button onclick="switchTab('subscription')" class="payment-back-btn w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-slate-700"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
                     <h2 class="text-xl font-bold text-white">Complete Payment</h2>
                 </div>
-                <div id="payExistingPlanBanner" class="hidden max-w-lg mx-auto w-full bg-amber-950/40 border border-amber-700/50 rounded-2xl p-3.5 flex items-start gap-2.5 text-amber-200 text-xs">
+                <div id="payExistingPlanBanner" class="pay-existing-banner hidden max-w-lg mx-auto w-full bg-amber-950/40 border border-amber-700/50 rounded-2xl p-3.5 flex items-start gap-2.5 text-amber-200 text-xs">
                     <i data-lucide="info" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
-                    <div><p class="font-bold">You already have an active plan!</p><p id="payExistingPlanText" class="text-amber-300/90 mt-0.5">Buying this will extend your current plan.</p></div>
+                    <div><p class="font-bold text-amber-200">You already have an active plan!</p><p id="payExistingPlanText" class="text-amber-300/90 mt-0.5">Buying this will extend your current plan.</p></div>
                 </div>
                 <div class="glass-card rounded-2xl p-5 max-w-lg mx-auto w-full">
                     <div class="bg-violet-900/30 border border-violet-500/30 rounded-xl p-4 mb-6 flex justify-between items-center">
@@ -3013,9 +3106,25 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                         <div>
                             <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-2">Select Payment Method *</label>
                             <div class="grid grid-cols-3 gap-3">
-                                <div class="pay-method-card" id="pay-bkash" onclick="selectPaymentMethod('bKash', this)"><div class="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center"><span class="text-pink-500 font-black text-lg">b</span></div><span class="text-xs font-bold text-slate-200">bKash</span></div>
-                                <div class="pay-method-card" id="pay-nagad" onclick="selectPaymentMethod('Nagad', this)"><div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center"><span class="text-orange-500 font-black text-lg">N</span></div><span class="text-xs font-bold text-slate-200">Nagad</span></div>
-                                <div class="pay-method-card" id="pay-rocket" onclick="selectPaymentMethod('Rocket', this)"><div class="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center"><i data-lucide="rocket" class="w-5 h-5 text-violet-500"></i></div><span class="text-xs font-bold text-slate-200">Rocket</span></div>
+                                <div class="pay-method-card" id="pay-bkash" onclick="selectPaymentMethod('bKash', this)">
+                                    <div class="w-11 h-11 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-sm border border-pink-200">
+                                        <img src="https://www.logo.wine/a/logo/BKash/BKash-Icon-Logo.wine.svg" alt="bKash" class="w-9 h-9 object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                        <span class="hidden w-full h-full items-center justify-center bg-[#E2136E] text-white font-black text-sm">bK</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-200">bKash</span>
+                                </div>
+                                <div class="pay-method-card" id="pay-nagad" onclick="selectPaymentMethod('Nagad', this)">
+                                    <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-[#F16522] shadow-sm">
+                                        <span class="text-white font-black text-[15px] tracking-tight">নগদ</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-200">Nagad</span>
+                                </div>
+                                <div class="pay-method-card" id="pay-rocket" onclick="selectPaymentMethod('Rocket', this)">
+                                    <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-[#8B3DFF] shadow-sm">
+                                        <i data-lucide="rocket" class="w-5 h-5 text-white"></i>
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-200">Rocket</span>
+                                </div>
                             </div>
                         </div>
                         <div>
@@ -3040,7 +3149,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             <div id="view-profile" class="tab-view hidden space-y-4">
                 <div class="info-card p-5 sm:p-6 max-w-xl mx-auto">
                     <div class="text-center pb-5 border-b border-violet-900/50">
-                        <div class="w-20 h-20 bg-gradient-to-br from-violet-600 via-purple-600 to-violet-700 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-xl shadow-violet-600/40 overflow-hidden border-2 border-violet-400/50 relative">
+                        <div class="w-20 h-20 bg-gradient-to-br from-violet-600 via-purple-600 to-violet-700 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-xl shadow-violet-600/40 overflow-hidden relative profile-blue-ring">
                             <img id="profilePicImg" src="" class="w-full h-full object-cover hidden absolute inset-0 z-10">
                             <i data-lucide="user-check" id="profilePicIcon" class="w-10 h-10"></i>
                         </div>
@@ -3761,7 +3870,66 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     <span>ইমেইল পরিবর্তন করতে পারবেন না। <button type="button" onclick="openSupportFromProfile()" class="text-violet-300 underline font-bold">সাপোর্টে যোগাযোগ করুন</button></span>
                 </div>
                 <button type="submit" id="editProfileSaveBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> সংরক্ষণ করুন</button>
+                <button type="button" onclick="openChangePasswordModal()" class="w-full mt-2 bg-transparent border border-violet-700/50 hover:bg-violet-950/40 text-violet-300 font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 transition">
+                    <i data-lucide="key-round" class="w-4 h-4"></i> পাসওয়ার্ড পরিবর্তন করুন
+                </button>
             </form>
+        </div>
+    </div>
+
+    <!-- CHANGE PASSWORD MODAL -->
+    <div id="changePasswordModal" class="hidden fixed inset-0 z-[190] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
+        <div class="w-full max-w-md rounded-3xl border border-violet-800/50 bg-[#1b1033] shadow-2xl modal-sheet overflow-hidden flex flex-col">
+            <div class="bg-gradient-to-r from-violet-700 to-purple-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="key-round" class="w-4 h-4"></i> পাসওয়ার্ড পরিবর্তন</h3>
+                    <p class="text-[10px] text-violet-200">নতুন পাসওয়ার্ড সেট করুন</p>
+                </div>
+                <button onclick="closeChangePasswordModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form id="changePasswordForm" onsubmit="handleChangePassword(event)" class="p-4 space-y-3.5">
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">পুরনো পাসওয়ার্ড *</label>
+                    <input type="password" id="oldPassword" required minlength="6" placeholder="••••••••" class="w-full bg-[#0b0715] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">নতুন পাসওয়ার্ড *</label>
+                    <input type="password" id="newPassword" required minlength="6" placeholder="••••••••" class="w-full bg-[#0b0715] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">কনফার্ম নতুন পাসওয়ার্ড *</label>
+                    <input type="password" id="confirmNewPassword" required minlength="6" placeholder="••••••••" class="w-full bg-[#0b0715] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <button type="submit" id="changePasswordBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-1">
+                    <i data-lucide="check" class="w-4 h-4"></i> পাসওয়ার্ড পরিবর্তন করুন
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CHAT INFO MODAL -->
+    <div id="chatInfoModal" class="hidden fixed inset-0 z-[190] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
+        <div class="w-full max-w-sm rounded-3xl border border-violet-800/50 bg-[#1b1033] shadow-2xl modal-sheet overflow-hidden">
+            <div class="bg-gradient-to-r from-violet-700 to-purple-700 p-4 px-5 text-white flex items-center justify-between">
+                <h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="info" class="w-4 h-4"></i> অপশন</h3>
+                <button onclick="closeChatInfoModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div class="p-3 space-y-2">
+                <button type="button" onclick="closeChatInfoModal(); showToast('রিপোর্ট অপশন শীঘ্রই আসছে', 'flag', 'text-amber-400');" class="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-[#0b0715] border border-violet-900/40 hover:border-rose-500/50 text-left transition">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center"><i data-lucide="flag" class="w-5 h-5"></i></div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-100">রিপোর্ট</p>
+                        <p class="text-[11px] text-slate-400">সমস্যা রিপোর্ট করুন</p>
+                    </div>
+                </button>
+                <button type="button" onclick="closeChatInfoModal(); openFeedbackModal();" class="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-[#0b0715] border border-violet-900/40 hover:border-violet-500/50 text-left transition">
+                    <div class="w-10 h-10 rounded-xl bg-violet-500/15 text-violet-400 flex items-center justify-center"><i data-lucide="message-square-warning" class="w-5 h-5"></i></div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-100">ওয়েবসাইট ফিডব্যাক</p>
+                        <p class="text-[11px] text-slate-400">মতামত ও পরামর্শ দিন</p>
+                    </div>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -3986,7 +4154,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, setDoc, getDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
 
@@ -4056,14 +4224,8 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             if (!splash) return;
             hideSplash();
             if (!auth?.currentUser) {
-                document.getElementById('authSection').classList.remove('hidden');
-                const _app = document.getElementById('appContent');
-                _app.classList.add('hidden');
-                _app.classList.remove('flex');
-                document.body.classList.add('overflow-hidden');
-            }
-            if (typeof showToast === 'function') {
-                showToast('নেটওয়ার্ক সমস্যা — আবার চেষ্টা করুন', 'wifi-off', 'text-amber-400');
+                if (typeof showGuestApp === 'function') showGuestApp();
+                if (typeof showToast === 'function') showToast('সংযোগ ধীর। কিছু তথ্য লোড হতে সময় লাগতে পারে।', 'wifi-off', 'text-amber-400');
             }
         }, 8000);
 
@@ -4093,6 +4255,42 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         // ========== STATE ==========
         let currentUser = null;
         let userProfile = null;
+        let guestRedirectTimer = null;
+        let guestSessionStarted = false;
+        const GUEST_PREVIEW_LIMIT_MS = 3 * 60 * 1000;
+        function analyticsDateKey() { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Dhaka', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); }
+        async function writeSiteAnalyticsEvent(eventName, extra = {}) {
+            if (!firebaseReady) return;
+            try {
+                let sessionId = sessionStorage.getItem('ae_analytics_session');
+                if (!sessionId) { sessionId = (crypto?.randomUUID?.() || ('s-' + Date.now() + '-' + Math.random().toString(36).slice(2))); sessionStorage.setItem('ae_analytics_session', sessionId); }
+                await addDoc(collection(db, 'siteAnalytics'), { event: eventName, dateKey: analyticsDateKey(), uid: currentUser?.uid || null, sessionId, createdAt: serverTimestamp(), page: location.pathname, ...extra });
+            } catch (err) { console.warn('Site analytics event not saved. Check Firestore siteAnalytics create rules:', err?.code || err?.message); }
+        }
+        function startGuestPreviewTimer() {
+            if (guestRedirectTimer) clearTimeout(guestRedirectTimer);
+            let startedAt = Number(sessionStorage.getItem('ae_guest_started_at') || 0);
+            if (!startedAt) { startedAt = Date.now(); sessionStorage.setItem('ae_guest_started_at', String(startedAt)); }
+            const remainingMs = Math.max(0, GUEST_PREVIEW_LIMIT_MS - (Date.now() - startedAt));
+            guestRedirectTimer = setTimeout(() => {
+                if (!currentUser) {
+                    sessionStorage.setItem('ae_guest_preview_expired', '1');
+                    showAuthScreen(); switchAuthTab('login');
+                    showToast('৩ মিনিটের অতিথি সময় শেষ। চালিয়ে যেতে লগইন করুন।', 'lock', 'text-amber-400');
+                }
+            }, remainingMs);
+        }
+        function stopGuestPreviewTimer() { if (guestRedirectTimer) { clearTimeout(guestRedirectTimer); guestRedirectTimer = null; } }
+        function showGuestApp() {
+            document.getElementById('authSection')?.classList.add('hidden');
+            const appEl = document.getElementById('appContent');
+            appEl?.classList.remove('hidden'); appEl?.classList.add('flex');
+            document.body.classList.remove('overflow-hidden');
+            refreshIcons();
+            if (!guestSessionStarted) { guestSessionStarted = true; if (!sessionStorage.getItem('ae_guest_visit_logged')) { sessionStorage.setItem('ae_guest_visit_logged', '1'); writeSiteAnalyticsEvent('guest_visit'); } }
+            startGuestPreviewTimer();
+        }
+
         let isForcedProfileMode = false;
         let categories = [{ id: 'all', name: 'সকল সেবা', icon: 'fa-border-all' }];
         let emergencyList = [];
@@ -4240,35 +4438,88 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             });
         }
 
+        function getUserCurrentPackageDays() {
+            if (!isUserPremium || !userProfile) return 0;
+            // Prefer explicit pending/current plan days
+            const planName = userProfile.premiumPlan || userProfile.currentPlan || userProfile.pendingPremiumPlan || '';
+            if (planName && PLAN_DAYS_MAP[planName]) return Number(PLAN_DAYS_MAP[planName]) || 0;
+            // Fallback from premiumExpiry remaining roughly doesn't tell original package
+            // Use stored days if available
+            if (userProfile.premiumDays) return Number(userProfile.premiumDays) || 0;
+            if (userProfile.pendingPremiumDays) return Number(userProfile.pendingPremiumDays) || 0;
+            return 0;
+        }
+
         function renderSubscriptionPackages() {
             const grid = document.getElementById('packagesGrid');
             if (!grid) return;
             const list = (subscriptionPackages || []).filter(p => p && p.active !== false && Number(p.price) > 0);
+            // Cancel subscription button area
+            let cancelHtml = '';
+            if (isUserPremium) {
+                cancelHtml = `<div class="col-span-full mt-4 pt-4 border-t border-violet-900/30 text-center">
+                    <button type="button" onclick="requestSubscriptionCancel()" class="text-sm font-bold text-rose-400 hover:text-rose-300 underline underline-offset-2 transition">
+                        আপনার সাবস্ক্রিপশন বাতিল করুন
+                    </button>
+                </div>`;
+            }
             if (!list.length) {
-                grid.innerHTML = '<p class="text-slate-500 text-sm col-span-full text-center py-6">এখন কোনো প্যাকেজ উপলব্ধ নেই।</p>';
+                grid.innerHTML = '<p class="text-slate-500 text-sm col-span-full text-center py-6">এখন কোনো প্যাকেজ উপলব্ধ নেই।</p>' + cancelHtml;
                 return;
             }
-            // Keep selectedPackage in sync if still valid
+            const userDays = getUserCurrentPackageDays();
+            const userPrice = isUserPremium ? (Number(userProfile?.premiumAmount || userProfile?.pendingPremiumAmount || 0)) : 0;
+            // Sort by days ascending
+            list.sort((a, b) => (Number(a.days) || 0) - (Number(b.days) || 0));
+
+            // Keep selectedPackage in sync if still valid (prefer first available/unlocked)
             const still = list.find(p => p.name === selectedPackage?.name && Number(p.price) === Number(selectedPackage?.amount));
-            if (!still && list[0]) {
-                selectedPackage = { name: list[0].name, amount: Number(list[0].price), days: Number(list[0].days) || 30 };
-                const n = document.getElementById('paySelectedPackageName');
-                const a = document.getElementById('paySelectedPackageAmount');
-                if (n) n.textContent = selectedPackage.name;
-                if (a) a.textContent = '৳' + selectedPackage.amount;
+            if (!still) {
+                const firstAvail = list.find(p => {
+                    const d = Number(p.days) || 30;
+                    if (!isUserPremium) return true;
+                    if (userDays > 0 && d <= userDays) return false;
+                    const curName = (userProfile?.premiumPlan || userProfile?.currentPlan || '').toLowerCase();
+                    if (curName && String(p.name || '').toLowerCase() === curName) return false;
+                    return true;
+                }) || list[0];
+                if (firstAvail) {
+                    selectedPackage = { name: firstAvail.name, amount: Number(firstAvail.price), days: Number(firstAvail.days) || 30 };
+                    const n = document.getElementById('paySelectedPackageName');
+                    const a = document.getElementById('paySelectedPackageAmount');
+                    if (n) n.textContent = selectedPackage.name;
+                    if (a) a.textContent = '৳' + selectedPackage.amount;
+                }
             }
             grid.innerHTML = list.map(p => {
                 const name = String(p.name || 'Package');
                 const price = Number(p.price) || 0;
                 const days = Number(p.days) || 30;
                 const safeName = name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                // Disable same or lower packages when user already has active subscription
+                let disabled = false;
+                if (isUserPremium) {
+                    const curName = (userProfile?.premiumPlan || userProfile?.currentPlan || '').toLowerCase();
+                    if (curName && name.toLowerCase() === curName) disabled = true;
+                    else if (userDays > 0 && days <= userDays) disabled = true;
+                    else if (userDays === 0 && userPrice > 0 && price <= userPrice) disabled = true;
+                }
+                if (disabled) {
+                    return `<div class="package-card opacity-50 pointer-events-none cursor-not-allowed relative" data-pkg-id="${esc(p.id || '')}">
+                        <div class="absolute top-2 right-2 text-[9px] font-bold bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded">Locked</div>
+                        <div class="package-duration">${esc(name)}</div>
+                        <div class="package-price">৳${price}</div>
+                        <p class="text-[10px] text-slate-400 mt-1">${days} দিন</p>
+                        <button type="button" disabled class="mt-3 w-full bg-slate-800 text-slate-500 text-xs font-bold py-2 rounded-lg border border-slate-700 cursor-not-allowed">Unavailable</button>
+                    </div>`;
+                }
                 return `<div class="package-card" data-pkg-id="${esc(p.id || '')}" onclick="selectPackage('${safeName}', ${price}, this, ${days})">
                     <div class="package-duration">${esc(name)}</div>
                     <div class="package-price">৳${price}</div>
                     <p class="text-[10px] text-slate-400 mt-1">${days} দিন</p>
                     <button type="button" class="mt-3 w-full bg-violet-900/50 text-violet-300 text-xs font-bold py-2 rounded-lg border border-violet-700/50">Get Subscription</button>
                 </div>`;
-            }).join('');
+            }).join('') + cancelHtml;
             if (window.lucide) try { refreshIcons(); } catch (e) {}
         }
 
@@ -4281,10 +4532,17 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             return paymentNumbers.bkash || paymentNumbers.nagad || paymentNumbers.rocket || DEFAULT_PAYMENT_NUMBERS.bkash;
         }
 
+        function maskPaymentNumber(num) {
+            const s = String(num || '').replace(/\s/g, '');
+            if (s.length < 5) return s || '—';
+            return s.slice(0, 2) + '*'.repeat(Math.max(0, s.length - 5)) + s.slice(-3);
+        }
         function updatePaymentNumberDisplay() {
             const el = document.getElementById('paymentNumberDisplay');
             if (!el) return;
-            el.textContent = getPaymentNumberForMethod(selectedPaymentMethod);
+            const full = getPaymentNumberForMethod(selectedPaymentMethod);
+            el.textContent = maskPaymentNumber(full);
+            el.setAttribute('data-full-number', full);
         }
 
 
@@ -4829,6 +5087,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         // ========== SIDEBAR ==========
         window.openSidebar = () => {
             if (isForcedProfileMode) return;
+            if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
             const b = document.getElementById('sidebarBackdrop');
             const d = document.getElementById('sidebarDrawer');
             b.classList.remove('hidden'); void b.offsetWidth;
@@ -4845,6 +5104,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             setTimeout(() => { if (b.classList.contains('opacity-0')) b.classList.add('hidden'); }, 320);
         };
         window.sidebarNav = (action) => {
+            if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
             closeSidebar();
             setTimeout(() => {
                 if (action === 'subscription' && !isPremiumSystemLive()) {
@@ -4930,6 +5190,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         };
 
         window.shareService = async (serviceId) => {
+            if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
             const url = new URL(window.location.href);
             url.searchParams.set('service', serviceId);
             const service = servicesCache.find(x => x.id === serviceId) || favoritesCache.find(x => x.id === serviceId) || (allServicesFullCache || []).find(x => x.id === serviceId);
@@ -4967,7 +5228,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         // ========== NOTIF PANEL ==========
         window.openNotifPanel = () => {
             if (isForcedProfileMode) return;
-            if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
             renderNotifications();
             const b = document.getElementById('notifBackdrop');
             const p = document.getElementById('notifPanel');
@@ -5149,6 +5410,12 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         }
 
         // ========== HEARTBEAT ==========
+        async function logSessionEvent(uid, kind) {
+            try {
+                const d = new Date().toISOString().slice(0, 10);
+                await setDoc(doc(db, 'users', uid, 'dailyActivity', d), { date: d, [kind === 'login' ? 'loginCount' : 'logoutCount']: increment(1), [kind === 'login' ? 'lastLoginAt' : 'lastLogoutAt']: serverTimestamp() }, { merge: true });
+            } catch (e) {}
+        }
         async function updateUserHeartbeat(isOnline) {
             if (!currentUser) return;
             try {
@@ -5267,6 +5534,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             try {
                 if (!('Notification' in window)) return;
                 const permission = await Notification.requestPermission();
+                try { await setDoc(doc(db, 'users', currentUser.uid), { notifPermission: permission, notifPermissionAt: serverTimestamp(), notifDevice: (navigator.userAgent || '').slice(0, 120) }, { merge: true }); } catch (e) {}
                 if (permission === 'granted') {
                     messaging = getMessaging(app);
                     const token = await getToken(messaging, { vapidKey: VAPID_PUBLIC_KEY });
@@ -5365,11 +5633,46 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             return data.secure_url;
         }
 
+
+        window.requestSubscriptionCancel = async () => {
+            if (!currentUser || !firebaseReady) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            if (!isUserPremium) return showToast('কোনো একটিভ সাবস্ক্রিপশন নেই', 'info', 'text-slate-400');
+            if (!confirm('আপনি কি সাবস্ক্রিপশন বাতিলের অনুরোধ পাঠাতে চান?')) return;
+            try {
+                await addDoc(collection(db, 'subscriptionCancelRequests'), {
+                    userId: currentUser.uid,
+                    userName: userProfile?.fullName || 'Unknown',
+                    userPhone: userProfile?.phone || '',
+                    userEmail: userProfile?.email || currentUser.email || '',
+                    currentPlan: userProfile?.premiumPlan || userProfile?.currentPlan || 'Unknown',
+                    premiumExpiry: userProfile?.premiumExpiry || null,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+                await setDoc(doc(db, 'users', currentUser.uid), {
+                    cancelRequestStatus: 'pending',
+                    cancelRequestedAt: serverTimestamp()
+                }, { merge: true });
+                if (userProfile) userProfile.cancelRequestStatus = 'pending';
+                showToast('বাতিলের অনুরোধ পাঠানো হয়েছে। অ্যাডমিন অনুমোদনের অপেক্ষা করুন।', 'check-circle', 'text-violet-400');
+            } catch (err) {
+                console.error(err);
+                showToast('অনুরোধ পাঠানো যায়নি: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
+            }
+        };
+
         // ========== SUBSCRIPTION ==========
         window.selectPackage = (name, amount, el, days) => {
             if (!isPremiumSystemLive()) return showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
             if (isForcedProfileMode) return;
             const d = Number(days) || PLAN_DAYS_MAP[name] || 30;
+            if (isUserPremium) {
+                const userDays = getUserCurrentPackageDays();
+                const curName = (userProfile?.premiumPlan || userProfile?.currentPlan || '').toLowerCase();
+                if ((userDays > 0 && d <= userDays) || (curName && String(name).toLowerCase() === curName)) {
+                    return showToast('এই প্যাকেজ আপনার জন্য উপলব্ধ নয়', 'lock', 'text-amber-400');
+                }
+            }
             selectedPackage = { name, amount: Number(amount), days: d };
             document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
             if (el) el.classList.add('selected');
@@ -5485,6 +5788,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             if (profPlanSub) profPlanSub.textContent = profSub;
             if (profPlanAction) profPlanAction.textContent = profAction;
             refreshIcons();
+            try { renderSubscriptionPackages(); } catch (e) {}
         }
 
         // ========== AUTH ==========
@@ -5625,6 +5929,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             if (!confirm('আপনি কি সত্যিই লগআউট করতে চান?')) return;
             try {
                 stopUserHeartbeat(); stopActivityTracking();
+                try { await logSessionEvent(currentUser.uid, 'logout'); await writeSiteAnalyticsEvent('logout'); } catch (e) {}
                 await signOut(auth);
                 showToast('লগআউট হয়েছে', 'circle-check', 'text-violet-400');
             } catch (err) { showToast('লগআউট ব্যর্থ', 'circle-x', 'text-rose-400'); }
@@ -5800,7 +6105,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 return;
             }
             if (!currentUser && !['services', 'emergency', 'blood'].includes(tabName)) {
-                return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+                showAuthScreen(); switchAuthTab('login'); return;
             }
             currentTab = tabName;
             try { localStorage.setItem('amar-elaka-tab', tabName); } catch (e) {}
@@ -6320,9 +6625,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     shuffledIds = shuffleArray(allServiceIds);
                     currentBatchIndex = 0;
                     remaining = shuffledIds.length;
-                    if (servicesLoopCount <= 3) {
-                        showToast('🔄 please wait...', 'sparkles', 'text-violet-400');
-                    }
+                    // please wait toast removed
                 }
 
                 const take = Math.min(BATCH, remaining);
@@ -6754,7 +7057,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     ${whatsapp ? `<button type="button" data-url="https://wa.me/${whatsapp}" onclick="event.stopPropagation(); openExternalUrl(this)" class="action-btn w-9 h-9 shrink-0 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 text-[#25D366] rounded-xl flex items-center justify-center" title="WhatsApp"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></button>` : ''}
                     ${facebook ? `<button type="button" data-url="${esc(facebook)}" onclick="event.stopPropagation(); openExternalUrl(this)" class="action-btn w-9 h-9 shrink-0 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 border border-[#1877F2]/30 text-[#1877F2] rounded-xl flex items-center justify-center" title="Facebook"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></button>` : ''}
                     <button type="button" onclick="event.stopPropagation(); shareService('${id}')" class="action-btn w-9 h-9 shrink-0 bg-violet-600/15 hover:bg-violet-600/25 border border-violet-400/40 text-violet-200 rounded-xl flex items-center justify-center" title="সেবা শেয়ার করুন" aria-label="সেবা শেয়ার করুন"><i data-lucide="share-2" class="w-4 h-4"></i></button>
-                    <a href="tel:${esc(phoneRaw)}" data-service-name="Service: ${title}" onclick="event.stopPropagation()" class="call-action flex-1 h-9 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-green-600/30">
+                    <a href="${currentUser ? `tel:${esc(phoneRaw)}` : '#guest-login'}" data-service-name="Service: ${title}" onclick="event.stopPropagation(); if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action flex-1 h-9 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-green-600/30">
                         <i data-lucide="phone" class="w-3.5 h-3.5"></i> কল করুন
                     </a>
                 </div>
@@ -6840,6 +7143,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         // ========== SERVICE DETAIL MODAL ==========
         window.openServiceDetail = (serviceId) => {
             if (isForcedProfileMode) return;
+            if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
             const service = servicesCache.find(s => s.id === serviceId)
                 || favoritesCache.find(s => s.id === serviceId)
                 || (allServicesFullCache || []).find(s => s.id === serviceId);
@@ -6938,7 +7242,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                                 <p class="text-[10px] text-slate-400 line-clamp-2">${esc(item.desc || '')}</p>
                             </div>
                         </div>
-                        <a href="tel:${esc(String(item.number || '').replace(/[^0-9+]/g, ''))}" data-service-name="Emergency: ${esc(item.title || '')}" class="call-action w-11 h-11 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center shrink-0 border-2 border-green-300/40 touch-target shadow-lg shadow-green-600/30"><i data-lucide="phone" class="w-4 h-4"></i></a>
+                        <a href="${currentUser ? `tel:${esc(String(item.number || '').replace(/[^0-9+]/g, ''))}` : '#guest-login'}" data-service-name="Emergency: ${esc(item.title || '')}" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action w-11 h-11 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center shrink-0 border-2 border-green-300/40 touch-target shadow-lg shadow-green-600/30"><i data-lucide="phone" class="w-4 h-4"></i></a>
                     </div>`;
                 });
                 html += `</div></div>`;
@@ -7101,7 +7405,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     <div class="w-10 h-10 bg-gradient-to-br from-rose-600 to-red-600 text-white font-black text-sm rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-rose-600/30">${esc(d.group || '?')}</div>
                     <div class="min-w-0"><h4 class="font-bold text-slate-200 text-xs truncate">${esc(d.name || '')}</h4><p class="text-[10px] text-slate-400 truncate">${esc(d.location || '')}</p></div>
                 </div>
-                <a href="tel:${esc(String(d.phone || '').replace(/[^0-9+]/g, ''))}" data-service-name="Blood Donor: ${esc(d.name || '')} (${esc(d.group || '')})" class="call-action bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold px-3 py-2 rounded-xl touch-target flex items-center gap-1 shadow-lg shadow-green-600/30"><i data-lucide="phone" class="w-3 h-3"></i> কল</a>
+                <a href="${currentUser ? `tel:${esc(String(d.phone || '').replace(/[^0-9+]/g, ''))}` : '#guest-login'}" data-service-name="Blood Donor: ${esc(d.name || '')} (${esc(d.group || '')})" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold px-3 py-2 rounded-xl touch-target flex items-center gap-1 shadow-lg shadow-green-600/30"><i data-lucide="phone" class="w-3 h-3"></i> কল</a>
             </div>`).join('');
             refreshIcons();
         };
@@ -7200,7 +7504,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 if (!isOnline) {
                     showToast('📡 অফলাইন — net ফিরলে auto যাবে', 'wifi-off', 'text-amber-400');
                 } else if (!isAdminOnline) {
-                    showToast('মেসেজ পাঠানো হয়েছে (অ্যাডমিন অফলাইনে)', 'check-circle', 'text-violet-400');
+                    // success toast removed
                     const key = `autoReply_${currentUser.uid}`;
                     const last = parseInt(lsGet(key, '0'), 10);
                     if (Date.now() - last > 3600000) {
@@ -7214,7 +7518,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                         } catch (e) { console.warn('Auto reply failed', e); }
                     }
                 } else {
-                    showToast('মেসেজ পাঠানো হয়েছে', 'check-circle', 'text-violet-400');
+                    // success toast removed
                 }
             } catch (err) {
                 chatMessages = chatMessages.filter(m => m.id !== tempId);
@@ -7505,9 +7809,9 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             const dot = document.getElementById('adminStatusDot');
             const label = document.getElementById('adminStatusLabel');
             if (!dot || !label) return;
-            if (isOnline) { dot.className = 'w-2.5 h-2.5 bg-violet-500 border-2 border-[#1b1033] rounded-full absolute top-0 right-0 animate-pulse'; label.textContent = 'অনলাইন'; label.className = 'text-[10px] text-violet-400 font-medium'; }
+            if (isOnline) { dot.className = 'w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full absolute bottom-0 right-0 animate-pulse'; label.textContent = 'অনলাইন'; label.className = 'text-[10px] text-emerald-500 font-medium'; }
             else {
-                dot.className = 'w-2.5 h-2.5 bg-slate-500 border-2 border-[#1b1033] rounded-full absolute top-0 right-0';
+                dot.className = 'w-2.5 h-2.5 bg-slate-500 border-2 border-white rounded-full absolute bottom-0 right-0';
                 if (lastSeen) {
                     const mins = Math.floor((Date.now() - lastSeen.getTime()) / 60000);
                     if (mins < 1) label.textContent = 'এইমাত্র সক্রিয় ছিলেন';
@@ -7731,6 +8035,8 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 closePromotionFormModal();
                 closeContactModal();
                 closeRatingModal();
+                closeChangePasswordModal();
+                closeChatInfoModal();
             }
         });
 
@@ -7769,7 +8075,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         // ========== REALTIME LISTENERS ==========
         function attachRealtimeListeners() {
             if (!firebaseReady) return;
-            attachAppSettingsListener();
+            if (currentUser) attachAppSettingsListener();
             if (unsubPromotions) unsubPromotions();
             unsubPromotions = onSnapshot(query(collection(db, 'promotions'), where('status', '==', 'approved')), snap => {
                 promotionsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -7830,6 +8136,67 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             }, (err) => { isAdminOnline = false; updateAdminStatus(false, null); });
         }
 
+
+        // ========== CHANGE PASSWORD ==========
+        window.openChangePasswordModal = () => {
+            if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            document.getElementById('changePasswordForm').reset();
+            const m = document.getElementById('changePasswordModal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+            refreshIcons();
+        };
+        window.closeChangePasswordModal = () => {
+            const m = document.getElementById('changePasswordModal');
+            m.classList.add('hidden'); m.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        };
+        window.handleChangePassword = async (e) => {
+            e.preventDefault();
+            if (!currentUser || !firebaseReady) return showToast('লগইন নেই', 'circle-x', 'text-rose-400');
+            const oldPass = document.getElementById('oldPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmNewPassword').value;
+            if (newPass.length < 6) return showToast('নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে', 'circle-x', 'text-rose-400');
+            if (newPass !== confirmPass) return showToast('নতুন পাসওয়ার্ড মিলছে না', 'circle-x', 'text-rose-400');
+            const btn = document.getElementById('changePasswordBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> অপেক্ষা করুন...';
+            refreshIcons();
+            try {
+                const cred = EmailAuthProvider.credential(currentUser.email, oldPass);
+                await reauthenticateWithCredential(currentUser, cred);
+                await updatePassword(currentUser, newPass);
+                closeChangePasswordModal();
+                showToast('পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!', 'circle-check', 'text-violet-400');
+            } catch (err) {
+                console.error(err);
+                let msg = 'পাসওয়ার্ড পরিবর্তন ব্যর্থ';
+                if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') msg = 'পুরনো পাসওয়ার্ড ভুল';
+                else if (err.code === 'auth/too-many-requests') msg = 'অনেকবার চেষ্টা করেছেন, কিছুক্ষণ পর চেষ্টা করুন';
+                else if (err.code === 'auth/requires-recent-login') msg = 'আবার লগইন করে চেষ্টা করুন';
+                showToast(msg, 'circle-x', 'text-rose-400');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> পাসওয়ার্ড পরিবর্তন করুন';
+                refreshIcons();
+            }
+        };
+
+        // ========== CHAT INFO MODAL ==========
+        window.openChatInfoModal = () => {
+            const m = document.getElementById('chatInfoModal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+            refreshIcons();
+        };
+        window.closeChatInfoModal = () => {
+            const m = document.getElementById('chatInfoModal');
+            m.classList.add('hidden'); m.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        };
+
+
         // ========== BOOT ==========
         document.getElementById('footerYear').textContent = new Date().getFullYear();
         const aF = document.getElementById('aboutFooterYear'); if (aF) aF.textContent = new Date().getFullYear();
@@ -7888,6 +8255,18 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             }
         }, { passive: true });
 
+        // Guest preview interaction gate: ads, service cards, phone actions and protected controls require auth.
+        document.addEventListener('click', (event) => {
+            if (currentUser) return;
+            const promo = event.target.closest('.promotion-card');
+            const serviceAction = event.target.closest('.service-card .action-btn, .service-card a.call-action, .service-card');
+            const phoneAction = event.target.closest('a[href^="tel:"], a.call-action');
+            if (promo || serviceAction || phoneAction) {
+                event.preventDefault(); event.stopPropagation();
+                showAuthScreen(); switchAuthTab('login');
+            }
+        }, true);
+
         // ========== AUTH STATE LISTENER ==========
         if (firebaseReady) {
             onAuthStateChanged(auth, async (user) => {
@@ -7895,7 +8274,11 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 hideSplash();
                 
                 if (user) {
+                    stopGuestPreviewTimer();
+                    sessionStorage.removeItem('ae_guest_preview_expired');
+                    sessionStorage.removeItem('ae_guest_started_at');
                     hideAuthScreen();
+                    if (!sessionStorage.getItem('ae_user_visit_logged')) { sessionStorage.setItem('ae_user_visit_logged', '1'); writeSiteAnalyticsEvent('user_visit'); }
 
                     try {
                         onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
@@ -7933,6 +8316,9 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                         }
 
                         try { await setDoc(doc(db, 'users', user.uid), { lastLogin: serverTimestamp() }, { merge: true }); } catch (e) {}
+                        const authEntryKind = sessionStorage.getItem('amar-welcome-pending');
+                        if (authEntryKind === 'register') writeSiteAnalyticsEvent('register');
+                        else { logSessionEvent(user.uid, 'login'); writeSiteAnalyticsEvent('login'); }
 
                         flushPendingActivity();
                         startUserHeartbeat();
@@ -7992,8 +8378,8 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     if (unsubscribeAdminStatus) { unsubscribeAdminStatus(); unsubscribeAdminStatus = null; }
                     [unsubCategories, unsubEmergency, unsubBlood, unsubNotices, unsubPromotions].forEach(fn => { try { fn?.(); } catch(e){} });
                     unsubCategories = unsubEmergency = unsubBlood = unsubNotices = unsubPromotions = null;
-                    // Keep appSettings listener alive for guests after logout
-                    if (!unsubAppSettings && firebaseReady) attachAppSettingsListener();
+                    // Stop account/payment configuration listener for guests.
+                    if (unsubAppSettings) { try { unsubAppSettings(); } catch (e) {} unsubAppSettings = null; }
                     promotionsCache = []; closePromotionFormModal();
 
                     if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
@@ -8019,7 +8405,9 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     document.body.classList.remove('chat-active');
 
                     renderChatMessages(); renderNotifications(); updateNotifBadge(); updateCurrentPlanDisplay(); renderFavorites();
-                    showAuthScreen(); switchAuthTab('login');
+                    showGuestApp();
+                    // Public preview data: guests may read only the collections shown in the public sections.
+                    if (firebaseReady) { attachRealtimeListeners(); loadServiceBatch(true); }
                 }
             });
         }

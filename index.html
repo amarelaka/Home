@@ -189,6 +189,23 @@
 
         /* ========== Light Mode Modal Fixes ========== */
         body.light-mode #promotionFormModal > div,
+
+        body.light-mode #promotionDetailModal > div {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        body.light-mode #promotionDetailModal .bg-\[\#1b1033\],
+        body.light-mode #promotionDetailModal .bg-\[\#0b0715\] {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+        body.light-mode #promotionDetailModal .text-white,
+        body.light-mode #promotionDetailModal .text-slate-100,
+        body.light-mode #promotionDetailModal .text-slate-200,
+        body.light-mode #promotionDetailModal .text-slate-300 { color: #0f172a !important; }
+        body.light-mode #promotionDetailModal .text-slate-400 { color: #64748b !important; }
+
         body.light-mode #serviceDetailModal > div,
         body.light-mode #categoryModal > div,
         body.light-mode #noticeModal > div,
@@ -799,9 +816,14 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .service-card-in {
-            animation: cardInStagger 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-            will-change: transform, opacity;
+            animation: cardInStagger 0.35s ease-out both;
             height: 100%;
+        }
+        /* After first paint, kill leftover transform so search/layout stays stable */
+        .service-card-in.anim-done {
+            animation: none !important;
+            transform: none !important;
+            opacity: 1 !important;
         }
         @keyframes adCardIn {
             0% { opacity: 0; transform: translateY(32px) scale(0.92) rotate(-1deg); }
@@ -809,9 +831,13 @@
             100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
         }
         .promo-card-in {
-            animation: adCardIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-            will-change: transform, opacity;
+            animation: adCardIn 0.4s ease-out both;
             height: 100%;
+        }
+        .promo-card-in.anim-done {
+            animation: none !important;
+            transform: none !important;
+            opacity: 1 !important;
         }
 
         /* ===== Infinity Counter ===== */
@@ -2442,6 +2468,250 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
 
 </style>
 
+
+<style id="light-mode-service-card-contrast-fix">
+/* =========================================================
+   LIGHT MODE — Service card + service detail modal contrast
+   Titles, text and action icons must stay clearly readable.
+   ========================================================= */
+
+/* --- Service list cards --- */
+body.light-mode .service-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+body.light-mode .service-card h3,
+body.light-mode .service-card h4,
+body.light-mode .service-card .font-bold.text-slate-100,
+body.light-mode .service-card .text-slate-100,
+body.light-mode .service-card .text-white {
+  color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 800 !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+body.light-mode .service-card p,
+body.light-mode .service-card .text-slate-300,
+body.light-mode .service-card .text-slate-400,
+body.light-mode .service-card .text-slate-500 {
+  color: #475569 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .text-violet-300,
+body.light-mode .service-card .text-violet-400 {
+  color: #6d28d9 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .text-rose-400,
+body.light-mode .service-card [data-lucide="map-pin"] {
+  color: #e11d48 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card svg {
+  opacity: 1 !important;
+}
+
+/* List card action icons — solid, high-contrast chips */
+body.light-mode .service-card .action-btn {
+  background: #f5f3ff !important;
+  border: 1.5px solid #c4b5fd !important;
+  color: #5b21b6 !important;
+  opacity: 1 !important;
+  box-shadow: 0 2px 6px rgba(91, 33, 182, 0.12) !important;
+}
+body.light-mode .service-card .action-btn svg {
+  color: #5b21b6 !important;
+  stroke: #5b21b6 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .action-btn[title="ওয়েবসাইট"],
+body.light-mode .service-card .action-btn[title*="Website"],
+body.light-mode .service-card .action-btn[title*="website"] {
+  background: #ede9fe !important;
+  border-color: #a78bfa !important;
+  color: #4c1d95 !important;
+}
+body.light-mode .service-card .action-btn[title*="শেয়ার"],
+body.light-mode .service-card .action-btn[title*="Share"],
+body.light-mode .service-card .action-btn[title*="share"] {
+  background: #f3e8ff !important;
+  border-color: #c4b5fd !important;
+  color: #6d28d9 !important;
+}
+body.light-mode .service-card .action-btn[title="WhatsApp"] {
+  background: #ecfdf5 !important;
+  border-color: #6ee7b7 !important;
+  color: #047857 !important;
+}
+body.light-mode .service-card .action-btn[title="WhatsApp"] svg {
+  color: #047857 !important;
+  stroke: #047857 !important;
+}
+body.light-mode .service-card .action-btn[title="Facebook"] {
+  background: #eff6ff !important;
+  border-color: #93c5fd !important;
+  color: #1d4ed8 !important;
+}
+body.light-mode .service-card .action-btn[title="Facebook"] svg {
+  color: #1d4ed8 !important;
+  fill: #1d4ed8 !important;
+}
+body.light-mode .service-card .fav-btn {
+  background: rgba(255,255,255,0.95) !important;
+  border: 1.5px solid #fda4af !important;
+  color: #e11d48 !important;
+}
+body.light-mode .service-card .fav-btn svg {
+  color: #e11d48 !important;
+  stroke: #e11d48 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .call-action {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  border: none !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .call-action svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* --- Service detail modal --- */
+body.light-mode #serviceDetailModal > div {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+body.light-mode #serviceDetailModal #svcModalTitle,
+body.light-mode #serviceDetailModal h3#svcModalTitle {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+}
+body.light-mode #serviceDetailModal #svcModalProvider,
+body.light-mode #serviceDetailModal #svcModalLocation,
+body.light-mode #serviceDetailModal #svcModalDescription {
+  color: #1e293b !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal .text-white:not(button):not(a.call-action):not(.bg-gradient-to-r *) {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+body.light-mode #serviceDetailModal .text-slate-100,
+body.light-mode #serviceDetailModal .text-slate-200,
+body.light-mode #serviceDetailModal .text-slate-300 {
+  color: #1e293b !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal .text-slate-400 {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal .text-violet-300 {
+  color: #6d28d9 !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal .bg-\[\#0b0715\],
+body.light-mode #serviceDetailModal .bg-\[\#1b1033\] {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+body.light-mode #serviceDetailModal svg {
+  opacity: 1 !important;
+}
+
+/* Modal bottom action bar — clear, solid buttons */
+body.light-mode #serviceDetailModal #svcModalWebsite,
+body.light-mode #serviceDetailModal #svcModalWhatsapp,
+body.light-mode #serviceDetailModal #svcModalFacebook,
+body.light-mode #serviceDetailModal #svcModalShare,
+body.light-mode #serviceDetailModal #svcModalFavBottom {
+  opacity: 1 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+}
+body.light-mode #serviceDetailModal #svcModalWebsite {
+  background: #ede9fe !important;
+  border: 1.5px solid #a78bfa !important;
+  color: #4c1d95 !important;
+}
+body.light-mode #serviceDetailModal #svcModalWebsite svg {
+  color: #4c1d95 !important;
+  stroke: #4c1d95 !important;
+}
+body.light-mode #serviceDetailModal #svcModalWhatsapp {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #6ee7b7 !important;
+  color: #047857 !important;
+}
+body.light-mode #serviceDetailModal #svcModalWhatsapp svg {
+  color: #047857 !important;
+  fill: #047857 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFacebook {
+  background: #eff6ff !important;
+  border: 1.5px solid #93c5fd !important;
+  color: #1d4ed8 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFacebook svg {
+  color: #1d4ed8 !important;
+  fill: #1d4ed8 !important;
+}
+body.light-mode #serviceDetailModal #svcModalShare {
+  background: #f3e8ff !important;
+  border: 1.5px solid #c4b5fd !important;
+  color: #6d28d9 !important;
+}
+body.light-mode #serviceDetailModal #svcModalShare svg {
+  color: #6d28d9 !important;
+  stroke: #6d28d9 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFavBottom {
+  background: #fff1f2 !important;
+  border: 1.5px solid #fda4af !important;
+  color: #e11d48 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFavBottom svg {
+  color: #e11d48 !important;
+  stroke: #e11d48 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFavBottom.is-favorite,
+body.light-mode #serviceDetailModal #svcModalFavBottom.is-favorite svg {
+  color: #e11d48 !important;
+  fill: #e11d48 !important;
+}
+body.light-mode #serviceDetailModal #svcModalCall {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal #svcModalCall svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Promotion detail modal same clarity in light mode */
+body.light-mode #promotionDetailModal #promoModalTitle {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  font-weight: 800 !important;
+  opacity: 1 !important;
+}
+body.light-mode #promotionDetailModal #promoModalAdvertiser,
+body.light-mode #promotionDetailModal #promoModalLocation,
+body.light-mode #promotionDetailModal #promoModalDescription {
+  color: #1e293b !important;
+  opacity: 1 !important;
+}
+body.light-mode #promotionDetailModal .text-white:not(button) {
+  color: #0f172a !important;
+}
+</style>
+
 </head>
 
 <body class="text-slate-100 min-h-[100dvh]">
@@ -2463,7 +2733,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
     </div>
 
     <!-- ✅ SPLASH SCREEN -->
-    <div id="splashScreen" class="fixed inset-0 z-[110] flex flex-col items-center justify-center" style="background:linear-gradient(180deg,#090510 0%,#160d29 50%,#000 100%);">
+    <div id="splashScreen" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-center" style="display:none;background:linear-gradient(180deg,#090510 0%,#160d29 50%,#000 100%);">
         <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mb-4 shadow-2xl shadow-violet-600/40 animate-pulse">
             <i data-lucide="house" class="w-10 h-10 text-white"></i>
         </div>
@@ -3335,7 +3605,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 <div class="flex items-center gap-3 bg-[#0b0715] p-3 rounded-xl border border-violet-900/40">
                     <div class="w-10 h-10 rounded-full bg-violet-900/50 flex items-center justify-center text-violet-300 shrink-0"><i data-lucide="user" class="w-5 h-5"></i></div>
                     <div class="min-w-0">
-                        <p class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">সেবাদানকারী</p>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-wider font-bold" data-i18n="common.provider">সেবাদানকারী</p>
                         <p id="svcModalProvider" class="text-sm font-bold text-white truncate"></p>
                     </div>
                 </div>
@@ -3344,7 +3614,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     <span id="svcModalLocation" class="truncate"></span>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold text-violet-300 uppercase tracking-wider mb-2">বিস্তারিত বর্ণনা</h4>
+                    <h4 class="text-xs font-bold text-violet-300 uppercase tracking-wider mb-2" data-i18n="common.details">বিস্তারিত বর্ণনা</h4>
                     <p id="svcModalDescription" class="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap"></p>
                 </div>
             </div>
@@ -3367,13 +3637,57 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         </div>
     </div>
 
+
+    <!-- PROMOTION DETAIL MODAL (same UX as service detail; no share/save) -->
+    <div id="promotionDetailModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog" aria-modal="true">
+        <div class="w-full max-w-lg rounded-3xl border border-amber-700/40 bg-[#1b1033] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[92dvh]">
+            <div class="relative h-48 sm:h-56 w-full shrink-0 bg-[#0b0715]">
+                <img id="promoModalImage" src="" alt="" loading="lazy" class="w-full h-full object-cover">
+                <div id="promoModalImageFallback" class="absolute inset-0 hidden items-center justify-center bg-gradient-to-br from-amber-900/50 to-orange-900/30">
+                    <i data-lucide="megaphone" class="w-12 h-12 text-amber-400/60"></i>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-[#1b1033] via-[#1b1033]/40 to-transparent pointer-events-none"></div>
+                <span class="absolute top-3 left-3 promo-ad-badge z-10">AD</span>
+                <span class="absolute top-3 left-14 promo-sponsored-badge z-10">⭐ স্পন্সরড</span>
+                <button type="button" onclick="closePromotionDetailModal()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/55 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-md z-20" aria-label="বন্ধ">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto flex-1 space-y-4 -mt-6 relative z-10">
+                <div class="flex items-center flex-wrap gap-2">
+                    <span id="promoModalTypeTag" class="promo-type-tag"></span>
+                    <h3 id="promoModalTitle" class="text-xl sm:text-2xl font-extrabold text-white leading-tight"></h3>
+                </div>
+                <div class="flex items-center gap-3 bg-[#0b0715] p-3 rounded-xl border border-amber-900/40">
+                    <div class="w-10 h-10 rounded-full bg-amber-900/40 flex items-center justify-center text-amber-300 shrink-0"><i data-lucide="megaphone" class="w-5 h-5"></i></div>
+                    <div class="min-w-0">
+                        <p class="text-[10px] text-slate-400 uppercase tracking-wider font-bold" data-i18n="promo.advertiser">বিজ্ঞাপনদাতা</p>
+                        <p id="promoModalAdvertiser" class="text-sm font-bold text-white truncate"></p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-slate-300 text-sm bg-[#0b0715] p-3 rounded-xl border border-amber-900/40">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-rose-400 shrink-0"></i>
+                    <span id="promoModalLocation" class="truncate"></span>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider mb-2" data-i18n="promo.details">বিস্তারিত বর্ণনা</h4>
+                    <p id="promoModalDescription" class="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap"></p>
+                </div>
+                <div id="promoModalExtra" class="space-y-2 hidden"></div>
+            </div>
+            <div id="promoModalActions" class="p-4 border-t border-amber-900/40 bg-[#1b1033] shrink-0 flex flex-wrap items-center gap-2">
+                <!-- CTAs injected by JS -->
+            </div>
+        </div>
+    </div>
+
     <!-- CATEGORY MODAL -->
     <div id="categoryModal" class="fixed inset-0 z-[150] bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 modal-sheet-parent hidden overflow-y-auto">
         <div class="bg-[#1b1033] text-slate-100 rounded-3xl shadow-2xl w-full max-w-2xl border border-violet-800/50 modal-sheet my-4 sm:my-0 flex flex-col max-h-[88dvh] overflow-hidden">
             <div class="bg-gradient-to-r from-violet-700 via-purple-700 to-violet-800 p-4 px-5 text-white flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-2.5">
                     <div class="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center"><i data-lucide="layout-grid" class="w-5 h-5"></i></div>
-                    <div><h3 class="font-bold text-sm sm:text-base">সকল ক্যাটাগরি</h3><p class="text-[10px] text-violet-200">ক্যাটাগরি নির্বাচন করে সার্ভিস খুঁজুন</p></div>
+                    <div><h3 class="font-bold text-sm sm:text-base" data-i18n="categories.title">সকল ক্যাটাগরি</h3><p class="text-[10px] text-violet-200" data-i18n="categories.subtitle">ক্যাটাগরি নির্বাচন করে সার্ভিস খুঁজুন</p></div>
                 </div>
                 <button onclick="closeCategoryModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center touch-target"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
@@ -4201,33 +4515,38 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             document.getElementById('firebaseWarning').classList.remove('hidden');
         }
 
-        // ========== INSTANT AUTH CHECK ==========
+
+        // ========== NO SPLASH: direct home / last page ==========
+        // Logged-in users go straight to app; guests see home preview (3-min login gate unchanged).
         function hideSplash() {
             const s = document.getElementById('splashScreen');
             if (!s) return;
-            s.style.opacity = '0';
-            s.style.transition = 'opacity 0.3s ease';
-            setTimeout(() => s.remove(), 320);
+            s.style.display = 'none';
+            s.classList.add('hidden');
+            try { s.remove(); } catch (e) {}
         }
-
-        if (firebaseReady && auth.currentUser) {
+        function enterAppShell() {
             hideSplash();
-            document.getElementById('authSection').classList.add('hidden');
-            const _app = document.getElementById('appContent');
-            _app.classList.remove('hidden');
-            _app.classList.add('flex');
+            const authEl = document.getElementById('authSection');
+            if (authEl) authEl.classList.add('hidden');
+            const app = document.getElementById('appContent');
+            if (app) {
+                app.classList.remove('hidden');
+                app.classList.add('flex');
+            }
             document.body.classList.remove('overflow-hidden');
         }
-
-        setTimeout(() => {
-            const splash = document.getElementById('splashScreen');
-            if (!splash) return;
-            hideSplash();
-            if (!auth?.currentUser) {
+        // First paint: never show logo splash — open app shell immediately
+        try { enterAppShell(); } catch (e) {}
+        if (firebaseReady && auth?.currentUser) {
+            try { enterAppShell(); } catch (e) {}
+        } else {
+            // Guest preview until auth resolves (keeps 3-min auto login + click gate)
+            try {
                 if (typeof showGuestApp === 'function') showGuestApp();
-                if (typeof showToast === 'function') showToast('সংযোগ ধীর। কিছু তথ্য লোড হতে সময় লাগতে পারে।', 'wifi-off', 'text-amber-400');
-            }
-        }, 8000);
+                else enterAppShell();
+            } catch (e) { enterAppShell(); }
+        }
 
         // ========== HELPERS ==========
         function refreshIcons() {
@@ -4563,6 +4882,23 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         let servicesLoopCount = 0;
         let allServicesFullCache = null;
 
+        // Independent, endlessly repeating randomized advertisement feed.
+        // Ads are generated only as the service feed grows, so scrolling can
+        // continue indefinitely without exhausting the available promotions.
+        let adFeedCards = [];
+        let adShufflePool = [];
+        let adShuffleIndex = 0;
+        let adLastShownId = null;
+        let adPoolSignature = '';
+
+        function resetAdFeedState() {
+            adFeedCards = [];
+            adShufflePool = [];
+            adShuffleIndex = 0;
+            adLastShownId = null;
+            adPoolSignature = '';
+        }
+
         let lastRenderedCount = 0;
         let lastAdCountAtRender = -1;
         let animationQueueCounter = 0;
@@ -4803,12 +5139,17 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 'nav.blood': 'রক্ত',
                 'nav.profile': 'প্রোফাইল',
                 'nav.support': 'Admin Support',
+                'nav.favorites': 'পছন্দ',
                 'sidebar.settings': 'সেটিংস',
                 'sidebar.about': 'আমাদের সম্বন্ধে',
                 'sidebar.terms': 'শর্তাবলী ও নীতিমালা',
                 'sidebar.share': 'অ্যাপটি শেয়ার করুন',
                 'sidebar.rate': 'রেটিং দিন',
                 'sidebar.logout': 'লগ আউট',
+                'sidebar.favorites': 'আমার পছন্দ',
+                'sidebar.feedback': 'মতামত দিন',
+                'sidebar.contact': 'যোগাযোগ',
+                'sidebar.premium': 'প্রিমিয়াম',
                 'rating.title': 'আমাদের রেটিং দিন',
                 'rating.subtitle': 'আপনার অভিজ্ঞতা অনুযায়ী রেটিং দিন',
                 'rating.commentLabel': 'আপনার মতামত লিখুন (ঐচ্ছিক)',
@@ -4824,6 +5165,60 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 'rating.updated': 'রেটিং আপডেট হয়েছে',
                 'toast.langBn': 'ভাষা: বাংলা',
                 'toast.langEn': 'Language: English',
+                'auth.login': 'লগইন',
+                'auth.register': 'রেজিস্ট্রেশন',
+                'auth.email': 'ইমেইল',
+                'auth.password': 'পাসওয়ার্ড',
+                'auth.fullName': 'পূর্ণ নাম',
+                'auth.loginBtn': 'লগইন করুন',
+                'auth.registerBtn': 'রেজিস্ট্রেশন করুন',
+                'auth.or': 'অথবা',
+                'auth.google': 'Google দিয়ে চালিয়ে যান',
+                'auth.github': 'GitHub দিয়ে চালিয়ে যান',
+                'auth.guest': 'অতিথি হিসেবে দেখুন',
+                'auth.welcome': 'স্বাগতম',
+                'auth.loginTitle': 'আবার স্বাগতম',
+                'auth.registerTitle': 'নতুন অ্যাকাউন্ট',
+                'common.call': 'কল করুন',
+                'common.share': 'শেয়ার',
+                'common.website': 'ওয়েবসাইট',
+                'common.close': 'বন্ধ',
+                'common.save': 'সংরক্ষণ',
+                'common.cancel': 'বাতিল',
+                'common.search': 'খুঁজুন...',
+                'common.loading': 'লোড হচ্ছে...',
+                'common.details': 'বিস্তারিত বর্ণনা',
+                'common.provider': 'সেবাদানকারী',
+                'common.location': 'অবস্থান',
+                'common.noData': 'কোনো তথ্য নেই',
+                'common.offline': 'অফলাইন — সংরক্ষিত ডেটা দেখানো হচ্ছে',
+                'promo.advertiser': 'বিজ্ঞাপনদাতা',
+                'promo.details': 'বিস্তারিত বর্ণনা',
+                'promo.sponsored': 'স্পন্সরড',
+                'promo.ad': 'AD',
+                'service.call': 'কল করুন',
+                'service.website': 'ওয়েবসাইট',
+                'service.share': 'সেবাটি শেয়ার করুন',
+                'service.favorite': 'পছন্দ',
+                'profile.edit': 'প্রোফাইল এডিট',
+                'profile.phone': 'ফোন',
+                'profile.email': 'ইমেইল',
+                'profile.address': 'ঠিকানা',
+                'profile.logout': 'লগ আউট',
+                'emergency.title': 'জরুরি হেল্পলাইন',
+                'blood.title': 'রক্তদাতা',
+                'blood.search': 'রক্তের গ্রুপ / নাম / এলাকা',
+                'chat.placeholder': 'মেসেজ লিখুন...',
+                'chat.send': 'পাঠান',
+                'chat.support': 'Admin Support',
+                'notice.title': 'নোটিশ',
+                'categories.title': 'সকল ক্যাটাগরি',
+                'categories.subtitle': 'ক্যাটাগরি নির্বাচন করে সার্ভিস খুঁজুন',
+                'premium.title': 'প্রিমিয়াম',
+                'guest.preview': 'অতিথি প্রিভিউ',
+                'logout.confirm': 'আপনি কি সত্যিই লগআউট করতে চান?',
+                'logout.done': 'লগআউট হয়েছে',
+                'logout.fail': 'লগআউট ব্যর্থ',
             },
             en: {
                 'settings.theme': 'App Theme',
@@ -4840,12 +5235,17 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 'nav.blood': 'Blood',
                 'nav.profile': 'Profile',
                 'nav.support': 'Admin Support',
+                'nav.favorites': 'Favorites',
                 'sidebar.settings': 'Settings',
                 'sidebar.about': 'About Us',
                 'sidebar.terms': 'Terms & Policy',
                 'sidebar.share': 'Share App',
                 'sidebar.rate': 'Rate Us',
                 'sidebar.logout': 'Log Out',
+                'sidebar.favorites': 'My Favorites',
+                'sidebar.feedback': 'Feedback',
+                'sidebar.contact': 'Contact',
+                'sidebar.premium': 'Premium',
                 'rating.title': 'Rate Us',
                 'rating.subtitle': 'Rate according to your experience',
                 'rating.commentLabel': 'Write your feedback (optional)',
@@ -4861,6 +5261,60 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 'rating.updated': 'Rating updated',
                 'toast.langBn': 'ভাষা: বাংলা',
                 'toast.langEn': 'Language: English',
+                'auth.login': 'Login',
+                'auth.register': 'Register',
+                'auth.email': 'Email',
+                'auth.password': 'Password',
+                'auth.fullName': 'Full name',
+                'auth.loginBtn': 'Log in',
+                'auth.registerBtn': 'Create account',
+                'auth.or': 'or',
+                'auth.google': 'Continue with Google',
+                'auth.github': 'Continue with GitHub',
+                'auth.guest': 'Continue as guest',
+                'auth.welcome': 'Welcome',
+                'auth.loginTitle': 'Welcome back',
+                'auth.registerTitle': 'Create account',
+                'common.call': 'Call',
+                'common.share': 'Share',
+                'common.website': 'Website',
+                'common.close': 'Close',
+                'common.save': 'Save',
+                'common.cancel': 'Cancel',
+                'common.search': 'Search...',
+                'common.loading': 'Loading...',
+                'common.details': 'Details',
+                'common.provider': 'Provider',
+                'common.location': 'Location',
+                'common.noData': 'No data',
+                'common.offline': 'Offline — showing saved data',
+                'promo.advertiser': 'Advertiser',
+                'promo.details': 'Details',
+                'promo.sponsored': 'Sponsored',
+                'promo.ad': 'AD',
+                'service.call': 'Call',
+                'service.website': 'Website',
+                'service.share': 'Share service',
+                'service.favorite': 'Favorite',
+                'profile.edit': 'Edit profile',
+                'profile.phone': 'Phone',
+                'profile.email': 'Email',
+                'profile.address': 'Address',
+                'profile.logout': 'Log out',
+                'emergency.title': 'Emergency helplines',
+                'blood.title': 'Blood donors',
+                'blood.search': 'Blood group / name / area',
+                'chat.placeholder': 'Type a message...',
+                'chat.send': 'Send',
+                'chat.support': 'Admin Support',
+                'notice.title': 'Notices',
+                'categories.title': 'All categories',
+                'categories.subtitle': 'Pick a category to find services',
+                'premium.title': 'Premium',
+                'guest.preview': 'Guest preview',
+                'logout.confirm': 'Do you really want to log out?',
+                'logout.done': 'Logged out',
+                'logout.fail': 'Logout failed',
             }
         };
         function t(key) {
@@ -4920,10 +5374,36 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     'শর্তাবলী ও নীতিমালা': 'sidebar.terms', 'Terms & Policy': 'sidebar.terms',
                     'অ্যাপটি শেয়ার করুন': 'sidebar.share', 'Share App': 'sidebar.share',
                     'রেটিং দিন': 'sidebar.rate', 'Rate Us': 'sidebar.rate',
-                    'লগ আউট': 'sidebar.logout', 'Log Out': 'sidebar.logout'
+                    'লগ আউট': 'sidebar.logout', 'Log Out': 'sidebar.logout',
+                    'আমার পছন্দ': 'sidebar.favorites', 'My Favorites': 'sidebar.favorites',
+                    'মতামত দিন': 'sidebar.feedback', 'Feedback': 'sidebar.feedback',
+                    'যোগাযোগ': 'sidebar.contact', 'Contact': 'sidebar.contact',
+                    'প্রিমিয়াম': 'sidebar.premium', 'Premium': 'sidebar.premium'
                 };
                 if (map[txt]) span.textContent = t(map[txt]);
             });
+            // Title attributes
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                const key = el.getAttribute('data-i18n-title');
+                if (key && t(key)) el.setAttribute('title', t(key));
+            });
+            // Common static labels that use known keys when data-i18n is present are already handled
+            // Service modal fixed labels
+            const svcProvLabel = document.querySelector('#serviceDetailModal .uppercase.tracking-wider.font-bold');
+            if (svcProvLabel && (svcProvLabel.textContent.includes('সেবাদানকারী') || svcProvLabel.textContent.includes('Provider'))) {
+                svcProvLabel.textContent = t('common.provider');
+            }
+            const svcDescH = document.querySelector('#serviceDetailModal h4');
+            if (svcDescH && (svcDescH.textContent.includes('বিস্তারিত') || svcDescH.textContent.includes('Details'))) {
+                svcDescH.textContent = t('common.details');
+            }
+            const callBtn = document.querySelector('#svcModalCall');
+            if (callBtn) {
+                const icon = callBtn.querySelector('i');
+                callBtn.innerHTML = '';
+                if (icon) callBtn.appendChild(icon);
+                callBtn.appendChild(document.createTextNode(' ' + t('common.call')));
+            }
             // Settings header
             const settingsH = document.querySelector('#settingsModal h3');
             if (settingsH) {
@@ -5925,14 +6405,33 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             }
         };
         window.logoutUser = async () => {
-            // Fixed: Removed isForcedProfileMode trap so users can logout even if profile is incomplete
-            if (!confirm('আপনি কি সত্যিই লগআউট করতে চান?')) return;
+            // Immediate logout: show login right away (no multi-second delay)
+            const msg = (typeof t === 'function' && currentLang === 'en') ? 'Do you really want to log out?' : 'আপনি কি সত্যিই লগআউট করতে চান?';
+            if (!confirm(msg)) return;
             try {
                 stopUserHeartbeat(); stopActivityTracking();
-                try { await logSessionEvent(currentUser.uid, 'logout'); await writeSiteAnalyticsEvent('logout'); } catch (e) {}
-                await signOut(auth);
-                showToast('লগআউট হয়েছে', 'circle-check', 'text-violet-400');
-            } catch (err) { showToast('লগআউট ব্যর্থ', 'circle-x', 'text-rose-400'); }
+                // UI first so user lands on login instantly
+                try { closeSidebar?.(); } catch (e) {}
+                try { closeServiceDetailModal?.(); } catch (e) {}
+                try { closePromotionDetailModal?.(); } catch (e) {}
+                isForcedProfileMode = false;
+                document.body.classList.remove('force-profile-mode');
+                currentUser = null;
+                userProfile = null;
+                showAuthScreen();
+                switchAuthTab('login');
+                const toastMsg = (typeof t === 'function' && currentLang === 'en') ? 'Logged out' : 'লগআউট হয়েছে';
+                showToast(toastMsg, 'circle-check', 'text-violet-400');
+                // Fire analytics + Firebase signOut in background (do not block UI)
+                const uid = auth?.currentUser?.uid;
+                if (uid) {
+                    try { logSessionEvent(uid, 'logout'); } catch (e) {}
+                    try { writeSiteAnalyticsEvent('logout'); } catch (e) {}
+                }
+                try { await signOut(auth); } catch (e) {}
+            } catch (err) {
+                showToast(currentLang === 'en' ? 'Logout failed' : 'লগআউট ব্যর্থ', 'circle-x', 'text-rose-400');
+            }
         };
 
         // ========== PROFILE UI ==========
@@ -6179,29 +6678,41 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             const sm = document.getElementById('searchInputMobile');
             return String((si && si.value) || (sm && sm.value) || '').toLowerCase().trim();
         }
-        window.handleSearch = async (el) => {
+        let searchDebounceTimer = null;
+        let searchFetchInFlight = null;
+        window.handleSearch = (el) => {
             if (isForcedProfileMode) return;
             const val = el.value;
             const si = document.getElementById('searchInput'); if (si && si !== el) si.value = val;
             const sm = document.getElementById('searchInputMobile'); if (sm && sm !== el) sm.value = val;
 
-            const search = val.trim().toLowerCase();
-
-            if (currentTab === 'services') {
-                if (search) {
-                    if (!allServicesFullCache) {
-                        const allIds = allServiceIds.length ? allServiceIds : await fetchServiceIds();
-                        if (!allServiceIds.length) allServiceIds = allIds;
-                        allServicesFullCache = await fetchServicesByIds(allIds);
+            // Debounce to stop card shake from re-animating on every keystroke
+            if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(async () => {
+                const search = String(val || '').trim().toLowerCase();
+                if (currentTab === 'services') {
+                    if (search) {
+                        if (!allServicesFullCache) {
+                            if (searchFetchInFlight) {
+                                try { await searchFetchInFlight; } catch (e) {}
+                            } else {
+                                searchFetchInFlight = (async () => {
+                                    const allIds = allServiceIds.length ? allServiceIds : await fetchServiceIds();
+                                    if (!allServiceIds.length) allServiceIds = allIds;
+                                    allServicesFullCache = await fetchServicesByIds(allIds);
+                                })();
+                                try { await searchFetchInFlight; } finally { searchFetchInFlight = null; }
+                            }
+                        }
+                        renderServices(true);
+                    } else {
+                        allServicesFullCache = null;
+                        renderServices(true);
                     }
-                    renderServices();
-                } else {
-                    allServicesFullCache = null;
-                    renderServices();
-                }
-            } else if (currentTab === 'emergency') renderEmergency();
-            else if (currentTab === 'blood') filterBloodDonors();
-            else if (currentTab === 'favorites') renderFavorites();
+                } else if (currentTab === 'emergency') renderEmergency();
+                else if (currentTab === 'blood') filterBloodDonors();
+                else if (currentTab === 'favorites') renderFavorites();
+            }, 220);
         };
         window.filterCategory = (catId) => {
             if (isForcedProfileMode) return;
@@ -6588,24 +7099,10 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     allServiceIds = await fetchServiceIds();
                     allServicesFullCache = await fetchServicesByIds(allServiceIds);
 
-                    const now = Date.now();
-                    const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
-                    const newOnes = [];
-                    const oldOnes = [];
-
-                    allServicesFullCache.forEach(svc => {
-                        const createdMs = svc.createdAt && typeof svc.createdAt.toDate === 'function'
-                            ? svc.createdAt.toDate().getTime()
-                            : (svc.createdAt ? new Date(svc.createdAt).getTime() : 0);
-                        if (createdMs > 0 && (now - createdMs) < SEVEN_DAYS) {
-                            newOnes.push({ id: svc.id, ms: createdMs });
-                        } else {
-                            oldOnes.push(svc.id);
-                        }
-                    });
-
-                    newOnes.sort((a, b) => b.ms - a.ms);
-                    shuffledIds = [...newOnes.map(n => n.id), ...shuffleArray(oldOnes)];
+                    // Every service participates in a fully random first cycle.
+                    // The next cycle is shuffled again after the current cycle ends.
+                    shuffledIds = shuffleArray(allServiceIds);
+                    resetAdFeedState();
 
                     if (allServiceIds.length === 0) {
                         servicesFirstLoadDone = true;
@@ -6963,7 +7460,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             const link = (href, cls, inner, title) => preview ? `<span class="${cls}" title="${esc(title || '')}">${inner}</span>` : `<a href="${esc(href)}" ${href.startsWith('tel:') ? '' : 'target="_blank" rel="noopener noreferrer"'} onclick="event.stopPropagation()" class="${cls}" title="${esc(title || '')}">${inner}</a>`;
             const smalls = smalls_(smallKeys);
             function smalls_(keys) { return keys.map(k => link(promoCtaHref(k, k === 'custom' ? cta.custom : cta[k]), 'promo-cta-small', `<i data-lucide="${PROMO_CTA_OPTIONS[k].icon}" class="w-4 h-4"></i>`, k === 'custom' ? cta.custom.label : PROMO_CTA_OPTIONS[k].btn)).join(''); }
-            return `<div class="promotion-card" data-promo-id="${esc(promo.id || '')}">
+            return `<div class="promotion-card cursor-pointer" data-promo-id="${esc(promo.id || '')}" onclick="openPromotionDetail('${esc(promo.id || '')}')">
                 <div>
                     <div class="h-40 bg-[#0f0a03] overflow-hidden relative">
                         ${img ? `<img src="${esc(img)}" alt="${esc(promo.title || '')}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-900/40 to-orange-900/20"><i data-lucide="megaphone" class="w-10 h-10 text-amber-400/60"></i></div>`}
@@ -6988,20 +7485,64 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
         function promoTimeMs(v) { return v && typeof v.toDate === 'function' ? v.toDate().getTime() : (v ? new Date(v).getTime() : 0); }
         function getActivePromotions() {
             const now = Date.now();
-            return promotionsCache.filter(p => p.status === 'approved' && promoTimeMs(p.expiresAt) > now)
-                .sort((a, b) => promoTimeMs(b.reviewedAt) - promoTimeMs(a.reviewedAt));
+            return promotionsCache.filter(p => p.status === 'approved' && promoTimeMs(p.expiresAt) > now);
         }
+
+        // Returns the next ad in a shuffled cycle. Each active ad is shown once
+        // per cycle; when the pool ends, a fresh random order is generated.
+        function getNextRandomPromotionCard(activeAds) {
+            if (!activeAds.length) return null;
+
+            const signature = activeAds.map(p => p.id).sort().join('|');
+            if (signature !== adPoolSignature) {
+                adFeedCards = [];
+                adShufflePool = [];
+                adShuffleIndex = 0;
+                adLastShownId = null;
+                adPoolSignature = signature;
+            }
+
+            if (adShuffleIndex >= adShufflePool.length) {
+                adShufflePool = shuffleArray(activeAds);
+                adShuffleIndex = 0;
+
+                // Avoid an identical ad at the boundary between two cycles
+                // whenever at least two different active ads are available.
+                if (adShufflePool.length > 1 && adShufflePool[0].id === adLastShownId) {
+                    const swapIndex = 1 + Math.floor(Math.random() * (adShufflePool.length - 1));
+                    [adShufflePool[0], adShufflePool[swapIndex]] = [adShufflePool[swapIndex], adShufflePool[0]];
+                }
+            }
+
+            const promotion = adShufflePool[adShuffleIndex++];
+            adLastShownId = promotion.id;
+            return buildPromotionCard(promotion);
+        }
+
         function mixAdsWithServices(services, search) {
             const cards = services.map(buildServiceCard);
+            // Search results intentionally remain service-only, as before.
             if (search) return cards;
-            const ads = getActivePromotions().map(buildPromotionCard);
-            if (!ads.length) return cards;
-            const out = []; let ai = 0, si = 0;
-            while (si < cards.length || ai < ads.length) {
-                if (ai < ads.length) out.push(ads[ai++]);
-                for (let k = 0; k < 3 && si < cards.length; k++) out.push(cards[si++]);
-                if (ai >= ads.length) { while (si < cards.length) out.push(cards[si++]); }
-            }
+
+            const activeAds = getActivePromotions();
+            if (!activeAds.length) return cards;
+
+            const out = [];
+            let adIndex = 0;
+
+            cards.forEach((serviceCard, index) => {
+                out.push(serviceCard);
+
+                // Exactly one advertisement after every three service cards.
+                if ((index + 1) % 3 === 0) {
+                    if (!adFeedCards[adIndex]) {
+                        adFeedCards[adIndex] = getNextRandomPromotionCard(activeAds);
+                    }
+                    if (adFeedCards[adIndex]) out.push(adFeedCards[adIndex]);
+                    adIndex++;
+                }
+            });
+
             return out;
         }
         let lastActivePromoCount = -1;
@@ -7104,9 +7645,9 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     refreshIcons();
                     return;
                 }
-                const html = filtered.map((s, idx) => {
-                    const delay = Math.min(idx * 50, 400);
-                    return `<div class="service-card-in" data-card-wrapper style="animation-delay:${delay}ms">${buildServiceCard(s)}</div>`;
+                // No entrance animation during search — prevents shake on each keystroke
+                const html = filtered.map((s) => {
+                    return `<div data-card-wrapper style="height:100%">${buildServiceCard(s)}</div>`;
                 }).join('');
                 grid.innerHTML = html;
                 refreshIcons();
@@ -7118,6 +7659,10 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                 lastRenderedCount = 0;
                 lastAdCountAtRender = currentAdCount;
                 animationQueueCounter = 0;
+
+                // A manual/realtime refresh or a changed active-ad count starts
+                // a fresh ad shuffle cycle while preserving all service data.
+                if (reset || adCountChanged) resetAdFeedState();
             }
 
             const allCards = mixAdsWithServices(filtered, search);
@@ -7138,6 +7683,10 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             }
 
             refreshIcons();
+            // Clear transforms after entrance so later search/filter does not feel shaky
+            setTimeout(() => {
+                document.querySelectorAll('#servicesGrid [data-card-wrapper]').forEach(el => el.classList.add('anim-done'));
+            }, 450);
         }
 
         // ========== SERVICE DETAIL MODAL ==========
@@ -7200,6 +7749,81 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
             activeServiceId = null;
         };
         document.getElementById('serviceDetailModal')?.addEventListener('click', (e) => { if (e.target.id === 'serviceDetailModal') closeServiceDetailModal(); });
+
+        window.openPromotionDetail = (promoId) => {
+            if (isForcedProfileMode) return;
+            if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
+            const promo = (promotionsCache || []).find(p => p.id === promoId)
+                || (typeof getActivePromotions === 'function' ? getActivePromotions().find(p => p.id === promoId) : null);
+            if (!promo) return;
+            const tInfo = (typeof PROMO_TYPES !== 'undefined' && PROMO_TYPES[promo.type]) ? PROMO_TYPES[promo.type] : { label: promo.type || 'AD', icon: 'megaphone', color: '#94a3b8' };
+            const loc = [promo.upazila, promo.district].filter(Boolean).join(', ') || promo.location || '—';
+            const img = /^(https?:|blob:)/i.test(promo.image || '') ? promo.image : '';
+            const desc = promo.shortDescription || promo.description || promo.details || (currentLang === 'en' ? 'No details provided.' : 'বিস্তারিত দেওয়া হয়নি।');
+            document.getElementById('promoModalTitle').textContent = promo.title || (currentLang === 'en' ? 'Promotion' : 'বিজ্ঞাপন');
+            document.getElementById('promoModalAdvertiser').textContent = promo.userName || (currentLang === 'en' ? 'Unknown' : 'অজানা');
+            document.getElementById('promoModalLocation').textContent = loc;
+            document.getElementById('promoModalDescription').textContent = desc;
+            const typeTag = document.getElementById('promoModalTypeTag');
+            if (typeTag) {
+                typeTag.style.background = tInfo.color || '#94a3b8';
+                typeTag.innerHTML = `<i data-lucide="${tInfo.icon || 'sparkles'}" class="w-3 h-3"></i> ${esc(tInfo.label || '')}`;
+            }
+            const imgEl = document.getElementById('promoModalImage');
+            const fb = document.getElementById('promoModalImageFallback');
+            if (img) { imgEl.src = img; imgEl.classList.remove('hidden'); fb.classList.add('hidden'); fb.classList.remove('flex'); }
+            else { imgEl.removeAttribute('src'); imgEl.classList.add('hidden'); fb.classList.remove('hidden'); fb.classList.add('flex'); }
+
+            // Extra type fields (read-only)
+            const extraBox = document.getElementById('promoModalExtra');
+            const extraDefs = (typeof PROMO_EXTRA_FIELDS !== 'undefined' && PROMO_EXTRA_FIELDS[promo.type]) ? PROMO_EXTRA_FIELDS[promo.type] : [];
+            const extraData = promo.extra || promo;
+            let extraHtml = '';
+            extraDefs.forEach(f => {
+                const val = extraData[f.k];
+                if (val == null || String(val).trim() === '') return;
+                extraHtml += `<div class="flex items-start gap-2 bg-[#0b0715] p-2.5 rounded-xl border border-amber-900/30 text-sm"><span class="text-[10px] font-bold text-amber-300/90 shrink-0 min-w-[7rem]">${esc(f.l)}</span><span class="text-slate-200 break-all">${esc(String(val))}</span></div>`;
+            });
+            if (extraHtml) { extraBox.innerHTML = extraHtml; extraBox.classList.remove('hidden'); }
+            else { extraBox.innerHTML = ''; extraBox.classList.add('hidden'); }
+
+            // CTAs only — same options as card (no share / no save)
+            const actions = document.getElementById('promoModalActions');
+            const cta = promo.cta || {};
+            const primary = typeof getPromoPrimaryCTA === 'function' ? getPromoPrimaryCTA(promo) : null;
+            const order = ['call', 'website', 'whatsapp', 'facebook', 'youtube', 'tiktok', 'instagram', 'telegram', 'custom'];
+            const parts = [];
+            order.forEach(k => {
+                const has = k === 'custom' ? !!(cta.custom && cta.custom.label && promoCtaHref('custom', cta.custom)) : !!(cta[k] && promoCtaHref(k, cta[k]));
+                if (!has) return;
+                const href = promoCtaHref(k, k === 'custom' ? cta.custom : cta[k]);
+                const label = k === 'custom' ? (cta.custom.label || 'Link') : (PROMO_CTA_OPTIONS[k]?.btn || k);
+                const icon = PROMO_CTA_OPTIONS[k]?.icon || 'link';
+                const isPrimary = primary && primary.key === k;
+                if (isPrimary) {
+                    parts.push(`<a href="${esc(href)}" ${href.startsWith('tel:') ? '' : 'target="_blank" rel="noopener noreferrer"'} class="promo-cta-main flex-1 min-w-[9rem] h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2"><i data-lucide="${icon}" class="w-4 h-4 shrink-0"></i><span class="truncate">${esc(label)}</span></a>`);
+                } else {
+                    parts.push(`<a href="${esc(href)}" ${href.startsWith('tel:') ? '' : 'target="_blank" rel="noopener noreferrer"'} class="promo-cta-small w-11 h-11 shrink-0 rounded-xl flex items-center justify-center" title="${esc(label)}"><i data-lucide="${icon}" class="w-4 h-4"></i></a>`);
+                }
+            });
+            if (!parts.length) {
+                parts.push(`<p class="text-xs text-slate-400 w-full text-center py-1">${currentLang === 'en' ? 'No action buttons for this ad.' : 'এই বিজ্ঞাপনে কোনো অ্যাকশন বাটন নেই।'}</p>`);
+            }
+            actions.innerHTML = parts.join('');
+            const m = document.getElementById('promotionDetailModal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+            refreshIcons();
+        };
+        window.closePromotionDetailModal = () => {
+            const m = document.getElementById('promotionDetailModal');
+            if (!m) return;
+            m.classList.add('hidden'); m.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        };
+        document.getElementById('promotionDetailModal')?.addEventListener('click', (e) => { if (e.target.id === 'promotionDetailModal') closePromotionDetailModal(); });
+
+
 
         // ========== EMERGENCY ==========
         function renderEmergency() {
@@ -8391,6 +9015,7 @@ body.light-mode .service-card .action-btn[title*="শেয়ার"] {
                     userFavorites = new Set(); favoritesLoaded = false;
                     favoritesCache = [];
                     servicesCache = []; servicesSeenIds = new Set();
+                    resetAdFeedState();
                     allServiceIds = []; shuffledIds = []; currentBatchIndex = 0;
                     servicesFirstLoadDone = false; servicesLoopCount = 0;
                     allServicesFullCache = null;

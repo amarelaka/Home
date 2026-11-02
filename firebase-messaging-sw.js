@@ -17,14 +17,20 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// ব্যাকগ্রাউন্ডে নোটিফিকেশন আসলে কী দেখাবে
+// ব্যাকগ্রাউন্ড নোটিফিকেশনের সময় কী দেখাবে
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  
+  // ✅ ফিক্স: ফায়ারবেস যদি নিজেই 'notification' পেলোড দেখায়, তবে ডাবল এড়াতে এখানেই রিটার্ন করে দিব
+  if (payload.notification) {
+    return; 
+  }
 
-  const notificationTitle = payload.notification?.title || "আমার এলাকা";
+  // ✅ নিচের অংশটি শুধুমাত্র 'data-only' মেসেজের জন্য কাজ করবে
+  const notificationTitle = payload.data?.title || "আমার এলাকা";
   const notificationOptions = {
-    body: payload.notification?.body || "নতুন নোটিফিকেশন এসেছে",
-    icon: '/icon-192.png' // আপনার অ্যাপের আইকনের লিংক
+    body: payload.data?.body || "মতু নোটিফিকেশন এসেছে",
+    icon: '/icon-192.png' // আপনার অ্যাপের আইকনের নাম
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
@@ -32,7 +38,7 @@ messaging.onBackgroundMessage((payload) => {
 
 
 // ==========================================
-// ২. PWA Offline Caching (আপনার আগের sw.js থেকে)
+// ২. PWA Offline Caching (আপনার আগের sw.js ফাইল)
 // ==========================================
 const CACHE_NAME = 'amar-elaka-v4';
 const CACHE_URLS = [
@@ -44,7 +50,7 @@ const CACHE_URLS = [
   'https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap'
 ];
 
-// ইনস্টল (ফাইল ক্যাশ করা)
+// ইনস্টল (ক্যাশ তৈরি করা)
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -68,7 +74,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// ফেচ (নেটওয়ার্ক না থাকলে ক্যাশ থেকে দেখানো)
+// ফেচ (নেটওয়ার্ক না থাকলে ক্যাশ থেকে দেখানো)
 self.addEventListener('fetch', (event) => {
   if (event.request.url.includes('firestore.googleapis.com') ||
       event.request.url.includes('identitytoolkit') ||

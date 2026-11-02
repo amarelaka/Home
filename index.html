@@ -943,6 +943,16 @@
             .modal-sheet-parent { align-items: flex-end !important; padding: 0 !important; }
         }
 
+
+        /* ===== Result modal ===== */
+        body.light-mode #resultModal > div { background:#ffffff !important; border-color:#ddd6fe !important; }
+        body.light-mode #resultModal .result-head { background:linear-gradient(90deg,#ede9fe,#f5f3ff) !important; border-color:#ddd6fe !important; }
+        body.light-mode #resultModal .result-head h2 { color:#1e1b4b !important; }
+        body.light-mode #resultModal .result-head p { color:#6d28d9 !important; }
+        body.light-mode #resultModal .result-head button { background:#ede9fe !important; color:#5b21b6 !important; }
+        body.light-mode #resultModal .result-foot { background:#f5f3ff !important; border-color:#ddd6fe !important; }
+        body.light-mode #resultModal #resultLoader { background:#f5f3ff !important; color:#6d28d9 !important; }
+
         @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
             .glass-card { background: rgba(8, 30, 18, 0.96); }
             .glass-input { background: rgba(10, 30, 20, 0.95); }
@@ -2960,6 +2970,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     <button type="button" onclick="sidebarNav('services')" class="sidebar-item"><i data-lucide="layout-grid"></i><span>সকল সেবা সমূহ</span></button>
                     <button type="button" onclick="sidebarNav('emergency')" class="sidebar-item"><i data-lucide="phone-call"></i><span>জরুরী হেল্পলাইন</span></button>
                     <button type="button" onclick="sidebarNav('blood')" class="sidebar-item"><i data-lucide="droplet"></i><span>রক্ত</span></button>
+                    <button type="button" onclick="sidebarNav('result')" class="sidebar-item"><i data-lucide="graduation-cap"></i><span>রেজাল্ট বের করুন</span></button>
                 </div>
             </div>
 
@@ -4100,6 +4111,38 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             <div class="p-4 border-t border-purple-900/50 bg-[#0b0715] shrink-0 text-center">
                 <button onclick="closeTermsModal()" class="w-full max-w-xs mx-auto bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-800 hover:to-indigo-700 text-white font-bold py-3 rounded-xl text-sm transition-colors shadow-lg">
                     আমি বুঝেছি ও সম্মত আছি
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
+        <div class="w-full max-w-2xl rounded-3xl border border-violet-800/50 bg-[#1b1033] shadow-2xl modal-sheet overflow-hidden flex flex-col h-[92dvh] max-h-[92dvh]">
+            <div class="result-head flex items-center justify-between border-b border-violet-900/50 p-4 shrink-0 bg-gradient-to-r from-[#160d29] to-[#1b1033]">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center">
+                        <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-white text-base">রেজাল্ট বের করুন</h2>
+                        <p class="text-[10px] text-violet-300">BTEB রেজাল্ট সার্চ</p>
+                    </div>
+                </div>
+                <button onclick="closeResultModal()" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="relative flex-1 min-h-0 bg-white">
+                <div id="resultLoader" class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#0b0715] text-violet-300 text-xs z-10">
+                    <div class="w-9 h-9 rounded-full border-4 border-violet-800 border-t-violet-400 animate-spin"></div>
+                    <span>রেজাল্ট পেজ লোড হচ্ছে...</span>
+                </div>
+                <iframe id="resultFrame" title="রেজাল্ট বের করুন" class="w-full h-full border-0 bg-white" referrerpolicy="no-referrer" allow="fullscreen"></iframe>
+            </div>
+            <div class="result-foot shrink-0 border-t border-violet-900/50 bg-[#160d29] p-3">
+                <button onclick="downloadResultPdf()" class="w-full py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-violet-600/30 transition">
+                    <i data-lucide="file-down" class="w-4 h-4"></i> PDF ডাউনলোড
                 </button>
             </div>
         </div>
@@ -5597,6 +5640,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                 else if (action === 'terms') openTermsModal();
                 else if (action === 'settings') openSettingsModal();
                 else if (action === 'contact') openContactModal();
+                else if (action === 'result') openResultModal();
                 else switchTab(action);
             }, 200);
         };
@@ -8610,6 +8654,37 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             finally { btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> পাঠান'; refreshIcons(); }
         };
 
+        // ========== RESULT MODAL ==========
+        const RESULT_URL = 'https://result.bteb.gov.bd/result-search';
+        let resultLoaderTimer = null;
+        window.openResultModal = () => {
+            if (isForcedProfileMode) return;
+            const m = document.getElementById('resultModal');
+            const f = document.getElementById('resultFrame');
+            const loader = document.getElementById('resultLoader');
+            loader.classList.remove('hidden');
+            if (!f.getAttribute('src')) {
+                f.onload = () => { loader.classList.add('hidden'); clearTimeout(resultLoaderTimer); };
+                f.src = RESULT_URL;
+            } else { loader.classList.add('hidden'); }
+            clearTimeout(resultLoaderTimer);
+            resultLoaderTimer = setTimeout(() => loader.classList.add('hidden'), 12000);
+            m.classList.remove('hidden'); m.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+            refreshIcons();
+        };
+        window.closeResultModal = () => {
+            const m = document.getElementById('resultModal');
+            m.classList.add('hidden'); m.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        };
+        window.downloadResultPdf = () => {
+            // Cross-site page: browser cannot read its content, so open it and guide the user to Save as PDF
+            window.open(RESULT_URL, '_blank', 'noopener');
+            showToast('রেজাল্ট দেখার পর ব্রাউজার মেনু থেকে Print → Save as PDF চাপুন', 'file-down', 'text-violet-400');
+        };
+        document.getElementById('resultModal')?.addEventListener('click', (e) => { if (e.target.id === 'resultModal') closeResultModal(); });
+
         // ========== ABOUT/TERMS ==========
         window.openAboutModal = () => { if (isForcedProfileMode) return; document.getElementById('aboutModal').classList.remove('hidden'); document.getElementById('aboutModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
         window.closeAboutModal = () => { document.getElementById('aboutModal').classList.add('hidden'); document.getElementById('aboutModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
@@ -8650,7 +8725,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
         });
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
-                closeNoticeModal(); closeFeedbackModal(); closeAboutModal(); closeTermsModal();
+                closeNoticeModal(); closeFeedbackModal(); closeAboutModal(); closeTermsModal(); closeResultModal();
                 closeProviderModal(); closeCategoryModal(); closeEditProfileModal();
                 closeSidebar(); closeNotifPanel(); closeSettingsModal(); closeServiceDetailModal();
                 closeUserEmergencyRequestModal();

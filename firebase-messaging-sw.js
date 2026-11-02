@@ -17,27 +17,21 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// ব্যাকগ্রাউন্ড নোটিফিকেশনের সময় আপনার কাস্টম লোগো দেখাবে
+// ব্যাকগ্রাউন্ড নোটিফিকেশন
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   
-  // ফায়ারবেসের ডিফল্ট নোটিফিকেশন বন্ধ করতে এবং শুধু আপনার কাস্টম নোটিফিকেশন দেখাতে
-  const notificationTitle = payload.notification?.title || payload.data?.title || "আমার এলাকা";
-  const notificationOptions = {
-    body: payload.notification?.body || payload.data?.body || "মতু নোটিফিকেশন এসেছে",
-    icon: '/icon-192.png', // ✅ এখানে আপনার লোগোর নাম দেওয়া আছে
-    badge: '/icon-192.png',
-    click_action: payload.data?.clickAction || 'https://www.amarelaka.shop'
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  // ✅ ফিক্স: ফায়ারবেস নিজে থেকেই নোটিফিকেশন দেখাবে, তাই আমাদের আর দেখানোর দরকার নেই (এতে ডাবল হবে না)
+  if (payload.notification) {
+    return; 
+  }
 });
 
 
 // ==========================================
 // ২. PWA Offline Caching (আপনার আগের কোড)
 // ==========================================
-const CACHE_NAME = 'amar-elaka-v4';
+const CACHE_NAME = 'amar-elaka-v5'; // ভার্সন বাড়ানো হলো যাতে ব্রাউজার নতুন কোড ধরে
 const CACHE_URLS = [
   '/',
   '/index.html',
@@ -47,6 +41,7 @@ const CACHE_URLS = [
   'https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap'
 ];
 
+// ইনস্টল (ক্যাশ তৈরি করা)
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -58,6 +53,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
+// অ্যাক্টিভেট (পুরনো ক্যাশ মুছে ফেলা)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -69,6 +65,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// ফেচ (নেটওয়ার্ক না থাকলে ক্যাশ থেকে দেখানো)
 self.addEventListener('fetch', (event) => {
   if (event.request.url.includes('firestore.googleapis.com') ||
       event.request.url.includes('identitytoolkit') ||

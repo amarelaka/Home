@@ -2722,6 +2722,67 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
 }
 </style>
 
+    <style>
+        /* ========== জেলা / উপজেলা ড্রপডাউন ========== */
+        .loc-btn {
+            display: flex; align-items: center; justify-content: space-between; gap: 6px;
+            text-align: left; cursor: pointer; min-width: 0; width: 100%;
+            background: transparent; border: none; outline: none; font-family: inherit;
+        }
+        .loc-btn:not(.loc-bare) { }
+        .loc-btn .loc-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .loc-btn .loc-label.loc-placeholder { color: #64748b; }
+        .loc-btn .loc-chev { flex-shrink: 0; width: 16px; height: 16px; color: #8b5cf6; transition: transform .2s ease; }
+        .loc-btn[aria-expanded="true"] .loc-chev { transform: rotate(180deg); }
+        .loc-btn.loc-disabled { opacity: .55; }
+        .loc-btn.loc-disabled .loc-label { color: #64748b; }
+        .loc-btn.loc-shake { animation: locShake .35s ease; }
+        @keyframes locShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+        /* বাটন যখন সরাসরি বক্সের ভেতরে (edit/provider/promo) */
+        .loc-btn.loc-boxed { border: 1px solid rgba(139,92,246,.3); border-radius: 12px; padding: 10px 12px; font-size: 13px; background: #0b0715; color: #f1f5f9; }
+        .loc-btn.loc-boxed:focus-visible, .loc-btn.loc-boxed[aria-expanded="true"] { border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139,92,246,.18); }
+        .loc-btn.loc-promo { border: 1px solid rgba(251,191,36,.25); border-radius: 12px; padding: 10px 12px; font-size: 13px; background: #0b0715; color: #f1f5f9; }
+        .loc-btn.loc-promo[aria-expanded="true"] { border-color: #f59e0b; }
+
+        #locDropdown {
+            position: fixed; z-index: 9000; display: none; flex-direction: column;
+            background: linear-gradient(180deg, #1b1033 0%, #140b25 100%);
+            border: 1px solid rgba(139,92,246,.45); border-radius: 16px; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,.6), 0 0 0 1px rgba(139,92,246,.12);
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+        #locDropdown.open { display: flex; animation: locPop .16s ease-out; }
+        #locDropdown.loc-up { transform-origin: bottom center; }
+        @keyframes locPop { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: none; } }
+        #locDropdown .loc-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px 6px; font-size: 11px; font-weight: 700; color: #a78bfa; letter-spacing: .03em; }
+        #locDropdown .loc-head span:last-child { color: #64748b; font-weight: 600; }
+        #locDropdown .loc-search-wrap { display: flex; align-items: center; gap: 8px; margin: 4px 10px 8px; padding: 0 10px; border-radius: 12px; background: rgba(0,0,0,.35); border: 1px solid rgba(139,92,246,.25); }
+        #locDropdown .loc-search-wrap:focus-within { border-color: #8b5cf6; }
+        #locDropdown .loc-search-wrap svg { width: 15px; height: 15px; color: #8b5cf6; flex-shrink: 0; }
+        #locDropdown .loc-search { flex: 1; min-width: 0; background: transparent; border: none; outline: none; color: #f1f5f9; font-size: 14px; padding: 10px 0; font-family: inherit; }
+        #locDropdown .loc-search::placeholder { color: #64748b; }
+        #locDropdown .loc-list { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 0 6px 8px; flex: 1; }
+        #locDropdown .loc-list::-webkit-scrollbar { width: 5px; }
+        #locDropdown .loc-list::-webkit-scrollbar-thumb { background: rgba(139,92,246,.45); border-radius: 10px; }
+        #locDropdown .loc-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 10px; font-size: 14px; color: #e2e8f0; cursor: pointer; transition: background .12s; }
+        #locDropdown .loc-item:hover, #locDropdown .loc-item.active { background: rgba(139,92,246,.18); }
+        #locDropdown .loc-item.selected { background: rgba(139,92,246,.3); color: #fff; font-weight: 700; }
+        #locDropdown .loc-item svg { width: 16px; height: 16px; color: #c4b5fd; flex-shrink: 0; }
+        #locDropdown .loc-item.loc-clear { color: #fda4af; font-size: 13px; }
+        #locDropdown .loc-empty { padding: 22px 12px; text-align: center; font-size: 13px; color: #64748b; }
+
+        body.light-mode .loc-btn.loc-boxed, body.light-mode .loc-btn.loc-promo { background: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        body.light-mode .loc-btn .loc-label.loc-placeholder { color: #94a3b8 !important; }
+        body.light-mode .loc-btn .loc-chev { color: #6d28d9; }
+        body.light-mode #locDropdown { background: #ffffff; border-color: #ddd6fe; box-shadow: 0 16px 40px rgba(15,23,42,.18); }
+        body.light-mode #locDropdown .loc-head { color: #6d28d9; }
+        body.light-mode #locDropdown .loc-search-wrap { background: #f8fafc; border-color: #cbd5e1; }
+        body.light-mode #locDropdown .loc-search { color: #0f172a; }
+        body.light-mode #locDropdown .loc-item { color: #1e293b; }
+        body.light-mode #locDropdown .loc-item:hover, body.light-mode #locDropdown .loc-item.active { background: #f5f3ff; }
+        body.light-mode #locDropdown .loc-item.selected { background: #ede9fe; color: #4c1d95; }
+        body.light-mode #locDropdown .loc-item svg { color: #7c3aed; }
+    </style>
 </head>
 
 <body class="text-slate-100 min-h-[100dvh]">
@@ -4509,6 +4570,359 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
         </div>
     </div>
 
+    <script>
+    /* ===================== জেলা → উপজেলা ড্রপডাউন সিস্টেম =====================
+       বাংলাদেশের ৬৪ জেলা ও সংশ্লিষ্ট উপজেলা। ইউজার প্রথমে জেলা সিলেক্ট করবে,
+       তারপর ঐ জেলার উপজেলা তালিকা থেকে উপজেলা সিলেক্ট করবে। কাস্টম লেখার সুযোগ নেই।
+       আগের কোড যেন অপরিবর্তিত থাকে তাই একই id-র hidden input রাখা হয়েছে
+       (.value পড়া/লেখা আগের মতোই কাজ করে)। */
+        const BD_LOCATIONS = {
+            'ঢাকা': ['ধামরাই','দোহার','কেরানীগঞ্জ','নবাবগঞ্জ','সাভার','ধানমন্ডি','গুলশান','বনানী','উত্তরা','মিরপুর','মোহাম্মদপুর','মতিঝিল','রমনা','তেজগাঁও','লালবাগ','কোতোয়ালী','সবুজবাগ','খিলগাঁও','যাত্রাবাড়ী','ডেমরা','বাড্ডা','রামপুরা','কাফরুল','পল্লবী','শাহবাগ','হাজারীবাগ','কামরাঙ্গীরচর','খিলক্ষেত','তুরাগ','ক্যান্টনমেন্ট'],
+            'গাজীপুর': ['গাজীপুর সদর','কালিয়াকৈর','কালীগঞ্জ','কাপাসিয়া','শ্রীপুর','টঙ্গী'],
+            'নারায়ণগঞ্জ': ['নারায়ণগঞ্জ সদর','আড়াইহাজার','বন্দর','রূপগঞ্জ','সোনারগাঁ','ফতুল্লা','সিদ্ধিরগঞ্জ'],
+            'নরসিংদী': ['নরসিংদী সদর','বেলাবো','মনোহরদী','পলাশ','রায়পুরা','শিবপুর'],
+            'মানিকগঞ্জ': ['মানিকগঞ্জ সদর','ঘিওর','দৌলতপুর','শিবালয়','সাটুরিয়া','সিঙ্গাইর','হরিরামপুর'],
+            'মুন্সিগঞ্জ': ['মুন্সিগঞ্জ সদর','গজারিয়া','লৌহজং','শ্রীনগর','সিরাজদিখান','টঙ্গীবাড়ী'],
+            'রাজবাড়ী': ['রাজবাড়ী সদর','গোয়ালন্দ','পাংশা','বালিয়াকান্দি','কালুখালী'],
+            'ফরিদপুর': ['ফরিদপুর সদর','আলফাডাঙ্গা','বোয়ালমারী','সদরপুর','নগরকান্দা','ভাঙ্গা','চরভদ্রাসন','মধুখালী','সালথা'],
+            'গোপালগঞ্জ': ['গোপালগঞ্জ সদর','কাশিয়ানী','কোটালীপাড়া','টুঙ্গিপাড়া','মুকসুদপুর'],
+            'মাদারীপুর': ['মাদারীপুর সদর','কালকিনি','রাজৈর','শিবচর','ডাসার'],
+            'শরীয়তপুর': ['শরীয়তপুর সদর','ডামুড্যা','নড়িয়া','ভেদরগঞ্জ','জাজিরা','গোসাইরহাট'],
+            'কিশোরগঞ্জ': ['কিশোরগঞ্জ সদর','অষ্টগ্রাম','বাজিতপুর','ভৈরব','হোসেনপুর','ইটনা','করিমগঞ্জ','কটিয়াদি','কুলিয়ারচর','মিঠামইন','নিকলী','পাকুন্দিয়া','তাড়াইল'],
+            'টাঙ্গাইল': ['টাঙ্গাইল সদর','বাসাইল','ভুঞাপুর','দেলদুয়ার','ঘাটাইল','গোপালপুর','কালিহাতী','মধুপুর','মির্জাপুর','নাগরপুর','সখীপুর','ধনবাড়ী'],
+
+            'চট্টগ্রাম': ['আনোয়ারা','বাঁশখালী','বোয়ালখালী','চন্দনাইশ','ফটিকছড়ি','হাটহাজারী','লোহাগাড়া','মীরসরাই','পটিয়া','রাঙ্গুনিয়া','রাউজান','সন্দ্বীপ','সীতাকুণ্ড','সাতকানিয়া','কর্ণফুলী','কোতোয়ালী','পাহাড়তলী','পাঁচলাইশ','ডবলমুরিং','খুলশী','বন্দর','বাকলিয়া','চান্দগাঁও','হালিশহর','বায়েজিদ বোস্তামী','ইপিজেড'],
+            'কুমিল্লা': ['কুমিল্লা আদর্শ সদর','কুমিল্লা সদর দক্ষিণ','বরুড়া','ব্রাহ্মণপাড়া','বুড়িচং','চান্দিনা','চৌদ্দগ্রাম','দাউদকান্দি','দেবিদ্বার','হোমনা','লাকসাম','লালমাই','মনোহরগঞ্জ','মেঘনা','মুরাদনগর','নাঙ্গলকোট','তিতাস'],
+            'ফেনী': ['ফেনী সদর','ছাগলনাইয়া','দাগনভূঁইয়া','পরশুরাম','ফুলগাজী','সোনাগাজী'],
+            'ব্রাহ্মণবাড়িয়া': ['ব্রাহ্মণবাড়িয়া সদর','আখাউড়া','আশুগঞ্জ','কসবা','বাঞ্ছারামপুর','বিজয়নগর','নবীনগর','নাসিরনগর','সরাইল','বাংলাবাজার'],
+            'রাঙ্গামাটি': ['রাঙ্গামাটি সদর','বাঘাইছড়ি','বরকল','কাউখালী','বিলাইছড়ি','জুরাছড়ি','কাপ্তাই','লংগদু','নানিয়ারচর','রাজস্থলী'],
+            'নোয়াখালী': ['নোয়াখালী সদর','বেগমগঞ্জ','চাটখিল','কোম্পানীগঞ্জ','হাতিয়া','কবিরহাট','সেনবাগ','সোনাইমুড়ী','সুবর্ণচর'],
+            'চাঁদপুর': ['চাঁদপুর সদর','ফরিদগঞ্জ','হাইমচর','হাজীগঞ্জ','কচুয়া','মতলব উত্তর','মতলব দক্ষিণ','শাহরাস্তি'],
+            'লক্ষ্মীপুর': ['লক্ষ্মীপুর সদর','কমলনগর','রায়পুর','রামগঞ্জ','রামগতি'],
+            'কক্সবাজার': ['কক্সবাজার সদর','চকরিয়া','কুতুবদিয়া','উখিয়া','মহেশখালী','পেকুয়া','রামু','টেকনাফ','ঈদগাঁও'],
+            'খাগড়াছড়ি': ['খাগড়াছড়ি সদর','দীঘিনালা','লক্ষ্মীছড়ি','মহালছড়ি','মানিকছড়ি','মাটিরাঙ্গা','পানছড়ি','রামগড়','গুইমারা'],
+            'বান্দরবান': ['বান্দরবান সদর','আলীকদম','লামা','নাইক্ষ্যংছড়ি','রোয়াংছড়ি','রুমা','থানচি'],
+
+            'রাজশাহী': ['বাগমারা','বাঘা','চারঘাট','দুর্গাপুর','গোদাগাড়ী','মোহনপুর','পবা','পুঠিয়া','তানোর','বোয়ালিয়া','মতিহার','রাজপাড়া','শাহ মখদুম'],
+            'চাঁপাইনবাবগঞ্জ': ['চাঁপাইনবাবগঞ্জ সদর','ভোলাহাট','গোমস্তাপুর','নাচোল','নিয়ামতপুর','শিবগঞ্জ'],
+            'নওগাঁ': ['নওগাঁ সদর','আত্রাই','বদলগাছী','ধামইরহাট','মহাদেবপুর','মান্দা','নিয়ামতপুর','পত্নীতলা','পোরশা','রাণীনগর','সাপাহার'],
+            'নাটোর': ['নাটোর সদর','বড়াইগ্রাম','বাগাতিপাড়া','গুরুদাসপুর','লালপুর','সিংড়া','নলডাঙ্গা'],
+            'পাবনা': ['পাবনা সদর','আটঘরিয়া','বেড়া','ভাঙ্গুড়া','চাটমোহর','ঈশ্বরদী','ফরিদপুর','সুজানগর','সাঁথিয়া'],
+            'সিরাজগঞ্জ': ['সিরাজগঞ্জ সদর','বেলকুচি','চৌহালী','কামারখন্দ','কাজীপুর','রায়গঞ্জ','শাহজাদপুর','তাড়াশ','উল্লাপাড়া'],
+            'বগুড়া': ['বগুড়া সদর','আদমদীঘি','ধুনট','দুপচাঁচিয়া','গাবতলী','কাহালু','নন্দীগ্রাম','শাজাহানপুর','সারিয়াকান্দি','শেরপুর','শিবগঞ্জ','সোনাতলা'],
+            'জয়পুরহাট': ['জয়পুরহাট সদর','আক্কেলপুর','কালাই','ক্ষেতলাল','পাঁচবিবি'],
+
+            'খুলনা': ['বটিয়াঘাটা','দাকোপ','ডুমুরিয়া','দিঘলিয়া','কয়রা','পাইকগাছা','ফুলতলা','রূপসা','তেরখাদা','খুলনা সদর','সোনাডাঙ্গা','খালিশপুর','দৌলতপুর','খান জাহান আলী','হরিণটানা'],
+            'বাগেরহাট': ['বাগেরহাট সদর','চিতলমারী','ফকিরহাট','কচুয়া','মোল্লাহাট','মোংলা','মোড়েলগঞ্জ','রামপাল','শরণখোলা'],
+            'সাতক্ষীরা': ['সাতক্ষীরা সদর','আশাশুনি','দেবহাটা','কলারোয়া','কালিগঞ্জ','শ্যামনগর','তালা'],
+            'যশোর': ['যশোর সদর','অভয়নগর','বাঘারপাড়া','চৌগাছা','ঝিকরগাছা','কেশবপুর','মণিরামপুর','শার্শা'],
+            'ঝিনাইদহ': ['ঝিনাইদহ সদর','কালীগঞ্জ','কোটচাঁদপুর','মহেশপুর','শৈলকুপা','হরিণাকুন্ডু'],
+            'মাগুরা': ['মাগুরা সদর','মোহাম্মদপুর','শালিখা','শ্রীপুর'],
+            'নড়াইল': ['নড়াইল সদর','কালিয়া','লোহাগড়া','নড়াগাতী'],
+            'কুষ্টিয়া': ['কুষ্টিয়া সদর','ভেড়ামারা','দৌলতপুর','খোকসা','কুমারখালী','মিরপুর'],
+            'চুয়াডাঙ্গা': ['চুয়াডাঙ্গা সদর','আলমডাঙ্গা','দামুড়হুদা','জীবননগর'],
+            'মেহেরপুর': ['মেহেরপুর সদর','গাংনী','মুজিবনগর'],
+
+            'বরিশাল': ['বরিশাল সদর','আগৈলঝাড়া','বাবুগঞ্জ','বাকেরগঞ্জ','বানারীপাড়া','গৌরনদী','হিজলা','মেহেন্দিগঞ্জ','মুলাদী','উজিরপুর'],
+            'ভোলা': ['ভোলা সদর','বোরহানউদ্দিন','চরফ্যাশন','দৌলতখান','লালমোহন','মনপুরা','তজুমদ্দিন'],
+            'পটুয়াখালী': ['পটুয়াখালী সদর','বাউফল','দশমিনা','দুমকি','গলাচিপা','কলাপাড়া','মির্জাগঞ্জ','রাঙ্গাবালী'],
+            'পিরোজপুর': ['পিরোজপুর সদর','ভান্ডারিয়া','কাউখালী','মঠবাড়িয়া','নাজিরপুর','নেছারাবাদ','ইন্দুরকানী'],
+            'ঝালকাঠি': ['ঝালকাঠি সদর','কাঠালিয়া','নলছিটি','রাজাপুর'],
+            'বরগুনা': ['বরগুনা সদর','আমতলী','বামনা','বেতাগী','পাথরঘাটা','তালতলী'],
+
+            'সিলেট': ['সিলেট সদর','বালাগঞ্জ','বিয়ানীবাজার','বিশ্বনাথ','কোম্পানীগঞ্জ','ফেঞ্চুগঞ্জ','গোলাপগঞ্জ','গোয়াইনঘাট','জৈন্তাপুর','কানাইঘাট','জকিগঞ্জ','দক্ষিণ সুরমা','ওসমানীনগর'],
+            'মৌলভীবাজার': ['মৌলভীবাজার সদর','বড়লেখা','জুড়ী','কমলগঞ্জ','কুলাউড়া','রাজনগর','শ্রীমঙ্গল'],
+            'হবিগঞ্জ': ['হবিগঞ্জ সদর','আজমিরীগঞ্জ','বাহুবল','বানিয়াচং','চুনারুঘাট','লাখাই','মাধবপুর','নবীগঞ্জ','শায়েস্তাগঞ্জ'],
+            'সুনামগঞ্জ': ['সুনামগঞ্জ সদর','বিশ্বম্ভরপুর','ছাতক','দক্ষিণ সুনামগঞ্জ','দিরাই','ধর্মপাশা','দোয়ারাবাজার','জগন্নাথপুর','জামালগঞ্জ','শাল্লা','তাহিরপুর','মধ্যনগর'],
+
+            'রংপুর': ['রংপুর সদর','বদরগঞ্জ','গঙ্গাচড়া','কাউনিয়া','মিঠাপুকুর','পীরগাছা','পীরগঞ্জ','তারাগঞ্জ'],
+            'গাইবান্ধা': ['গাইবান্ধা সদর','ফুলছড়ি','গোবিন্দগঞ্জ','পলাশবাড়ী','সাদুল্লাপুর','সাঘাটা','সুন্দরগঞ্জ'],
+            'কুড়িগ্রাম': ['কুড়িগ্রাম সদর','ভুরুঙ্গামারী','চিলমারী','ফুলবাড়ী','নাগেশ্বরী','রাজারহাট','রাজিবপুর','রৌমারী','উলিপুর'],
+            'লালমনিরহাট': ['লালমনিরহাট সদর','আদিতমারী','হাতীবান্ধা','কালীগঞ্জ','পাটগ্রাম'],
+            'নীলফামারী': ['নীলফামারী সদর','ডিমলা','ডোমার','জলঢাকা','কিশোরগঞ্জ','সৈয়দপুর'],
+            'ঠাকুরগাঁও': ['ঠাকুরগাঁও সদর','বালিয়াডাঙ্গী','হরিপুর','পীরগঞ্জ','রাণীশংকৈল'],
+            'পঞ্চগড়': ['পঞ্চগড় সদর','আটোয়ারী','বোদা','দেবীগঞ্জ','তেঁতুলিয়া'],
+            'দিনাজপুর': ['দিনাজপুর সদর','বিরল','বীরগঞ্জ','বিরামপুর','বোচাগঞ্জ','চিরিরবন্দর','ফুলবাড়ী','ঘোড়াঘাট','হাকিমপুর','কাহারোল','খানসামা','নবাবগঞ্জ','পার্বতীপুর'],
+
+            'ময়মনসিংহ': ['ময়মনসিংহ সদর','ভালুকা','ধোবাউড়া','ফুলবাড়িয়া','গফরগাঁও','গৌরীপুর','হালুয়াঘাট','ঈশ্বরগঞ্জ','মুক্তাগাছা','নান্দাইল','ফুলপুর','ত্রিশাল','তারাকান্দা'],
+            'জামালপুর': ['জামালপুর সদর','বকশীগঞ্জ','দেওয়ানগঞ্জ','ইসলামপুর','মাদারগঞ্জ','মেলান্দহ','সরিষাবাড়ী'],
+            'নেত্রকোণা': ['নেত্রকোণা সদর','আটপাড়া','বারহাট্টা','দুর্গাপুর','খালিয়াজুরী','কলমাকান্দা','কেন্দুয়া','মদন','মোহনগঞ্জ','পূর্বধলা'],
+            'শেরপুর': ['শেরপুর সদর','ঝিনাইগাতী','নকলা','নালিতাবাড়ী','শ্রীবরদী']
+        };
+        // পুরনো ইউজারদের ইংরেজি/বিকল্প বানানে সংরক্ষিত জেলার নাম মেলানোর জন্য
+        const BD_DISTRICT_ALIASES = {
+            'dhaka':'ঢাকা','gazipur':'গাজীপুর','narayanganj':'নারায়ণগঞ্জ','narsingdi':'নরসিংদী','manikganj':'মানিকগঞ্জ','munshiganj':'মুন্সিগঞ্জ','rajbari':'রাজবাড়ী','faridpur':'ফরিদপুর','gopalganj':'গোপালগঞ্জ','madaripur':'মাদারীপুর','shariatpur':'শরীয়তপুর','kishoreganj':'কিশোরগঞ্জ','tangail':'টাঙ্গাইল',
+            'chattogram':'চট্টগ্রাম','chittagong':'চট্টগ্রাম','cumilla':'কুমিল্লা','comilla':'কুমিল্লা','feni':'ফেনী','brahmanbaria':'ব্রাহ্মণবাড়িয়া','rangamati':'রাঙ্গামাটি','noakhali':'নোয়াখালী','chandpur':'চাঁদপুর','lakshmipur':'লক্ষ্মীপুর','laxmipur':'লক্ষ্মীপুর','coxsbazar':'কক্সবাজার','coxbazar':'কক্সবাজার','khagrachhari':'খাগড়াছড়ি','khagrachari':'খাগড়াছড়ি','bandarban':'বান্দরবান',
+            'rajshahi':'রাজশাহী','chapainawabganj':'চাঁপাইনবাবগঞ্জ','naogaon':'নওগাঁ','natore':'নাটোর','pabna':'পাবনা','sirajganj':'সিরাজগঞ্জ','bogura':'বগুড়া','bogra':'বগুড়া','joypurhat':'জয়পুরহাট','jaipurhat':'জয়পুরহাট',
+            'khulna':'খুলনা','bagerhat':'বাগেরহাট','satkhira':'সাতক্ষীরা','jashore':'যশোর','jessore':'যশোর','jhenaidah':'ঝিনাইদহ','magura':'মাগুরা','narail':'নড়াইল','kushtia':'কুষ্টিয়া','chuadanga':'চুয়াডাঙ্গা','meherpur':'মেহেরপুর',
+            'barishal':'বরিশাল','barisal':'বরিশাল','bhola':'ভোলা','patuakhali':'পটুয়াখালী','pirojpur':'পিরোজপুর','jhalokathi':'ঝালকাঠি','jhalakathi':'ঝালকাঠি','barguna':'বরগুনা',
+            'sylhet':'সিলেট','moulvibazar':'মৌলভীবাজার','maulvibazar':'মৌলভীবাজার','habiganj':'হবিগঞ্জ','sunamganj':'সুনামগঞ্জ',
+            'rangpur':'রংপুর','gaibandha':'গাইবান্ধা','kurigram':'কুড়িগ্রাম','lalmonirhat':'লালমনিরহাট','nilphamari':'নীলফামারী','thakurgaon':'ঠাকুরগাঁও','panchagarh':'পঞ্চগড়','dinajpur':'দিনাজপুর',
+            'mymensingh':'ময়মনসিংহ','jamalpur':'জামালপুর','netrokona':'নেত্রকোণা','netrakona':'নেত্রকোণা','sherpur':'শেরপুর'
+        };
+
+        (function () {
+            const collator = new Intl.Collator('bn');
+            const DISTRICTS = Object.keys(BD_LOCATIONS).sort(collator.compare);
+            const bnDigits = '০১২৩৪৫৬৭৮৯';
+            const toBn = (n) => String(n).replace(/\d/g, d => bnDigits[d]);
+            const norm = (s) => String(s || '').trim().toLowerCase().replace(/[\s\-_.]+/g, '');
+            const CHEV = '<svg class="loc-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+            const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+            const SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>';
+            const escHtml = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+            // পুরনো/অমিল জেলা নাম মেলানো
+            function matchDistrict(raw) {
+                let v = String(raw || '').trim();
+                if (!v) return '';
+                if (BD_LOCATIONS[v]) return v;
+                const stripped = v.replace(/\s*(জেলা|district|zila|zilla)\s*$/i, '').trim();
+                if (BD_LOCATIONS[stripped]) return stripped;
+                const alias = BD_DISTRICT_ALIASES[norm(stripped)];
+                if (alias) return alias;
+                return '';
+            }
+            function matchUpazila(district, raw) {
+                const list = BD_LOCATIONS[district];
+                let v = String(raw || '').trim();
+                if (!list || !v) return '';
+                if (list.includes(v)) return v;
+                const stripped = v.replace(/\s*উপজেলা\s*$/, '').trim();
+                if (list.includes(stripped)) return stripped;
+                if (list.includes(stripped + ' সদর')) return stripped + ' সদর';
+                const hit = list.find(u => norm(u) === norm(stripped));
+                return hit || '';
+            }
+
+            // ---------- ভাসমান ড্রপডাউন প্যানেল (একটিই, সব ফিল্ডে শেয়ার হয়) ----------
+            let panel, searchEl, listEl, headEl, current = null, activeIdx = -1, shown = [];
+            function ensurePanel() {
+                if (panel) return;
+                panel = document.createElement('div');
+                panel.id = 'locDropdown';
+                panel.setAttribute('role', 'listbox');
+                panel.innerHTML = '<div class="loc-head"><span></span><span></span></div>' +
+                    '<div class="loc-search-wrap">' + SEARCH + '<input type="text" class="loc-search" autocomplete="off" autocapitalize="off" spellcheck="false"></div>' +
+                    '<div class="loc-list"></div>';
+                document.body.appendChild(panel);
+                headEl = panel.querySelector('.loc-head');
+                searchEl = panel.querySelector('.loc-search');
+                listEl = panel.querySelector('.loc-list');
+                searchEl.addEventListener('input', renderList);
+                searchEl.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown') { e.preventDefault(); moveActive(1); }
+                    else if (e.key === 'ArrowUp') { e.preventDefault(); moveActive(-1); }
+                    else if (e.key === 'Enter') { e.preventDefault(); if (shown[activeIdx] !== undefined) choose(shown[activeIdx]); }
+                    else if (e.key === 'Escape') { e.preventDefault(); closePanel(true); }
+                });
+                listEl.addEventListener('click', (e) => {
+                    const it = e.target.closest('.loc-item'); if (!it) return;
+                    choose(it.dataset.val);
+                });
+                document.addEventListener('mousedown', (e) => {
+                    if (!current) return;
+                    if (panel.contains(e.target) || current.btn.contains(e.target)) return;
+                    closePanel(false);
+                }, true);
+                document.addEventListener('touchstart', (e) => {
+                    if (!current) return;
+                    if (panel.contains(e.target) || current.btn.contains(e.target)) return;
+                    closePanel(false);
+                }, { passive: true, capture: true });
+                // মোবাইলে সার্চ বক্সে ট্যাপ করলে কীবোর্ড ওঠে (resize/scroll হয়) — তখন প্যানেল বন্ধ না করে শুধু জায়গা ঠিক করা হয়
+                window.addEventListener('resize', () => {
+                    if (!current) return;
+                    if (document.activeElement === searchEl) positionPanel(); else closePanel(false);
+                });
+                if (window.visualViewport) window.visualViewport.addEventListener('resize', () => { if (current) positionPanel(); });
+                window.addEventListener('scroll', (e) => {
+                    if (!current || panel.contains(e.target)) return;
+                    if (document.activeElement === searchEl) { positionPanel(); return; }
+                    closePanel(false);
+                }, true);
+            }
+
+            function itemsFor(picker) {
+                return picker.kind === 'district' ? DISTRICTS : (BD_LOCATIONS[picker.getDistrict()] || []).slice().sort(collator.compare);
+            }
+            function renderList() {
+                if (!current) return;
+                const all = itemsFor(current);
+                const q = norm(searchEl.value);
+                const items = q ? all.filter(x => norm(x).includes(q)) : all;
+                shown = items.slice();
+                let html = '';
+                if (current.optional && current.value && !q) {
+                    html += '<div class="loc-item loc-clear" data-val="">নির্বাচন মুছে ফেলুন</div>';
+                }
+                if (!items.length) html += '<div class="loc-empty">কিছু পাওয়া যায়নি</div>';
+                items.forEach((it) => {
+                    const sel = it === current.value;
+                    html += '<div class="loc-item' + (sel ? ' selected' : '') + '" role="option" data-val="' + escHtml(it) + '">' +
+                        '<span>' + escHtml(it) + '</span>' + (sel ? CHECK : '') + '</div>';
+                });
+                listEl.innerHTML = html;
+                activeIdx = q && items.length ? 0 : -1;
+                if (activeIdx === 0) listEl.querySelectorAll('.loc-item:not(.loc-clear)')[0]?.classList.add('active');
+                const selEl = listEl.querySelector('.loc-item.selected');
+                if (selEl && !q) listEl.scrollTop = Math.max(0, selEl.offsetTop - listEl.clientHeight / 2 + selEl.offsetHeight / 2);
+                else listEl.scrollTop = 0;
+                headEl.children[0].textContent = current.kind === 'district' ? 'জেলা নির্বাচন করুন' : (current.getDistrict() + ' জেলার উপজেলা');
+                headEl.children[1].textContent = toBn(items.length) + 'টি';
+            }
+            function moveActive(d) {
+                const els = listEl.querySelectorAll('.loc-item:not(.loc-clear)');
+                if (!els.length) return;
+                els.forEach(e => e.classList.remove('active'));
+                activeIdx = (activeIdx + d + els.length) % els.length;
+                const a = els[activeIdx];
+                a.classList.add('active');
+                if (a.offsetTop < listEl.scrollTop) listEl.scrollTop = a.offsetTop;
+                else if (a.offsetTop + a.offsetHeight > listEl.scrollTop + listEl.clientHeight) listEl.scrollTop = a.offsetTop + a.offsetHeight - listEl.clientHeight;
+            }
+            function positionPanel() {
+                const r = current.btn.getBoundingClientRect();
+                const vw = window.innerWidth, vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+                const width = Math.min(Math.max(r.width, 230), vw - 16);
+                let left = Math.min(Math.max(8, r.left), vw - width - 8);
+                const spaceBelow = vh - r.bottom - 10, spaceAbove = r.top - 10;
+                const want = 330;
+                const up = spaceBelow < 240 && spaceAbove > spaceBelow;
+                const maxH = Math.max(180, Math.min(want, up ? spaceAbove : spaceBelow));
+                panel.style.width = width + 'px';
+                panel.style.left = left + 'px';
+                panel.style.maxHeight = maxH + 'px';
+                panel.classList.toggle('loc-up', up);
+                if (up) { panel.style.top = 'auto'; panel.style.bottom = (window.innerHeight - r.top + 6) + 'px'; }
+                else { panel.style.bottom = 'auto'; panel.style.top = (r.bottom + 6) + 'px'; }
+            }
+            function openPanel(picker) {
+                ensurePanel();
+                if (current && current !== picker) closePanel(false);
+                current = picker;
+                picker.btn.setAttribute('aria-expanded', 'true');
+                searchEl.value = '';
+                searchEl.placeholder = picker.kind === 'district' ? 'জেলা খুঁজুন...' : 'উপজেলা খুঁজুন...';
+                panel.classList.add('open');
+                renderList();
+                positionPanel();
+                // মোবাইলে অটো-ফোকাস করলে কীবোর্ড উঠে লিস্ট ঢেকে যায়, তাই শুধু ডেস্কটপে
+                if (window.matchMedia && window.matchMedia('(pointer:fine)').matches) setTimeout(() => searchEl.focus({ preventScroll: true }), 30);
+            }
+            function closePanel(refocus) {
+                if (!current) return;
+                current.btn.setAttribute('aria-expanded', 'false');
+                if (refocus) { try { current.btn.focus({ preventScroll: true }); } catch (e) {} }
+                panel.classList.remove('open');
+                current = null;
+            }
+            function choose(val) {
+                const p = current; if (!p) return;
+                closePanel(true);
+                p.userSelect(val);
+            }
+
+            // ---------- picker তৈরি ----------
+            function makePicker(inputId, kind, partner) {
+                const orig = document.getElementById(inputId);
+                if (!orig || orig.dataset.locMounted) return null;
+                const placeholder = orig.getAttribute('placeholder') || (kind === 'district' ? 'জেলা' : 'উপজেলা');
+                const optional = !orig.required;
+                const cls = orig.className || '';
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.id = inputId + 'Btn';
+                btn.className = 'loc-btn ' + cls.replace(/placeholder:[^\s]+/g, '');
+                if (orig.classList.contains('promo-input')) btn.classList.add('loc-promo');
+                else if (/bg-\[#0b0715\]/.test(cls)) btn.classList.add('loc-boxed');
+                btn.setAttribute('aria-haspopup', 'listbox');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.innerHTML = '<span class="loc-label loc-placeholder"></span>' + CHEV;
+
+                const hid = document.createElement('input');
+                hid.type = 'hidden';
+                hid.id = inputId;
+                hid.dataset.locMounted = '1';
+                if (orig.name) hid.name = orig.name;
+
+                let value = '';
+                const label = btn.querySelector('.loc-label');
+                const picker = { kind, btn, optional, hid, partner: null,
+                    get value() { return value; },
+                    getDistrict() { return picker.kind === 'upazila' && picker.partner ? picker.partner.value : ''; }
+                };
+
+                function paint() {
+                    const needsDistrict = kind === 'upazila' && !picker.getDistrict();
+                    btn.classList.toggle('loc-disabled', needsDistrict);
+                    label.classList.toggle('loc-placeholder', !value);
+                    label.textContent = value || (needsDistrict ? 'আগে জেলা নির্বাচন করুন' : placeholder);
+                }
+                picker.paint = paint;
+                function setValue(v, fire) {
+                    let nv = '';
+                    if (kind === 'district') nv = matchDistrict(v);
+                    else nv = matchUpazila(picker.getDistrict(), v);
+                    const changed = nv !== value;
+                    value = nv;
+                    paint();
+                    if (kind === 'district' && picker.child && changed) picker.child.reset();
+                    if (fire && changed) hid.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                picker.reset = () => { const had = !!value; value = ''; paint(); if (had) hid.dispatchEvent(new Event('input', { bubbles: true })); };
+                picker.userSelect = (val) => {
+                    setValue(val, true);
+                    if (kind === 'district' && val && picker.child) setTimeout(() => openPanel(picker.child), 120);
+                };
+                Object.defineProperty(hid, 'value', {
+                    configurable: true,
+                    get() { return value; },
+                    set(v) { setValue(v, false); }
+                });
+
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (kind === 'upazila' && !picker.getDistrict()) {
+                        // জেলা নির্বাচন ছাড়া উপজেলা খোলা যাবে না — জেলার ড্রপডাউন খুলে দেওয়া হবে
+                        btn.classList.remove('loc-shake'); void btn.offsetWidth; btn.classList.add('loc-shake');
+                        if (picker.partner) openPanel(picker.partner);
+                        return;
+                    }
+                    if (current === picker) closePanel(false); else openPanel(picker);
+                });
+                btn.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+                });
+
+                orig.replaceWith(hid);
+                hid.insertAdjacentElement('beforebegin', btn);
+                const form = hid.closest('form');
+                if (form) form.addEventListener('reset', () => setTimeout(() => { value = ''; paint(); }, 0));
+                paint();
+                return picker;
+            }
+
+            function mountPair(districtId, upazilaId) {
+                const d = makePicker(districtId, 'district');
+                const u = makePicker(upazilaId, 'upazila');
+                if (!d || !u) return;
+                d.child = u; u.partner = d;
+                u.paint();
+            }
+
+            function init() {
+                mountPair('regDistrict', 'regUpazila');      // রেজিস্ট্রেশন
+                mountPair('editDistrict', 'editUpazila');    // প্রোফাইল এডিট
+                mountPair('provDistrict', 'provUpazila');    // সার্ভিস প্রোভাইডার ফর্ম
+                mountPair('promoDistrict', 'promoUpazila');  // প্রমোশন/বিজ্ঞাপন ফর্ম
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+            else init();
+        })();
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -5082,7 +5496,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             const toast = document.getElementById('toast');
             if (!toast) return;
             if (toastTimer) clearTimeout(toastTimer);
-            document.getElementById('toastMessage').textContent = msg;
+            document.getElementById('toastMessage').textContent = (typeof translateUiMessage === 'function') ? translateUiMessage(msg) : msg;
             const wrap = document.getElementById('toastIconWrap');
             if (wrap) { wrap.innerHTML = `<i data-lucide="${esc(iconName)}" class="w-5 h-5 ${colorClass}"></i>`; refreshIcons(); }
             toast.classList.remove('translate-y-20', 'opacity-0');
@@ -5378,6 +5792,411 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                 }
             });
         }
+        // ========== COMPLETE STATIC UI TRANSLATION LAYER ==========
+        // This dictionary is intentionally limited to website-owned interface text.
+        // Firebase/user-submitted values (names, addresses, donor details, service
+        // descriptions, notices, chat messages, etc.) are excluded below.
+        const STATIC_UI_EN = {
+            'আমার এলাকা - সকল সেবা এখন হাতের মুঠোয়': 'Amar Elaka - All Services at Your Fingertips',
+            'আমার এলাকা': 'Amar Elaka',
+            'ইউজার সেবা পোর্টাল': 'User Service Portal',
+            'আমার এলাকা - ইউজার সার্ভিস পোর্টাল': 'Amar Elaka - User Service Portal',
+            'স্থানীয় পরিষেবা ও তথ্যের নির্ভরযোগ্য প্ল্যাটফর্ম': 'A trusted platform for local services and information',
+            'আমার এলাকা। সর্বস্বত্ব সংরক্ষিত।': 'Amar Elaka. All rights reserved.',
+            'আমার এলাকা — সর্বস্বত্ব সংরক্ষিত।': 'Amar Elaka — All rights reserved.',
+            'লোড হচ্ছে...': 'Loading...', 'প্যাকেজ লোড হচ্ছে...': 'Loading packages...',
+            'লগইন': 'Login', 'রেজিস্ট্রেশন': 'Register', 'স্বাগতম!': 'Welcome!',
+            'আপনার অ্যাকাউন্টে প্রবেশ করুন': 'Sign in to your account', 'ইমেইল': 'Email',
+            'ইমেইল *': 'Email *', 'পাসওয়ার্ড': 'Password', 'পাসওয়ার্ড *': 'Password *',
+            'পূর্ণ নাম': 'Full name', 'পুরো নাম *': 'Full name *',
+            'মোবাইল (১১ সংখ্যা) *': 'Mobile number (11 digits) *', 'জেলা *': 'District *',
+            'উপজেলা *': 'Upazila *', 'কনফার্ম *': 'Confirm *',
+            'প্রবেশ করুন': 'Sign in', 'লগইন করুন': 'Log in', 'রেজিস্ট্রেশন করুন': 'Create account',
+            'নতুন অ্যাকাউন্ট': 'Create a new account', 'আজই যোগ দিন আমাদের সাথে': 'Join us today',
+            'আমি': 'I have read, understood, and fully agree to the',
+            'পড়েছি, বুঝেছি এবং এর সাথে সম্পূর্ণ সম্মত আছি।': 'and agree to the terms and policies.',
+            'শর্তাবলী ও নীতিমালা': 'Terms & Policies', 'অথবা (OR)': 'OR', 'অথবা': 'OR',
+            'Google দিয়ে চালিয়ে যান': 'Continue with Google', 'GitHub দিয়ে চালিয়ে যান': 'Continue with GitHub',
+            'প্রবেশ করতে লগইন করা বাধ্যতামূলক': 'Login is required to access this feature',
+            'আপনার তথ্য সম্পূর্ণ সুরক্ষিত ও এনক্রিপ্টেড': 'Your information is fully protected and encrypted',
+            'অতিথি ব্যবহারকারী': 'Guest user', 'অতিথি হিসেবে দেখুন': 'Continue as guest',
+            'আমার অ্যাকাউন্ট': 'My Account', 'সেবাসমূহ': 'Services', 'সকল সেবা সমূহ': 'All Services',
+            'সকল সেবা': 'All Services', 'সেবা, হাসপাতাল বা টেকনিশিয়ান খুঁজুন...': 'Search services, hospitals, or technicians...',
+            'জরুরী হেল্পলাইন': 'Emergency Helplines', 'জরুরি হেল্পলাইন': 'Emergency Helplines',
+            'জরুরি বিভাগ শেয়ার করুন': 'Share Emergency Section', 'রক্তদাতা বিভাগ শেয়ার করুন': 'Share Blood Donor Section',
+            'রক্তদাতা সন্ধান': 'Find Blood Donors', 'রক্তদাতা খুঁজুন': 'Find Blood Donors',
+            'আপনার এলাকায় রক্তদাতাদের তালিকা': 'List of blood donors in your area',
+            'সকল গ্রুপ': 'All Groups', 'সকল ক্যাটাগরি': 'All Categories',
+            'ক্যাটাগরি নির্বাচন করে সার্ভিস খুঁজুন': 'Choose a category to find services',
+            'ক্যাটাগরি খুঁজুন...': 'Search categories...', 'সেবা যোগ করা': 'Add a Service',
+            'সেবা যোগ করুন': 'Add Service', 'সেবাদাতা আবেদন': 'Service Provider Application',
+            'সেবা দাতা হিসেবে যোগদান': 'Join as a Service Provider', 'সেবাদাতা হিসেবে আবেদন করুন': 'Apply as a Service Provider',
+            'সেবা দাতা হিসেবে যোগদান': 'Join as a Service Provider', 'সেবার ছবি (ঐচ্ছিক)': 'Service Image (Optional)',
+            'সেবার নাম *': 'Service Name *', 'সেবাদাতার নাম *': 'Provider Name *',
+            'যোগাযোগের নম্বর *': 'Contact Number *', 'সোশ্যাল / ওয়েবসাইট (ঐচ্ছিক)': 'Social / Website (Optional)',
+            'বিস্তারিত বিবরণ *': 'Detailed Description *', 'বিস্তারিত বর্ণনা': 'Description',
+            'বিস্তারিত বর্ণনা *': 'Detailed Description *', 'বিস্তারিত': 'Details',
+            'পরবর্তী আবেদনের জন্য অপেক্ষা করুন...': 'Please wait before submitting another application...',
+            'আবেদন জমা দিন': 'Submit Application', 'অ্যাডমিন অনুমোদনের পর হোমপেজে প্রকাশিত হবে': 'Will be published on the homepage after admin approval',
+            'এডমিন পোস্ট': 'Admin Post', 'সেবাদানকারী': 'Service Provider', 'কল করুন': 'Call',
+            'সেবা শেয়ার করুন': 'Share Service', 'সেবাটি শেয়ার করুন': 'Share this service',
+            '⭐ স্পন্সরড': '⭐ Sponsored', 'বিজ্ঞাপনদাতা': 'Advertiser', 'বিজ্ঞাপন': 'Advertisement',
+            'বিজ্ঞাপন চালান': 'Promote Your Ad', 'আপনার পোস্ট প্রমোট করুন': 'Promote Your Post',
+            'প্রমোশন পোস্ট': 'Promotional Post', 'বিজ্ঞাপন জমা দিন': 'Submit Advertisement',
+            'ধাপ ১/৪ — প্রমোশনের ধরন': 'Step 1/4 — Promotion Type', 'আপনি কী প্রমোট করতে চান?': 'What would you like to promote?',
+            'ছবি *': 'Image *', 'শিরোনাম * (৩-৮০ অক্ষর)': 'Title * (3–80 characters)',
+            'সংক্ষিপ্ত বিবরণ * (৫-১৫০) — কার্ডে দেখাবে': 'Short Description * (5–150) — Shown on the card',
+            'বিস্তারিত বর্ণনা * (১০-৬০০)': 'Detailed Description * (10–600)',
+            'কার্ডে যা দেখাবে': 'Shown on the card', 'বিস্তারিত লিখুন': 'Enter details',
+            'জেলা': 'District', 'উপজেলা': 'Upazila', 'কমপক্ষে ১টি বাটন বেছে নিন': 'Choose at least one button',
+            '👁️ লাইভ প্রিভিউ': '👁️ Live Preview', 'পিছনে': 'Back', 'পরের ধাপ': 'Next Step',
+            'প্রিমিয়াম অ্যাকশন': 'Premium Actions', 'আপনার পছন্দমতো অপশন বেছে নিন': 'Choose your preferred option',
+            'কেন আপনি বিজ্ঞাপন চালাবেন ?': 'Why should you promote an advertisement?',
+            'বার্তা': 'Message', 'আপনার বার্তা লিখুন...': 'Write your message...',
+            'অ্যাডমিন এখন অফলাইনে': 'Admin is currently offline',
+            'অ্যাডমিন বর্তমানে অফলাইনে রয়েছেন। অ্যাডমিন অনলাইনে আসলে আপনি ভয়েস কল করতে পারবেন। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।': 'The admin is currently offline. You can make a voice call when the admin is online. Please try again later.',
+            'ঠিক আছে': 'OK', 'কল প্রস্তুত করা হচ্ছে...': 'Preparing call...', 'বন্ধ করুন': 'Close',
+            'মাইক্রোফোন বন্ধ বা চালু': 'Mute or unmute microphone', 'কল শেষ করুন': 'End Call',
+            'নোটিফিকেশন': 'Notifications', 'সব পড়া হয়েছে': 'All caught up',
+            'সব পড়া হিসেবে চিহ্নিত করুন': 'Mark all as read',
+            'নতুন আপডেট স্বয়ংক্রিয়ভাবে এখানে দেখানো হবে': 'New updates will appear here automatically',
+            'আমার': 'My', 'এলাকা': 'Area', 'নাগরিক সেবা': 'Citizen Services',
+            'অ্যাডমিন চ্যাট': 'Admin Chat', 'অ্যাডমিন সাপোর্ট': 'Admin Support', 'অ্যাডমিন সাপোর্টের উত্তর': 'Admin Support Reply',
+            'আরও (+)': 'More (+)', 'টি সেবা চলছে': 'services are active', 'লাইভ': 'Live',
+            'আপনার সংরক্ষিত সকল সেবার তালিকা': 'List of all your saved services', 'অ্যাডমিন অনুরোধ': 'Admin Requests',
+            'জরুরি': 'Emergency', 'হোম': 'Home', 'প্রোফাইল': 'Profile', 'পছন্দ': 'Favorites',
+            'নারী ও শিশু নির্যাতন ঘটলে': 'For violence against women and children',
+            'এখনই কল করুন': 'Call Now', 'পরিচয় গোপন': 'Confidential', '২৪ ঘণ্টা': '24 Hours',
+            'হেল্পলাইন': 'Helpline', 'জরুরি মুহূর্তে যেকোনো সহায়তা পেতে নিচের হটলাইনে ক্লিক করে সরাসরি কল করুন।': 'For help in an emergency, tap one of the helplines below to call directly.',
+            'সকল সেবা এখন হাতের মুঠোয়': 'All services at your fingertips', 'ফিচারসমূহ': 'Features',
+            'সাধারণ': 'Basic', 'উন্নতমানের': 'Advanced', 'ফ্রি': 'Free', 'অ্যাড ব্লক': 'Ad Block',
+            'প্রোফাইল ভেরিফাইড': 'Verified Profile', 'ব্লু ভেরিফাই ব্যাজ': 'Blue Verified Badge', 'আপগ্রেড নাও': 'Upgrade Now',
+            'মোবাইল:': 'Mobile:', 'ইমেইল:': 'Email:', 'এলাকা:': 'Area:',
+            'প্রোফাইল এডিট করুন': 'Edit Profile', 'প্রোফাইল এডিট': 'Edit Profile', 'প্রোফাইল সম্পূর্ণ করুন': 'Complete Profile',
+            'লগআউট': 'Log Out', 'লগ আউট': 'Log Out', 'লগইন করুন': 'Log In',
+            'স্ট্যাটাস:': 'Status:', 'স্ট্যাটাস': 'Status', 'যাচাইকৃত': 'Verified', 'যাচাই করুন': 'Verify Now',
+            'স্ট্যাটাস:': 'Status:', 'পাসওয়ার্ড পরিবর্তন করুন': 'Change Password', 'পাসওয়ার্ড পরিবর্তন': 'Change Password',
+            'নতুন পাসওয়ার্ড সেট করুন': 'Set a New Password', 'পুরনো পাসওয়ার্ড *': 'Current Password *',
+            'নতুন পাসওয়ার্ড *': 'New Password *', 'কনফার্ম নতুন পাসওয়ার্ড *': 'Confirm New Password *',
+            'সংরক্ষণ করুন': 'Save Changes', 'ছবি দিন': 'Add Photo', 'ছবি পরিবর্তন করতে ক্লিক করুন': 'Click to change photo',
+            'ইমেইল পরিবর্তন করতে পারবেন না।': 'Email address cannot be changed.', 'সাপোর্টে যোগাযোগ করুন': 'Contact Support',
+            'অপশন': 'Options', 'রিপোর্ট': 'Report', 'সমস্যা রিপোর্ট করুন': 'Report a Problem',
+            'ওয়েবসাইট ফিডব্যাক': 'Website Feedback', 'মতামত ও পরামর্শ দিন': 'Send Feedback and Suggestions',
+            'জরুরি তথ্য যোগ করুন': 'Add Emergency Information', 'অ্যাডমিন যাচাই করে হেল্পলাইনে যোগ করবেন': 'The admin will verify and add it to the helpline directory',
+            'শিরোনাম *': 'Title *', 'জরুরি ফোন নাম্বার *': 'Emergency Phone Number *', 'ক্যাটাগরি *': 'Category *',
+            'বিবরণ (ঐচ্ছিক)': 'Description (Optional)', 'আপনার মোবাইল নাম্বার *': 'Your Mobile Number *',
+            'যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।': 'The admin may call you if verification is needed.',
+            'রক্তদাতা হিসেবে যোগ দিন': 'Join as a Blood Donor', 'অ্যাডমিন যাচাই করে রক্তদাতা তালিকায় যোগ করবেন': 'The admin will verify and add you to the donor list',
+            'আপনার তথ্য যাচাইয়ের পর অ্যাডমিন অনুমোদন করলে তালিকায় প্রকাশিত হবে।': 'Your information will appear in the list after admin verification and approval.',
+            'নাম *': 'Name *', 'রক্তের গ্রুপ *': 'Blood Group *', '-- গ্রুপ নির্বাচন করুন --': '-- Select Blood Group --',
+            'মোবাইল নাম্বার *': 'Mobile Number *', 'এলাকা (গ্রাম/বাজার/শহর) *': 'Area (Village/Market/City) *',
+            'আপনার মতামত আমাদের কাছে গুরুত্বপূর্ণ': 'Your feedback matters to us', 'ধরন *': 'Type *',
+            'অভিযোগ': 'Complaint', 'পরামর্শ': 'Suggestion', 'বিষয় *': 'Subject *', 'বিস্তারিত *': 'Details *',
+            'পরবর্তী পাঠানোর জন্য অপেক্ষা করুন...': 'Please wait before sending another request...',
+            'অ্যাপ কাস্টমাইজ করুন': 'Customize the App', 'অ্যাপের থিম': 'App Theme',
+            'আপনার পছন্দমতো থিম বেছে নিন': 'Choose your preferred theme', 'লাইট': 'Light', 'ডার্ক': 'Dark', 'সিস্টেম': 'System',
+            'ভাষা / Language': 'Language', 'অ্যাপের ভাষা পরিবর্তন করুন': 'Change the app language', 'বাংলা': 'Bengali',
+            'আমাদের রেটিং দিন': 'Rate Us', 'আপনার অভিজ্ঞতা অনুযায়ী রেটিং দিন': 'Rate us based on your experience',
+            'আপনার মতামত লিখুন (ঐচ্ছিক)': 'Write your feedback (Optional)', 'রেটিং পাঠান': 'Submit Rating',
+            'আপনার দেওয়া রেটিং': 'Your Rating', 'জমা হয়েছে': 'Submitted', 'রেটিং এডিট করুন': 'Edit Rating',
+            'রেটিং দিতে প্রথমে লগইন করুন': 'Please log in to submit a rating', 'কমপক্ষে ১টি স্টার দিন': 'Please select at least one star',
+            'ধন্যবাদ! আপনার রেটিং জমা হয়েছে': 'Thank you! Your rating has been submitted', 'রেটিং আপডেট হয়েছে': 'Rating updated',
+            'ভাষা: বাংলা': 'Language: Bengali', 'আমাদের সম্বন্ধে': 'About Us', 'আমাদের সম্পর্কে': 'About Us',
+            'শর্তাবলী ও নীতিমালা': 'Terms & Policies', 'অ্যাপটি শেয়ার করুন': 'Share App', 'রেটিং দিন': 'Rate Us',
+            'আমার পছন্দ': 'My Favorites', 'মতামত দিন': 'Feedback', 'যোগাযোগ': 'Contact', 'সেটিংস': 'Settings',
+            'সেটিংস ও তথ্য': 'Settings & Information', 'সকল সেবা সমূহ': 'All Services', 'সহযোগিতা': 'Support',
+            'সেবা দাতা হিসেবে যোগদান': 'Join as a Service Provider', 'আমাদের যাত্রা': 'Our Journey',
+            'আমাদের লক্ষ্য': 'Our Mission', 'আমরা কী করতে চাই?': 'What Do We Want to Do?', 'আমাদের মূল দর্শন': 'Our Core Philosophy',
+            'প্রযুক্তি ও AI সহযোগিতা': 'Technology and AI Assistance', 'আমাদের অঙ্গীকার': 'Our Commitment',
+            '১. আমাদের সম্পর্কে': '1. About Us', '২. ব্যবহারের শর্তাবলী': '2. Terms of Use', '৩. গোপনীয়তা নীতিমালা': '3. Privacy Policy',
+            '৪. রক্তদাতা নীতিমালা': '4. Blood Donor Policy', '৫. জরুরি সেবা নীতিমালা': '5. Emergency Service Policy',
+            '৬. তথ্য ও সেবার নীতিমালা': '6. Information and Service Policy', '৭. পোস্ট ও প্রচার নীতিমালা': '7. Posting and Promotion Policy',
+            '৮. আচরণবিধি (নিষিদ্ধ কাজসমূহ)': '8. Code of Conduct (Prohibited Activities)', '৯. অভিযোগ ও সহযোগিতা': '9. Complaints and Support',
+            '১০. দায়বদ্ধতা ও সীমাবদ্ধতা': '10. Liability and Limitations', '১১. নীতিমালা পরিবর্তন': '11. Policy Changes', '১২. যোগাযোগ': '12. Contact',
+            'যেকোনো প্রশ্ন, অভিযোগ, সহযোগিতা বা তথ্য সংশোধনের জন্য আমাদের সাথে যোগাযোগ করতে পারেন:': 'For questions, complaints, support, or information corrections, you can contact us:',
+            'আমার এলাকা ফেসবুক পেজ': 'Amar Elaka Facebook Page', 'আমি বুঝেছি ও সম্মত আছি': 'I Understand and Agree',
+            'BTEB রেজাল্ট সার্চ': 'BTEB Result Search', 'রেজাল্ট পেজ লোড হচ্ছে...': 'Loading result page...', 'PDF ডাউনলোড': 'Download PDF',
+            'যোগাযোগ করুন': 'Contact Us', 'যেকোনো প্রয়োজনে বা সাহায্যের জন্য আমাদের সাথে যোগাযোগ করুন:': 'Contact us for any assistance or help:',
+            'ইমেইল করুন': 'Email Us', 'ফেসবুক পেজ': 'Facebook Page', 'আমার এলাকা - Amar Elaka': 'Amar Elaka',
+            'আপনার তথ্য আপডেট করুন': 'Update Your Information', 'পাসওয়ার্ড পরিবর্তন': 'Change Password', 'নতুন পাসওয়ার্ড সেট করুন': 'Set a New Password',
+            'সমস্যা রিপোর্ট করুন': 'Report a Problem', 'ওয়েবসাইট ফিডব্যাক': 'Website Feedback', 'মতামত ও পরামর্শ দিন': 'Share Feedback and Suggestions',
+            'সেবা যোগ করুন': 'Add a Service', 'সেবাদাতা হিসেবে আবেদন করুন': 'Apply as a Service Provider',
+            'আপনার পোস্ট প্রমোট করুন': 'Promote Your Post', 'প্রমোশনের ধরন': 'Promotion Type', 'সাধারণ তথ্য': 'General Information',
+            'অতিরিক্ত তথ্য': 'Additional Information', 'বাটন ও প্রিভিউ': 'Buttons and Preview',
+            'এই ধরনের জন্য অতিরিক্ত তথ্য লাগবে না। পরের ধাপে যান।': 'No additional information is required for this type. Continue to the next step.',
+            'প্রথমে প্রমোশনের ধরন বেছে নিন।': 'Choose a promotion type first.', 'বাটনের লেখা (যেমন: অফার দেখুন)': 'Button Label (e.g. View Offer)',
+            'কাস্টম বাটনের লেখা দিন': 'Enter a custom button label', 'কাস্টম বাটনের সঠিক লিংক দিন (http/https)': 'Enter a valid custom button URL (http/https)',
+            'শুধু JPG/PNG ছবি দিন': 'Only JPG/PNG images are allowed', 'ছবি সর্বোচ্চ ৩MB হতে পারবে': 'Image size must not exceed 3MB',
+            'আপনার বিজ্ঞাপনের শিরোনাম': 'Your Ad Title', 'সংক্ষিপ্ত বিবরণ এখানে দেখাবে': 'The short description will appear here',
+            'প্রমোশনের ধরন বেছে নিন': 'Choose a promotion type', 'ছবি আপলোড করুন': 'Upload an Image',
+            'শিরোনাম ৩-৮০ অক্ষরের হতে হবে': 'Title must be 3–80 characters', 'সংক্ষিপ্ত বিবরণ ৫-১৫০ অক্ষরের হতে হবে': 'Short description must be 5–150 characters',
+            'বিস্তারিত বর্ণনা ১০-৬০০ অক্ষরের হতে হবে': 'Detailed description must be 10–600 characters',
+            'বিজ্ঞাপন চালাতে প্রিমিয়াম সাবস্ক্রিপশন কিনতে হবে': 'A premium subscription is required to run an advertisement',
+            'প্রিমিয়াম সাবস্ক্রিপশন প্রয়োজন': 'Premium subscription required', '২৪ ঘণ্টায় ১টি বিজ্ঞাপন দেওয়া যায়': 'Only one advertisement can be submitted every 24 hours',
+            'নোটিশের বিস্তারিত': 'Notice Details', 'আপনার অভিজ্ঞতা আমাদের জানান...': 'Tell us about your experience...',
+            'নোটিশ': 'Notices', 'পাঠান': 'Send', 'মেসেজ লিখুন...': 'Type a message...', 'আপনার পুরো নাম': 'Your Full Name',
+            'অভিজ্ঞতা, কাজের ধরন, সেবার সময়...': 'Experience, type of work, service hours...', 'ছবি আপলোড করতে ক্লিক করুন': 'Click to upload an image',
+            'JPG/PNG, সর্বোচ্চ ৩MB': 'JPG/PNG, up to 3MB', 'পাসওয়ার্ড পরিবর্তন করুন': 'Change Password',
+            'ছবি আপলোড করতে ক্লিক করুন': 'Click to upload an image', 'সেবা শেয়ার সফল হয়েছে': 'Service shared successfully',
+            'শেয়ার সফল হয়েছে': 'Shared successfully', 'লিংক কপি হয়েছে, বন্ধুদের সাথে শেয়ার করুন!': 'Link copied. Share it with your friends!',
+            'শেয়ার করা যায়নি, লিংকটি ম্যানুয়ালি কপি করুন।': 'Could not share. Please copy the link manually.',
+            'শেয়ার লিংক কপি হয়েছে': 'Share link copied', 'লিংক কপি করা যায়নি। আবার চেষ্টা করুন।': 'Could not copy the link. Please try again.',
+            'শেয়ার করতে প্রথমে লগইন বা রেজিস্ট্রেশন করুন': 'Please log in or register to share',
+            'রক্তদাতা খুঁজতে আমার এলাকার রক্তদাতা বিভাগটি দেখুন।': 'Visit the Blood Donors section to find donors.',
+            'জরুরি যোগাযোগের নম্বর ও সহায়তার জন্য আমার এলাকার জরুরি বিভাগটি দেখুন।': 'Visit the Emergency section for emergency contact numbers and assistance.',
+            'আমার এলাকার সেবা': 'Services in My Area', 'এইমাত্র': 'Just now', 'সব নোটিফিকেশন পড়া হিসেবে চিহ্নিত হয়েছে': 'All notifications marked as read',
+            'সব নোটিফিকেশন আগেই পড়া হয়েছে': 'All notifications were already read', 'ব্যবহারকারী': 'User',
+            'আপনার অ্যাকাউন্ট তৈরি হয়েছে। এখন সব সেবা ব্যবহার করতে পারবেন।': 'Your account has been created. You can now use all services.',
+            'সফলভাবে লগইন করেছেন।': 'You have logged in successfully.', '✅ ইন্টারনেট ফিরেছে — sync হচ্ছে': '✅ Internet restored — syncing',
+            '📡 অফলাইন — ক্যাশ থেকে দেখছেন': '📡 Offline — showing cached data', '📡 অফলাইন মোড — সংযোগ ফিরলে সব আপডেট হবে': '📡 Offline mode — updates will sync when connection returns',
+            'ছবির সাইজ ৫MB এর কম হতে হবে': 'Image size must be less than 5MB', 'ছবি আপলোড ব্যর্থ': 'Image upload failed',
+            'প্রথমে লগইন করুন': 'Please log in first', 'কোনো একটিভ সাবস্ক্রিপশন নেই': 'No active subscription',
+            'আপনি কি সাবস্ক্রিপশন বাতিলের অনুরোধ পাঠাতে চান?': 'Do you want to submit a subscription cancellation request?',
+            'বাতিলের অনুরোধ পাঠানো হয়েছে। অ্যাডমিন অনুমোদনের অপেক্ষা করুন।': 'Cancellation request submitted. Waiting for admin approval.',
+            'এই প্যাকেজ আপনার জন্য উপলব্ধ নয়': 'This package is not available to you', 'নাগরিক': 'Citizen',
+            'Firebase কনফিগার হয়নি': 'Firebase is not configured', 'এই ইমেইলে অ্যাকাউন্ট নেই': 'No account exists with this email',
+            'পাসওয়ার্ড ভুল': 'Incorrect password', 'ইমেইল সঠিক নয়': 'Invalid email address', 'ইমেইল বা পাসওয়ার্ড ভুল': 'Incorrect email or password',
+            'অনেকবার চেষ্টা — কিছুক্ষণ পরে': 'Too many attempts — please try again later', 'গুগল লগইন সফল!': 'Google login successful!',
+            'লগইন বাতিল': 'Login cancelled', 'পপআপ ব্লক! অনুমতি দিন।': 'Popup blocked! Please allow popups.',
+            'এই ইমেইলে অন্য অ্যাকাউন্ট আছে!': 'Another account already exists with this email!', 'গুগল লগইন ব্যর্থ': 'Google login failed',
+            'গিটহাব লগইন সফল!': 'GitHub login successful!', 'গিটহাব লগইন ব্যর্থ': 'GitHub login failed',
+            'অনুগ্রহ করে শর্তাবলী ও নীতিমালা পড়ে সম্মতি দিন।': 'Please read and agree to the Terms & Policies.',
+            'পাসওয়ার্ড মিলছে না': 'Passwords do not match', 'সঠিক মোবাইল নম্বর দিন': 'Enter a valid mobile number',
+            'উপজেলা নির্বাচন করুন': 'Select an upazila', 'রেজিস্ট্রেশন সফল!': 'Registration successful!',
+            'ইমেইল ইতিমধ্যে নিবন্ধিত': 'This email is already registered', 'পাসওয়ার্ড দুর্বল': 'Password is too weak',
+            'অতিথি': 'Guest', 'হোমপেজে যেতে হলে আগে আপনার প্রোফাইল সম্পূর্ণ করুন!': 'Please complete your profile before going to the homepage!',
+            'সঠিক নাম দিন': 'Enter a valid name', 'অভিনন্দন! আপনার প্রোফাইল সম্পূর্ণ হয়েছে।': 'Congratulations! Your profile is complete.',
+            'মোবাইল, জেলা ও উপজেলা সঠিকভাবে পূরণ করুন!': 'Please enter a valid mobile number, district, and upazila!',
+            'প্রোফাইল আপডেট হয়েছে!': 'Profile updated successfully!', 'অনুগ্রহ করে আগে প্রোফাইল সম্পূর্ণ করুন!': 'Please complete your profile first!',
+            'সাধারণ': 'General', 'গুরুত্বপূর্ণ': 'Important', 'বিস্তারিত দেওয়া হয়নি।': 'No details provided.',
+            'নোটিশটি আর সক্রিয় নেই': 'This notice is no longer active', 'ফেভারিট করতে আগে লগইন করুন': 'Please log in to add favorites',
+            'ফেভারিট থেকে সরানো হয়েছে': 'Removed from favorites', 'ফেভারিটে যোগ হয়েছে': 'Added to favorites', 'আপডেট ব্যর্থ': 'Update failed',
+            'দোকান': 'Shop', 'পণ্য': 'Product', 'গাড়ি': 'Vehicle', 'সার্ভিস': 'Service', 'অন্যান্য': 'Other',
+            'চ্যানেল লিংক': 'Channel Link', 'সাবস্ক্রাইবার সংখ্যা': 'Subscriber Count', 'ক্যাটাগরি': 'Category', 'পেজ লিংক': 'Page Link',
+            'ফলোয়ার সংখ্যা': 'Follower Count', 'প্রোফাইল লিংক': 'Profile Link', 'কনটেন্টের ধরন': 'Content Type',
+            'চ্যানেল/গ্রুপ লিংক': 'Channel/Group Link', 'মেম্বার সংখ্যা': 'Member Count', 'দোকানের ঠিকানা': 'Shop Address',
+            'খোলার সময়': 'Opening Hours', 'ব্যবসার ধরন': 'Business Type', 'মূল্য (৳)': 'Price (৳)', 'ডিসকাউন্ট': 'Discount',
+            'পণ্যের ধরন': 'Product Type', 'মডেল': 'Model', 'সাল': 'Year', 'অবস্থা (নতুন/ব্যবহৃত)': 'Condition (New/Used)',
+            'সার্ভিসের ধরন': 'Service Type', 'সার্ভিসের সময়': 'Service Hours', '📞 কল করুন': '📞 Call', '🌐 ওয়েবসাইট': '🌐 Website',
+            'ওয়েবসাইটে যান': 'Visit Website', 'WhatsApp-এ মেসেজ': 'Message on WhatsApp', 'Facebook-এ যান': 'Visit Facebook',
+            'YouTube-এ দেখুন': 'Watch on YouTube', 'TikTok-এ দেখুন': 'Watch on TikTok', 'Instagram-এ যান': 'Visit Instagram',
+            'Telegram-এ যোগ দিন': 'Join on Telegram', '🔗 কাস্টম বাটন': '🔗 Custom Button', 'দেখুন': 'View',
+            'প্রমোশনের ধরন': 'Promotion Type', 'সাধারণ তথ্য': 'General Information', 'অতিরিক্ত তথ্য': 'Additional Information',
+            'বাটন ও প্রিভিউ': 'Buttons and Preview', 'নতুন ক্যাটাগরি যোগ হয়েছে': 'New category added', 'নতুন ক্যাটাগরি': 'New Category',
+            'নতুন জরুরি নম্বর': 'New Emergency Number', 'নতুন নোটিশ প্রকাশিত': 'New Notice Published', 'নতুন ঘোষণা': 'New Announcement',
+            'লগইন নেই': 'Not logged in', 'নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে': 'New password must be at least 6 characters',
+            'নতুন পাসওয়ার্ড মিলছে না': 'New passwords do not match', 'পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!': 'Password changed successfully!',
+            'পাসওয়ার্ড পরিবর্তন ব্যর্থ': 'Password change failed', 'পুরনো পাসওয়ার্ড ভুল': 'Current password is incorrect',
+            'অনেকবার চেষ্টা করেছেন, কিছুক্ষণ পর চেষ্টা করুন': 'Too many attempts. Please try again later.',
+            'আবার লগইন করে চেষ্টা করুন': 'Log in again and try', 'শর্টকাট লগইনের জন্য অনুগ্রহ করে প্রোফাইল সম্পূর্ণ করুন!': 'Please complete your profile to use quick login!',
+            'জরুরী': 'Emergency', 'রিফ্রেশ করা যায়নি — আবার চেষ্টা করুন': 'Could not refresh — please try again',
+            'রিপোর্ট অপশন শীঘ্রই আসছে': 'Report option coming soon', 'নির্বাচন মুছে ফেলুন': 'Clear Selection',
+            'কিছু পাওয়া যায়নি': 'No results found', 'জেলা নির্বাচন করুন': 'Select District', 'জেলার উপজেলা': 'District Upazilas',
+            'জেলা খুঁজুন...': 'Search districts...', 'উপজেলা খুঁজুন...': 'Search upazilas...', 'আগে জেলা নির্বাচন করুন': 'Select a district first',
+            '⚠️ একাধিক tab — offline cache কাজ করবে না': '⚠️ Multiple tabs — offline cache will not work',
+            '⚠️ এই browser offline সাপোর্ট দেয় না': '⚠️ This browser does not support offline mode',
+            '৩ মিনিটের অতিথি সময় শেষ। চালিয়ে যেতে লগইন করুন।': 'The 3-minute guest session has ended. Log in to continue.',
+            'এখন কোনো প্যাকেজ উপলব্ধ নেই।': 'No packages are currently available.', 'লাইট মোড চালু হয়েছে': 'Light mode enabled',
+            'ডার্ক মোড চালু হয়েছে': 'Dark mode enabled', 'সিস্টেম থিম চালু হয়েছে': 'System theme enabled',
+            'রেটিং দিতে প্রথমে লগইন করুন': 'Please log in before rating', 'কমপক্ষে ১টি স্টার দিন': 'Please select at least one star',
+            'ধন্যবাদ! আপনার রেটিং জমা হয়েছে': 'Thank you! Your rating has been submitted', 'রেটিং আপডেট হয়েছে': 'Rating updated',
+            'আপনার আগের রেটিং:': 'Your previous rating:', 'শুধু ছবি ফাইল দিন': 'Please select an image file only',
+            'ছবির সাইজ ৩MB এর কম হতে হবে': 'Image size must be less than 3MB', 'সেবার নাম কমপক্ষে ৩ অক্ষর': 'Service name must be at least 3 characters',
+            'বিস্তারিত কমপক্ষে ১০ অক্ষর': 'Description must be at least 10 characters',
+            'ওয়েবসাইট লিংক http/https দিয়ে শুরু করুন': 'Website URL must start with http/https',
+            'Facebook লিংক http/https দিয়ে শুরু করুন': 'Facebook URL must start with http/https',
+            'আপনার সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন': 'Enter a valid 11-digit mobile number',
+            'সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন': 'Enter a valid 11-digit mobile number',
+            'রক্তের গ্রুপ নির্বাচন করুন': 'Select a blood group', 'সঠিক এলাকা লিখুন': 'Enter a valid area',
+            'অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে যোগ করবেন।': 'Request submitted! The admin will verify and add it.',
+            'অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে রক্তদাতা তালিকায় যোগ করবেন।': 'Request submitted! The admin will verify and add you to the blood donor list.',
+            'আপনি আজ ইতিমধ্যে ২টি অনুরোধ পাঠিয়েছেন। আগামীকাল আবার চেষ্টা করুন।': 'You have already submitted 2 requests today. Please try again tomorrow.',
+            'অফলাইন — net এলে যাবে': 'Offline — will send when connected', 'পাঠানো হচ্ছে...': 'Sending...',
+            'অ্যাডমিন': 'Admin', 'ইউজার': 'User', '📡 অফলাইন — net ফিরলে auto যাবে': '📡 Offline — will send automatically when online',
+            'অ্যাডমিন অফলাইনে আছেন, শীঘ্রই উত্তর দেবেন।': 'The admin is offline and will reply soon.',
+            'ভয়েস কল': 'Voice Call', 'অ্যাডমিন আপনার কলটি গ্রহণ করতে পারেননি। পরে আবার চেষ্টা করুন।': 'The admin could not answer your call. Please try again later.',
+            'কলের সময় শেষ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।': 'The call timed out. Please try again.',
+            'কল সংযোগ করা যায়নি। নেটওয়ার্ক পরীক্ষা করে আবার চেষ্টা করুন।': 'Could not connect the call. Check your network and try again.',
+            'কলটি শেষ হয়েছে।': 'The call has ended.', 'অ্যাডমিন কল গ্রহণ করেছেন। অডিও সংযোগ স্থাপন হচ্ছে...': 'The admin accepted the call. Connecting audio...',
+            'কল সংযোগে সমস্যা হয়েছে।': 'There was a problem connecting the call.', 'কলের অবস্থা পাওয়া যাচ্ছে না।': 'Call status is unavailable.',
+            'আপনার একটি কল ইতিমধ্যে চলছে': 'You already have an active call', 'ভয়েস কল করতে প্রথমে লগইন করুন': 'Please log in to make a voice call',
+            'আগে আপনার প্রোফাইল সম্পূর্ণ করুন': 'Please complete your profile first', 'ইন্টারনেট সংযোগ নেই': 'No internet connection',
+            'এই ব্রাউজারে WebRTC Audio সমর্থিত নয়': 'WebRTC audio is not supported in this browser',
+            'যাচাই হচ্ছে': 'Verifying', 'মাইক্রোফোন ব্যবহারের অনুমতি নেওয়া হচ্ছে...': 'Requesting microphone permission...',
+            'কথোপকথন চলছে': 'Call in progress', 'নেটওয়ার্ক সংযোগ বিচ্ছিন্ন হয়েছে।': 'Network connection lost.',
+            'অ্যাডমিনের কাছে কল পাঠানো হয়েছে, উত্তর দেওয়ার অপেক্ষায় আছেন।': 'Call request sent to the admin. Waiting for an answer.',
+            'মাইক্রোফোন ব্যবহারের অনুমতি পাওয়া যায়নি। Browser Settings থেকে অনুমতি দিন।': 'Microphone permission was denied. Allow it in your browser settings.',
+            'কল করার অনুমতি নেই। Firebase Security Rules পরীক্ষা করুন।': 'Call permission denied. Check Firebase Security Rules.',
+            'কল শুরু করা যায়নি। আবার চেষ্টা করুন।': 'Could not start the call. Please try again.', 'আপনি কলটি শেষ করেছেন।': 'You ended the call.',
+            'অনলাইন': 'Online', 'এইমাত্র সক্রিয় ছিলেন': 'Active just now', 'অফলাইন': 'Offline',
+            'আবেদন জমা হয়েছে! অ্যাডমিন অনুমোদনের অপেক্ষায়।': 'Application submitted! Waiting for admin approval.',
+            'পাঠানো হয়েছে! ধন্যবাদ।': 'Sent! Thank you.', 'রেজাল্ট দেখার পর ব্রাউজার মেনু থেকে Print → Save as PDF চাপুন': 'After viewing the result, select Print → Save as PDF from your browser menu.',
+            'কোনো ক্যাটাগরি নেই।': 'No categories available.', 'নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে': 'New password must be at least 6 characters long.',
+            'অ্যাডমিন সাপোর্ট': 'Admin Support', 'প্রোফাইল লোড ব্যর্থ:': 'Profile loading failed:', 'জরুরী': 'Emergency',
+            'একটি জনকল্যাণমূলক ডিজিটাল উদ্যোগ, যার মূল উদ্দেশ্য হলো প্রযুক্তির মাধ্যমে মানুষের কাছে প্রয়োজনীয় তথ্য, সেবা ও সহযোগিতা সহজলভ্য করে তোলা। আমরা বিশ্বাস করি, সঠিক সময়ে সঠিক তথ্য এবং মানুষের পারস্পরিক সহযোগিতা অনেকের জীবনে ইতিবাচক পরিবর্তন আনতে পারে।': 'A public-welfare digital initiative whose main purpose is to make essential information, services, and support more accessible through technology. We believe that timely information and mutual support can bring positive change to many lives.',
+            'মানুষের জরুরি প্রয়োজনে রক্তদাতা খুঁজে পেতে ভোগান্তি এবং প্রয়োজনীয় তথ্য সহজে পাওয়ার সীমাবদ্ধতা থেকেই “আমার এলাকা” গড়ে তোলার চিন্তা আসে। বিশেষ করে জরুরি মুহূর্তে রক্তের প্রয়োজন হলে মানুষকে বিভিন্ন জায়গায় যোগাযোগ করতে হয় এবং প্রয়োজনীয় তথ্য খুঁজতে সময় ব্যয় করতে হয়। এই বাস্তবতা থেকে অনুপ্রাণিত হয়ে এমন একটি প্ল্যাটফর্ম গড়ে তোলার উদ্যোগ নেওয়া হয়েছে, যেখানে মানুষের প্রয়োজনীয় তথ্য ও সেবা সহজে খুঁজে পাওয়ার সুযোগ থাকবে।': 'The idea for Amar Elaka grew from the difficulties people face when searching for blood donors during urgent situations and from the limited access to essential information. In emergencies, people often have to contact many places and spend valuable time finding the information they need. Inspired by this reality, we set out to build a platform where people can find useful information and services more easily.',
+            'আমাদের লক্ষ্য হলো মানুষের দৈনন্দিন প্রয়োজন ও জরুরি পরিস্থিতিতে কাজে লাগে এমন তথ্য ও সেবা একটি সহজলভ্য ডিজিটাল প্ল্যাটফর্মে একত্রিত করা। রক্তদাতা খুঁজতে সহায়তা, জরুরি যোগাযোগ নম্বর, স্থানীয় সেবাদাতা এবং বিভিন্ন প্রয়োজনীয় সেবার তথ্য মানুষের কাছে পৌঁছে দেওয়ার মাধ্যমে আমরা পারস্পরিক সহযোগিতা ও জনকল্যাণে অবদান রাখতে চাই।': 'Our goal is to bring together information and services that help with everyday needs and emergencies in one accessible digital platform. By helping people find blood donors, emergency contact numbers, local service providers, and other essential services, we aim to encourage mutual support and contribute to public welfare.',
+            '“আমার এলাকা”র মাধ্যমে আমরা এমন একটি সহযোগিতামূলক পরিবেশ গড়ে তুলতে চাই, যেখানে মানুষ প্রয়োজনীয় তথ্য খুঁজে পেতে পারবেন, নিজেদের উপকারী তথ্য অন্যদের সঙ্গে ভাগ করে নিতে পারবেন এবং বিভিন্ন সেবার সঙ্গে সহজে পরিচিত হতে পারবেন। আমাদের পরিকল্পনার মধ্যে রয়েছে দৈনন্দিন যাতায়াতের প্রয়োজনীয় সেবা, যেমন সিএনজি, অটোরিকশা ও ব্যক্তিগত গাড়ির তথ্য যুক্ত করা, যাতে মানুষ সহজে প্রয়োজনীয় পরিবহন খুঁজে পান।': 'Through Amar Elaka, we want to build a collaborative environment where people can find essential information, share useful information with others, and discover different services easily. Our plans include adding everyday transport options such as CNGs, auto-rickshaws, and private cars so people can find suitable transportation more easily.',
+            'আমরা মনে করি, সমাজের উন্নয়নে প্রত্যেক মানুষের ছোট ছোট উদ্যোগও গুরুত্বপূর্ণ ভূমিকা রাখতে পারে। মানুষের পাশে দাঁড়ানো, প্রয়োজনের সময় সহযোগিতার হাত বাড়িয়ে দেওয়া এবং প্রযুক্তিকে ইতিবাচক কাজে ব্যবহার করাই আমাদের চিন্তার মূল ভিত্তি। আমরা চাই, “আমার এলাকা” মানুষের পারস্পরিক সহযোগিতা ও জনকল্যাণে একটি কার্যকর মাধ্যম হয়ে উঠুক।': 'We believe that small initiatives by individuals can play an important role in social progress. Supporting people, offering help when it is needed, and using technology for positive purposes are the foundations of our vision. We hope Amar Elaka will become a useful channel for mutual support and public welfare.',
+            '“আমার এলাকা” উদ্যোগের পরিকল্পনা, ধারণা সাজানো, লেখালেখি এবং ডিজিটাল উন্নয়নের বিভিন্ন কাজে': 'For planning the Amar Elaka initiative, organizing ideas, writing content, and various aspects of digital development, assistance is being taken from',
+            '-এর সহযোগিতা নেওয়া হচ্ছে। কৃত্রিম বুদ্ধিমত্তাকে সহায়ক মাধ্যম হিসেবে ব্যবহার করে উদ্যোগটির পরিকল্পনা ও উন্নয়নের কাজকে আরও সহজ ও কার্যকর করার চেষ্টা করা হচ্ছে। আমরা বিশ্বাস করি, মানুষের চিন্তা, সৃজনশীলতা এবং আধুনিক প্রযুক্তির যথাযথ সমন্বয় সমাজের কল্যাণে ইতিবাচক ভূমিকা রাখতে পারে।': '. Artificial intelligence is being used as a supporting tool to make the planning and development of this initiative easier and more effective. We believe that combining human ideas, creativity, and modern technology can contribute positively to society.',
+            'মানুষের প্রয়োজনকে গুরুত্ব দেওয়া, তথ্যের যথার্থতা ও গোপনীয়তার প্রতি যত্নশীল থাকা, অন্যের অধিকারকে সম্মান করা এবং প্রযুক্তিকে জনকল্যাণে কাজে লাগানোর প্রচেষ্টা অব্যাহত রাখাই “আমার এলাকা”র অঙ্গীকার। এই পথচলায় মানুষের মতামত, সহযোগিতা এবং সম্মিলিত অংশগ্রহণ আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ।': 'Our commitment is to prioritize people’s needs, care about information accuracy and privacy, respect the rights of others, and continue using technology for public welfare. Feedback, support, and community participation are very important to us on this journey.',
+            'একটি জনকল্যাণমূলক উদ্যোগ। আমাদের মূল লক্ষ্য মানুষের পাশে দাঁড়ানো, সমাজসেবায় অবদান রাখা এবং বিভিন্ন প্রয়োজনীয় সেবা মানুষের কাছে সহজে পৌঁছে দেওয়া। এই প্ল্যাটফর্মের প্রতিষ্ঠাতা': 'is a public-welfare initiative. Our main goal is to support people, contribute to social service, and make essential services easier to access. The founder of this platform is',
+            ', চাঁদপুর টেকনিক্যাল স্কুল ও কলেজের একজন শিক্ষার্থী। একজন শিক্ষার্থী হয়েও মানুষের কল্যাণে প্রযুক্তিকে কাজে লাগিয়ে একটি উপকারী প্ল্যাটফর্ম গড়ে তোলার চেষ্টা করছেন তিনি। আমাদের অনুপ্রেরণা হলো বিপদের সময় মানুষের পাশে থাকা এবং রক্তদাতা খুঁজে পেতে সহায়তা করা।': ', a student of Chandpur Technical School and College. While still a student, he is working to use technology to build a helpful platform for people. Our inspiration is to support people in difficult times and help them find blood donors.',
+            '"আমার এলাকা" ওয়েবসাইটের মূল উদ্দেশ্য হলো স্থানীয় সেবা, জরুরি হেল্পলাইন এবং রক্তদাতাদের তথ্য একই প্ল্যাটফর্মে একত্রিত করা। এটি কোনো বাণিজ্যিক প্রতিষ্ঠান নয়, বরং একটি সমাজসেবামূলক উদ্যোগ। মানুষের সহযোগিতায় এই প্ল্যাটফর্মকে আরও উপকারী করে তোলার আমাদের অঙ্গীকার।': 'The main purpose of the Amar Elaka website is to bring local services, emergency helplines, and blood donor information together on one platform. It is not a commercial organization; it is a social-service initiative. We are committed to making this platform more useful with the support of the community.',
+            'ব্যবহারকারীদের সঠিক ও সত্য তথ্য প্রদান করতে হবে। ওয়েবসাইটটি ব্যবহারের সময় অন্যদের প্রতি সম্মান বজায় রাখতে হবে। কোনো অশ্লীল, হিংসাত্মক বা বিভ্রান্তিকর তথ্য বা পোস্ট করা যাবে না। প্ল্যাটফর্মের ক্ষতিসাধন করে এমন কোনো কার্যকলাপ করা থেকে বিরত থাকতে হবে।': 'Users must provide accurate and truthful information and treat others respectfully while using the website. Obscene, violent, or misleading information and posts are not allowed. Users must not engage in activities that could harm the platform.',
+            'আপনার ব্যক্তিগত তথ্য (নাম, ফোন নম্বর, প্রোফাইল) আমাদের কাছে অত্যন্ত সুরক্ষিত। আমরা আপনার তথ্য তৃতীয় কোনো পক্ষের কাছে বিক্রি বা বিপণন করি না। শুধুমাত্র সেবা প্রদানের স্বার্থে (যেমন: রক্তদাতা বা জরুরি সেবার সাথে সংযোগ করতে) প্রয়োজনীয় তথ্য ব্যবহার করা হয়।': 'Your personal information (name, phone number, and profile) is treated with care. We do not sell or market your information to third parties. Information is used only when necessary to provide services, such as connecting you with blood donors or emergency services.',
+            'রক্তদাতাদের দেওয়া তথ্য শুধুমাত্র রক্তের প্রয়োজনে ব্যবহার করতে হবে। রক্তদাতার অনুমতি ছাড়া তার নম্বর কোনো প্রকার প্রচার বা অপব্যবহার করা সম্পূর্ণ নিষিদ্ধ। রক্তদাতাদেরও সঠিক ও সর্বশেষ তথ্য দেওয়ার জন্য অনুরোধ করা হচ্ছে।': 'Blood donor information must only be used for blood-related needs. Sharing or misusing a donor’s phone number without permission is strictly prohibited. Donors are also requested to provide accurate and up-to-date information.',
+            'জরুরি হেল্পলাইনে দেওয়া নম্বরগুলো কেবলমাত্র সত্যিকারের জরুরি প্রয়োজনে ব্যবহার করতে হবে। কোনো প্রকার মিথ্যা কল বা হয়রানি করা আইনত দণ্ডনীয়। জরুরি পরিস্থিতিতে সরাসরি সংশ্লিষ্ট কর্তৃপক্ষের সাথে যোগাযোগ করাই সর্বোত্তম।': 'The numbers listed in the emergency helpline directory must only be used for genuine emergencies. False calls or harassment may be punishable by law. In an emergency, contacting the relevant authorities directly is recommended.',
+            'ব্যবহারকারীদের দেওয়া তথ্যের যথার্থতা যাচাই করার সর্বোচ্চ চেষ্টা করা হয়। তবে ভুল তথ্য পাওয়া গেলে তা সংশোধনের জন্য অ্যাডমিনের সাথে যোগাযোগ করতে হবে। অনুমতি ছাড়া অন্য কোনো ব্যক্তি বা প্রতিষ্ঠানের তথ্য প্রকাশ করা যাবে না।': 'We make every effort to verify the accuracy of information submitted by users. If you find incorrect information, contact the admin to request a correction. Information about another person or organization must not be published without permission.',
+            'সেবা, দোকান বা পণ্যের প্রচারের জন্য দেওয়া পোস্ট অবশ্যই সত্য এবং আইনসম্মত হতে হবে। কোনো প্রকার ভুয়া অফার বা প্রতারণামূলক বিজ্ঞাপন অনুমোদন করা হবে না। অ্যাডমিন যেকোনো পোস্ট যাচাইয়ের পর তা প্রকাশ বা বাতিল করার অধিকার রাখে।': 'Posts promoting services, shops, or products must be truthful and lawful. Fake offers and deceptive advertisements will not be approved. The admin reserves the right to review and publish or reject any post.',
+            'প্ল্যাটফর্মে ভুয়া তথ্য দেওয়া, প্রতারণা করা, কাউকে হয়রানি করা, স্প্যাম করা এবং অন্যের ব্যক্তিগত তথ্য চুরি বা অপব্যবহার করা সম্পূর্ণ নিষিদ্ধ। এমন কাজ প্রমাণিত হলে অ্যাকাউন্টটি ব্লক করা হবে।': 'Providing false information, committing fraud, harassing others, spamming, or stealing or misusing someone else’s personal information is strictly prohibited. Accounts found engaging in such activities may be blocked.',
+            "যদি আপনি কোনো ভুল তথ্য, অনুপযুক্ত পোস্ট বা গোপনীয়তা লঙ্ঘনের বিষয় লক্ষ্য করেন, তবে অনুগ্রহ করে আমাদের 'অভিযোগ ও পরামর্শ' সেকশনের মাধ্যমে জানান। আপনার একটি ছোট রিপোর্ট প্ল্যাটফর্মটিকে নিরাপদ রাখতে সাহায্য করবে।": "If you notice incorrect information, an inappropriate post, or a privacy violation, please report it through our 'Complaints and Suggestions' section. Your report can help keep the platform safe.",
+            '"আমার এলাকা" একটি তথ্য প্রদানকারী প্ল্যাটফর্ম। তৃতীয় পক্ষের (যেমন: ডাক্তার, টেকনিশিয়ান) দেওয়া সেবার মান বা ফলাফলের জন্য প্ল্যাটফর্ম সরাসরি দায়ী নয়। যেকোনো সেবা নেওয়ার আগে নিজ দায়িত্বে যাচাই করে নেওয়ার জন্য অনুরোধ করা হচ্ছে।': 'Amar Elaka is an information platform. The platform is not directly responsible for the quality or results of services provided by third parties, such as doctors or technicians. Users are advised to verify details independently before using any service.',
+            'ভবিষ্যতে প্রয়োজন অনুযায়ী এই নীতিমালা সংশোধন বা পরিবর্তন করা হতে পারে। পরিবর্তনগুলো এই পেজেই আপডেট করা হবে। প্ল্যাটফর্মের নিয়মিত ব্যবহারের মানে হলো আপনি নতুন নীতিমালার সাথেও সম্মত আছেন।': 'These policies may be revised or changed as needed in the future. Any changes will be updated on this page. Continued use of the platform means that you agree to the updated policies.',
+            'আমাদের ওয়েবসাইটে সেবাগুলো রেনডমলি ভাবে হোম পেজে দেখা যায়। এর মানে আপনি এই মাত্র যে সেবাটি দেখেছেন সেটা একটু পর আবার নাও দেখতে পারেন যদি না আপনি সংরক্ষণ করে রাখেন। বিজ্ঞাপনের সুবিধাটি হলো যত বেশি সম্ভব বিজ্ঞাপন করা পোস্টটি হোমপেজে দেখানো। আপনি প্রতিদিন একটি প্রমোশন পোস্ট করতে পারবেন যার মেয়াদ থাকবে ২৪ ঘন্টা অর্থাৎ একদিন। তাহলে আর দেরি কেন এখনই করুন আপনার প্রমোশন পোস্ট।': 'Services on our website are displayed randomly on the homepage, so a service you just viewed may not appear again unless you save it. Promotion helps your post appear on the homepage more frequently. You can submit one promotional post per day, and each promotion remains active for 24 hours. Create your promotion when you are ready.',
+            'যেমন: মো: আরিফুল ইসলাম': 'e.g. Md. Ariful Islam', 'সেবা, হাসপাতাল বা টেকনিশিয়ান খুঁজুন...': 'Search services, hospitals, or technicians...',
+            'ক্যাটাগরি খুঁজুন...': 'Search categories...', 'আপনার অভিযোগ বা পরামর্শ লিখুন...': 'Write your complaint or suggestion...',
+            'আপনার অভিজ্ঞতা আমাদের জানান...': 'Tell us about your experience...', 'যেমন: পুলিশ হেল্পলাইন': 'e.g. Police Helpline',
+            'যেমন: 999': 'e.g. 999', 'যেমন: হাসপাতাল, পুলিশ': 'e.g. Hospital, Police', 'অতিরিক্ত তথ্য...': 'Additional information...',
+            'যেমন: শাহবাজপুর বাজার, চাঁদপুর': 'e.g. Shahbazpur Bazar, Chandpur', 'যেমন: রহমান টেলিকম — ঈদ অফার': 'e.g. Rahman Telecom — Eid Offer',
+            'যেমন: ইলেকট্রিশিয়ান সার্ভিস': 'e.g. Electrician Service', 'আপনার পুরো নাম': 'Your full name',
+            'আপনার বার্তা লিখুন...': 'Write your message...', 'উপজেলা': 'Upazila', 'জেলা': 'District',
+            'জেলার উপজেলা': 'Upazilas in this district', 'নির্বাচন মুছে ফেলুন': 'Clear selection', 'কিছু পাওয়া যায়নি': 'No results found',
+            'আপনি এখনো কোনো সেবা': 'You have not saved any services yet', 'এই বিজ্ঞাপনে কোনো অ্যাকশন বাটন নেই।': 'This advertisement has no action buttons.',
+            'আপনার সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন': 'Enter your correct 11-digit mobile number',
+            'আপনি কি সত্যিই লগআউট করতে চান?': 'Do you really want to log out?', 'লগআউট হয়েছে': 'Logged out', 'লগআউট ব্যর্থ': 'Logout failed',
+            'আপনার আগের রেটিং:': 'Your previous rating:', 'পুনরায় রেটিং পাঠান': 'Resubmit Rating', 'রেটিং দিতে প্রথমে লগইন করুন': 'Please log in to rate',
+            'এখন কোনো প্যাকেজ উপলব্ধ নেই।': 'No packages are currently available.', 'কোনো ক্যাটাগরি নেই।': 'No categories available.',
+            'শুধু JPG/PNG ছবি দিন': 'Only JPG/PNG images are allowed', 'ছবি সর্বোচ্চ ৩MB হতে পারবে': 'Image must be 3MB or smaller',
+            'আপনার একটি কল ইতিমধ্যে চলছে': 'You already have a call in progress', 'এই ব্রাউজারে WebRTC Audio সমর্থিত নয়': 'WebRTC audio is not supported in this browser',
+            'কলের অবস্থা পাওয়া যাচ্ছে না।': 'Call status is unavailable.', 'কলটি শেষ হয়েছে।': 'The call has ended.',
+            'অ্যাডমিনের কাছে কল পাঠানো হয়েছে, উত্তর দেওয়ার অপেক্ষায় আছেন।': 'Your call request has been sent to the admin. Waiting for a response.',
+            'Firebase কনফিগারেশন নেই!': 'Firebase configuration is missing!', 'কোডের ভেতরে': 'inside the code',
+            'এ আপনার Firebase প্রজেক্টের API key বসান।': 'add your Firebase project API key here.',
+            'প্রিমিয়াম': 'Premium', 'রক্ত': 'Blood', 'রেজাল্ট বের করুন': 'Check Results',
+            'এডমিন চ্যাট': 'Admin Chat', 'অভিযোগ ও পরামর্শ': 'Complaints & Suggestions',
+            'প্রতিষ্ঠাতা:Akror karmaker': 'Founder: Akror Karmaker', '📧 ইমেইল:': '📧 Email:', '🌐 ফেসবুক:': '🌐 Facebook:',
+            'অনুরোধ পাঠান': 'Send Request', '📷 ছবি *': '📷 Image *', 'আপনার আগের রেটিং: 0/5': 'Your previous rating: 0/5',
+            '“আমার এলাকা”র মাধ্যমে আমরা এমন একটি সহযোগিতামূলক পরিবেশ গড়ে তুলতে চাই, যেখানে মানুষ প্রয়োজনীয় তথ্য খুঁজে পেতে পারবেন, নিজেদের উপকারী তথ্য অন্যদের সঙ্গে ভাগ করে নিতে পারবেন এবং বিভিন্ন সেবার সঙ্গে সহজে পরিচিত হতে পারবেন। আমাদের পরিকল্পনার মধ্যে রয়েছে রক্তদাতা খুঁজতে সহায়তা, জরুরি যোগাযোগের তথ্য, স্থানীয় সেবা ও সেবাদাতাদের পরিচিতি, বিভিন্ন প্রয়োজনীয় তথ্য এবং সামাজিক ও ব্যবসায়িক প্রচারের সুযোগ তৈরি করা। এসব সেবা মানুষের প্রকৃত চাহিদা, যথাযথ অনুমতি এবং বাস্তবসম্মত পরিকল্পনার ভিত্তিতে ধাপে ধাপে উন্নত করার প্রত্যাশা রয়েছে।': 'Through Amar Elaka, we want to create a collaborative environment where people can find essential information, share useful information with others, and discover different services. Our plans include helping people find blood donors, providing emergency contact information, introducing local services and providers, sharing other useful information, and creating opportunities for community and business promotion. We aim to improve these services gradually based on people’s real needs, proper permissions, and practical planning.',
+            'আমরা মনে করি, সমাজের উন্নয়নে প্রত্যেক মানুষের ছোট ছোট উদ্যোগও গুরুত্বপূর্ণ ভূমিকা রাখতে পারে। মানুষের পাশে দাঁড়ানো, প্রয়োজনের সময় সহযোগিতার হাত বাড়িয়ে দেওয়া এবং প্রযুক্তিকে ইতিবাচক কাজে ব্যবহার করাই আমাদের চিন্তার মূল ভিত্তি। আমরা চাই, “আমার এলাকা” শুধু তথ্য খোঁজার একটি মাধ্যম না হয়ে মানুষের পারস্পরিক সহযোগিতা ও জনকল্যাণের একটি কার্যকর প্ল্যাটফর্ম হিসেবে গড়ে উঠুক।': 'We believe that small initiatives by individuals can play an important role in social progress. Supporting people, offering help when needed, and using technology for positive purposes are the foundations of our vision. We want Amar Elaka to become more than an information-search tool: a practical platform for mutual support and public welfare.',
+            '“আমার এলাকা” উদ্যোগের পরিকল্পনা, ধারণা সাজানো, লেখালেখি এবং ডিজিটাল উন্নয়নের বিভিন্ন কাজে ': 'For planning the Amar Elaka initiative, organizing ideas, writing content, and various aspects of digital development, assistance is being provided by ',
+            '-এর সহযোগিতা নেওয়া হচ্ছে। কৃত্রিম বুদ্ধিমত্তাকে সহায়ক মাধ্যম হিসেবে ব্যবহার করে উদ্যোগটির পরিকল্পনা ও উন্নয়নের কাজকে আরও সহজ ও কার্যকর করার চেষ্টা করা হচ্ছে। আমরা বিশ্বাস করি, মানুষের চিন্তা, সৃজনশীলতা এবং আধুনিক প্রযুক্তির যথাযথ সমন্বয় সমাজের কল্যাণে নতুন সম্ভাবনা তৈরি করতে পারে।': '. Artificial intelligence is being used as a supporting tool to make the planning and development of this initiative easier and more effective. We believe that combining human ideas, creativity, and modern technology can create new opportunities for the good of society.',
+            'মানুষের প্রয়োজনকে গুরুত্ব দেওয়া, তথ্যের যথার্থতা ও গোপনীয়তার প্রতি যত্নশীল থাকা, অন্যের অধিকারকে সম্মান করা এবং প্রযুক্তিকে জনকল্যাণে কাজে লাগানোর প্রচেষ্টা অব্যাহত রাখাই “আমার এলাকা”র অঙ্গীকার। এই পথচলায় মানুষের মতামত, সহযোগিতা এবং সম্মিলিত অংশগ্রহণ আমাদের এগিয়ে যাওয়ার অনুপ্রেরণা।': 'Our commitment is to prioritize people’s needs, protect information accuracy and privacy, respect the rights of others, and continue using technology for public welfare. Feedback, support, and community participation inspire us to keep moving forward.',
+            "যদি আপনি কোনো ভুল তথ্য, অনুপযুক্ত পোস্ট বা গোপনীয়তা লঙ্ঘনের বিষয় লক্ষ্য করেন, তবে অনুগ্রহ করে আমাদের 'অভিযোগ ও পরামর্শ' সেকশনের মাধ্যমে জানান। আপনার একটি ছোট রিপোর্ট প্ল্যাটফর্মটিকে নিরাপদ রাখতে সাহায্য করবে।": "If you notice incorrect information, an inappropriate post, or a privacy violation, please let us know through our 'Complaints and Suggestions' section. Even a small report can help keep the platform safe.",
+            'সেবাদাতা:': 'Provider:', 'কল': 'Call', 'এডমিন': 'Admin', 'কোনো সংরক্ষিত সেবা নেই': 'No saved services yet',
+            'আপনি এখনো কোনো সেবা "আমার পছন্দ" তালিকায় যুক্ত করেননি। সেবার উপরে থাকা হার্ট আইকনে ক্লিক করে সেভ করুন।': 'You have not added any services to My Favorites yet. Tap the heart icon on a service card to save it.',
+            'কোনো রক্তদাতা নিবন্ধিত নেই।': 'No blood donors are registered yet.', 'এখনো কোনো মেসেজ নেই।': 'There are no messages yet.',
+            'কোনো নোটিফিকেশন নেই': 'No notifications', 'নতুন আপডেট বা ঘোষণা এলে এখানে দেখা যাবে।': 'New updates and announcements will appear here.',
+            'সব পড়া হয়েছে': 'All caught up', 'সকল': 'All'
+        };
+
+        const uiOriginalTextNodes = new WeakMap();
+        const uiOriginalAttributes = new WeakMap();
+        const UI_DYNAMIC_CONTENT_SKIP = [
+            '#profileNameText', '#profilePhone', '#profileEmail', '#profileLocation', '#profileFullAddress',
+            '#sidebarUserName', '#sidebarUserEmail', '#svcModalTitle', '#svcModalProvider', '#svcModalLocation', '#svcModalDescription',
+            '#promoModalTitle', '#promoModalAdvertiser', '#promoModalLocation', '#promoModalDescription', '#noticeModalTitle', '#noticeModalContent',
+            '.chat-message-body', '.firebase-user-content', '.user-generated-content', '[data-user-content="true"]',
+            '.donor-name', '.donor-location', '.service-title', '.service-description', '.service-provider', '.service-location',
+            '.notice-title', '.notice-description', '.notice-body', '.dynamic-user-value'
+        ].join(',');
+
+        function isInsideDynamicUserContent(node) {
+            const el = node && (node.nodeType === 1 ? node : node.parentElement);
+            if (!el || !el.closest) return false;
+            if (el.closest('[data-i18n]')) return true;
+            return !!el.closest(UI_DYNAMIC_CONTENT_SKIP);
+        }
+
+        function translateStaticUiText(root = document) {
+            if (!root || currentLang !== 'en') {
+                if (root && currentLang === 'bn') restoreStaticUiText(root);
+                return;
+            }
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                acceptNode(node) {
+                    if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                    if (isInsideDynamicUserContent(node)) return NodeFilter.FILTER_REJECT;
+                    const parent = node.parentElement;
+                    if (!parent || /^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA)$/i.test(parent.tagName)) return NodeFilter.FILTER_REJECT;
+                    if (parent.isContentEditable) return NodeFilter.FILTER_REJECT;
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            });
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+            nodes.forEach(node => {
+                if (!uiOriginalTextNodes.has(node)) uiOriginalTextNodes.set(node, node.nodeValue);
+                const original = uiOriginalTextNodes.get(node);
+                const key = original.trim();
+                const translated = STATIC_UI_EN[key];
+                if (translated) {
+                    const leading = original.match(/^\s*/)?.[0] || '';
+                    const trailing = original.match(/\s*$/)?.[0] || '';
+                    const nextValue = leading + translated + trailing;
+                    if (node.nodeValue !== nextValue) node.nodeValue = nextValue;
+                }
+            });
+            // Translate only fixed interface attributes; never rewrite user-entered values.
+            root.querySelectorAll?.('input[placeholder],textarea[placeholder],button[title],[title],[aria-label]').forEach(el => {
+                if (isInsideDynamicUserContent(el)) return;
+                ['placeholder', 'title', 'aria-label'].forEach(attr => {
+                    if (!el.hasAttribute(attr)) return;
+                    let saved = uiOriginalAttributes.get(el);
+                    if (!saved) { saved = {}; uiOriginalAttributes.set(el, saved); }
+                    if (!(attr in saved)) saved[attr] = el.getAttribute(attr);
+                    const original = saved[attr];
+                    if (currentLang === 'en' && STATIC_UI_EN[original?.trim()]) el.setAttribute(attr, STATIC_UI_EN[original.trim()]);
+                    else if (currentLang === 'bn' && el.getAttribute(attr) !== original) el.setAttribute(attr, original);
+                });
+            });
+        }
+
+        function restoreStaticUiText(root = document) {
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+            nodes.forEach(node => {
+                if (uiOriginalTextNodes.has(node)) {
+                    const original = uiOriginalTextNodes.get(node);
+                    if (node.nodeValue !== original) node.nodeValue = original;
+                }
+            });
+            root.querySelectorAll?.('[placeholder],[title],[aria-label]').forEach(el => {
+                const saved = uiOriginalAttributes.get(el);
+                if (saved) Object.entries(saved).forEach(([attr, value]) => el.setAttribute(attr, value));
+            });
+        }
+
+        let uiTranslationObserver = null;
+        function startUiTranslationObserver() {
+            if (uiTranslationObserver || !document.body || !window.MutationObserver) return;
+            uiTranslationObserver = new MutationObserver(records => {
+                if (currentLang !== 'en') return;
+                records.forEach(record => {
+                    record.addedNodes?.forEach(node => {
+                        if (node.nodeType === Node.ELEMENT_NODE) translateStaticUiText(node);
+                        else if (node.nodeType === Node.TEXT_NODE && !isInsideDynamicUserContent(node)) {
+                            const key = (node.nodeValue || '').trim();
+                            if (STATIC_UI_EN[key]) {
+                                if (!uiOriginalTextNodes.has(node)) uiOriginalTextNodes.set(node, node.nodeValue);
+                                node.nodeValue = node.nodeValue.replace(key, STATIC_UI_EN[key]);
+                            }
+                        }
+                    });
+                });
+            });
+            uiTranslationObserver.observe(document.body, { childList: true, subtree: true });
+        }
+
+        function translateUiMessage(message) {
+            if (currentLang !== 'en' || typeof message !== 'string') return message;
+            const trimmed = message.trim();
+            if (STATIC_UI_EN[trimmed]) return message.replace(trimmed, STATIC_UI_EN[trimmed]);
+            return message;
+        }
+
         function applyLanguage() {
             document.documentElement.lang = currentLang === 'en' ? 'en' : 'bn';
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -5457,6 +6276,8 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             }
             const settingsSub = document.querySelector('#settingsModal .text-violet-200');
             if (settingsSub) settingsSub.textContent = t('settings.subtitle');
+            translateStaticUiText(document);
+            startUiTranslationObserver();
             updateLangButtonsUI();
             refreshIcons();
         }
@@ -5877,10 +6698,10 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     ${iconHtml}
                     <div class="min-w-0 flex-1">
                         <div class="flex items-start justify-between gap-2">
-                            <h4 class="text-xs font-bold text-slate-100 leading-snug">${esc(n.title)}</h4>
+                            <h4 data-user-content="true" class="text-xs font-bold text-slate-100 leading-snug">${esc(n.title)}</h4>
                             ${!n.read ? '<span class="w-2 h-2 rounded-full bg-purple-500 shrink-0 mt-1.5"></span>' : ''}
                         </div>
-                        ${n.body ? `<p class="mt-0.5 text-[11px] text-slate-400 leading-relaxed line-clamp-2">${esc(n.body)}</p>` : ''}
+                        ${n.body ? `<p data-user-content="true" class="mt-0.5 text-[11px] text-slate-400 leading-relaxed line-clamp-2">${esc(n.body)}</p>` : ''}
                         <span class="text-[10px] text-slate-500 mt-1 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${esc(formatNotifTime(n.time))}</span>
                     </div>
                 </div>`;
@@ -6422,6 +7243,8 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             
             if (pass !== confirm) return showToast('পাসওয়ার্ড মিলছে না', 'circle-x', 'text-rose-400');
             if (!/^01[3-9]\d{8}$/.test(phone)) return showToast('সঠিক মোবাইল নম্বর দিন', 'circle-x', 'text-rose-400');
+            if (!district) return showToast('জেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
+            if (!upazila) return showToast('উপজেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
             
             const btn = document.getElementById('registerBtn');
             btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> রেজিস্ট্রেশন...'; refreshIcons();
@@ -6487,7 +7310,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             document.getElementById('profileNameText').textContent = userProfile.fullName || 'নাগরিক';
             document.getElementById('profilePhone').textContent = userProfile.phone || '—';
             document.getElementById('profileEmail').textContent = userProfile.email || '—';
-            document.getElementById('profileLocation').textContent = addr;
+            document.getElementById('profileLocation').textContent = userProfile.email || currentUser?.email || '—';
             document.getElementById('profileFullAddress').textContent = addr;
             const imgEl = document.getElementById('profilePicImg');
             const iconEl = document.getElementById('profilePicIcon');
@@ -6595,8 +7418,8 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             const upazila = document.getElementById('editUpazila').value.trim();
             if (fullName.length < 2) return showToast('সঠিক নাম দিন', 'circle-x', 'text-rose-400');
             if (!/^01[3-9]\d{8}$/.test(phone)) return showToast('সঠিক মোবাইল নম্বর দিন', 'circle-x', 'text-rose-400');
-            if (!district) return showToast('জেলা লিখুন', 'circle-x', 'text-rose-400');
-            if (!upazila) return showToast('উপজেলা লিখুন', 'circle-x', 'text-rose-400');
+            if (!district) return showToast('জেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
+            if (!upazila) return showToast('উপজেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
             
             const btn = document.getElementById('editProfileSaveBtn');
             btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> সংরক্ষণ...'; refreshIcons();
@@ -6812,8 +7635,8 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                 <div class="flex items-center gap-3">
                     <span class="w-8 h-8 rounded-lg ${p.style} border flex items-center justify-center shrink-0"><i data-lucide="${p.icon}" class="w-3.5 h-3.5"></i></span>
                     <div class="min-w-0 flex-1">
-                        <div class="flex items-center justify-between gap-2"><h3 class="text-sm font-bold text-white truncate leading-tight">${title}</h3><i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
-                        <p class="mt-0.5 text-[11px] text-slate-400 line-clamp-1">${body}</p>
+                        <div class="flex items-center justify-between gap-2"><h3 data-user-content="true" class="text-sm font-bold text-white truncate leading-tight">${title}</h3><i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
+                        <p data-user-content="true" class="mt-0.5 text-[11px] text-slate-400 line-clamp-1">${body}</p>
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-[9px] px-1.5 py-0.5 rounded-md border ${p.style} font-bold">${p.label}</span>
                             ${dl ? `<span class="text-[9px] text-slate-500 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${esc(dl)}</span>` : ''}
@@ -7624,17 +8447,17 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     </div>
                     <div class="p-4">
                         <div class="flex items-center flex-wrap gap-2 mb-1.5">
-                            <h4 class="font-bold text-slate-100 text-sm sm:text-base leading-snug flex-1 min-w-0">${title}</h4>
+                            <h4 data-user-content="true" class="font-bold text-slate-100 text-sm sm:text-base leading-snug flex-1 min-w-0">${title}</h4>
                             
                             ${isAdminPost ? `<span class="bg-violet-600/90 text-white px-2 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow-sm border border-violet-500/50 shrink-0">এডমিন <i data-lucide="shield-check" class="w-2.5 h-2.5 text-white"></i></span>` : ''}
                         </div>
                         <p class="text-[11px] text-violet-300 font-bold mb-1.5 flex items-center gap-1 truncate">
-                            <i data-lucide="user" class="w-3 h-3 shrink-0"></i> সেবাদাতা: ${providerName}
+                            <i data-lucide="user" class="w-3 h-3 shrink-0"></i> সেবাদাতা: <span data-user-content="true">${providerName}</span>
                         </p>
                         <p class="text-[11px] text-slate-400 mb-2 flex items-center gap-1 truncate">
-                            <i data-lucide="map-pin" class="w-3 h-3 text-rose-400 shrink-0"></i> ${location}
+                            <i data-lucide="map-pin" class="w-3 h-3 text-rose-400 shrink-0"></i> <span data-user-content="true">${location}</span>
                         </p>
-                        <p class="text-xs text-slate-300 line-clamp-2">${desc}</p>
+                        <p data-user-content="true" class="text-xs text-slate-300 line-clamp-2">${desc}</p>
                     </div>
                 </div>
                 <div class="p-3 pt-0 flex items-center gap-1.5">
@@ -8071,7 +8894,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             grid.innerHTML = filtered.map(d => `<div class="bg-[#0b0715] p-3.5 rounded-2xl border border-violet-900/40 flex items-center justify-between gap-2">
                 <div class="flex items-center gap-2.5 min-w-0">
                     <div class="w-10 h-10 bg-gradient-to-br from-rose-600 to-red-600 text-white font-black text-sm rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-rose-600/30">${esc(d.group || '?')}</div>
-                    <div class="min-w-0"><h4 class="font-bold text-slate-200 text-xs truncate">${esc(d.name || '')}</h4><p class="text-[10px] text-slate-400 truncate">${esc(d.location || '')}</p></div>
+                    <div class="min-w-0"><h4 data-user-content="true" class="font-bold text-slate-200 text-xs truncate">${esc(d.name || '')}</h4><p data-user-content="true" class="text-[10px] text-slate-400 truncate">${esc(d.location || '')}</p></div>
                 </div>
                 <a href="${currentUser ? `tel:${esc(String(d.phone || '').replace(/[^0-9+]/g, ''))}` : '#guest-login'}" data-service-name="Blood Donor: ${esc(d.name || '')} (${esc(d.group || '')})" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold px-3 py-2 rounded-xl touch-target flex items-center gap-1 shadow-lg shadow-green-600/30"><i data-lucide="phone" class="w-3 h-3"></i> কল</a>
             </div>`).join('');
@@ -8097,7 +8920,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     const wasOffline = msg.offlineSent === true;
                     return `<div class="flex gap-2 max-w-[85%] ml-auto justify-end">
                         <div class="bg-gradient-to-br from-violet-600 to-purple-600 text-white p-2.5 sm:p-3 rounded-2xl rounded-tr-none shadow-lg shadow-violet-600/30 ${pending ? 'opacity-70' : ''}">
-                            <p class="text-sm leading-relaxed">${esc(msg.text)}</p>
+                            <p data-user-content="true" class="text-sm leading-relaxed">${esc(msg.text)}</p>
                             <div class="flex items-center justify-end gap-1 mt-1">
                                 ${pending
                                     ? `<span class="text-[9px] text-amber-200 flex items-center gap-0.5"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${wasOffline ? 'অফলাইন — net এলে যাবে' : 'পাঠানো হচ্ছে...'}</span>`
@@ -8111,9 +8934,9 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                 return `<div class="flex gap-2 max-w-[85%]">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-violet-600/30"><i data-lucide="headset" class="w-3.5 h-3.5"></i></div>
                     <div class="bg-[#1b1033] text-slate-100 p-2.5 sm:p-3 rounded-2xl rounded-tl-none border border-violet-900/60">
-                        <span class="text-[10px] font-extrabold text-violet-400 uppercase block mb-1">${esc(an)}</span>
-                        <p class="text-sm leading-relaxed">${esc(msg.text)}</p>
-                        <span class="text-[9px] text-slate-500 mt-1 block">${esc(msg.time || '')}</span>
+                        <span data-user-content="true" class="text-[10px] font-extrabold text-violet-400 uppercase block mb-1">${esc(an)}</span>
+                        <p data-user-content="true" class="text-sm leading-relaxed">${esc(msg.text)}</p>
+                        <span data-user-content="true" class="text-[9px] text-slate-500 mt-1 block">${esc(msg.time || '')}</span>
                     </div>
                 </div>`;
             }).join('');
@@ -8574,6 +9397,8 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             if (title.length < 3) return showToast('সেবার নাম কমপক্ষে ৩ অক্ষর', 'circle-x', 'text-rose-400');
             if (providerName.length < 2) return showToast('সঠিক নাম দিন', 'circle-x', 'text-rose-400');
             if (!/^01[3-9]\d{8}$/.test(phone)) return showToast('সঠিক মোবাইল নম্বর দিন', 'circle-x', 'text-rose-400');
+            if (!district) return showToast('জেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
+            if (!upazila) return showToast('উপজেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
             if (details.length < 10) return showToast('বিস্তারিত কমপক্ষে ১০ অক্ষর', 'circle-x', 'text-rose-400');
             if (website && !/^https?:\/\//i.test(website)) return showToast('ওয়েবসাইট লিংক http/https দিয়ে শুরু করুন', 'circle-x', 'text-rose-400');
             if (facebook && !/^https?:\/\//i.test(facebook)) return showToast('Facebook লিংক http/https দিয়ে শুরু করুন', 'circle-x', 'text-rose-400');

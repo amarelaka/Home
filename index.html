@@ -4028,7 +4028,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                 <!-- Intro -->
                 <div class="p-4 bg-[#0b0715] rounded-2xl border border-purple-900/30 text-center mb-4">
                     <p class="text-sm font-medium text-slate-200 leading-relaxed">
-                        <strong class="text-violet-400">"আমার এলাকা"</strong> একটি জনকল্যাণমূলক উদ্যোগ। আমাদের মূল লক্ষ্য মানুষের পাশে দাঁড়ানো, সমাজসেবায় অবদান রাখা এবং বিভিন্ন প্রয়োজনীয় সেবা মানুষের কাছে সহজে পৌঁছে দেওয়া। এই প্ল্যাটফর্মের প্রতিষ্ঠাতা <strong class="text-white">অক্রর কর্মকার</strong>, চাঁদপুর টেকনিক্যাল স্কুল ও কলেজের একজন শিক্ষার্থী। একজন শিক্ষার্থী হয়েও মানুষের কল্যাণে প্রযুক্তিকে কাজে লাগিয়ে একটি উপকারী প্ল্যাটফর্ম গড়ে তোলার চেষ্টা করছেন তিনি। আমাদের অনুপ্রেরণা হলো বিপদের সময় মানুষের পাশে থাকা এবং রক্তদাতা খুঁজে পেতে সহায়তা করা। 
+                        <strong class="text-violet-400">"আমার এলাকা"</strong> একটি জনকল্যাণমূলক উদ্যোগ। আমাদের মূল লক্ষ্য মানুষের পাশে দাঁড়ানো, সমাজসেবায় অবদান রাখা এবং বিভিন্ন প্রয়োজনীয় সেবা মানুষের কাছে সহজে পৌঁছে দেওয়া। এই প্ল্যাটফর্মের প্রতিষ্ঠাতা <strong class="text-white">Akror karmaker</strong>, চাঁদপুর টেকনিক্যাল স্কুল ও কলেজের একজন শিক্ষার্থী। একজন শিক্ষার্থী হয়েও মানুষের কল্যাণে প্রযুক্তিকে কাজে লাগিয়ে একটি উপকারী প্ল্যাটফর্ম গড়ে তোলার চেষ্টা করছেন তিনি। আমাদের অনুপ্রেরণা হলো বিপদের সময় মানুষের পাশে থাকা এবং রক্তদাতা খুঁজে পেতে সহায়তা করা। 
                     </p>
                 </div>
 
@@ -5030,6 +5030,37 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
 
         // ========== STATE ==========
         let currentUser = null;
+
+        // ========== FLUTTER NATIVE FCM TOKEN BRIDGE ==========
+        // ফ্লাটার অ্যাপ থেকে FCM টোকেন রিসিভ করার ফাংশন
+        window.receiveNativeFcmToken = function(token) {
+            console.log("Native FCM Token received from Flutter App:", token);
+            if (!token) return;
+
+            // টোকেনটি সেশনে সেভ করে রাখুন
+            sessionStorage.setItem('pending_fcm_token', token);
+
+            // ইউজার যদি ইতিমধ্যে লগইন থাকে, তবে সরাসরি ডেটাবেসে সেভ করুন
+            if (currentUser && firebaseReady && db) {
+                saveTokenToFirestore(token, currentUser.uid);
+            }
+        };
+
+        // ফায়ারস্টোরে টোকেন সেভ করার হেল্পার ফাংশন
+        function saveTokenToFirestore(token, uid) {
+            if (!token || !uid || !firebaseReady || !db) return;
+            setDoc(doc(db, 'users', uid), {
+                fcmToken: token,
+                notifPermission: 'granted',
+                notifDevice: 'Android App',
+                lastTokenUpdate: new Date()
+            }, { merge: true }).then(() => {
+                console.log("FCM Token successfully saved to Firestore!");
+                sessionStorage.removeItem('pending_fcm_token');
+            }).catch((e) => {
+                console.error("Failed to save FCM token:", e);
+            });
+        }
         let userProfile = null;
         let guestRedirectTimer = null;
         let guestSessionStarted = false;
@@ -6879,11 +6910,17 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             try {
                 if (!('Notification' in window)) return;
                 const permission = await Notification.requestPermission();
-                try { await setDoc(doc(db, 'users', currentUser.uid), { notifPermission: permission, notifPermissionAt: serverTimestamp(), notifDevice: (navigator.userAgent || '').slice(0, 120) }, { merge: true }); } catch (e) {}
+                // Flutter WebView অ্যাপের ভেতরে নেটিভ টোকেনই সোর্স; ব্রাউজারের notifDevice/fcmToken যেন ওভাররাইট না হয়
+                const isFlutterApp = !!(window.flutterFcmBridgeReady || window.FlutterBridge);
+                if (!isFlutterApp) {
+                    try { await setDoc(doc(db, 'users', currentUser.uid), { notifPermission: permission, notifPermissionAt: serverTimestamp(), notifDevice: (navigator.userAgent || '').slice(0, 120) }, { merge: true }); } catch (e) {}
+                }
                 if (permission === 'granted') {
                     messaging = getMessaging(app);
-                    const token = await getToken(messaging, { vapidKey: VAPID_PUBLIC_KEY });
-                    if (token) await setDoc(doc(db, 'users', currentUser.uid), { fcmToken: token }, { merge: true });
+                    if (!isFlutterApp) {
+                        const token = await getToken(messaging, { vapidKey: VAPID_PUBLIC_KEY });
+                        if (token) await setDoc(doc(db, 'users', currentUser.uid), { fcmToken: token }, { merge: true });
+                    }
                 }
                 onMessage(messaging, (payload) => {
                     const n = payload.notification || {};
@@ -9850,6 +9887,12 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                         startActivityTracking();
                         setupPushNotifications();
 
+                        // ফ্লাটার থেকে আসা pending FCM টোকেন থাকলে লগইনের সাথে সাথে সেভ করুন
+                        try {
+                            const pendingFcm = sessionStorage.getItem('pending_fcm_token');
+                            if (pendingFcm) saveTokenToFirestore(pendingFcm, user.uid);
+                        } catch (e) {}
+
                         let pendingKind = null;
                         try { pendingKind = sessionStorage.getItem('amar-welcome-pending'); if (pendingKind) sessionStorage.removeItem('amar-welcome-pending'); } catch (e) {}
                         if (pendingKind) pushWelcomeNotification(pendingKind);
@@ -9938,6 +9981,17 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
         }
 
         window.addEventListener('load', refreshIcons);
+
+        // পেজ লোডের পর ফ্লাটার অ্যাপের কাছে FCM টোকেন চাওয়া
+        function requestNativeFcmToken() {
+            try {
+                if (window.FlutterBridge) {
+                    window.FlutterBridge.postMessage('request_fcm_token');
+                }
+            } catch (e) { console.warn('FCM token request failed', e); }
+        }
+        if (document.readyState === 'complete') requestNativeFcmToken();
+        else window.addEventListener('load', requestNativeFcmToken);
         setTimeout(refreshIcons, 300);
         setTimeout(refreshIcons, 1200);
     

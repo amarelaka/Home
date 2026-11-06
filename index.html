@@ -2602,6 +2602,30 @@ body.light-mode #serviceDetailModal h3#svcModalTitle {
   font-weight: 800 !important;
   text-shadow: none !important;
 }
+/* Close (X) button: always high-contrast in light mode */
+body.light-mode #serviceDetailModal button[onclick="closeServiceDetailModal()"],
+body.light-mode #serviceDetailModal button[aria-label="বন্ধ"] {
+  background: rgba(15, 23, 42, 0.78) !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+}
+body.light-mode #serviceDetailModal button[onclick="closeServiceDetailModal()"] svg,
+body.light-mode #serviceDetailModal button[aria-label="বন্ধ"] svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+  opacity: 1 !important;
+}
+body.light-mode #promotionDetailModal button[onclick="closePromotionDetailModal()"],
+body.light-mode #promotionDetailModal button[aria-label="বন্ধ"] {
+  background: rgba(15, 23, 42, 0.78) !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+}
+body.light-mode #promotionDetailModal button[aria-label="বন্ধ"] svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
 body.light-mode #serviceDetailModal #svcModalProvider,
 body.light-mode #serviceDetailModal #svcModalLocation,
 body.light-mode #serviceDetailModal #svcModalDescription {
@@ -3031,7 +3055,6 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     <button type="button" onclick="sidebarNav('services')" class="sidebar-item"><i data-lucide="layout-grid"></i><span>সকল সেবা সমূহ</span></button>
                     <button type="button" onclick="sidebarNav('emergency')" class="sidebar-item"><i data-lucide="phone-call"></i><span>জরুরী হেল্পলাইন</span></button>
                     <button type="button" onclick="sidebarNav('blood')" class="sidebar-item"><i data-lucide="droplet"></i><span>রক্ত</span></button>
-                    <button type="button" onclick="sidebarNav('result')" class="sidebar-item"><i data-lucide="graduation-cap"></i><span>রেজাল্ট বের করুন</span></button>
                 </div>
             </div>
 
@@ -3080,9 +3103,6 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                 </div>
                 <button type="button" onclick="closeNotifPanel()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white" aria-label="বন্ধ"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
-            <button type="button" onclick="markAllNotificationsRead()" class="w-full text-[11px] font-bold text-violet-300 bg-violet-950/60 hover:bg-violet-900/70 border border-violet-800/60 rounded-xl py-2 flex items-center justify-center gap-1.5 transition">
-                <i data-lucide="check-check" class="w-3.5 h-3.5"></i> সব পড়া হিসেবে চিহ্নিত করুন
-            </button>
         </div>
         <div id="notifList" class="flex-1 overflow-y-auto p-3 space-y-2 hide-scrollbar"></div>
         <div class="p-3 border-t border-violet-500/15 shrink-0 bg-[#0b0715] text-center">
@@ -5105,8 +5125,10 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
         let notices = [];
         let chatMessages = [];
         let activeCategory = 'all';
+        const MY_UPAZILA_CAT = '__my_upazila__';
         let currentTab = 'services';
         let currentTheme = 'system'; // Default now system
+        let _scrollLockY = 0;
         let unsubscribeChat = null;
         let unsubscribeAdminStatus = null;
         let unsubCategories = null;
@@ -5204,6 +5226,8 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     const d = snap.data() || {};
                     // Missing field = treat as ON (backward compatible)
                     premiumLaunchEnabled = d.premiumEnabled !== false;
+                    window.__aiCfg = { enabled: d.aiEnabled !== false && !!d.aiWorkerUrl, url: d.aiWorkerUrl || '' };
+                    window.dispatchEvent(new Event('ai-config'));
                     if (Array.isArray(d.packages) && d.packages.length) {
                         subscriptionPackages = d.packages.map(p => ({
                             id: p.id || ('pkg_' + Math.random().toString(36).slice(2, 8)),
@@ -5226,6 +5250,8 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     }
                 } else {
                     premiumLaunchEnabled = true;
+                    window.__aiCfg = { enabled: false, url: '' };
+                    window.dispatchEvent(new Event('ai-config'));
                     subscriptionPackages = DEFAULT_PACKAGES.map(p => ({ ...p }));
                     paymentNumbers = { ...DEFAULT_PAYMENT_NUMBERS };
                 }
@@ -6459,6 +6485,27 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             if (e.target.id === 'ratingModal') closeRatingModal();
         });
 
+        // ========== BODY SCROLL LOCK (sidebar / drawers) ==========
+        function lockBodyScroll() {
+            _scrollLockY = window.pageYOffset || document.documentElement.scrollTop || 0;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${_scrollLockY}px`;
+            document.body.style.left = '0';
+            document.body.style.right = '0';
+            document.body.style.width = '100%';
+            document.body.classList.add('overflow-hidden');
+        }
+        function unlockBodyScroll() {
+            document.body.classList.remove('overflow-hidden');
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.style.width = '';
+            window.scrollTo(0, _scrollLockY || 0);
+            _scrollLockY = 0;
+        }
+
         // ========== SIDEBAR ==========
         window.openSidebar = () => {
             if (isForcedProfileMode) return;
@@ -6468,14 +6515,14 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             b.classList.remove('hidden'); void b.offsetWidth;
             b.classList.remove('opacity-0'); b.classList.add('opacity-100');
             d.classList.remove('-translate-x-full'); d.classList.add('translate-x-0');
-            document.body.classList.add('overflow-hidden');
+            lockBodyScroll();
         };
         window.closeSidebar = () => {
             const b = document.getElementById('sidebarBackdrop');
             const d = document.getElementById('sidebarDrawer');
             b.classList.remove('opacity-100'); b.classList.add('opacity-0');
             d.classList.remove('translate-x-0'); d.classList.add('-translate-x-full');
-            document.body.classList.remove('overflow-hidden');
+            unlockBodyScroll();
             setTimeout(() => { if (b.classList.contains('opacity-0')) b.classList.add('hidden'); }, 320);
         };
         window.sidebarNav = (action) => {
@@ -6605,20 +6652,26 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
         window.openNotifPanel = () => {
             if (isForcedProfileMode) return;
             if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
+            // Opening the panel auto-marks every notification as read
+            const store = getNotifStore();
+            let changed = false;
+            store.forEach(n => { if (!n.read) { n.read = true; changed = true; } });
+            if (changed) saveNotifStore(store);
             renderNotifications();
+            updateNotifBadge();
             const b = document.getElementById('notifBackdrop');
             const p = document.getElementById('notifPanel');
             b.classList.remove('hidden'); void b.offsetWidth;
             b.classList.remove('opacity-0'); b.classList.add('opacity-100');
             p.classList.remove('translate-x-full'); p.classList.add('translate-x-0');
-            document.body.classList.add('overflow-hidden');
+            lockBodyScroll();
         };
         window.closeNotifPanel = () => {
             const b = document.getElementById('notifBackdrop');
             const p = document.getElementById('notifPanel');
             b.classList.remove('opacity-100'); b.classList.add('opacity-0');
             p.classList.remove('translate-x-0'); p.classList.add('translate-x-full');
-            document.body.classList.remove('overflow-hidden');
+            unlockBodyScroll();
             setTimeout(() => { if (b.classList.contains('opacity-0')) b.classList.add('hidden'); }, 320);
         };
         document.getElementById('notifBackdrop')?.addEventListener('click', closeNotifPanel);
@@ -6635,8 +6688,12 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
         }
         function addNotification(notif) {
             if (!notif || !notif.id || !currentUser) return;
-            const list = getNotifStore();
+            let list = getNotifStore();
             if (list.find(n => n.id === notif.id)) return;
+            // Chat notifications: keep only the latest one at the top (no spam)
+            if ((notif.type || '') === 'chat' || (notif.clickAction || '') === 'chat') {
+                list = list.filter(n => n.type !== 'chat' && n.clickAction !== 'chat');
+            }
             list.unshift({
                 id: notif.id,
                 type: notif.type || 'info',
@@ -7342,7 +7399,14 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
         function updateProfileUI() {
             const nameEl = document.getElementById('sidebarUserName');
             const emailEl = document.getElementById('sidebarUserEmail');
-            if (!userProfile) { if (nameEl) nameEl.textContent = 'অতিথি'; if (emailEl) emailEl.textContent = 'লগইন করুন'; return; }
+            if (!userProfile) {
+                if (nameEl) nameEl.textContent = 'অতিথি';
+                if (emailEl) emailEl.textContent = 'লগইন করুন';
+                if (activeCategory === MY_UPAZILA_CAT) activeCategory = 'all';
+                try { renderCategoryChips(); } catch (e) {}
+                return;
+            }
+            try { renderCategoryChips(); } catch (e) {}
             const addr = [userProfile.upazila, userProfile.district].filter(Boolean).join(', ') || '—';
             document.getElementById('profileNameText').textContent = userProfile.fullName || 'নাগরিক';
             document.getElementById('profilePhone').textContent = userProfile.phone || '—';
@@ -7560,6 +7624,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
 
             const si = document.getElementById('searchInput'); if (si) si.value = '';
             const sm = document.getElementById('searchInputMobile'); if (sm) sm.value = '';
+            updateSearchPlaceholders(tabName);
             
             renderNotices();
             if (tabName === 'subscription' || tabName === 'payment') updateCurrentPlanDisplay();
@@ -7577,6 +7642,21 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             refreshIcons();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
+
+        // Section-aware search placeholder text
+        function updateSearchPlaceholders(tabName) {
+            const placeholders = {
+                services: 'সেবা, হাসপাতাল বা টেকনিশিয়ান খুঁজুন...',
+                favorites: 'সেবা, হাসপাতাল বা টেকনিশিয়ান খুঁজুন...',
+                emergency: 'জরুরি সেবা খুঁজুন...',
+                blood: 'রক্তদাতা খুঁজুন যেমন রহিম, ও পজেটিভ...'
+            };
+            const ph = placeholders[tabName] || placeholders.services;
+            const si = document.getElementById('searchInput');
+            const sm = document.getElementById('searchInputMobile');
+            if (si) si.placeholder = ph;
+            if (sm) sm.placeholder = ph;
+        }
         function getSearchValue() {
             const si = document.getElementById('searchInput');
             const sm = document.getElementById('searchInputMobile');
@@ -7630,10 +7710,19 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
         function renderCategoryChips() {
             const container = document.getElementById('categoryChips');
             if (!container) return;
-            const visible = categories.slice(0, 8);
-            container.innerHTML = visible.map(cat => {
-                const iconName = faToLucide(cat.icon);
-                return `<button onclick="filterCategory('${esc(cat.id)}')" class="px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border flex items-center gap-1 ${activeCategory === cat.id ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white border-violet-500 shadow-lg shadow-violet-600/40' : 'bg-[#1b1033] text-slate-300 border-violet-900/50 hover:border-violet-600/60'}">
+            const userUpazila = (currentUser && userProfile && userProfile.upazila) ? String(userProfile.upazila).trim() : '';
+            // Build chip list: সকল সেবা → [ব্যক্তিগত উপজেলা] → other categories
+            const chips = [];
+            const allCat = categories.find(c => c.id === 'all') || { id: 'all', name: 'সকল সেবা', icon: 'fa-border-all' };
+            chips.push(allCat);
+            if (userUpazila) {
+                chips.push({ id: MY_UPAZILA_CAT, name: userUpazila, icon: 'fa-map-marker-alt', isUpazila: true });
+            }
+            categories.filter(c => c.id !== 'all').slice(0, 7).forEach(c => chips.push(c));
+            container.innerHTML = chips.map(cat => {
+                const iconName = cat.isUpazila ? 'map-pin' : faToLucide(cat.icon);
+                const isActive = activeCategory === cat.id;
+                return `<button onclick="filterCategory('${esc(cat.id)}')" class="px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border flex items-center gap-1 ${isActive ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white border-violet-500 shadow-lg shadow-violet-600/40' : 'bg-[#1b1033] text-slate-300 border-violet-900/50 hover:border-violet-600/60'}">
                     <i data-lucide="${esc(iconName)}" class="w-3.5 h-3.5"></i><span>${esc(cat.name)}</span>
                 </button>`;
             }).join('');
@@ -7916,6 +8005,29 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             if (!firebaseReady) return [];
             try {
                 const baseCol = collection(db, 'services');
+                // Personal upazila filter: match services in the logged-in user's upazila
+                if (activeCategory === MY_UPAZILA_CAT) {
+                    const upa = (userProfile && userProfile.upazila) ? String(userProfile.upazila).trim() : '';
+                    if (!upa) return [];
+                    try {
+                        const q = query(baseCol, where('upazila', '==', upa));
+                        const snap = await getDocs(q);
+                        if (snap.docs.length) return snap.docs.map(d => d.id);
+                    } catch (e) {
+                        console.warn('upazila query failed, falling back to client filter:', e);
+                    }
+                    // Fallback: load all and filter client-side (handles slight name mismatches)
+                    const snapAll = await getDocs(baseCol);
+                    const upaLower = upa.toLowerCase();
+                    return snapAll.docs
+                        .filter(d => {
+                            const data = d.data();
+                            const u = String(data.upazila || '').trim().toLowerCase();
+                            const loc = String(data.location || '').trim().toLowerCase();
+                            return u === upaLower || u.includes(upaLower) || loc.includes(upaLower);
+                        })
+                        .map(d => d.id);
+                }
                 const q = activeCategory !== 'all'
                     ? query(baseCol, where('category', '==', activeCategory))
                     : baseCol;
@@ -8525,6 +8637,9 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             if (count) {
                 if (search) {
                     count.textContent = `${filtered.length} টি মিলেছে`;
+                } else if (activeCategory === MY_UPAZILA_CAT) {
+                    const upaName = (userProfile && userProfile.upazila) ? String(userProfile.upazila).trim() : 'আপনার এলাকা';
+                    count.innerHTML = `<span class="text-violet-300 font-semibold">${filtered.length} টি সেবা · ${esc(upaName)}</span>`;
                 } else {
                     count.innerHTML = `<span class="inline-flex items-center gap-1.5">
                         <span class="infinity-symbol">∞</span>
@@ -8538,6 +8653,19 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             wasInSearchMode = isSearchMode;
             const currentAdCount = getActivePromotions().length;
             const adCountChanged = currentAdCount !== lastAdCountAtRender;
+
+            // Empty state for personal upazila filter (no services in that area yet)
+            if (!isSearchMode && activeCategory === MY_UPAZILA_CAT && servicesFirstLoadDone && filtered.length === 0) {
+                const upaName = (userProfile && userProfile.upazila) ? String(userProfile.upazila).trim() : 'আপনার উপজেলা';
+                grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#1b1033] rounded-2xl border border-dashed border-violet-900/50 p-6 space-y-2">
+                    <div class="w-16 h-16 bg-violet-950/60 text-violet-400 rounded-full flex items-center justify-center mx-auto border border-violet-800/60"><i data-lucide="map-pin" class="w-7 h-7"></i></div>
+                    <h3 class="text-sm font-bold text-slate-200">${esc(upaName)}-এ এখনো কোনো সেবা নেই</h3>
+                    <p class="text-xs text-slate-400 max-w-sm mx-auto">সকল সেবা দেখতে উপরের “সকল সেবা” চাপুন, অথবা পরে আবার চেক করুন।</p>
+                    <button type="button" onclick="filterCategory('all')" class="mt-2 px-4 py-2 rounded-full text-xs font-bold bg-violet-600 text-white">সকল সেবা দেখুন</button>
+                </div>`;
+                refreshIcons();
+                return;
+            }
 
             if (isSearchMode) {
                 if (filtered.length === 0) {
@@ -10254,5 +10382,158 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             catch (e) { window.scrollTo(0, Math.max(0, y)); }
         }
     </script>
+
+<!-- ===== AI সহকারী (Worker-এর মাধ্যমে; এখানে কোনো API key নেই) ===== -->
+<style>
+#aiFab{position:fixed;right:14px;bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:45;width:52px;height:52px;border-radius:50%;border:1px solid rgba(196,181,253,.45);background:linear-gradient(145deg,#6d28d9,#8b5cf6);color:#fff;display:none;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(109,40,217,.45);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s}
+#aiFab.show{display:flex}
+#aiFab:active{transform:scale(.93)}
+#aiFab svg{width:24px;height:24px}
+#aiPanel{position:fixed;left:0;right:0;bottom:0;z-index:96;height:min(82dvh,640px);display:none;flex-direction:column;background:#1b1033;border:1px solid rgba(124,58,237,.5);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.55);font-family:'Hind Siliguri',sans-serif;color:#ede9fe}
+#aiPanel.open{display:flex;animation:aiUp .22s ease-out}
+@keyframes aiUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@media (min-width:768px){#aiFab{bottom:24px;right:24px}#aiPanel{left:auto;right:24px;bottom:90px;width:380px;height:560px;border-radius:18px;border-bottom:1px solid rgba(124,58,237,.5)}}
+.ai-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(124,58,237,.35);background:linear-gradient(90deg,rgba(124,58,237,.28),transparent)}
+.ai-head .t{font-weight:700;font-size:15px;line-height:1.2}
+.ai-head .s{font-size:11px;color:#c4b5fd;margin-top:2px}
+.ai-x{margin-left:auto;width:32px;height:32px;border-radius:10px;border:0;background:rgba(255,255,255,.06);color:#ddd6fe;font-size:20px;line-height:1;cursor:pointer}
+.ai-body{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.ai-msg{max-width:86%;padding:9px 12px;border-radius:14px;font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.ai-msg.bot{align-self:flex-start;background:#2a1a4d;border:1px solid rgba(124,58,237,.35);border-bottom-left-radius:4px}
+.ai-msg.me{align-self:flex-end;background:linear-gradient(135deg,#7c3aed,#8b5cf6);color:#fff;border-bottom-right-radius:4px}
+.ai-msg.err{align-self:flex-start;background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.4);color:#fecdd3}
+.ai-msg a{color:#ddd6fe;text-decoration:underline;cursor:pointer}
+.ai-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ai-chip{font-size:12.5px;padding:6px 10px;border-radius:999px;border:1px solid rgba(167,139,250,.5);background:transparent;color:#ddd6fe;cursor:pointer;font-family:inherit}
+.ai-dots{display:inline-flex;gap:4px;align-items:center;height:18px}
+.ai-dots i{width:6px;height:6px;border-radius:50%;background:#c4b5fd;animation:aiB 1s infinite ease-in-out}
+.ai-dots i:nth-child(2){animation-delay:.15s}.ai-dots i:nth-child(3){animation-delay:.3s}
+@keyframes aiB{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.ai-foot{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(124,58,237,.35);background:#140b25}
+.ai-foot textarea{flex:1;resize:none;max-height:90px;min-height:42px;padding:10px 12px;border-radius:12px;border:1.5px solid rgba(124,58,237,.4);background:#0b0715;color:#fff;font:inherit;font-size:14px;outline:none}
+.ai-foot textarea:focus{border-color:#a78bfa}
+.ai-send{width:44px;border-radius:12px;border:0;background:linear-gradient(135deg,#7c3aed,#8b5cf6);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ai-send:disabled{opacity:.5}
+.ai-note{font-size:10.5px;color:#a78bfa;text-align:center;padding:0 12px 6px;background:#140b25}
+body.light-mode #aiPanel{background:#fff;color:#0f172a;border-color:#ddd6fe}
+body.light-mode .ai-head .s{color:#6d28d9}
+body.light-mode .ai-x{background:#f1f5f9;color:#334155}
+body.light-mode .ai-msg.bot{background:#f5f3ff;border-color:#ddd6fe;color:#1e1b4b}
+body.light-mode .ai-msg.err{color:#9f1239}
+body.light-mode .ai-chip{color:#5b21b6;border-color:#c4b5fd}
+body.light-mode .ai-foot,body.light-mode .ai-note{background:#f8fafc;border-color:#e2e8f0}
+body.light-mode .ai-foot textarea{background:#fff;color:#0f172a;border-color:#c4b5fd}
+@media (prefers-reduced-motion:reduce){#aiPanel.open{animation:none}.ai-dots i{animation:none;opacity:.7}}
+</style>
+
+<button id="aiFab" type="button" aria-label="এআই সহকারী খুলুন">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M2 14h2M20 14h2M9 13v2M15 13v2"/></svg>
+</button>
+
+<section id="aiPanel" role="dialog" aria-label="এআই সহকারী" aria-modal="false">
+  <div class="ai-head">
+    <div><div class="t">আমার এলাকা সহকারী</div><div class="s">সাইটের ফিচার ও এলাকা নিয়ে প্রশ্ন করুন</div></div>
+    <button class="ai-x" id="aiClose" type="button" aria-label="বন্ধ করুন">&times;</button>
+  </div>
+  <div class="ai-body" id="aiBody" aria-live="polite"></div>
+  <div class="ai-note">এআই ভুল করতে পারে। জরুরি বিষয়ে এডমিন চ্যাটে যোগাযোগ করুন।</div>
+  <form class="ai-foot" id="aiForm" autocomplete="off">
+    <textarea id="aiInput" rows="1" maxlength="500" placeholder="আপনার প্রশ্ন লিখুন..." aria-label="প্রশ্ন"></textarea>
+    <button class="ai-send" id="aiSend" type="submit" aria-label="পাঠান"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+  </form>
+</section>
+
+<script>
+(function () {
+  var fab = document.getElementById('aiFab'), panel = document.getElementById('aiPanel');
+  var body = document.getElementById('aiBody'), form = document.getElementById('aiForm');
+  var input = document.getElementById('aiInput'), sendBtn = document.getElementById('aiSend');
+  var history = [], busy = false, started = false;
+  var CHIPS = ['প্রিমিয়ামে কী কী সুবিধা?', 'সেবাদাতা হিসেবে কীভাবে যোগ দেব?', 'আমার এলাকা সম্পর্কে জানতে চাই'];
+
+  function cfg() { return window.__aiCfg || { enabled: false, url: '' }; }
+  function sync() {
+    var c = cfg();
+    fab.classList.toggle('show', !!(c.enabled && c.url));
+    if (!(c.enabled && c.url)) panel.classList.remove('open');
+  }
+  window.addEventListener('ai-config', sync);
+  sync();
+
+  function add(cls, text) {
+    var d = document.createElement('div');
+    d.className = 'ai-msg ' + cls;
+    d.textContent = text;
+    body.appendChild(d);
+    body.scrollTop = body.scrollHeight;
+    return d;
+  }
+  function start() {
+    if (started) return; started = true;
+    add('bot', 'আসসালামু আলাইকুম! আমি "আমার এলাকা" সহকারী। সাইটের ফিচার বা আপনার এলাকা নিয়ে যা জানতে চান, জিজ্ঞেস করুন।');
+    var wrap = document.createElement('div'); wrap.className = 'ai-chips'; wrap.id = 'aiChips';
+    CHIPS.forEach(function (c) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'ai-chip'; b.textContent = c;
+      b.addEventListener('click', function () { ask(c); });
+      wrap.appendChild(b);
+    });
+    body.appendChild(wrap);
+  }
+  function openPanel() { panel.classList.add('open'); start(); setTimeout(function () { try { input.focus(); } catch (e) {} }, 60); }
+  function closePanel() { panel.classList.remove('open'); }
+  fab.addEventListener('click', function () { panel.classList.contains('open') ? closePanel() : openPanel(); });
+  document.getElementById('aiClose').addEventListener('click', closePanel);
+
+  function errText(code, status) {
+    if (status === 429 || code === 'too_many_requests') return 'অনেক বেশি প্রশ্ন করা হয়েছে। এক মিনিট পরে আবার চেষ্টা করুন।';
+    if (code === 'ai_failed') return 'এখন উত্তর দিতে পারছি না (দৈনিক ফ্রি সীমা শেষ হতে পারে)। একটু পরে চেষ্টা করুন অথবা এডমিন চ্যাটে লিখুন।';
+    if (code === 'disabled' || code === 'not_configured') return 'সহকারী এখন চালু নেই।';
+    return 'সংযোগে সমস্যা হয়েছে। ইন্টারনেট দেখে আবার চেষ্টা করুন।';
+  }
+
+  async function ask(text) {
+    text = (text || '').trim();
+    if (!text || busy) return;
+    var c = cfg(); if (!c.enabled || !c.url) return;
+    var chips = document.getElementById('aiChips'); if (chips) chips.remove();
+    busy = true; sendBtn.disabled = true;
+    add('me', text);
+    history.push({ role: 'user', text: text });
+    var typing = document.createElement('div'); typing.className = 'ai-msg bot';
+    typing.innerHTML = '<span class="ai-dots"><i></i><i></i><i></i></span>';
+    body.appendChild(typing); body.scrollTop = body.scrollHeight;
+    try {
+      var res = await fetch(c.url.replace(/\/+$/, '') + '/chat', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history.slice(-16) })
+      });
+      var data = {}; try { data = await res.json(); } catch (e) {}
+      typing.remove();
+      if (!res.ok || !data.reply) {
+        history.pop();
+        add('err', errText(data.error, res.status));
+      } else {
+        history.push({ role: 'assistant', text: data.reply });
+        add('bot', data.reply);
+      }
+    } catch (e) {
+      typing.remove(); history.pop();
+      add('err', errText('network', 0));
+    } finally { busy = false; sendBtn.disabled = false; }
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = input.value; input.value = ''; input.style.height = 'auto';
+    ask(v);
+  });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+  });
+  input.addEventListener('input', function () {
+    input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 90) + 'px';
+  });
+})();
+</script>
 </body>
 </html>

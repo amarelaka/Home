@@ -26,7 +26,7 @@
     <link rel="manifest" href="manifest.json">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/lucide@0.525.0/dist/umd/lucide.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -7737,9 +7737,9 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                                 try { await searchFetchInFlight; } catch (e) {}
                             } else {
                                 searchFetchInFlight = (async () => {
-                                    const allIds = allServiceIds.length ? allServiceIds : await fetchServiceIds();
+                                    const allIds = allServiceIds.length ? allServiceIds : await fetchAllServicesData();
                                     if (!allServiceIds.length) allServiceIds = allIds;
-                                    allServicesFullCache = await fetchServicesByIds(allIds);
+                                    allServicesFullCache = allIds.map(id => serviceDataCache.get(id)).filter(Boolean);
                                 })();
                                 try { await searchFetchInFlight; } finally { searchFetchInFlight = null; }
                             }
@@ -8057,8 +8057,21 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
             return a;
         }
 
-        async function fetchServiceIds() {
+        // ফায়ারস্টোর থেকে একবার আনা সার্ভিস ডেটা এখানে ক্যাশ হয়ে থাকে, যাতে
+        // পরবর্তী ব্যাচ/সার্চের সময় একই ডকুমেন্ট আবার ডাউনলোড করতে না হয়।
+        let serviceDataCache = new Map(); // id -> { id, ...data }
+
+        // আগে fetchServiceIds() পুরো কালেকশন ডাউনলোড করে শুধু ID রাখত, ডেটা ফেলে দিত —
+        // তারপর fetchServicesByIds() সেই একই ডকুমেন্ট আবার ডাউনলোড করত। এই ফাংশনটি
+        // একটাই Firestore রিড-এ ID এবং পুরো ডেটা দুটোই একসাথে এনে ক্যাশ করে রাখে, ফলে
+        // দ্বিতীয়বার একই ডেটা আনার দরকার পড়ে না।
+        async function fetchAllServicesData() {
             if (!firebaseReady) return [];
+            const cacheDocs = (docs) => docs.map(d => {
+                const data = { id: d.id, ...d.data() };
+                serviceDataCache.set(d.id, data);
+                return d.id;
+            });
             try {
                 const baseCol = collection(db, 'services');
                 // Personal upazila filter: match services in the logged-in user's upazila
@@ -8068,48 +8081,51 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     try {
                         const q = query(baseCol, where('upazila', '==', upa));
                         const snap = await getDocs(q);
-                        if (snap.docs.length) return snap.docs.map(d => d.id);
+                        if (snap.docs.length) return cacheDocs(snap.docs);
                     } catch (e) {
                         console.warn('upazila query failed, falling back to client filter:', e);
                     }
                     // Fallback: load all and filter client-side (handles slight name mismatches)
                     const snapAll = await getDocs(baseCol);
                     const upaLower = upa.toLowerCase();
-                    return snapAll.docs
-                        .filter(d => {
-                            const data = d.data();
-                            const u = String(data.upazila || '').trim().toLowerCase();
-                            const loc = String(data.location || '').trim().toLowerCase();
-                            return u === upaLower || u.includes(upaLower) || loc.includes(upaLower);
-                        })
-                        .map(d => d.id);
+                    const matched = snapAll.docs.filter(d => {
+                        const data = d.data();
+                        const u = String(data.upazila || '').trim().toLowerCase();
+                        const loc = String(data.location || '').trim().toLowerCase();
+                        return u === upaLower || u.includes(upaLower) || loc.includes(upaLower);
+                    });
+                    return cacheDocs(matched);
                 }
                 const q = activeCategory !== 'all'
                     ? query(baseCol, where('category', '==', activeCategory))
                     : baseCol;
                 const snap = await getDocs(q);
-                return snap.docs.map(d => d.id);
+                return cacheDocs(snap.docs);
             } catch (e) {
-                console.warn('fetchServiceIds failed:', e);
+                console.warn('fetchAllServicesData failed:', e);
                 return [];
             }
         }
 
+        // ক্যাশে থাকা ডেটা থেকে সরাসরি রিটার্ন করে — Firestore-এ নতুন করে কল যায় শুধু
+        // তখনই, যখন কোনো id ক্যাশে নেই (সাধারণত এটা হবে না, কারণ fetchAllServicesData
+        // আগেই সবকিছু ক্যাশ করে রাখে)।
         async function fetchServicesByIds(ids) {
             if (!ids.length || !firebaseReady) return [];
-            const groups = [];
-            for (let i = 0; i < ids.length; i += 10) groups.push(ids.slice(i, i + 10));
-            try {
-                const results = await Promise.all(groups.map(g =>
-                    getDocs(query(collection(db, 'services'), where('__name__', 'in', g)))
-                ));
-                const map = new Map();
-                results.forEach(snap => snap.docs.forEach(d => map.set(d.id, { id: d.id, ...d.data() })));
-                return ids.map(id => map.get(id)).filter(Boolean);
-            } catch (e) {
-                console.warn('fetchServicesByIds failed:', e);
-                return [];
+            const missing = ids.filter(id => !serviceDataCache.has(id));
+            if (missing.length) {
+                const groups = [];
+                for (let i = 0; i < missing.length; i += 10) groups.push(missing.slice(i, i + 10));
+                try {
+                    const results = await Promise.all(groups.map(g =>
+                        getDocs(query(collection(db, 'services'), where('__name__', 'in', g)))
+                    ));
+                    results.forEach(snap => snap.docs.forEach(d => serviceDataCache.set(d.id, { id: d.id, ...d.data() })));
+                } catch (e) {
+                    console.warn('fetchServicesByIds failed:', e);
+                }
             }
+            return ids.map(id => serviceDataCache.get(id)).filter(Boolean);
         }
 
         function matchesServiceSearch(s, search) {
@@ -8168,8 +8184,11 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     wasInSearchMode = false;
                     showServicesLoading(true);
 
-                    allServiceIds = await fetchServiceIds();
-                    allServicesFullCache = await fetchServicesByIds(allServiceIds);
+                    serviceDataCache = new Map();
+                    allServiceIds = await fetchAllServicesData();
+                    // fetchAllServicesData ইতিমধ্যে পুরো ডেটা ক্যাশ করে ফেলেছে, তাই এখানে
+                    // আলাদা করে আবার Firestore থেকে আনার দরকার নেই — ক্যাশ থেকেই সরাসরি।
+                    allServicesFullCache = allServiceIds.map(id => serviceDataCache.get(id)).filter(Boolean);
 
                     // Every service participates in a fully random first cycle.
                     // The next cycle is shuffled again after the current cycle ends.
@@ -10030,6 +10049,7 @@ body.light-mode #promotionDetailModal .text-white:not(button) {
                     userFavorites = new Set(); favoritesLoaded = false;
                     favoritesCache = [];
                     servicesCache = []; servicesSeenIds = new Set();
+                    serviceDataCache = new Map();
                     resetAdFeedState();
                     allServiceIds = []; shuffledIds = []; currentBatchIndex = 0;
                     servicesFirstLoadDone = false; servicesLoopCount = 0;

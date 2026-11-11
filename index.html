@@ -670,6 +670,12 @@
         }
         .top-app-icon-btn:hover { background: rgba(16, 185, 129, 0.15); }
         .top-app-icon-btn:active { transform: scale(0.94); }
+        /* Header Admin Support — Messenger-style icon */
+        #headerChatBtn .messenger-header-icon { color: #0084FF; width: 22px; height: 22px; }
+        #headerChatBtn.header-chat-active { background: rgba(0, 132, 255, 0.15) !important; }
+        body.light-mode #headerChatBtn .messenger-header-icon { color: #0084FF; }
+        body.light-mode #headerChatBtn.header-chat-active { background: rgba(0, 132, 255, 0.12) !important; }
+        #bnav-notif { position: relative; }
 
         .brand-text-1 {
             background: linear-gradient(135deg, #6ee7b7 0%, #10b981 50%, #059669 100%);
@@ -700,12 +706,95 @@
         .sidebar-item-danger svg { color: #f87171; }
 
         #notifBackdrop { background: rgba(0,0,0,0.55); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); transition: opacity 0.3s ease; }
+        /* নোটিফিকেশন = পূর্ণ পেজ (পপআপ/মোডাল নয়) */
         #notifPanel {
-            background: #0d1f17; border-left: 1px solid rgba(16, 185, 129, 0.22);
-            box-shadow: -8px 0 40px rgba(0,0,0,0.6);
-            transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #0d1f17;
+            border: none;
+            left: 0 !important; right: 0 !important;
+            width: 100% !important; max-width: 100% !important;
+            top: 0 !important;
+            bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+            height: auto !important;
+            padding-top: env(safe-area-inset-top, 0px);
+            box-shadow: none;
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
+            z-index: 48 !important;
         }
+        #notifPanel.translate-x-full { transform: translateY(110%) !important; pointer-events: none !important; }
+        #notifPanel.translate-x-0 { transform: translateY(0) !important; pointer-events: auto !important; }
+        body.notif-page-open #bottomNav.nav-hidden ~ #notifPanel,
+        body.notif-page-open.nav-is-hidden #notifPanel {
+            bottom: 0 !important;
+        }
+        /* ব্যাকড্রপ লুকানো — পূর্ণ পেজ, অন্য পেজের উপর মোডাল নয় */
+        #notifBackdrop {
+            display: none !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+        }
+        body.notif-page-open #bottomNav { z-index: 50 !important; }
+        body.notif-page-open .top-app-bar { display: none !important; }
+        body.notif-page-open #appContent main { visibility: hidden !important; pointer-events: none !important; }
+        body.notif-page-open #bnav-notif { color: #047857 !important; }
+        body.notif-page-open #bnav-notif svg { color: #10b981 !important; stroke: #10b981 !important; }
+        body.light-mode #bnav-notif { color: #64748b !important; }
+        body.light-mode #bnav-notif svg { color: #64748b !important; stroke: #64748b !important; stroke-width: 2 !important; opacity: 1 !important; }
+        body.light-mode.notif-page-open #bnav-notif,
+        body.light-mode.notif-page-open #bnav-notif svg { color: #047857 !important; stroke: #047857 !important; }
+        /* সব বটম-নেভ আইকন একই ওজন/স্টাইল */
+        #bottomNav .bottom-nav-btn svg {
+            width: 22px !important; height: 22px !important;
+            stroke-width: 2 !important;
+            opacity: 1 !important;
+        }
+        #bottomNav .bottom-nav-btn { color: #64748b; }
+        body:not(.light-mode) #bottomNav .bottom-nav-btn { color: #94a3b8; }
+        body:not(.light-mode) #bottomNav .bottom-nav-btn svg { stroke: currentColor; color: inherit; }
+        body.light-mode #bottomNav .bottom-nav-btn { color: #64748b !important; }
+        body.light-mode #bottomNav .bottom-nav-btn svg { color: #64748b !important; stroke: #64748b !important; }
+        #bottomNav .bottom-nav-btn.active { color: #10b981 !important; }
+        #bottomNav .bottom-nav-btn.active svg { color: #10b981 !important; stroke: #10b981 !important; }
+        body.light-mode #bottomNav .bottom-nav-btn.active { color: #047857 !important; }
+        body.light-mode #bottomNav .bottom-nav-btn.active svg { color: #047857 !important; stroke: #047857 !important; }
+        /* চ্যাট থ্রেডে নোটিফ পেজ কখনো দেখাবে না */
+        body.chat-thread #notifPanel,
+        body.chat-kb-open #notifPanel,
+        body.chat-active.chat-thread #notifPanel {
+            display: none !important;
+            transform: translateY(110%) !important;
+            pointer-events: none !important;
+        }
+        /* Header bell in notif page */
+        body.light-mode #notifPanel .w-10.h-10.rounded-xl {
+            background: #d1fae5 !important;
+            color: #047857 !important;
+            box-shadow: none !important;
+        }
+        body.light-mode #notifPanel .w-10.h-10.rounded-xl svg {
+            color: #047857 !important; stroke: #047857 !important; opacity: 1 !important;
+        }
+        .notif-menu-btn {
+            width: 32px; height: 32px; border-radius: 999px;
+            display: flex; align-items: center; justify-content: center;
+            color: #94a3b8; background: transparent; border: none; flex-shrink: 0;
+        }
+        .notif-menu-btn:hover { background: rgba(16,185,129,0.12); color: #e2e8f0; }
+        .notif-menu-pop {
+            position: absolute; right: 8px; top: 36px; z-index: 20;
+            min-width: 140px; padding: 6px;
+            background: #10281c; border: 1px solid rgba(16,185,129,0.35);
+            border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        }
+        body.light-mode .notif-menu-pop {
+            background: #ffffff; border-color: #e2e8f0; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .notif-menu-pop button {
+            width: 100%; text-align: left; padding: 10px 12px; border-radius: 8px;
+            font-size: 12px; font-weight: 600; color: #fca5a5; background: transparent; border: none;
+        }
+        .notif-menu-pop button:hover { background: rgba(239,68,68,0.12); }
+        body.light-mode .notif-menu-pop button { color: #dc2626; }
         .notif-item {
             display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px;
             background: rgba(8, 30, 18, 0.6); border: 1px solid rgba(16, 185, 129, 0.16);
@@ -992,11 +1081,23 @@
         #searchContainerDesktop { display: none; }
         @media (min-width: 768px) { #searchContainerDesktop.show { display: flex; } }
 
-        /* ========== CHAT FULL-SCREEN MODE FIX ========== */
+        /* ========== CHAT MODE ========== */
+        /* chat-active = চ্যাট ট্যাব খোলা (ইনবক্স বা থ্রেড)
+           chat-thread = কথোপকথন খোলা — তখন দুই নেভ লুকানো
+           ইনবক্সে শুধু নিচের নেভ থাকবে (স্ক্রল হাইড/শো সহ) */
         body.chat-active .top-app-bar,
         body.chat-active nav.hidden.md\:block,
         body.chat-active #searchContainerMobile {
             display: none !important;
+        }
+        /* থ্রেড ভিউতে নিচের নেভও সম্পূর্ণ অদৃশ্য */
+        body.chat-active.chat-thread #bottomNav,
+        body.chat-active.chat-thread .bottom-nav {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+            transform: translateY(120%) !important;
         }
         body.chat-active #appContent {
             height: 100dvh !important;
@@ -1004,13 +1105,27 @@
             display: flex !important;
             flex-direction: column !important;
         }
-        body.chat-active main {
+        /* ইনবক্স: নিচের নেভের জন্য জায়গা রাখা */
+        body.chat-active:not(.chat-thread) main {
             flex: 1 !important;
             height: 100dvh !important;
             max-width: 100vw !important;
             width: 100vw !important;
             padding: 0 !important;
-            padding-bottom: 80px !important;
+            padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        /* থ্রেড: ফুল স্ক্রিন, নেভ নেই */
+        body.chat-active.chat-thread main {
+            flex: 1 !important;
+            height: 100dvh !important;
+            max-width: 100vw !important;
+            width: 100vw !important;
+            padding: 0 !important;
+            padding-bottom: 0 !important;
             margin: 0 !important;
             overflow: hidden !important;
             display: flex !important;
@@ -1028,7 +1143,7 @@
             flex-direction: column !important;
             overflow: hidden !important;
         }
-        body.chat-active #view-chat > .info-card {
+        body.chat-active #view-chat > .info-card:not(.hidden) {
             flex: 1 !important;
             display: flex !important;
             flex-direction: column !important;
@@ -1042,13 +1157,133 @@
             box-shadow: none !important;
             overflow: hidden !important;
         }
+        body.chat-active #view-chat > .info-card.hidden {
+            display: none !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            pointer-events: none !important;
+        }
         body.chat-active #view-chat > .info-card > div:first-child {
             border-radius: 0 !important;
             border-top: none !important;
             flex-shrink: 0 !important;
         }
-        body.chat-active #chatMessages { flex: 1 !important; overflow-y: auto !important; }
-        body.chat-active #chatForm { flex-shrink: 0 !important; margin-bottom: 0 !important; }
+        body.chat-active #chatMessages { flex: 1 !important; overflow-y: auto !important; min-height: 0 !important; }
+        /* ইনপুট: নিচে + কীবোর্ড ওপেন হলে visualViewport দিয়ে উপরে উঠবে */
+        body.chat-active #chatForm {
+            flex-shrink: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 10px !important;
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+            padding-bottom: max(env(safe-area-inset-bottom), 10px) !important;
+            position: relative;
+            z-index: 60 !important;
+            background: #10281c;
+            transition: transform 0.18s ease-out, padding-bottom 0.18s ease-out;
+            /* --kb-offset JS থেকে সেট হয় (কীবোর্ড উচ্চতা) */
+            transform: translateY(calc(-1 * var(--kb-offset, 0px)));
+            pointer-events: auto !important;
+        }
+        body.chat-active #chatInput {
+            pointer-events: auto !important;
+            -webkit-user-select: text !important;
+            user-select: text !important;
+            touch-action: manipulation;
+        }
+        body.light-mode.chat-active #chatForm {
+            background: #ffffff !important;
+        }
+        body.chat-active.chat-thread #chatForm {
+            padding-bottom: max(env(safe-area-inset-bottom), 10px) !important;
+        }
+        body.chat-active #mesesuInbox:not(.hidden),
+        body.chat-active #mesesuThreadView:not(.hidden) {
+            height: 100% !important; max-height: none !important; min-height: 0 !important;
+            border-radius: 0 !important; border: none !important;
+        }
+        /* কীবোর্ড ওপেন থাকলে বডি স্ক্রল লক — নোটিফ/নেভ ফ্ল্যাশ আটকায় */
+        body.chat-kb-open {
+            overflow: hidden !important;
+        }
+        body.chat-kb-open #bottomNav,
+        body.chat-kb-open .bottom-nav {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        /* People row — online/offline dot must not be clipped */
+        #mesesuPeopleRow { overflow-x: auto; overflow-y: visible; padding-top: 6px; padding-bottom: 10px; }
+        .mesesu-person { flex-shrink: 0; width: 74px; text-align: center; cursor: pointer; padding-top: 2px; }
+        .mesesu-person-avatar {
+            width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 6px;
+            background: linear-gradient(135deg,#059669,#047857);
+            display: flex; align-items: center; justify-content: center;
+            border: 2.5px solid transparent; position: relative;
+            overflow: visible;
+            box-sizing: border-box;
+        }
+        .mesesu-person-avatar-inner {
+            width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .mesesu-person-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* Online ring = blue (not green) */
+        .mesesu-person.online .mesesu-person-avatar {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 1px rgba(59,130,246,0.35);
+        }
+        .mesesu-online-dot {
+            position: absolute; bottom: 1px; right: 1px;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: #22c55e;
+            border: 2.5px solid #10281c;
+            box-sizing: border-box;
+            z-index: 2;
+            pointer-events: none;
+        }
+        body.light-mode .mesesu-online-dot { border-color: #ffffff; }
+        .mesesu-person-name { font-size: 10px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 72px; margin: 0 auto; }
+        /* Search icon contrast light/dark */
+        #mesesuSearchInput { padding-left: 2.75rem !important; }
+        #mesesuSearchWrap .mesesu-search-icon { color: #94a3b8; }
+        body.light-mode #mesesuSearchWrap .mesesu-search-icon { color: #64748b !important; }
+        body:not(.light-mode) #mesesuSearchWrap .mesesu-search-icon { color: #94a3b8 !important; }
+        .mesesu-thread-row {
+            display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+            border-radius: 16px; cursor: pointer; transition: background .15s, box-shadow .15s, transform .12s;
+            margin: 6px 8px;
+            /* glass + soft shadow so list items separate when many chats */
+            background: rgba(16, 40, 28, 0.55);
+            border: 1px solid rgba(16, 185, 129, 0.18);
+            -webkit-backdrop-filter: blur(12px) saturate(140%);
+            backdrop-filter: blur(12px) saturate(140%);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.04) inset;
+        }
+        .mesesu-thread-row:hover, .mesesu-thread-row:active {
+            background: rgba(16,185,129,.14);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.28), 0 0 0 1px rgba(16,185,129,0.2);
+        }
+        body.light-mode .mesesu-person-name { color: #334155; }
+        body.light-mode #mesesuInbox, body.light-mode #mesesuThreadView { background: #fff !important; }
+        body.light-mode #mesesuSearchInput { background: #f1f5f9 !important; color: #0f172a !important; border-color: #e2e8f0 !important; }
+        body.light-mode .mesesu-thread-row {
+            background: rgba(255,255,255,0.85);
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 14px rgba(15,23,42,0.08), 0 1px 0 rgba(255,255,255,0.9) inset;
+        }
+        body.light-mode .mesesu-thread-row:hover { background: #f8fafc; }
+        .mesesu-admin-online-dot {
+            position: absolute; bottom: 0; right: 0;
+            width: 12px; height: 12px; border-radius: 50%;
+            border: 2px solid #10281c; box-sizing: border-box; z-index: 2;
+        }
+        .mesesu-admin-online-dot.on { background: #22c55e; }
+        .mesesu-admin-online-dot.off { background: #94a3b8; }
+        body.light-mode .mesesu-admin-online-dot { border-color: #ffffff; }
+        /* থ্রেড হেডারের অনলাইন/অফলাইন ডট — লাইট মোডে সাদা বর্ডার */
+        body.light-mode #adminStatusDot { border-color: #ffffff !important; }
+        body.light-mode #threadAvatarWrap { box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2); }
 
         /* ===== PROMOTION / AD CARD ===== */
         .promotion-card { position: relative; display: flex; flex-direction: column; justify-content: space-between; border-radius: 1rem; overflow: hidden; border: 1.5px solid rgba(251,191,36,0.45); background: linear-gradient(145deg, rgba(50,35,10,0.94), rgba(15,10,5,0.96)); transition: border-color .2s, box-shadow .2s, transform .2s; height: 100%; }
@@ -2412,11 +2647,52 @@ body .service-card .action-btn[title="Facebook"] {
   color:#1877f2 !important;
 }
 /* Official-looking Lucide phone icon and accessible call control */
-/* Green chat send button and user outgoing bubbles */
-#chatSendBtn, #sendMessageBtn,
-.chat-send-btn {
-  background:linear-gradient(135deg,#059669,#065f46) !important;
-  color:#fff !important;
+/* Chat action button: Gemini (empty) ↔ Messenger-style Send (has text) — সবুজ গোলাকার */
+#chatSendBtn, #sendMessageBtn, .chat-send-btn, .chat-action-btn {
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px;
+  border-radius: 50%; border: none; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .18s ease, box-shadow .18s ease, transform .12s ease;
+}
+#chatSendBtn.chat-gemini-mode {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(226, 232, 240, 0.9) !important;
+  border-radius: 50%;
+}
+#chatSendBtn.chat-send-mode {
+  /* Messenger-style: solid green circular send button */
+  background: #059669 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.45) !important;
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px;
+  padding: 0;
+  border-radius: 50%;
+}
+#chatSendBtn.chat-send-mode:active {
+  transform: scale(0.92);
+  background: #047857 !important;
+}
+#chatSendBtn .chat-btn-gemini { display: flex; align-items: center; justify-content: center; }
+#chatSendBtn .chat-btn-send.hidden { display: none !important; }
+#chatSendBtn .chat-btn-gemini.hidden { display: none !important; }
+#chatSendBtn .chat-btn-send {
+  display: flex; align-items: center; justify-content: center;
+}
+#chatSendBtn .chat-btn-send .send-label { display: none !important; } /* টেক্সট লুকানো — শুধু আইকন */
+#chatSendBtn .gemini-logo { display: block; }
+body.light-mode #chatSendBtn.chat-gemini-mode {
+  background: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.1), 0 0 0 1px #e2e8f0 !important;
+}
+body.chat-active #chatSendBtn.chat-gemini-mode {
+  background: #ffffff !important;
+}
+/* Messenger-like paper plane icon size */
+#chatSendBtn.chat-send-mode i[data-lucide="send"],
+#chatSendBtn.chat-send-mode svg.lucide-send {
+  width: 20px !important; height: 20px !important;
+  stroke-width: 2.25;
 }
 .chat-message.outgoing, .message-bubble.outgoing,
 body .chat-bubble-user {
@@ -3205,15 +3481,15 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
     <!-- NOTIFICATION PANEL -->
     <div id="notifBackdrop" class="fixed inset-0 z-[92] hidden opacity-0"></div>
-    <aside id="notifPanel" class="fixed top-0 right-0 h-full w-[85%] max-w-[380px] z-[96] translate-x-full flex flex-col overflow-hidden">
-        <div class="p-4 border-b border-emerald-500/20 bg-gradient-to-br from-emerald-900/50 to-transparent shrink-0">
-            <div class="flex items-center justify-between gap-2 mb-2">
+    <aside id="notifPanel" class="fixed z-[45] translate-x-full flex flex-col overflow-hidden">
+        <div class="p-4 border-b border-emerald-500/20 bg-gradient-to-br from-emerald-900/50 to-transparent shrink-0 safe-top">
+            <div class="flex items-center justify-between gap-2 mb-1">
                 <div class="flex items-center gap-2.5">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-600/40 shrink-0">
                         <i data-lucide="bell" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-white text-sm leading-tight">নোটিফিকেশন</h3>
+                        <h3 class="font-bold text-white text-base leading-tight">নোটিফিকেশন</h3>
                         <p class="text-[10px] text-emerald-300" id="notifSummary">সব পড়া হয়েছে</p>
                     </div>
                 </div>
@@ -3221,11 +3497,6 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             </div>
         </div>
         <div id="notifList" class="flex-1 overflow-y-auto p-3 space-y-2 hide-scrollbar"></div>
-        <div class="p-3 border-t border-emerald-500/15 shrink-0 bg-[#07140e] text-center">
-            <p class="text-[10px] text-slate-500 flex items-center justify-center gap-1.5">
-                <i data-lucide="sparkles" class="w-3 h-3 text-emerald-400"></i> নতুন আপডেট স্বয়ংক্রিয়ভাবে এখানে দেখানো হবে
-            </p>
-        </div>
     </aside>
 
     <!-- MAIN APP -->
@@ -3259,9 +3530,12 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         <button type="button" id="headerPlusBtn" onclick="openPremiumActionModal()" class="top-app-icon-btn text-emerald-400 hover:bg-emerald-500/15 premium-feature" title="প্রিমিয়াম অ্যাকশন" aria-label="প্রিমিয়াম অ্যাকশন">
                             <i data-lucide="plus-circle" class="w-5 h-5"></i>
                         </button>
-                        <button type="button" onclick="openNotifPanel()" class="top-app-icon-btn" title="নোটিফিকেশন" aria-label="নোটিফিকেশন">
-                            <i data-lucide="bell" class="w-5 h-5"></i>
-                            <span id="notifBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 ring-2 ring-[#0d1f17]">0</span>
+                        <button type="button" id="headerChatBtn" onclick="switchTab('chat')" class="top-app-icon-btn relative" title="অ্যাডমিন সাপোর্ট" aria-label="অ্যাডমিন সাপোর্ট">
+                            <!-- Facebook Messenger-style vector logo -->
+                            <svg class="w-5 h-5 messenger-header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path fill="currentColor" d="M12 2C6.48 2 2 6.16 2 11.28c0 2.9 1.43 5.49 3.67 7.2V22l3.36-1.85c.94.26 1.94.4 2.97.4 5.52 0 10-4.16 10-9.28S17.52 2 12 2zm1.06 12.47l-2.55-2.72-4.98 2.72 5.48-5.82 2.61 2.72 4.92-2.72-5.48 5.82z"/>
+                            </svg>
+                            <span id="adminUnreadBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 ring-2 ring-[#0d1f17]">0</span>
                         </button>
                         <button type="button" id="hamburgerBtn" onclick="openSidebar()" class="top-app-icon-btn" title="মেনু" aria-label="মেনু">
                             <i data-lucide="menu" class="w-5 h-5"></i>
@@ -3426,11 +3700,13 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center justify-between gap-2">
                                     <h3 class="text-sm sm:text-base font-bold text-slate-100">রক্তদাতা খুঁজুন</h3>
-                                    <div id="bloodDistrictFilterWrap" class="flex flex-col items-end gap-0.5 shrink-0">
-                                        <button type="button" id="bloodDistrictToggleBtn" onclick="toggleBloodDistrictFilter()" class="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-600/80 border border-slate-500/40 transition-colors touch-target" aria-pressed="false" title="নিজ জেলার রক্তদাতা">
-                                            <span id="bloodDistrictToggleKnob" class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition translate-x-1"></span>
+                                    <div id="bloodDistrictFilterWrap" class="flex flex-col items-end gap-1 shrink-0">
+                                        <button type="button" id="bloodDistrictToggleBtn" onclick="toggleBloodDistrictFilter()" class="group relative inline-flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-full bg-slate-700/70 border border-slate-500/50 shadow-inner transition-all duration-300 touch-target active:scale-95" aria-pressed="false" title="নিজ জেলার রক্তদাতা">
+                                            <span id="bloodDistrictToggleKnob" class="relative flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-slate-400 to-slate-600 text-white shadow-md transition-all duration-300">
+                                                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                                            </span>
+                                            <span id="bloodDistrictToggleLabel" class="text-[10px] font-semibold text-slate-300 max-w-[5.5rem] truncate leading-tight">নিজ জেলা</span>
                                         </button>
-                                        <span id="bloodDistrictToggleLabel" class="text-[9px] text-slate-500 max-w-[7.5rem] truncate text-right leading-tight">নিজ জেলা</span>
                                     </div>
                                 </div>
                                 <p class="text-[11px] text-slate-400">আপনার এলাকায় রক্তদাতাদের তালিকা</p>
@@ -3450,32 +3726,64 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
             <!-- CHAT VIEW -->
             <div id="view-chat" class="tab-view hidden space-y-4">
-                <div class="info-card overflow-hidden max-w-3xl mx-auto flex flex-col h-[calc(100dvh-11rem)] min-h-[420px] max-h-[640px]">
+                <!-- ===== MESESU INBOX (Messenger-style list) ===== -->
+                <div id="mesesuInbox" class="info-card overflow-hidden max-w-3xl mx-auto flex flex-col h-[calc(100dvh-11rem)] min-h-[420px] max-h-[640px]">
+                    <div class="px-4 pt-4 pb-2 shrink-0 border-b border-emerald-900/30">
+                        <h2 class="text-2xl font-extrabold tracking-tight text-white leading-none">Mesesu</h2>
+                        <div class="mt-3 relative" id="mesesuSearchWrap">
+                            <i data-lucide="search" class="mesesu-search-icon w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none z-10"></i>
+                            <input type="search" id="mesesuSearchInput" placeholder="ব্যবহারকারী খুঁজুন" autocomplete="off" class="w-full bg-[#07140e] border border-emerald-900/50 text-white rounded-full pl-11 pr-4 py-2.5 text-sm outline-none focus:border-emerald-500 placeholder:text-slate-500">
+                        </div>
+                    </div>
+                    <!-- Story-style people row -->
+                    <div id="mesesuPeopleRow" class="flex gap-3 overflow-x-auto hide-scrollbar px-3 py-3 shrink-0 border-b border-emerald-900/20"></div>
+                    <!-- Search results overlay list -->
+                    <div id="mesesuSearchResults" class="hidden flex-1 overflow-y-auto px-2 pb-2"></div>
+                    <!-- Chat threads list -->
+                    <div id="mesesuThreadList" class="flex-1 overflow-y-auto px-1 pb-2">
+                        <div id="mesesuEmptyState" class="hidden"></div>
+                        <div id="mesesuThreads" class="space-y-0.5"></div>
+                    </div>
+                </div>
+
+                <!-- ===== CONVERSATION THREAD (Admin or DM) ===== -->
+                <div id="mesesuThreadView" class="hidden info-card overflow-hidden max-w-3xl mx-auto flex flex-col h-[calc(100dvh-11rem)] min-h-[420px] max-h-[640px]">
                     <div class="bg-[#10281c] p-3 sm:p-4 text-white flex items-center justify-between shrink-0 border-b border-emerald-900/50">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-600 flex items-center justify-center relative shrink-0 shadow-lg shadow-emerald-600/30">
-                                <i data-lucide="headset" class="w-5 h-5 text-white"></i>
-                                <span id="adminStatusDot" class="w-2.5 h-2.5 bg-slate-500 border-2 border-white rounded-full absolute bottom-0 right-0"></span>
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <button type="button" onclick="mesesuBackToInbox()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0" aria-label="পিছনে">
+                                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                            </button>
+                            <div id="threadAvatarWrap" class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-600 flex items-center justify-center relative shrink-0 shadow-lg shadow-emerald-600/30" style="overflow: visible;">
+                                <div class="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+                                    <img id="threadAvatarImg" src="" alt="" class="w-full h-full object-cover hidden">
+                                    <i data-lucide="headset" id="threadAvatarIcon" class="w-5 h-5 text-white"></i>
+                                </div>
+                                <!-- অনলাইন/অফলাইন ব্যাজ — প্রোফাইল পিকচারের নিচের ডান কোনায় (ক্লিপ হবে না) -->
+                                <span id="adminStatusDot" class="w-3 h-3 bg-slate-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10 hidden" style="box-sizing: border-box;"></span>
                             </div>
-                            <div>
-                                <div class="flex items-center gap-1.5">
-                                    <h3 class="font-bold text-sm leading-tight text-white">অ্যাডমিন সাপোর্ট</h3>
-                                    <i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-white" title="Verified"></i>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <h3 id="threadTitle" class="font-bold text-sm leading-tight text-white truncate">অ্যাডমিন সাপোর্ট</h3>
+                                    <i data-lucide="badge-check" id="threadBlueTick" class="w-3.5 h-3.5 fill-blue-500 text-white shrink-0" title="Verified"></i>
                                 </div>
                                 <p id="adminStatusLabel" class="text-[10px] text-slate-400">অফলাইন</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-1.5"><button type="button" id="chatInfoBtn" onclick="openChatInfoModal()" class="w-10 h-10 rounded-full bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-400/30 flex items-center justify-center text-white transition active:scale-95 touch-target" title="তথ্য">
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" id="chatInfoBtn" onclick="openChatInfoModal()" class="w-10 h-10 rounded-full bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-400/30 flex items-center justify-center text-white transition active:scale-95 touch-target" title="তথ্য">
                                 <i data-lucide="info" class="w-5 h-5"></i>
                             </button>
                         </div>
                     </div>
                     <div id="chatMessages" class="p-3 sm:p-4 flex-1 overflow-y-auto space-y-3 bg-[#07140e] text-xs"></div>
+                    <div id="dmPermissionBanner" class="hidden px-3 py-2 bg-amber-950/50 border-t border-amber-700/30 text-[11px] text-amber-200 text-center">উত্তর না আসা পর্যন্ত নতুন মেসেজ পাঠানো যাবে না</div>
                     <form id="chatForm" onsubmit="handleSendChatMessage(event)" class="p-2.5 sm:p-3 bg-[#10281c] border-t border-emerald-900/50 flex items-center gap-2 shrink-0">
-                        <input type="text" id="chatInput" required placeholder="আপনার বার্তা লিখুন..." class="flex-1 bg-[#07140e] border border-emerald-900/60 text-white rounded-2xl px-4 py-3 text-sm outline-none focus:border-emerald-500 placeholder:text-slate-500 min-w-0">
-                        <button type="submit" id="chatSendBtn" class="bg-gradient-to-br from-emerald-600 to-emerald-600 hover:from-emerald-700 hover:to-emerald-700 text-white p-3 rounded-2xl text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-lg shadow-emerald-600/40 touch-target">
-                            <span class="hidden sm:inline">পাঠান</span>
-                            <i data-lucide="send" class="w-4 h-4"></i>
+                        <input type="text" id="chatInput" placeholder="আপনার বার্তা লিখুন..." autocomplete="off" inputmode="text" enterkeyhint="send" autocapitalize="sentences" class="flex-1 bg-[#07140e] border border-emerald-900/60 text-white rounded-2xl px-4 py-3 text-sm outline-none focus:border-emerald-500 placeholder:text-slate-500 min-w-0" style="font-size: 16px; -webkit-user-select: text; user-select: text;">
+                        <button type="submit" id="chatSendBtn" data-mode="send" aria-label="পাঠান" class="chat-action-btn chat-send-mode shrink-0 touch-target flex items-center justify-center">
+                            <!-- Messenger-style সবুজ গোল সেন্ড বাটন — সবসময় দেখাবে -->
+                            <span class="chat-btn-send flex items-center justify-center">
+                                <i data-lucide="send" class="w-5 h-5"></i>
+                            </span>
                         </button>
                     </form>
                 </div>
@@ -3700,14 +4008,12 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             <div class="relative flex items-stretch justify-around px-1 pt-2 pb-1">
                 <button id="bnav-services" onclick="switchTab('services')" class="bottom-nav-btn active"><i data-lucide="house" class="w-[22px] h-[22px]"></i><span>হোম</span></button>
                 <button id="bnav-emergency" onclick="switchTab('emergency')" class="bottom-nav-btn"><i data-lucide="phone-call" class="w-[22px] h-[22px]"></i><span>জরুরী</span></button>
-                <div class="relative flex flex-col items-center justify-end" style="width:20%;">
-                    <button id="bnav-chat" onclick="switchTab('chat')" class="admin-fab" aria-label="Admin Support">
-                        <i data-lucide="headset" class="w-[30px] h-[30px]"></i>
-                        <span id="adminUnreadBadge" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 border-2 border-[#0d1f17]">0</span>
-                    </button>
-                    <span class="admin-fab-label mt-1">Admin Support</span>
-                </div>
                 <button id="bnav-blood" onclick="switchTab('blood')" class="bottom-nav-btn"><i data-lucide="droplet" class="w-[22px] h-[22px]"></i><span>রক্ত</span></button>
+                <button id="bnav-notif" type="button" onclick="openNotifPanel()" class="bottom-nav-btn relative" aria-label="নোটিফিকেশন">
+                    <i data-lucide="bell" class="w-[22px] h-[22px]" stroke-width="2"></i>
+                    <span>নোটি</span>
+                    <span id="notifBadge" class="hidden absolute top-0 right-1/2 translate-x-3 min-w-[16px] h-[16px] bg-rose-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center px-0.5 ring-2 ring-[#0d1f17]">0</span>
+                </button>
                 <button id="bnav-profile" onclick="switchTab('profile')" class="bottom-nav-btn">
                     <div class="w-[22px] h-[22px] rounded-full overflow-hidden flex items-center justify-center relative bnav-icon-wrapper border border-transparent">
                         <img id="bnavProfilePic" src="" class="w-full h-full object-cover hidden absolute inset-0">
@@ -6829,11 +7135,12 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         window.openContactModal = () => { if (isForcedProfileMode) return; document.getElementById('contactModal').classList.remove('hidden'); document.getElementById('contactModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
         window.closeContactModal = () => { document.getElementById('contactModal').classList.add('hidden'); document.getElementById('contactModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
 
-        // ========== NOTIF PANEL ==========
+        // ========== NOTIF = পূর্ণ পেজ (মোডাল/পপআপ নয়) ==========
         window.openNotifPanel = () => {
             if (isForcedProfileMode) return;
             if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
-            // Opening the panel auto-marks every notification as read
+            // চ্যাট থ্রেডে থাকলে নোটিফ খুলবে না
+            if (document.body.classList.contains('chat-thread')) return;
             const store = getNotifStore();
             let changed = false;
             store.forEach(n => { if (!n.read) { n.read = true; changed = true; } });
@@ -6842,20 +7149,56 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             updateNotifBadge();
             const b = document.getElementById('notifBackdrop');
             const p = document.getElementById('notifPanel');
-            b.classList.remove('hidden'); void b.offsetWidth;
-            b.classList.remove('opacity-0'); b.classList.add('opacity-100');
-            p.classList.remove('translate-x-full'); p.classList.add('translate-x-0');
-            lockBodyScroll();
+            if (b) { b.classList.add('hidden'); b.classList.remove('opacity-100'); b.classList.add('opacity-0'); }
+            if (p) {
+                p.classList.remove('translate-x-full');
+                p.classList.add('translate-x-0');
+            }
+            document.body.classList.add('notif-page-open');
+            document.querySelectorAll('.bottom-nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('bnav-notif')?.classList.add('active');
         };
         window.closeNotifPanel = () => {
             const b = document.getElementById('notifBackdrop');
             const p = document.getElementById('notifPanel');
-            b.classList.remove('opacity-100'); b.classList.add('opacity-0');
-            p.classList.remove('translate-x-0'); p.classList.add('translate-x-full');
-            unlockBodyScroll();
-            setTimeout(() => { if (b.classList.contains('opacity-0')) b.classList.add('hidden'); }, 320);
+            if (b) {
+                b.classList.add('hidden');
+                b.classList.remove('opacity-100');
+                b.classList.add('opacity-0');
+                b.style.bottom = '';
+            }
+            if (p) {
+                p.classList.remove('translate-x-0');
+                p.classList.add('translate-x-full');
+            }
+            document.body.classList.remove('notif-page-open');
+            document.getElementById('bnav-notif')?.classList.remove('active');
+            // আগের ট্যাব হাইলাইট ফিরিয়ে আনা
+            try {
+                const tab = currentTab || 'services';
+                const bnav = document.getElementById('bnav-' + tab);
+                if (bnav) bnav.classList.add('active');
+            } catch (e) {}
         };
-        document.getElementById('notifBackdrop')?.addEventListener('click', closeNotifPanel);
+        window.deleteNotification = (id, ev) => {
+            if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+            const list = getNotifStore().filter(n => n.id !== id);
+            saveNotifStore(list);
+            renderNotifications();
+            updateNotifBadge();
+            showToast('নোটিফিকেশন মুছে ফেলা হয়েছে', 'trash-2', 'text-rose-400');
+        };
+        window.toggleNotifMenu = (id, ev) => {
+            if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+            document.querySelectorAll('.notif-menu-pop').forEach(el => {
+                if (el.dataset.nid !== id) el.classList.add('hidden');
+            });
+            const pop = document.querySelector(`.notif-menu-pop[data-nid="${id}"]`);
+            if (pop) pop.classList.toggle('hidden');
+        };
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.notif-menu-pop').forEach(el => el.classList.add('hidden'));
+        });
 
         const NOTIF_STORE_PREFIX = 'amar-notif-store-';
         const NOTIF_MAX = 100;
@@ -6963,7 +7306,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     ? `<div class="notif-icon overflow-hidden p-0"><img src="${esc(n.image)}" class="w-full h-full object-cover rounded-xl" alt=""></div>`
                     : `<div class="notif-icon"><i data-lucide="${esc(n.icon || 'bell')}"></i></div>`;
                 return `
-                <div class="notif-item ${n.read ? 'read' : 'unread'}" onclick="handleNotificationClick('${esc(n.id)}')">
+                <div class="notif-item ${n.read ? 'read' : 'unread'} relative" onclick="handleNotificationClick('${esc(n.id)}')">
                     ${iconHtml}
                     <div class="min-w-0 flex-1">
                         <div class="flex items-start justify-between gap-2">
@@ -6972,6 +7315,14 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         </div>
                         ${n.body ? `<p data-user-content="true" class="mt-0.5 text-[11px] text-slate-400 leading-relaxed line-clamp-2">${esc(n.body)}</p>` : ''}
                         <span class="text-[10px] text-slate-500 mt-1 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${esc(formatNotifTime(n.time))}</span>
+                    </div>
+                    <button type="button" class="notif-menu-btn" onclick="toggleNotifMenu('${esc(n.id)}', event)" aria-label="মেনু">
+                        <i data-lucide="ellipsis-vertical" class="w-4 h-4"></i>
+                    </button>
+                    <div class="notif-menu-pop hidden" data-nid="${esc(n.id)}" onclick="event.stopPropagation()">
+                        <button type="button" onclick="deleteNotification('${esc(n.id)}', event)">
+                            <span class="inline-flex items-center gap-2"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> ডিলিট</span>
+                        </button>
                     </div>
                 </div>`;
             }).join('');
@@ -7769,6 +8120,10 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             } else {
                 document.body.classList.remove('chat-active');
             }
+            // যেকোনো ট্যাব সুইচে নোটিফ পেজ বন্ধ
+            if (document.body.classList.contains('notif-page-open') && typeof closeNotifPanel === 'function') {
+                try { closeNotifPanel(); } catch (e) {}
+            }
 
             document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(el => { el.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-emerald-950/60 transition flex items-center gap-2 border border-transparent'; });
@@ -7779,10 +8134,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (tab) tab.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-600 text-white shadow-lg shadow-emerald-600/40';
             const bnav = document.getElementById(`bnav-${tabName}`);
             if (bnav) bnav.classList.add('active');
-            const fab = document.getElementById('bnav-chat');
-            if (fab) fab.classList.toggle('active', tabName === 'chat');
-            const fabWrap = fab?.closest('.relative');
-            if (fabWrap) fabWrap.classList.toggle('active', tabName === 'chat');
+            // Header messenger/chat icon highlight
+            const headerChat = document.getElementById('headerChatBtn');
+            if (headerChat) headerChat.classList.toggle('header-chat-active', tabName === 'chat');
             const showSearch = ['services', 'emergency', 'blood', 'favorites'].includes(tabName);
             document.getElementById('searchContainerDesktop')?.classList.toggle('show', showSearch);
             document.getElementById('searchContainerMobile')?.classList.toggle('hidden', !showSearch);
@@ -7816,15 +8170,28 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             
             renderNotices();
             if (tabName === 'subscription' || tabName === 'payment') updateCurrentPlanDisplay();
-            if (tabName === 'chat') setTimeout(async () => { await markMessagesAsRead(); updateUnreadBadge(); }, 400);
-            else updateUnreadBadge();
+            if (tabName === 'chat') {
+                if (typeof mesesuShowInbox === 'function') mesesuShowInbox();
+                updateUnreadBadge();
+            } else updateUnreadBadge();
             
             if (tabName === 'favorites') {
                 loadUserFavorites();
             }
 
             const bottomNav = document.getElementById('bottomNav');
-            if (bottomNav) bottomNav.classList.remove('nav-hidden');
+            if (bottomNav) {
+                // চ্যাট ইনবক্সে নিচের নেভ দেখাবে; থ্রেডে লুকানো থাকবে
+                if (tabName === 'chat' && document.body.classList.contains('chat-thread')) {
+                    bottomNav.classList.add('nav-hidden');
+                } else {
+                    bottomNav.classList.remove('nav-hidden');
+                }
+            }
+            if (tabName !== 'chat') {
+                document.body.classList.remove('chat-thread', 'chat-kb-open');
+                document.documentElement.style.setProperty('--kb-offset', '0px');
+            }
             lastScrollTop = 0;
 
             refreshIcons();
@@ -8224,10 +8591,31 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         // পরবর্তী ব্যাচ/সার্চের সময় একই ডকুমেন্ট আবার ডাউনলোড করতে না হয়।
         let serviceDataCache = new Map(); // id -> { id, ...data }
 
-        // আগে fetchServiceIds() পুরো কালেকশন ডাউনলোড করে শুধু ID রাখত, ডেটা ফেলে দিত —
-        // তারপর fetchServicesByIds() সেই একই ডকুমেন্ট আবার ডাউনলোড করত। এই ফাংশনটি
-        // একটাই Firestore রিড-এ ID এবং পুরো ডেটা দুটোই একসাথে এনে ক্যাশ করে রাখে, ফলে
-        // দ্বিতীয়বার একই ডেটা আনার দরকার পড়ে না।
+        // ক্যাটাগরি/উপজেলা ফিল্টারসহ services কুয়েরি তৈরি
+        function buildServicesQuery(withLimit = null) {
+            const baseCol = collection(db, 'services');
+            const useCat = activeCategory && activeCategory !== 'all' && activeCategory !== MY_UPAZILA_CAT;
+            if (withLimit && withLimit > 0) {
+                return useCat
+                    ? query(baseCol, where('category', '==', activeCategory), limit(withLimit))
+                    : query(baseCol, limit(withLimit));
+            }
+            return useCat
+                ? query(baseCol, where('category', '==', activeCategory))
+                : baseCol;
+        }
+        function applyUpazilaClientFilter(docs) {
+            if (!(myUpazilaFilterOn && currentUser && userProfile && userProfile.upazila)) return docs;
+            const upaLower = String(userProfile.upazila).trim().toLowerCase();
+            return docs.filter(d => {
+                const data = d.data ? d.data() : d;
+                const u = String(data.upazila || '').trim().toLowerCase();
+                const loc = String(data.location || '').trim().toLowerCase();
+                const dist = String(data.district || '').trim().toLowerCase();
+                return u === upaLower || u.includes(upaLower) || loc.includes(upaLower) || dist.includes(upaLower);
+            });
+        }
+        // পুরো কালেকশন (ব্যাকগ্রাউন্ড ক্যাশ / শাফলের জন্য)
         async function fetchAllServicesData() {
             if (!firebaseReady) return [];
             const cacheDocs = (docs) => docs.map(d => {
@@ -8236,26 +8624,32 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 return d.id;
             });
             try {
-                const baseCol = collection(db, 'services');
-                // ক্যাটাগরি অনুযায়ী কুয়েরি; উপজেলা ফিল্টার আলাদাভাবে ক্লায়েন্ট-সাইডে
-                const q = (activeCategory && activeCategory !== 'all' && activeCategory !== MY_UPAZILA_CAT)
-                    ? query(baseCol, where('category', '==', activeCategory))
-                    : baseCol;
-                const snap = await getDocs(q);
-                let docs = snap.docs;
-                if (myUpazilaFilterOn && currentUser && userProfile && userProfile.upazila) {
-                    const upaLower = String(userProfile.upazila).trim().toLowerCase();
-                    docs = docs.filter(d => {
-                        const data = d.data();
-                        const u = String(data.upazila || '').trim().toLowerCase();
-                        const loc = String(data.location || '').trim().toLowerCase();
-                        const dist = String(data.district || '').trim().toLowerCase();
-                        return u === upaLower || u.includes(upaLower) || loc.includes(upaLower) || dist.includes(upaLower);
-                    });
-                }
+                const snap = await getDocs(buildServicesQuery(null));
+                const docs = applyUpazilaClientFilter(snap.docs);
                 return cacheDocs(docs);
             } catch (e) {
                 console.warn('fetchAllServicesData failed:', e);
+                return [];
+            }
+        }
+        // প্রথম পেইন্ট: শুধু সীমিত ব্যাচ — হোম দ্রুত দেখানোর জন্য
+        async function fetchFirstServicesFast(batchSize) {
+            if (!firebaseReady) return [];
+            try {
+                // উপজেলা ফিল্টার থাকলে client-side কাটতে একটু বেশি আনা
+                const fetchLimit = (myUpazilaFilterOn && userProfile?.upazila)
+                    ? Math.max(batchSize * 4, 48)
+                    : batchSize;
+                const snap = await getDocs(buildServicesQuery(fetchLimit));
+                let docs = applyUpazilaClientFilter(snap.docs);
+                docs = docs.slice(0, batchSize);
+                return docs.map(d => {
+                    const data = { id: d.id, ...d.data() };
+                    serviceDataCache.set(d.id, data);
+                    return data;
+                });
+            } catch (e) {
+                console.warn('fetchFirstServicesFast failed:', e);
                 return [];
             }
         }
@@ -8316,6 +8710,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         }
 
         // ========== LOAD SERVICE BATCH (Mode A) ==========
+        let servicesFullIndexReady = false;
+        let servicesFullIndexLoading = false;
+
         async function loadServiceBatch(reset = false) {
             if (isForcedProfileMode) return;
             if (!firebaseReady || servicesLoading) return;
@@ -8328,7 +8725,10 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     currentBatchIndex = 0;
                     servicesLoopCount = 0;
                     servicesFirstLoadDone = false;
+                    servicesFullIndexReady = false;
                     allServicesFullCache = null;
+                    allServiceIds = [];
+                    shuffledIds = [];
                     const grid = document.getElementById('servicesGrid');
                     if (grid) grid.innerHTML = '';
                     lastRenderedCount = 0;
@@ -8336,23 +8736,83 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     animationQueueCounter = 0;
                     wasInSearchMode = false;
                     showServicesLoading(true);
-
                     serviceDataCache = new Map();
-                    allServiceIds = await fetchAllServicesData();
-                    // fetchAllServicesData ইতিমধ্যে পুরো ডেটা ক্যাশ করে ফেলেছে, তাই এখানে
-                    // আলাদা করে আবার Firestore থেকে আনার দরকার নেই — ক্যাশ থেকেই সরাসরি।
-                    allServicesFullCache = allServiceIds.map(id => serviceDataCache.get(id)).filter(Boolean);
-
-                    // Every service participates in a fully random first cycle.
-                    // The next cycle is shuffled again after the current cycle ends.
-                    shuffledIds = shuffleArray(allServiceIds);
                     resetAdFeedState();
 
-                    if (allServiceIds.length === 0) {
-                        servicesFirstLoadDone = true;
-                        servicesLoading = false;
-                        showServicesLoading(false);
-                        renderServices();
+                    // ① দ্রুত প্রথম পেইন্ট — সীমিত ব্যাচ + ক্লায়েন্ট-সাইড র‍্যান্ডম অর্ডার
+                    const firstBatch = shuffleArray(await fetchFirstServicesFast(SERVICES_BATCH_SIZE));
+                    firstBatch.forEach(svc => {
+                        if (!servicesSeenIds.has(svc.id)) {
+                            servicesSeenIds.add(svc.id);
+                            servicesCache.push(svc);
+                        }
+                    });
+                    servicesFirstLoadDone = true;
+                    renderServices();
+                    showServicesLoading(false);
+                    servicesLoading = false;
+
+                    const sharedServiceId = new URLSearchParams(window.location.search).get('service');
+                    if (sharedServiceId && !window.__sharedServiceOpened) {
+                        const sharedService = servicesCache.find(x => x.id === sharedServiceId)
+                            || serviceDataCache.get(sharedServiceId);
+                        if (sharedService) {
+                            window.__sharedServiceOpened = true;
+                            setTimeout(() => openServiceDetail(sharedServiceId), 250);
+                        }
+                    }
+
+                    // ② ব্যাকগ্রাউন্ডে পুরো ইনডেক্স — শাফল + ইনফিনিট স্ক্রলের জন্য
+                    if (!servicesFullIndexLoading) {
+                        servicesFullIndexLoading = true;
+                        fetchAllServicesData().then(ids => {
+                            servicesFullIndexLoading = false;
+                            allServiceIds = ids;
+                            allServicesFullCache = allServiceIds.map(id => serviceDataCache.get(id)).filter(Boolean);
+                            // ইতিমধ্যে দেখানো আইটেম বাদ দিয়ে বাকিগুলো শাফল
+                            const remaining = allServiceIds.filter(id => !servicesSeenIds.has(id));
+                            shuffledIds = shuffleArray(remaining);
+                            currentBatchIndex = 0;
+                            servicesFullIndexReady = true;
+                            setupInfiniteScroll();
+                            // শেয়ার্ড সার্ভিস পুরো ক্যাশে থাকলে ওপেন
+                            if (sharedServiceId && !window.__sharedServiceOpened) {
+                                const s = serviceDataCache.get(sharedServiceId);
+                                if (s) {
+                                    window.__sharedServiceOpened = true;
+                                    setTimeout(() => openServiceDetail(sharedServiceId), 200);
+                                }
+                            }
+                        }).catch(err => {
+                            servicesFullIndexLoading = false;
+                            console.warn('background services index failed:', err);
+                            setupInfiniteScroll();
+                        });
+                    } else {
+                        setupInfiniteScroll();
+                    }
+                    return;
+                }
+
+                // ইনফিনিট স্ক্রল — পুরো ইনডেক্স প্রস্তুত না হলে অপেক্ষা
+                if (!servicesFullIndexReady || !shuffledIds.length) {
+                    if (!servicesFullIndexLoading && allServiceIds.length === 0) {
+                        servicesFullIndexLoading = true;
+                        try {
+                            allServiceIds = await fetchAllServicesData();
+                            allServicesFullCache = allServiceIds.map(id => serviceDataCache.get(id)).filter(Boolean);
+                            const remaining = allServiceIds.filter(id => !servicesSeenIds.has(id));
+                            shuffledIds = shuffleArray(remaining);
+                            currentBatchIndex = 0;
+                            servicesFullIndexReady = true;
+                        } catch (e) {
+                            console.warn(e);
+                        } finally {
+                            servicesFullIndexLoading = false;
+                        }
+                    }
+                    if (!shuffledIds.length) {
+                        setupInfiniteScroll();
                         return;
                     }
                 }
@@ -8366,7 +8826,6 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     shuffledIds = shuffleArray(allServiceIds);
                     currentBatchIndex = 0;
                     remaining = shuffledIds.length;
-                    // please wait toast removed
                 }
 
                 const take = Math.min(BATCH, remaining);
@@ -8383,11 +8842,6 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
                 servicesFirstLoadDone = true;
                 renderServices();
-                const sharedServiceId = new URLSearchParams(window.location.search).get('service');
-                if (sharedServiceId && !window.__sharedServiceOpened) {
-                    const sharedService = servicesCache.find(x => x.id === sharedServiceId);
-                    if (sharedService) { window.__sharedServiceOpened = true; setTimeout(() => openServiceDetail(sharedServiceId), 250); }
-                }
                 setupInfiniteScroll();
             } catch (e) {
                 console.error('loadServiceBatch error:', e);
@@ -9313,26 +9767,23 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const on = bloodDistrictFilterOn && !!currentUser && !!district;
             btn.setAttribute('aria-pressed', on ? 'true' : 'false');
             if (on) {
-                btn.classList.remove('bg-slate-600/80', 'border-slate-500/40');
-                btn.classList.add('bg-emerald-600', 'border-emerald-400/50');
-                knob.classList.remove('translate-x-1');
-                knob.classList.add('translate-x-6');
+                btn.className = 'group relative inline-flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-full bg-emerald-600/25 border border-emerald-400/60 shadow-md shadow-emerald-600/20 transition-all duration-300 touch-target active:scale-95';
+                knob.className = 'relative flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/40 transition-all duration-300 ring-2 ring-emerald-300/50';
+                label.className = 'text-[10px] font-bold text-emerald-300 max-w-[5.5rem] truncate leading-tight';
             } else {
-                btn.classList.add('bg-slate-600/80', 'border-slate-500/40');
-                btn.classList.remove('bg-emerald-600', 'border-emerald-400/50');
-                knob.classList.add('translate-x-1');
-                knob.classList.remove('translate-x-6');
+                btn.className = 'group relative inline-flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-full bg-slate-700/70 border border-slate-500/50 shadow-inner transition-all duration-300 touch-target active:scale-95';
+                knob.className = 'relative flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-slate-400 to-slate-600 text-white shadow-md transition-all duration-300';
+                label.className = 'text-[10px] font-semibold text-slate-300 max-w-[5.5rem] truncate leading-tight';
             }
             if (!currentUser) {
-                label.textContent = 'লগইন প্রয়োজন';
-                label.className = 'text-[9px] text-slate-500 max-w-[7.5rem] truncate text-right leading-tight';
+                label.textContent = 'লগইন';
             } else if (!district) {
                 label.textContent = 'জেলা নেই';
-                label.className = 'text-[9px] text-amber-400/90 max-w-[7.5rem] truncate text-right leading-tight';
+                label.className = 'text-[10px] font-semibold text-amber-400 max-w-[5.5rem] truncate leading-tight';
             } else {
                 label.textContent = district;
-                label.className = 'text-[9px] ' + (on ? 'text-emerald-300 font-semibold' : 'text-slate-400') + ' max-w-[7.5rem] truncate text-right leading-tight';
             }
+            if (typeof refreshIcons === 'function') refreshIcons();
         }
 
         window.toggleBloodDistrictFilter = () => {
@@ -9438,8 +9889,579 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             }).join('');
             box.scrollTop = box.scrollHeight;
             refreshIcons();
+            // Refresh admin last-message preview on Mesesu inbox list
+            try {
+                if (typeof mesesuMode !== 'undefined' && mesesuMode === 'inbox' && typeof mesesuRenderThreads === 'function') {
+                    mesesuRenderThreads(typeof mesesuInboxCache !== 'undefined' ? mesesuInboxCache : []);
+                }
+            } catch (e) {}
         }
+        // ========== MESESU (community messenger inbox) ==========
+        const DM_PERMISSION_TEXT = 'আমাকে কি আপনার সাথে মেসেজ করার অনুমতি দিবেন?';
+        let mesesuMode = 'inbox'; // inbox | admin | dm
+        let mesesuPeer = null; // { id, fullName, photoURL, isPremium }
+        let mesesuDmPermission = 'none'; // none | pending | approved
+        let mesesuPermissionRequester = null;
+        let unsubscribeDm = null;
+        let unsubscribeInbox = null;
+        let mesesuInboxCache = [];
+        let mesesuUsersCache = [];
+
+        function mesesuFirstName(full) {
+            const p = String(full || '').trim().split(/\s+/).filter(Boolean);
+            return p[0] || 'ইউজার';
+        }
+        function mesesuHasBlue(u) {
+            if (!u) return false;
+            if (u.isPremium || u.verified || u.blueBadge) return true;
+            try {
+                const et = u.premiumExpiresAt?.toDate ? u.premiumExpiresAt.toDate().getTime() : (u.premiumExpiresAt ? new Date(u.premiumExpiresAt).getTime() : 0);
+                return et > Date.now();
+            } catch (e) { return false; }
+        }
+        /** Realistic online: isOnline flag + lastSeen within 8 minutes */
+        function mesesuIsReallyOnline(u) {
+            if (!u || u.isOnline !== true) return false;
+            try {
+                const ls = u.lastSeen?.toDate ? u.lastSeen.toDate() : (u.lastSeen ? new Date(u.lastSeen) : null);
+                if (!ls || Number.isNaN(ls.getTime())) return false;
+                return (Date.now() - ls.getTime()) < 8 * 60 * 1000;
+            } catch (e) { return false; }
+        }
+        function mesesuThreadId(a, b) {
+            return [a, b].sort().join('_');
+        }
+        function mesesuAvatarHtml(photoURL, sizeClass) {
+            if (photoURL) return `<img src="${esc(photoURL)}" alt="" class="${sizeClass} rounded-full object-cover">`;
+            return `<div class="${sizeClass} rounded-full bg-emerald-800/80 flex items-center justify-center"><i data-lucide="user" class="w-1/2 h-1/2 text-emerald-200"></i></div>`;
+        }
+        function mesesuShowInbox() {
+            mesesuMode = 'inbox';
+            mesesuPeer = null;
+            if (unsubscribeDm) { try { unsubscribeDm(); } catch (e) {} unsubscribeDm = null; }
+            document.getElementById('mesesuInbox')?.classList.remove('hidden');
+            document.getElementById('mesesuThreadView')?.classList.add('hidden');
+            const search = document.getElementById('mesesuSearchInput');
+            if (search) search.value = '';
+            document.getElementById('mesesuSearchResults')?.classList.add('hidden');
+            document.getElementById('mesesuThreadList')?.classList.remove('hidden');
+            // ইনবক্স: থ্রেড মোড বন্ধ — নিচের নেভ দেখাবে
+            document.body.classList.remove('chat-thread');
+            document.body.classList.remove('chat-kb-open');
+            document.documentElement.style.setProperty('--kb-offset', '0px');
+            const bottomNav = document.getElementById('bottomNav');
+            if (bottomNav && currentTab === 'chat') bottomNav.classList.remove('nav-hidden');
+            // Always show Admin Support row immediately
+            mesesuRenderThreads(mesesuInboxCache || []);
+            if (currentUser && firebaseReady) {
+                mesesuLoadPeopleRow();
+                mesesuListenInbox();
+            } else {
+                mesesuRenderPeopleRow([]);
+            }
+            refreshIcons();
+        }
+        window.mesesuShowInbox = mesesuShowInbox;
+        window.mesesuBackToInbox = () => {
+            mesesuShowInbox();
+            updateUnreadBadge();
+        };
+
+        async function mesesuLoadPeopleRow() {
+            if (!firebaseReady || !currentUser) return;
+            try {
+                const snap = await getDocs(query(collection(db, 'users'), limit(80)));
+                let users = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(u => u.id !== currentUser.uid);
+                mesesuUsersCache = users;
+                const online = users.filter(u => mesesuIsReallyOnline(u));
+                const offline = users.filter(u => !mesesuIsReallyOnline(u));
+                const pick = (arr, n) => shuffleArray(arr.slice()).slice(0, n);
+                // Prefer real online users first, fill rest with offline — no fake online
+                let selected = pick(online, Math.min(6, online.length));
+                if (selected.length < 10) selected = selected.concat(pick(offline, 10 - selected.length));
+                selected = selected.slice(0, 10);
+                mesesuRenderPeopleRow(selected);
+            } catch (e) {
+                console.warn('mesesu people', e);
+                mesesuRenderPeopleRow([]);
+            }
+        }
+        function mesesuRenderPeopleRow(list) {
+            const row = document.getElementById('mesesuPeopleRow');
+            if (!row) return;
+            const meName = mesesuFirstName(userProfile?.fullName || currentUser?.displayName || 'আমি');
+            const mePhoto = userProfile?.photoURL || '';
+            const meOnline = !!(currentUser && navigator.onLine);
+            let html = `<div class="mesesu-person ${meOnline ? 'online' : ''}" title="আপনার প্রোফাইল">
+                <div class="mesesu-person-avatar"><div class="mesesu-person-avatar-inner">${mePhoto ? `<img src="${esc(mePhoto)}" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-white"></i>`}</div>
+                ${meOnline ? '<span class="mesesu-online-dot" title="অনলাইন"></span>' : ''}
+                </div>
+                <div class="mesesu-person-name font-semibold">${esc(meName)}</div>
+            </div>`;
+            (list || []).forEach(u => {
+                const online = mesesuIsReallyOnline(u);
+                html += `<div class="mesesu-person ${online ? 'online' : ''}" onclick="mesesuOpenUser('${esc(u.id)}')">
+                    <div class="mesesu-person-avatar">
+                      <div class="mesesu-person-avatar-inner">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-white"></i>`}</div>
+                      ${online ? '<span class="mesesu-online-dot" title="অনলাইন"></span>' : ''}
+                    </div>
+                    <div class="mesesu-person-name">${esc(mesesuFirstName(u.fullName))}${mesesuHasBlue(u) ? ' <i data-lucide="badge-check" class="w-3 h-3 inline fill-blue-500 text-blue-400"></i>' : ''}</div>
+                </div>`;
+            });
+            row.innerHTML = html;
+            refreshIcons();
+        }
+        function mesesuListenInbox() {
+            if (!currentUser || !firebaseReady) return;
+            if (unsubscribeInbox) { try { unsubscribeInbox(); } catch (e) {} }
+            const q = query(collection(db, 'users', currentUser.uid, 'inbox'), orderBy('lastAt', 'desc'));
+            unsubscribeInbox = onSnapshot(q, snap => {
+                mesesuInboxCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                mesesuRenderThreads(mesesuInboxCache);
+            }, err => {
+                console.warn('inbox listen', err);
+                // fallback without orderBy if index missing
+                onSnapshot(collection(db, 'users', currentUser.uid, 'inbox'), snap2 => {
+                    mesesuInboxCache = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
+                    mesesuInboxCache.sort((a, b) => (b.lastAt?.toMillis?.() || 0) - (a.lastAt?.toMillis?.() || 0));
+                    mesesuRenderThreads(mesesuInboxCache);
+                });
+            });
+        }
+        function mesesuPreviewText(text, maxWords) {
+            const words = String(text || '').trim().split(/\s+/).filter(Boolean);
+            if (!words.length) return '';
+            const n = maxWords || 5;
+            if (words.length <= n) return words.join(' ');
+            return words.slice(0, n).join(' ') + '...';
+        }
+        function mesesuAdminLastPreview() {
+            // Latest message in admin support chat (user or admin)
+            if (!chatMessages || !chatMessages.length) return 'অ্যাডমিনের সাথে কথা বলুন';
+            const last = chatMessages[chatMessages.length - 1];
+            const raw = (last && last.text) ? String(last.text) : '';
+            const prev = mesesuPreviewText(raw, 5);
+            return prev || 'অ্যাডমিনের সাথে কথা বলুন';
+        }
+        function mesesuRenderThreads(list) {
+            const box = document.getElementById('mesesuThreads');
+            const empty = document.getElementById('mesesuEmptyState');
+            if (!box) return;
+            const adminOnline = !!isAdminOnline;
+            const adminPreview = mesesuAdminLastPreview();
+            // Pinned Admin Support — verified badge by name; online/offline on avatar corner
+            let html = `<div class="mesesu-thread-row" onclick="mesesuOpenAdmin()">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center shrink-0 relative overflow-visible">
+                    <i data-lucide="headset" class="w-6 h-6 text-white"></i>
+                    <span class="mesesu-admin-online-dot ${adminOnline ? 'on' : 'off'}" title="${adminOnline ? 'অনলাইন' : 'অফলাইন'}"></span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2">
+                        <p class="text-sm font-bold text-slate-100 truncate flex items-center gap-1">
+                            অ্যাডমিন সাপোর্ট
+                            <i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-blue-400 shrink-0" title="Verified"></i>
+                        </p>
+                        <span class="text-[10px] text-slate-500 shrink-0">${adminOnline ? 'অনলাইন' : 'অফলাইন'}</span>
+                    </div>
+                    <p class="text-xs text-slate-400 truncate mt-0.5">${esc(adminPreview)}</p>
+                </div>
+            </div>`;
+            const rows = list || [];
+            if (empty) empty.classList.add('hidden');
+            rows.forEach(t => {
+                const tick = t.peerBlue ? '<i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-blue-400 shrink-0"></i>' : '';
+                const timeStr = t.lastAt?.toDate ? t.lastAt.toDate().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }) : '';
+                const preview = mesesuPreviewText(t.lastMessage || '', 5);
+                html += `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(t.peerId || t.id)}')">
+                    <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-emerald-900/50 flex items-center justify-center">
+                        ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-emerald-300"></i>`}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="text-sm font-bold text-slate-100 truncate flex items-center gap-1">${esc(t.peerName || 'ইউজার')} ${tick}</p>
+                            <span class="text-[10px] text-slate-500 shrink-0">${esc(timeStr)}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate mt-0.5">${esc(preview)}</p>
+                    </div>
+                </div>`;
+            });
+            if (!rows.length) {
+                html += `<div class="text-center py-12 px-4">
+                    <p class="text-sm font-bold text-slate-300">কোনো চ্যাট নেই</p>
+                    <p class="text-xs text-slate-500 mt-1">উপরের প্রোফাইল থেকে কাউকে বেছে মেসেজের অনুমতি চান</p>
+                </div>`;
+            }
+            box.innerHTML = html;
+            refreshIcons();
+        }
+        window.mesesuOpenAdmin = () => {
+            mesesuMode = 'admin';
+            mesesuPeer = null;
+            document.getElementById('mesesuInbox')?.classList.add('hidden');
+            document.getElementById('mesesuThreadView')?.classList.remove('hidden');
+            // থ্রেড মোড: দুই নেভ লুকানো + নোটিফ বন্ধ
+            document.body.classList.add('chat-thread');
+            if (typeof closeNotifPanel === 'function') { try { closeNotifPanel(); } catch (e) {} }
+            const bottomNav = document.getElementById('bottomNav');
+            if (bottomNav) bottomNav.classList.add('nav-hidden');
+            document.getElementById('threadTitle').textContent = 'অ্যাডমিন সাপোর্ট';
+            document.getElementById('threadBlueTick')?.classList.remove('hidden');
+            const statusDot = document.getElementById('adminStatusDot');
+            if (statusDot) {
+                statusDot.classList.remove('hidden');
+                if (isAdminOnline) {
+                    statusDot.className = 'w-3 h-3 bg-emerald-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
+                } else {
+                    statusDot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
+                }
+            }
+            const statusLabel = document.getElementById('adminStatusLabel');
+            if (statusLabel) {
+                statusLabel.textContent = isAdminOnline ? 'অনলাইন' : 'অফলাইন';
+                statusLabel.className = isAdminOnline ? 'text-[10px] text-emerald-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
+            }
+            const img = document.getElementById('threadAvatarImg');
+            const ic = document.getElementById('threadAvatarIcon');
+            if (img) { img.classList.add('hidden'); img.src = ''; }
+            if (ic) { ic.classList.remove('hidden'); ic.setAttribute('data-lucide', 'headset'); }
+            document.getElementById('dmPermissionBanner')?.classList.add('hidden');
+            document.getElementById('chatInput').disabled = false;
+            document.getElementById('chatInput').placeholder = 'আপনার বার্তা লিখুন...';
+            document.getElementById('chatInput').value = '';
+            updateChatActionButton();
+            renderChatMessages();
+            setTimeout(async () => { await markMessagesAsRead(); updateUnreadBadge(); }, 300);
+            refreshIcons();
+        };
+        window.mesesuOpenUser = async (peerId) => {
+            if (!currentUser || !peerId || peerId === currentUser.uid) return;
+            if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
+            let peer = mesesuUsersCache.find(u => u.id === peerId);
+            if (!peer) {
+                try {
+                    const snap = await getDoc(doc(db, 'users', peerId));
+                    if (!snap.exists()) return showToast('ব্যবহারকারী পাওয়া যায়নি', 'circle-x', 'text-rose-400');
+                    peer = { id: peerId, ...snap.data() };
+                } catch (e) {
+                    return showToast('লোড ব্যর্থ', 'circle-x', 'text-rose-400');
+                }
+            }
+            mesesuMode = 'dm';
+            const peerOnline = mesesuIsReallyOnline(peer);
+            mesesuPeer = { id: peer.id, fullName: peer.fullName || 'ইউজার', photoURL: peer.photoURL || '', isPremium: mesesuHasBlue(peer), isOnline: peerOnline };
+            document.getElementById('mesesuInbox')?.classList.add('hidden');
+            document.getElementById('mesesuThreadView')?.classList.remove('hidden');
+            // থ্রেড মোড: দুই নেভ লুকানো + নোটিফ বন্ধ
+            document.body.classList.add('chat-thread');
+            if (typeof closeNotifPanel === 'function') { try { closeNotifPanel(); } catch (e) {} }
+            const bottomNavDm = document.getElementById('bottomNav');
+            if (bottomNavDm) bottomNavDm.classList.add('nav-hidden');
+            document.getElementById('threadTitle').textContent = mesesuPeer.fullName;
+            /* ব্লু ভেরিফাই ব্যাজ — প্রিমিয়াম/verified ইউজার হলে দেখাবে */
+            document.getElementById('threadBlueTick')?.classList.toggle('hidden', !mesesuPeer.isPremium);
+            /* অনলাইন/অফলাইন ব্যাজ প্রোফাইল পিকচারের নিচের ডান কোনায় */
+            const statusDot = document.getElementById('adminStatusDot');
+            if (statusDot) {
+                statusDot.classList.remove('hidden');
+                if (peerOnline) {
+                    statusDot.className = 'w-3 h-3 bg-emerald-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
+                } else {
+                    statusDot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
+                }
+            }
+            const statusLabel = document.getElementById('adminStatusLabel');
+            if (statusLabel) {
+                statusLabel.textContent = peerOnline ? 'অনলাইন' : 'অফলাইন';
+                statusLabel.className = peerOnline ? 'text-[10px] text-emerald-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
+            }
+            const img = document.getElementById('threadAvatarImg');
+            const ic = document.getElementById('threadAvatarIcon');
+            if (mesesuPeer.photoURL && img) {
+                img.src = mesesuPeer.photoURL; img.classList.remove('hidden');
+                if (ic) ic.classList.add('hidden');
+            } else {
+                if (img) { img.classList.add('hidden'); img.src = ''; }
+                if (ic) { ic.classList.remove('hidden'); ic.setAttribute('data-lucide', 'user'); }
+            }
+            chatMessages = [];
+            renderChatMessages();
+            await mesesuOpenDmThread(peerId);
+            refreshIcons();
+        };
+        async function mesesuOpenDmThread(peerId) {
+            const tid = mesesuThreadId(currentUser.uid, peerId);
+            try {
+                const tSnap = await getDoc(doc(db, 'dmThreads', tid));
+                if (tSnap.exists()) {
+                    const d = tSnap.data();
+                    mesesuDmPermission = d.permissionStatus || 'none';
+                    mesesuPermissionRequester = d.permissionRequester || null;
+                } else {
+                    mesesuDmPermission = 'none';
+                    mesesuPermissionRequester = null;
+                }
+            } catch (e) { mesesuDmPermission = 'none'; mesesuPermissionRequester = null; }
+            mesesuApplyPermissionUi();
+            if (unsubscribeDm) { try { unsubscribeDm(); } catch (e) {} }
+            const q = query(collection(db, 'dmThreads', tid, 'messages'), orderBy('createdAt', 'asc'));
+            unsubscribeDm = onSnapshot(q, snap => {
+                chatMessages = snap.docs.map(d => {
+                    const m = d.data();
+                    return {
+                        id: d.id,
+                        sender: m.senderId === currentUser.uid ? 'user' : 'admin',
+                        text: m.text || '',
+                        time: m.time || '',
+                        uid: m.senderId,
+                        userName: m.senderName || '',
+                        readByUser: true,
+                        isDm: true
+                    };
+                });
+                // if peer replied after our permission request → approved
+                if (mesesuDmPermission === 'pending') {
+                    const peerReplied = snap.docs.some(d => d.data().senderId === peerId && d.data().type !== 'permission');
+                    if (peerReplied) {
+                        mesesuDmPermission = 'approved';
+                        setDoc(doc(db, 'dmThreads', tid), { permissionStatus: 'approved' }, { merge: true }).catch(() => {});
+                        mesesuApplyPermissionUi();
+                    }
+                }
+                renderChatMessages();
+            }, err => console.warn('dm messages', err));
+        }
+        function mesesuApplyPermissionUi() {
+            const input = document.getElementById('chatInput');
+            const banner = document.getElementById('dmPermissionBanner');
+            if (mesesuMode !== 'dm') {
+                banner?.classList.add('hidden');
+                if (input) { input.disabled = false; input.placeholder = 'আপনার বার্তা লিখুন...'; input.readOnly = false; }
+                return;
+            }
+            if (mesesuDmPermission === 'none') {
+                banner?.classList.add('hidden');
+                if (input) {
+                    input.value = DM_PERMISSION_TEXT;
+                    input.readOnly = true;
+                    input.disabled = false;
+                    input.placeholder = DM_PERMISSION_TEXT;
+                }
+                updateChatActionButton();
+            } else if (mesesuDmPermission === 'pending' && mesesuPermissionRequester === currentUser?.uid) {
+                banner?.classList.remove('hidden');
+                if (input) {
+                    input.value = '';
+                    input.readOnly = true;
+                    input.disabled = true;
+                    input.placeholder = 'উত্তরের অপেক্ষায়...';
+                }
+                updateChatActionButton();
+            } else if (mesesuDmPermission === 'pending') {
+                // recipient can reply (that reply grants permission)
+                banner?.classList.add('hidden');
+                if (input) {
+                    input.value = '';
+                    input.readOnly = false;
+                    input.disabled = false;
+                    input.placeholder = 'আপনার বার্তা লিখুন...';
+                }
+                updateChatActionButton();
+            } else {
+                banner?.classList.add('hidden');
+                if (input) {
+                    input.value = '';
+                    input.readOnly = false;
+                    input.disabled = false;
+                    input.placeholder = 'আপনার বার্তা লিখুন...';
+                }
+                updateChatActionButton();
+            }
+        }
+        async function mesesuSendDm(text) {
+            if (!mesesuPeer || !currentUser) return;
+            const peerId = mesesuPeer.id;
+            const tid = mesesuThreadId(currentUser.uid, peerId);
+            const time = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
+            const isPermission = mesesuDmPermission === 'none';
+            const isGrantingReply = mesesuDmPermission === 'pending' && mesesuPermissionRequester && mesesuPermissionRequester !== currentUser.uid;
+            const msgText = isPermission ? DM_PERMISSION_TEXT : text;
+            if (isPermission) {
+                await setDoc(doc(db, 'dmThreads', tid), {
+                    members: [currentUser.uid, peerId],
+                    permissionStatus: 'pending',
+                    permissionRequester: currentUser.uid,
+                    updatedAt: serverTimestamp(),
+                    lastMessage: msgText,
+                    lastMessageAt: serverTimestamp()
+                }, { merge: true });
+                mesesuDmPermission = 'pending';
+                mesesuPermissionRequester = currentUser.uid;
+            } else if (mesesuDmPermission === 'pending' && !isGrantingReply) {
+                return showToast('অনুমতি ছাড়া মেসেজ পাঠানো যাবে না', 'lock', 'text-amber-400');
+            } else {
+                const payload = {
+                    members: [currentUser.uid, peerId],
+                    updatedAt: serverTimestamp(),
+                    lastMessage: msgText,
+                    lastMessageAt: serverTimestamp()
+                };
+                if (isGrantingReply) {
+                    payload.permissionStatus = 'approved';
+                    mesesuDmPermission = 'approved';
+                }
+                await setDoc(doc(db, 'dmThreads', tid), payload, { merge: true });
+            }
+            await addDoc(collection(db, 'dmThreads', tid, 'messages'), {
+                senderId: currentUser.uid,
+                senderName: userProfile?.fullName || 'ইউজার',
+                text: msgText,
+                time,
+                type: isPermission ? 'permission' : 'text',
+                createdAt: serverTimestamp()
+            });
+            // mirror inbox both sides
+            const myInbox = {
+                peerId, peerName: mesesuPeer.fullName, peerPhoto: mesesuPeer.photoURL || '',
+                peerBlue: !!mesesuPeer.isPremium,
+                lastMessage: msgText, lastAt: serverTimestamp(),
+                permissionStatus: mesesuDmPermission
+            };
+            const peerInbox = {
+                peerId: currentUser.uid,
+                peerName: userProfile?.fullName || 'ইউজার',
+                peerPhoto: userProfile?.photoURL || '',
+                peerBlue: !!isUserPremium,
+                lastMessage: msgText, lastAt: serverTimestamp(),
+                permissionStatus: mesesuDmPermission
+            };
+            await setDoc(doc(db, 'users', currentUser.uid, 'inbox', peerId), myInbox, { merge: true });
+            await setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), peerInbox, { merge: true });
+            mesesuApplyPermissionUi();
+            try { playAppSound('send'); } catch (e) {}
+        }
+
+        // Search users as you type
+        (() => {
+            const bind = () => {
+                const input = document.getElementById('mesesuSearchInput');
+                if (!input || input.dataset.bound) return;
+                input.dataset.bound = '1';
+                input.addEventListener('input', () => {
+                    const q = input.value.trim().toLowerCase();
+                    const res = document.getElementById('mesesuSearchResults');
+                    const listWrap = document.getElementById('mesesuThreadList');
+                    if (!q) {
+                        res?.classList.add('hidden');
+                        listWrap?.classList.remove('hidden');
+                        return;
+                    }
+                    listWrap?.classList.add('hidden');
+                    res?.classList.remove('hidden');
+                    const hits = (mesesuUsersCache || []).filter(u =>
+                        String(u.fullName || '').toLowerCase().includes(q) ||
+                        String(u.email || '').toLowerCase().includes(q)
+                    ).slice(0, 30);
+                    if (!hits.length) {
+                        res.innerHTML = `<p class="text-center text-xs text-slate-500 py-8">কোনো ব্যবহারকারী পাওয়া যায়নি</p>`;
+                        return;
+                    }
+                    res.innerHTML = hits.map(u => `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(u.id)}')">
+                        <div class="w-11 h-11 rounded-full overflow-hidden shrink-0 bg-emerald-900/50 flex items-center justify-center">
+                            ${u.photoURL ? `<img src="${esc(u.photoURL)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-5 h-5 text-emerald-300"></i>`}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm font-bold text-slate-100 truncate flex items-center gap-1">${esc(u.fullName || 'ইউজার')}${mesesuHasBlue(u) ? ' <i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-blue-400"></i>' : ''}</p>
+                            <p class="text-[10px] text-slate-500">${u.isOnline ? 'অনলাইন' : 'অফলাইন'}</p>
+                        </div>
+                    </div>`).join('');
+                    refreshIcons();
+                });
+            };
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+            else bind();
+            setTimeout(bind, 800);
+        })();
+
         window.focusChatInput = () => { if (isForcedProfileMode) return; const i = document.getElementById('chatInput'); if (i) i.focus(); };
+
+        /* সবসময় Messenger-style সবুজ সেন্ড বাটন (Gemini আইকন সরানো) */
+        const SEND_BTN_HTML = `<span class="chat-btn-send flex items-center justify-center"><i data-lucide="send" class="w-5 h-5"></i></span>`;
+
+        function updateChatActionButton() {
+            const btn = document.getElementById('chatSendBtn');
+            if (!btn) return;
+            btn.dataset.mode = 'send';
+            btn.setAttribute('aria-label', 'পাঠান');
+            btn.classList.remove('chat-gemini-mode');
+            btn.classList.add('chat-send-mode');
+            btn.type = 'submit';
+            if (!btn.querySelector('.chat-btn-send') || btn.querySelector('.chat-btn-gemini')) {
+                btn.innerHTML = SEND_BTN_HTML;
+                if (typeof refreshIcons === 'function') refreshIcons();
+            }
+        }
+        function bindChatActionToggle() {
+            const btn = document.getElementById('chatSendBtn');
+            if (!btn || btn.dataset.sendBound) return;
+            btn.dataset.sendBound = '1';
+            updateChatActionButton();
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindChatActionToggle);
+        else bindChatActionToggle();
+        setTimeout(bindChatActionToggle, 500);
+
+        // ========== KEYBOARD AWARE INPUT (Messenger/Instagram style) ==========
+        // visualViewport দিয়ে কীবোর্ড উচ্চতা মাপা — ইনপুট কীবোর্ডের উপরে থাকে
+        (() => {
+            const root = document.documentElement;
+            let lastKb = 0;
+            function applyKeyboardOffset() {
+                if (!document.body.classList.contains('chat-active') || !document.body.classList.contains('chat-thread')) {
+                    root.style.setProperty('--kb-offset', '0px');
+                    document.body.classList.remove('chat-kb-open');
+                    lastKb = 0;
+                    return;
+                }
+                const vv = window.visualViewport;
+                if (!vv) return;
+                // কীবোর্ড খোলা হলে visualViewport.height কমে যায়
+                const fullH = window.innerHeight || document.documentElement.clientHeight;
+                const kb = Math.max(0, Math.round(fullH - vv.height - (vv.offsetTop || 0)));
+                // ছোট পার্থক্য (অ্যাড্রেস বার) উপেক্ষা
+                const effective = kb > 80 ? kb : 0;
+                if (effective !== lastKb) {
+                    lastKb = effective;
+                    root.style.setProperty('--kb-offset', effective + 'px');
+                    document.body.classList.toggle('chat-kb-open', effective > 0);
+                    // মেসেজ লিস্ট নিচে স্ক্রল রাখা
+                    const box = document.getElementById('chatMessages');
+                    if (box && effective > 0) {
+                        requestAnimationFrame(() => { box.scrollTop = box.scrollHeight; });
+                    }
+                }
+            }
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', applyKeyboardOffset);
+                window.visualViewport.addEventListener('scroll', applyKeyboardOffset);
+            }
+            window.addEventListener('resize', applyKeyboardOffset);
+            // ইনপুট ফোকাস/ব্লার
+            document.addEventListener('focusin', (e) => {
+                if (e.target && e.target.id === 'chatInput') {
+                    setTimeout(applyKeyboardOffset, 50);
+                    setTimeout(applyKeyboardOffset, 300);
+                }
+            });
+            document.addEventListener('focusout', (e) => {
+                if (e.target && e.target.id === 'chatInput') {
+                    setTimeout(() => {
+                        root.style.setProperty('--kb-offset', '0px');
+                        document.body.classList.remove('chat-kb-open');
+                        lastKb = 0;
+                    }, 80);
+                }
+            });
+        })();
 
         // ========== CHAT SEND WITH OFFLINE OPTIMISTIC UI ==========
         window.handleSendChatMessage = async (e) => {
@@ -9453,7 +10475,34 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
-            if (!text) return;
+            if (!text) {
+                updateChatActionButton();
+                return;
+            }
+
+            // Community DM path
+            if (typeof mesesuMode !== 'undefined' && mesesuMode === 'dm') {
+                if (mesesuDmPermission === 'pending') {
+                    return showToast('উত্তর না আসা পর্যন্ত মেসেজ পাঠানো যাবে না', 'lock', 'text-amber-400');
+                }
+                const btn = document.getElementById('chatSendBtn');
+                btn.disabled = true;
+                try {
+                    await mesesuSendDm(text);
+                    if (mesesuDmPermission !== 'none') {
+                        input.value = '';
+                        updateChatActionButton();
+                    }
+                } catch (err) {
+                    showToast('পাঠানো যায়নি: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
+                } finally {
+                    btn.disabled = false;
+                    updateChatActionButton();
+                }
+                return;
+            }
+            // Inbox mode — no direct send
+            if (typeof mesesuMode !== 'undefined' && mesesuMode === 'inbox') return;
 
             const isOnline = navigator.onLine;
             const time = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
@@ -9468,10 +10517,14 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             chatMessages.push(optimisticMsg);
             renderChatMessages();
             input.value = '';
+            updateChatActionButton();
 
             const btn = document.getElementById('chatSendBtn');
             btn.disabled = true;
+            const prevMode = btn.dataset.mode;
             btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i>';
+            btn.classList.remove('chat-gemini-mode');
+            btn.classList.add('chat-send-mode');
             refreshIcons();
 
             try {
@@ -9491,7 +10544,6 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 if (!isOnline) {
                     showToast('📡 অফলাইন — net ফিরলে auto যাবে', 'wifi-off', 'text-amber-400');
                 } else if (!isAdminOnline) {
-                    // success toast removed
                     const key = `autoReply_${currentUser.uid}`;
                     const last = parseInt(lsGet(key, '0'), 10);
                     if (Date.now() - last > 3600000) {
@@ -9504,8 +10556,6 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                             lsSet(key, String(Date.now()));
                         } catch (e) { console.warn('Auto reply failed', e); }
                     }
-                } else {
-                    // success toast removed
                 }
             } catch (err) {
                 chatMessages = chatMessages.filter(m => m.id !== tempId);
@@ -9513,8 +10563,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 showToast('পাঠানো যায়নি: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<span class="hidden sm:inline">পাঠান</span><i data-lucide="send" class="w-4 h-4"></i>';
-                refreshIcons();
+                updateChatActionButton();
             }
         };
 
@@ -9549,9 +10598,16 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const dot = document.getElementById('adminStatusDot');
             const label = document.getElementById('adminStatusLabel');
             if (!dot || !label) return;
-            if (isOnline) { dot.className = 'w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full absolute bottom-0 right-0 animate-pulse'; label.textContent = 'অনলাইন'; label.className = 'text-[10px] text-emerald-500 font-medium'; }
-            else {
-                dot.className = 'w-2.5 h-2.5 bg-slate-500 border-2 border-white rounded-full absolute bottom-0 right-0';
+            /* শুধু অ্যাডমিন থ্রেডে আপডেট করুন (DM-এ আলাদা হ্যান্ডল) */
+            if (typeof mesesuMode !== 'undefined' && mesesuMode === 'dm') return;
+            if (isOnline) {
+                dot.classList.remove('hidden');
+                dot.className = 'w-3 h-3 bg-emerald-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
+                label.textContent = 'অনলাইন';
+                label.className = 'text-[10px] text-emerald-500 font-medium';
+            } else {
+                dot.classList.remove('hidden');
+                dot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
                 if (lastSeen) {
                     const mins = Math.floor((Date.now() - lastSeen.getTime()) / 60000);
                     if (mins < 1) label.textContent = 'এইমাত্র সক্রিয় ছিলেন';
@@ -10143,26 +11199,61 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         const scrollThreshold = 50;
         let ticking = false;
         const bottomNavElement = document.getElementById('bottomNav');
+        let navHideTimer = null;
+
+        function setBottomNavHidden(hidden) {
+            if (!bottomNavElement) return;
+            if (isForcedProfileMode) return;
+            bottomNavElement.classList.toggle('nav-hidden', !!hidden);
+            document.body.classList.toggle('nav-is-hidden', !!hidden);
+            // Expand notif page to bottom when nav hides
+            const np = document.getElementById('notifPanel');
+            if (np && document.body.classList.contains('notif-page-open')) {
+                np.style.bottom = hidden ? '0px' : '';
+            }
+        }
+        window.setBottomNavHidden = setBottomNavHidden;
 
         window.addEventListener('scroll', () => {
             if (isForcedProfileMode) return;
             if (!ticking) {
                 window.requestAnimationFrame(() => {
-                    if (document.body.classList.contains('overflow-hidden')) {
+                    if (document.body.classList.contains('overflow-hidden') && !document.body.classList.contains('notif-page-open')) {
                         ticking = false;
                         return;
                     }
                     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                     if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
-                        bottomNavElement?.classList.add('nav-hidden');
-                    } else {
-                        bottomNavElement?.classList.remove('nav-hidden');
+                        setBottomNavHidden(true);
+                    } else if (scrollTop < lastScrollTop - 4) {
+                        setBottomNavHidden(false);
                     }
                     lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
                     ticking = false;
                 });
                 ticking = true;
             }
+        }, { passive: true });
+
+        // Tap/click anywhere (except bottom nav / form controls) temporarily hides bottom nav — all sections
+        document.addEventListener('click', (event) => {
+            if (isForcedProfileMode) return;
+            if (!currentUser && !document.getElementById('appContent')?.classList.contains('flex')) return;
+            const t = event.target;
+            if (!t || !t.closest) return;
+            if (t.closest('#bottomNav, .bottom-nav, input, textarea, select, button, a, [contenteditable="true"], .notif-menu-pop, .modal-sheet, #sidebarDrawer, #sidebarBackdrop')) return;
+            // Hide on content tap; show again after idle
+            setBottomNavHidden(true);
+            if (navHideTimer) clearTimeout(navHideTimer);
+            navHideTimer = setTimeout(() => setBottomNavHidden(false), 2800);
+        }, true);
+
+        // Notif list scroll also toggles nav
+        document.getElementById('notifList')?.addEventListener('scroll', () => {
+            const el = document.getElementById('notifList');
+            if (!el) return;
+            if (el.scrollTop > 24) setBottomNavHidden(true);
+            else setBottomNavHidden(false);
         }, { passive: true });
 
         // Guest preview interaction gate: ads, service cards, phone actions and protected controls require auth.
@@ -10309,6 +11400,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     resetAdFeedState();
                     allServiceIds = []; shuffledIds = []; currentBatchIndex = 0;
                     servicesFirstLoadDone = false; servicesLoopCount = 0;
+                    servicesFullIndexReady = false; servicesFullIndexLoading = false;
                     allServicesFullCache = null;
                     lastRenderedCount = 0; lastAdCountAtRender = -1;
                     animationQueueCounter = 0; wasInSearchMode = false;

@@ -5419,7 +5419,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocFromServer, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
 
         // ========== ANTI-ZOOM ==========
@@ -5597,6 +5597,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         let bloodDonors = [];
         let notices = [];
         let chatMessages = [];
+        // Admin Support messages are kept separately from community DMs to prevent state mixing.
+        let adminChatMessages = [];
         let activeCategory = 'all';
         const MY_UPAZILA_CAT = '__my_upazila__';
         let myUpazilaFilterOn = false; // লোকেশন ফিল্টার — ক্যাটাগরির সাথে আলাদাভাবে কাজ করে
@@ -9903,6 +9905,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         let mesesuDmPermission = 'none'; // none | pending | approved
         let mesesuPermissionRequester = null;
         let unsubscribeDm = null;
+        let unsubscribeDmThread = null; // থ্রেড ডকুমেন্টের লাইভ লিস্টেনার (permission স্টেট)
         let unsubscribeInbox = null;
         let mesesuInboxCache = [];
         let mesesuUsersCache = [];
@@ -9939,6 +9942,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             mesesuMode = 'inbox';
             mesesuPeer = null;
             if (unsubscribeDm) { try { unsubscribeDm(); } catch (e) {} unsubscribeDm = null; }
+            if (unsubscribeDmThread) { try { unsubscribeDmThread(); } catch (e) {} unsubscribeDmThread = null; }
             document.getElementById('mesesuInbox')?.classList.remove('hidden');
             document.getElementById('mesesuThreadView')?.classList.add('hidden');
             const search = document.getElementById('mesesuSearchInput');
@@ -10036,9 +10040,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             return words.slice(0, n).join(' ') + '...';
         }
         function mesesuAdminLastPreview() {
-            // Latest message in admin support chat (user or admin)
-            if (!chatMessages || !chatMessages.length) return 'অ্যাডমিনের সাথে কথা বলুন';
-            const last = chatMessages[chatMessages.length - 1];
+            // Latest message from the real Admin Support thread only.
+            if (!adminChatMessages || !adminChatMessages.length) return 'অ্যাডমিনের সাথে কথা বলুন';
+            const last = adminChatMessages[adminChatMessages.length - 1];
             const raw = (last && last.text) ? String(last.text) : '';
             const prev = mesesuPreviewText(raw, 5);
             return prev || 'অ্যাডমিনের সাথে কথা বলুন';
@@ -10094,9 +10098,16 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             box.innerHTML = html;
             refreshIcons();
         }
-        window.mesesuOpenAdmin = () => {
+        window.mesesuOpenAdmin = async () => {
+            // Switch mode first so a late DM snapshot cannot overwrite Admin Support state.
             mesesuMode = 'admin';
             mesesuPeer = null;
+            if (unsubscribeDm) { try { unsubscribeDm(); } catch (e) {} unsubscribeDm = null; }
+            if (unsubscribeDmThread) { try { unsubscribeDmThread(); } catch (e) {} unsubscribeDmThread = null; }
+            mesesuDmPermission = 'none';
+            mesesuPermissionRequester = null;
+            chatMessages = [];
+            document.getElementById('chatMessages')?.replaceChildren();
             document.getElementById('mesesuInbox')?.classList.add('hidden');
             document.getElementById('mesesuThreadView')?.classList.remove('hidden');
             // থ্রেড মোড: দুই নেভ লুকানো + নোটিফ বন্ধ
@@ -10125,12 +10136,42 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (img) { img.classList.add('hidden'); img.src = ''; }
             if (ic) { ic.classList.remove('hidden'); ic.setAttribute('data-lucide', 'headset'); }
             document.getElementById('dmPermissionBanner')?.classList.add('hidden');
-            document.getElementById('chatInput').disabled = false;
-            document.getElementById('chatInput').placeholder = 'আপনার বার্তা লিখুন...';
-            document.getElementById('chatInput').value = '';
+            const adminInput = document.getElementById('chatInput');
+            if (adminInput) {
+                adminInput.disabled = false;
+                adminInput.readOnly = false;
+                adminInput.placeholder = 'আপনার বার্তা লিখুন...';
+                adminInput.value = '';
+            }
             updateChatActionButton();
-            renderChatMessages();
-            setTimeout(async () => { await markMessagesAsRead(); updateUnreadBadge(); }, 300);
+
+            // Fetch the real Admin Support thread again; never reuse DM messages.
+            if (currentUser && firebaseReady) {
+                try {
+                    const adminQuery = query(
+                        collection(db, `chats/${currentUser.uid}/messages`),
+                        orderBy('createdAt', 'asc')
+                    );
+                    const adminSnap = await getDocs(adminQuery);
+                    adminChatMessages = adminSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    if (mesesuMode === 'admin') {
+                        chatMessages = adminChatMessages.slice();
+                        renderChatMessages();
+                        await markMessagesAsRead();
+                    }
+                } catch (err) {
+                    console.warn('Admin Support refresh failed:', err?.code || err?.message);
+                    // Keep the listener cache if the one-time refresh is unavailable.
+                    if (mesesuMode === 'admin') {
+                        chatMessages = adminChatMessages.slice();
+                        renderChatMessages();
+                    }
+                }
+            } else {
+                chatMessages = adminChatMessages.slice();
+                renderChatMessages();
+            }
+            updateUnreadBadge();
             refreshIcons();
         };
         window.mesesuOpenUser = async (peerId) => {
@@ -10147,6 +10188,14 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 }
             }
             mesesuMode = 'dm';
+            // আগের চ্যাটের permission স্টেট নতুন থ্রেডে ঢুকতে দেওয়া হবে না
+            mesesuDmPermission = 'none';
+            mesesuPermissionRequester = null;
+            if (unsubscribeDmThread) { try { unsubscribeDmThread(); } catch (e) {} unsubscribeDmThread = null; }
+            {
+                const lockInput = document.getElementById('chatInput');
+                if (lockInput) { lockInput.value = ''; lockInput.readOnly = true; lockInput.placeholder = 'লোড হচ্ছে...'; }
+            }
             const peerOnline = mesesuIsReallyOnline(peer);
             mesesuPeer = { id: peer.id, fullName: peer.fullName || 'ইউজার', photoURL: peer.photoURL || '', isPremium: mesesuHasBlue(peer), isOnline: peerOnline };
             document.getElementById('mesesuInbox')?.classList.add('hidden');
@@ -10188,23 +10237,59 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             await mesesuOpenDmThread(peerId);
             refreshIcons();
         };
+        /* থ্রেডের permission স্টেট সার্ভার থেকে সরাসরি পড়ে (অফলাইন ক্যাশের পুরনো ডেটা এড়াতে) */
+        async function mesesuSyncThreadState(peerIdArg) {
+            if (!currentUser || !firebaseReady) return;
+            const peerId = peerIdArg || (mesesuPeer && mesesuPeer.id);
+            if (!peerId) return;
+            const tid = mesesuThreadId(currentUser.uid, peerId);
+            let d = null, ok = false;
+            try {
+                const tSnap = await getDocFromServer(doc(db, 'dmThreads', tid));
+                d = tSnap.exists() ? tSnap.data() : null;
+                ok = true;
+            } catch (e) {
+                try {
+                    const tSnap2 = await getDoc(doc(db, 'dmThreads', tid));
+                    d = tSnap2.exists() ? tSnap2.data() : null;
+                    ok = true;
+                } catch (e2) { ok = false; }
+            }
+            if (!ok) return;
+            if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId) return;
+            const np = d ? (d.permissionStatus || 'none') : 'none';
+            const nr = d ? (d.permissionRequester || null) : null;
+            const changed = (np !== mesesuDmPermission) || (nr !== mesesuPermissionRequester);
+            mesesuDmPermission = np;
+            mesesuPermissionRequester = nr;
+            if (changed) mesesuApplyPermissionUi();
+        }
         async function mesesuOpenDmThread(peerId) {
             const tid = mesesuThreadId(currentUser.uid, peerId);
-            try {
-                const tSnap = await getDoc(doc(db, 'dmThreads', tid));
-                if (tSnap.exists()) {
-                    const d = tSnap.data();
-                    mesesuDmPermission = d.permissionStatus || 'none';
-                    mesesuPermissionRequester = d.permissionRequester || null;
-                } else {
-                    mesesuDmPermission = 'none';
-                    mesesuPermissionRequester = null;
-                }
-            } catch (e) { mesesuDmPermission = 'none'; mesesuPermissionRequester = null; }
+            // প্রথমে সার্ভার থেকে নিশ্চিত স্টেট নিন
+            await mesesuSyncThreadState(peerId);
             mesesuApplyPermissionUi();
+
+            // থ্রেড ডকুমেন্ট লাইভ শুনুন — permissionStatus/permissionRequester বদলালে সাথে সাথে UI আপডেট
+            if (unsubscribeDmThread) { try { unsubscribeDmThread(); } catch (e) {} unsubscribeDmThread = null; }
+            unsubscribeDmThread = onSnapshot(doc(db, 'dmThreads', tid), tSnap => {
+                if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId) return;
+                // ক্যাশ থেকে আসা snapshot-এ পুরনো স্টেট থাকতে পারে; সার্ভারের snapshot-ই চূড়ান্ত
+                if (tSnap.metadata && tSnap.metadata.fromCache && tSnap.exists()) return;
+                const d = tSnap.exists() ? tSnap.data() : null;
+                const np = d ? (d.permissionStatus || 'none') : 'none';
+                const nr = d ? (d.permissionRequester || null) : null;
+                if (np !== mesesuDmPermission || nr !== mesesuPermissionRequester) {
+                    mesesuDmPermission = np;
+                    mesesuPermissionRequester = nr;
+                    mesesuApplyPermissionUi();
+                }
+            }, err => console.warn('dm thread', err));
+
             if (unsubscribeDm) { try { unsubscribeDm(); } catch (e) {} }
             const q = query(collection(db, 'dmThreads', tid, 'messages'), orderBy('createdAt', 'asc'));
             unsubscribeDm = onSnapshot(q, snap => {
+                if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId) return;
                 chatMessages = snap.docs.map(d => {
                     const m = d.data();
                     return {
@@ -10218,10 +10303,10 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         isDm: true
                     };
                 });
-                // if peer replied after our permission request → approved
-                if (mesesuDmPermission === 'pending') {
-                    const peerReplied = snap.docs.some(d => d.data().senderId === peerId && d.data().type !== 'permission');
-                    if (peerReplied) {
+                // আমি অনুমতি চেয়ে অপেক্ষায় আছি, আর অপর পক্ষ কোনো মেসেজ (অনুমতির মেসেজ হলেও) পাঠিয়েছে → approved
+                if (mesesuDmPermission === 'pending' && mesesuPermissionRequester === currentUser.uid) {
+                    const peerMsg = snap.docs.some(d => d.data().senderId === peerId);
+                    if (peerMsg) {
                         mesesuDmPermission = 'approved';
                         setDoc(doc(db, 'dmThreads', tid), { permissionStatus: 'approved' }, { merge: true }).catch(() => {});
                         mesesuApplyPermissionUi();
@@ -10282,6 +10367,20 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const peerId = mesesuPeer.id;
             const tid = mesesuThreadId(currentUser.uid, peerId);
             const time = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
+            // পাঠানোর আগে সার্ভার থেকে সর্বশেষ permission স্টেট নিশ্চিত করা
+            const prevPerm = mesesuDmPermission;
+            await mesesuSyncThreadState(peerId);
+            if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId) return;
+            // দুজনেই একসাথে অনুমতি চাইলে: অপর পক্ষ আগেই চেয়ে থাকলে সরাসরি approved
+            if (prevPerm === 'none' && mesesuDmPermission === 'pending' && mesesuPermissionRequester && mesesuPermissionRequester !== currentUser.uid) {
+                mesesuDmPermission = 'approved';
+                try { await setDoc(doc(db, 'dmThreads', tid), { permissionStatus: 'approved' }, { merge: true }); } catch (e) {}
+                mesesuApplyPermissionUi();
+                return showToast('অপর পক্ষ আগেই অনুমতি চেয়েছে — এখন মেসেজ করতে পারবেন', 'check', 'text-emerald-400');
+            }
+            if (mesesuDmPermission === 'pending' && mesesuPermissionRequester === currentUser.uid) {
+                return showToast('উত্তর না আসা পর্যন্ত মেসেজ পাঠানো যাবে না', 'lock', 'text-amber-400');
+            }
             const isPermission = mesesuDmPermission === 'none';
             const isGrantingReply = mesesuDmPermission === 'pending' && mesesuPermissionRequester && mesesuPermissionRequester !== currentUser.uid;
             const msgText = isPermission ? DM_PERMISSION_TEXT : text;
@@ -10482,8 +10581,12 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
             // Community DM path
             if (typeof mesesuMode !== 'undefined' && mesesuMode === 'dm') {
-                if (mesesuDmPermission === 'pending') {
-                    return showToast('উত্তর না আসা পর্যন্ত মেসেজ পাঠানো যাবে না', 'lock', 'text-amber-400');
+                if (mesesuDmPermission === 'pending' && mesesuPermissionRequester === currentUser.uid) {
+                    // লোকাল স্টেট পুরনো হতে পারে — ব্লক করার আগে সার্ভার থেকে যাচাই
+                    await mesesuSyncThreadState();
+                    if (mesesuDmPermission === 'pending' && mesesuPermissionRequester === currentUser.uid) {
+                        return showToast('উত্তর না আসা পর্যন্ত মেসেজ পাঠানো যাবে না', 'lock', 'text-amber-400');
+                    }
                 }
                 const btn = document.getElementById('chatSendBtn');
                 btn.disabled = true;
@@ -10570,27 +10673,51 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         function getLocallyReadMessageIds() { const arr = lsGetJSON(`amar-chat-read-${currentUid()}`, []); return new Set(Array.isArray(arr) ? arr : []); }
         function markMessagesAsReadLocally() {
             const s = getLocallyReadMessageIds();
-            chatMessages.filter(m => m.sender === 'admin').forEach(m => s.add(m.id));
+            adminChatMessages.filter(m => m.sender === 'admin' && !m.isDm).forEach(m => s.add(m.id));
             const arr = [...s];
             lsSetJSON(`amar-chat-read-${currentUid()}`, arr.length > CHAT_READ_MAX ? arr.slice(-CHAT_READ_MAX) : arr);
         }
         async function markMessagesAsRead() {
-            if (!currentUser || !firebaseReady || isForcedProfileMode) return;
-            markMessagesAsReadLocally();
-            const unread = chatMessages.filter(m => m.sender === 'admin' && m.readByUser !== true);
-            if (!unread.length) { updateUnreadBadge(); return; }
+            if (!currentUser || !firebaseReady || isForcedProfileMode || mesesuMode === 'dm') return;
+
+            // Only documents from the real Admin Support collection are eligible.
+            const unread = adminChatMessages.filter(m =>
+                m.sender === 'admin' && !m.isDm && m.readByUser !== true
+            );
+            if (!unread.length) {
+                markMessagesAsReadLocally();
+                updateUnreadBadge();
+                return;
+            }
+
             try {
-                const batch = writeBatch(db);
-                unread.forEach(m => batch.update(doc(db, `chats/${currentUser.uid}/messages`, m.id), { readByUser: true }));
-                await batch.commit();
-            } catch (e) {}
+                // Firestore write batches are limited to 500 operations; use safe chunks.
+                for (let i = 0; i < unread.length; i += 450) {
+                    const batch = writeBatch(db);
+                    unread.slice(i, i + 450).forEach(m => {
+                        batch.update(doc(db, `chats/${currentUser.uid}/messages`, m.id), { readByUser: true });
+                    });
+                    await batch.commit();
+                }
+
+                const readIds = new Set(unread.map(m => m.id));
+                adminChatMessages = adminChatMessages.map(m =>
+                    readIds.has(m.id) ? { ...m, readByUser: true } : m
+                );
+                if (mesesuMode !== 'dm') chatMessages = adminChatMessages.slice();
+                markMessagesAsReadLocally();
+            } catch (e) {
+                // Do not mark locally if Firestore rejected the update.
+                console.warn('Admin Support read receipt failed:', e?.code || e?.message);
+            }
             updateUnreadBadge();
         }
         function updateUnreadBadge() {
             const b = document.getElementById('adminUnreadBadge');
             if (!b) return;
             const localRead = getLocallyReadMessageIds();
-            const unread = chatMessages.filter(m => m.sender === 'admin' && m.readByUser !== true && !localRead.has(m.id)).length;
+            // Count only messages stored in chats/{uid}/messages, never dmThreads.
+            const unread = adminChatMessages.filter(m => m.sender === 'admin' && !m.isDm && m.readByUser !== true && !localRead.has(m.id)).length;
             if (unread > 0 && currentTab !== 'chat') { b.textContent = unread > 9 ? '9+' : String(unread); b.classList.remove('hidden'); b.classList.add('flex'); }
             else { b.classList.add('hidden'); b.classList.remove('flex'); }
         }
@@ -11356,10 +11483,14 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         unsubscribeChat = onSnapshot(q, snap => {
                             const isInitial = !chatInitialLoadDone;
                             chatInitialLoadDone = true;
-                            chatMessages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                            renderChatMessages();
+                            adminChatMessages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                            // Do not let the Admin listener overwrite an open community DM.
+                            if (mesesuMode !== 'dm') {
+                                chatMessages = adminChatMessages.slice();
+                                renderChatMessages();
+                            }
                             updateUnreadBadge();
-                            if (currentTab === 'chat') setTimeout(async () => await markMessagesAsRead(), 500);
+                            if (currentTab === 'chat' && mesesuMode !== 'dm') setTimeout(async () => await markMessagesAsRead(), 500);
                             if (!isInitial) {
                                 snap.docChanges().forEach(change => {
                                     if (change.type === 'added') {
@@ -11376,7 +11507,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         showToast('প্রোফাইল লোড ব্যর্থ: ' + e.message, 'circle-x', 'text-rose-400');
                     }
                 } else {
-                    userProfile = null; currentUser = null; chatInitialLoadDone = false;
+                    userProfile = null; currentUser = null; chatInitialLoadDone = false; adminChatMessages = []; chatMessages = [];
                     isForcedProfileMode = false;
                     document.body.classList.remove('force-profile-mode');
                     if (unsubscribeChat) { unsubscribeChat(); unsubscribeChat = null; }

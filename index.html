@@ -1281,6 +1281,12 @@
         .mesesu-admin-online-dot.on { background: #22c55e; }
         .mesesu-admin-online-dot.off { background: #94a3b8; }
         body.light-mode .mesesu-admin-online-dot { border-color: #ffffff; }
+        /* Mesesu: ইনবক্স রো-র আনরিড ব্যাজ */
+        .mesesu-unread-badge {
+            min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+            background: #f43f5e; color: #fff; font-size: 11px; font-weight: 800; line-height: 1;
+            display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
         /* ===== Mesesu: থ্রি-ডট মেনু, রিকুয়েস্ট/রিজেক্টেড ভিউ, এপ্রুভ-রিজেক্ট বার — ডার্ক + লাইট মোড ফিক্সড ===== */
         #mesesuMenuBtn:hover { background: rgba(255,255,255,.08); }
         body.light-mode #mesesuMenuBtn { color: #334155; }
@@ -3832,7 +3838,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                             </button>
                         </div>
                     </div>
-                    <div id="chatMessages" class="p-3 sm:p-4 flex-1 overflow-y-auto space-y-3 bg-[#07140e] text-xs"></div>
+                    <div id="chatMessages" class="p-3 sm:p-4 flex-1 overflow-y-auto space-y-2 bg-[#07140e] text-xs"></div>
                     <div id="dmPermissionBanner" class="hidden px-3 py-2 bg-amber-950/50 border-t border-amber-700/30 text-[11px] text-amber-200 text-center">উত্তর না আসা পর্যন্ত নতুন মেসেজ পাঠানো যাবে না</div>
                     <div id="dmRejectedBanner" class="hidden px-3 py-2.5 bg-rose-950/50 border-t border-rose-700/30 text-[11px] text-rose-300 text-center font-medium"></div>
                     <div id="dmRequestActionBar" class="hidden px-3 py-3 bg-[#0c1f16] border-t border-emerald-900/40 flex items-center gap-2 shrink-0">
@@ -8175,6 +8181,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             }
             currentTab = tabName;
             try { localStorage.setItem('amar-elaka-tab', tabName); } catch (e) {}
+            if (tabName !== 'chat' && typeof mesesuStopPeerWatchers === 'function') { try { mesesuStopPeerWatchers(); } catch (e) {} }
             // রক্তদাতা সেকশন ছেড়ে গেলে জেলা-ফিল্টার টগল অটো অফ
             if (tabName !== 'blood' && typeof resetBloodDistrictFilter === 'function') {
                 resetBloodDistrictFilter();
@@ -9913,10 +9920,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         };
 
         // ========== CHAT RENDERING WITH OFFLINE/PENDING STATES ==========
-        function renderChatMessages() {
+        function renderChatMessages(opts) {
             if (isForcedProfileMode) return;
             const box = document.getElementById('chatMessages');
             if (!box) return;
+            const prevTop = box.scrollTop;
             if (chatMessages.length === 0) {
                 box.innerHTML = `<div class="flex flex-col items-center justify-center py-10 text-center px-4">
                     <div class="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-600/30 to-emerald-600/20 border border-emerald-500/40 flex items-center justify-center mb-3"><i data-lucide="messages-square" class="w-8 h-8 text-emerald-400"></i></div>
@@ -9935,28 +9943,33 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     const pending = msg.pending === true;
                     const wasOffline = msg.offlineSent === true;
                     return `<div class="flex gap-2 max-w-[85%] ml-auto justify-end">
-                        <div class="bg-gradient-to-br from-emerald-600 to-emerald-600 text-white p-2.5 sm:p-3 rounded-2xl rounded-tr-none shadow-lg shadow-emerald-600/30 ${pending ? 'opacity-70' : ''}">
-                            <p data-user-content="true" class="text-sm leading-relaxed">${esc(msg.text)}</p>
-                            <div class="flex items-center justify-end gap-1 mt-1">
+                        <div class="bg-gradient-to-br from-emerald-600 to-emerald-600 text-white px-3 py-1.5 rounded-2xl rounded-tr-none shadow-lg shadow-emerald-600/30 ${pending ? 'opacity-70' : ''}">
+                            <p data-user-content="true" class="text-sm leading-snug">${esc(msg.text)}</p>
+                            <div class="flex items-center justify-end gap-1 mt-0.5">
                                 ${pending
                                     ? `<span class="text-[9px] text-amber-200 flex items-center gap-0.5"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${wasOffline ? 'অফলাইন — net এলে যাবে' : 'পাঠানো হচ্ছে...'}</span>`
-                                    : `<span class="text-[9px] text-emerald-200 flex items-center gap-0.5"><i data-lucide="check-check" class="w-2.5 h-2.5"></i>${esc(msg.time || '')}</span>`
+                                    : `<span class="text-[9px] text-emerald-200 flex items-center gap-0.5">${mesesuTickHtml(msg)}${esc(msg.time || '')}</span>`
                                 }
                             </div>
                         </div>
                     </div>`;
                 }
-                const an = msg.userName || msg.adminName || 'অ্যাডমিন';
+                let sideAvatar;
+                if (msg.isDm === true) {
+                    const ph = (typeof mesesuPeer !== 'undefined' && mesesuPeer && mesesuPeer.photoURL) ? mesesuPeer.photoURL : '';
+                    sideAvatar = `<div class="w-7 h-7 rounded-full overflow-hidden bg-emerald-800/80 text-emerald-200 flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30">${ph ? `<img src="${esc(ph)}" alt="" class="w-full h-full object-cover" loading="lazy">` : `<i data-lucide="user" class="w-3.5 h-3.5"></i>`}</div>`;
+                } else {
+                    sideAvatar = `<div class="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30"><i data-lucide="headset" class="w-3.5 h-3.5"></i></div>`;
+                }
                 return `<div class="flex gap-2 max-w-[85%]">
-                    <div class="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30"><i data-lucide="headset" class="w-3.5 h-3.5"></i></div>
-                    <div class="bg-[#10281c] text-slate-100 p-2.5 sm:p-3 rounded-2xl rounded-tl-none border border-emerald-900/60">
-                        <span data-user-content="true" class="text-[10px] font-extrabold text-emerald-400 uppercase block mb-1">${esc(an)}</span>
-                        <p data-user-content="true" class="text-sm leading-relaxed">${esc(msg.text)}</p>
-                        <span data-user-content="true" class="text-[9px] text-slate-500 mt-1 block">${esc(msg.time || '')}</span>
+                    ${sideAvatar}
+                    <div class="bg-[#10281c] text-slate-100 px-3 py-1.5 rounded-2xl rounded-tl-none border border-emerald-900/60">
+                        <p data-user-content="true" class="text-sm leading-snug">${esc(msg.text)}</p>
+                        <span data-user-content="true" class="text-[9px] text-slate-500 mt-0.5 block">${esc(msg.time || '')}</span>
                     </div>
                 </div>`;
             }).join('');
-            box.scrollTop = box.scrollHeight;
+            box.scrollTop = (opts && opts.keepScroll) ? prevTop : box.scrollHeight;
             refreshIcons();
             // Refresh admin last-message preview on Mesesu inbox list
             try {
@@ -9984,6 +9997,21 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         let mesesuSubView = null; // null | 'requests' | 'rejected' — কোন সাব-ভিউ খোলা আছে
         const mesesuVerifiedInbox = new Set(); // সার্ভার থেকে যাচাই করা pending ইনবক্স ডকুমেন্ট
         let mesesuRejectedCache = []; // আমি যাদের রিজেক্ট করেছি, ৫ দিনের মধ্যে
+        // ===== Mesesu v2 স্টেট: আনরিড ব্যাজ, টিক, প্রেজেন্স =====
+        let mesesuUnsubPeerDoc = null;     // খোলা DM-এর পিয়ারের users ডক লাইভ লিস্টেনার
+        let mesesuPeerLive = null;         // পিয়ারের সর্বশেষ users ডেটা
+        let mesesuThreadReadMap = {};      // dmThreads/{tid}.readAt -> { uid: ms }
+        let mesesuBadgeSeenMs = 0;         // হেডার ব্যাজ "দেখা হয়েছে" ওয়াটারমার্ক (সার্ভার-টাইম ms)
+        let mesesuBadgeSavedMs = 0;
+        let mesesuBadgeSaveTimer = null;
+        let mesesuInboxUid = null;
+        let mesesuAdminLastSeenMs = 0;
+        let mesesuReadInFlight = false;
+        let mesesuReadLastTry = 0;
+        let mesesuReadRetry = null;
+        let mesesuRenderTimer = null;
+        const mesesuPeerWatch = new Map(); // peerUid -> unsubscribe
+        const mesesuPeerData = {};         // peerUid -> users ডক ডেটা (ইনবক্স স্ট্যাটাস ডটের জন্য)
         const MESESU_FIVE_DAYS_MS = 5 * 24 * 60 * 60 * 1000; // চ্যাট মেসেজ + রিজেক্ট ব্লক মেয়াদ: ৫ দিন
         const MESESU_ADMIN_ONE_DAY_MS = 24 * 60 * 60 * 1000; // অ্যাডমিন চ্যাট মেসেজ মেয়াদ: ১ দিন
         function mesesuTsMillis(ts) {
@@ -10003,8 +10031,13 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (!u) return false;
             if (u.isPremium || u.verified || u.blueBadge) return true;
             try {
-                const et = u.premiumExpiresAt?.toDate ? u.premiumExpiresAt.toDate().getTime() : (u.premiumExpiresAt ? new Date(u.premiumExpiresAt).getTime() : 0);
-                return et > Date.now();
+                const toMs = (v) => v?.toDate ? v.toDate().getTime() : (v ? new Date(v).getTime() : 0);
+                // পুরনো ফিল্ড
+                if ((toMs(u.premiumExpiresAt) || 0) > Date.now()) return true;
+                // অ্যাপের আসল প্রিমিয়াম ফিল্ড: premiumExpiry (নিজের প্রোফাইলে isUserPremium এটা দিয়েই হয়, প্রিমিয়াম সিস্টেম লাইভ থাকলে)
+                const live = (typeof isPremiumSystemLive === 'function') ? isPremiumSystemLive() : true;
+                if (live && (toMs(u.premiumExpiry) || 0) > Date.now()) return true;
+                return false;
             } catch (e) { return false; }
         }
         /** Realistic online: isOnline flag + lastSeen within 8 minutes */
@@ -10023,11 +10056,212 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (photoURL) return `<img src="${esc(photoURL)}" alt="" class="${sizeClass} rounded-full object-cover">`;
             return `<div class="${sizeClass} rounded-full bg-emerald-800/80 flex items-center justify-center"><i data-lucide="user" class="w-1/2 h-1/2 text-emerald-200"></i></div>`;
         }
+        // ================= Mesesu v2 হেল্পার =================
+        /** ইনবক্স লিস্ট আর চ্যাট হেডার — দুই জায়গায় একই ব্লু টিক লজিক */
+        function mesesuPeerBlue(peerId, u) {
+            if (mesesuHasBlue(u)) return true;
+            const row = (mesesuInboxCache || []).find(x => (x.peerId || x.id) === peerId);
+            return !!(row && row.peerBlue);
+        }
+        /** আপডেট ৭: হেডারের "Active X ago" (ইংরেজি) */
+        function mesesuActiveAgoText(u) {
+            const ms = mesesuTsMillis(u && u.lastSeen);
+            if (!ms) return 'Offline';
+            const mins = Math.max(0, Math.floor((Date.now() - ms) / 60000));
+            if (mins < 1) return 'Active just now';
+            if (mins < 60) return `Active ${mins} minute${mins === 1 ? '' : 's'} ago`;
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return `Active ${hrs} hour${hrs === 1 ? '' : 's'} ago`;
+            const days = Math.floor(hrs / 24);
+            return `Active ${days} day${days === 1 ? '' : 's'} ago`;
+        }
+        /** আপডেট ৬: নিজের পাঠানো মেসেজের স্ট্যাটাস — 'sent' | 'delivered' | 'seen' */
+        function mesesuOwnMsgStatus(msg) {
+            const t = msg.createdMs || mesesuTsMillis(msg.createdAt) || Date.now();
+            if (msg.isDm === true && typeof mesesuPeer !== 'undefined' && mesesuPeer) {
+                const readMs = mesesuThreadReadMap[mesesuPeer.id] || 0;
+                if (readMs && readMs >= t) return 'seen';
+                const u = mesesuPeerLive;
+                if (u) {
+                    if (mesesuIsReallyOnline(u)) return 'delivered';
+                    const ls = mesesuTsMillis(u.lastSeen);
+                    if (ls && ls >= t) return 'delivered'; // মেসেজের পরে প্রাপক অনলাইনে এসেছিল
+                }
+                return 'sent';
+            }
+            // অ্যাডমিন সাপোর্ট চ্যাট
+            if (msg.seenByAdmin === true || msg.readByAdmin === true) return 'seen';
+            if (isAdminOnline || (mesesuAdminLastSeenMs && mesesuAdminLastSeenMs >= t)) return 'delivered';
+            return 'sent';
+        }
+        function mesesuTickHtml(msg) {
+            const st = mesesuOwnMsgStatus(msg);
+            if (st === 'sent') return '<i data-lucide="check" class="w-2.5 h-2.5"></i>';
+            if (st === 'seen') return '<i data-lucide="check-check" class="w-3 h-3" stroke-width="3" style="color:#7dd3fc"></i>';
+            return '<i data-lucide="check-check" class="w-2.5 h-2.5"></i>';
+        }
+        function mesesuRowBadge(n) {
+            n = Number(n) || 0;
+            if (n < 1) return '';
+            return `<span class="mesesu-unread-badge">${n > 9 ? '9+' : n}</span>`;
+        }
+        function mesesuAdminUnreadCount() {
+            try {
+                const localRead = getLocallyReadMessageIds();
+                return (adminChatMessages || []).filter(m => m.sender === 'admin' && !m.isDm && m.readByUser !== true && !localRead.has(m.id)).length;
+            } catch (e) { return 0; }
+        }
+        // ---------- আপডেট ১: হেডার ব্যাজ (চ্যাট গণনা) ----------
+        function mesesuBadgeRows() {
+            return (mesesuApprovedThreads || []).filter(t => !t._pendingSent).concat(mesesuRequestsCache || []);
+        }
+        function mesesuBadgeChatCount() {
+            if (!currentUser) return 0;
+            const seen = mesesuBadgeSeenMs || 0;
+            let n = 0;
+            try {
+                const localRead = getLocallyReadMessageIds();
+                const au = (adminChatMessages || []).filter(m => m.sender === 'admin' && !m.isDm && m.readByUser !== true && !localRead.has(m.id));
+                if (au.length) {
+                    const lastMs = Math.max.apply(null, au.map(m => mesesuTsMillis(m.createdAt) || Date.now()));
+                    if (lastMs > seen) n++;
+                }
+            } catch (e) {}
+            mesesuBadgeRows().forEach(t => {
+                if ((Number(t.unreadCount) || 0) > 0 && mesesuTsMillis(t.lastAt) > seen) n++;
+            });
+            return n;
+        }
+        /** Mesesu-তে ঢুকলে/থাকলে: এ পর্যন্ত জানা সব অ্যাক্টিভিটি "দেখা হয়েছে" ধরে ওয়াটারমার্ক এগিয়ে দেয় (সার্ভার-টাইম ভিত্তিক, ক্লক-স্কিউ নেই) */
+        function mesesuAckBadge() {
+            if (!currentUser) return;
+            let mx = mesesuBadgeSeenMs || 0;
+            try {
+                (mesesuInboxCache || []).forEach(t => { const v = mesesuTsMillis(t.lastAt); if (v > mx) mx = v; });
+                (adminChatMessages || []).forEach(m => { const v = mesesuTsMillis(m.createdAt); if (v > mx) mx = v; });
+            } catch (e) {}
+            if (mx <= (mesesuBadgeSeenMs || 0)) return;
+            mesesuBadgeSeenMs = mx;
+            lsSet('amar-mesesu-badgeseen-' + currentUser.uid, String(mx));
+            if (!firebaseReady) return;
+            clearTimeout(mesesuBadgeSaveTimer);
+            mesesuBadgeSaveTimer = setTimeout(() => {
+                if (!currentUser || mesesuBadgeSavedMs >= mesesuBadgeSeenMs) return;
+                mesesuBadgeSavedMs = mesesuBadgeSeenMs;
+                setDoc(doc(db, 'users', currentUser.uid), { mesesuBadgeSeenAt: mesesuBadgeSeenMs }, { merge: true })
+                    .catch(e => console.warn('badge seen save', e?.code || e?.message));
+            }, 1200);
+        }
+        // ---------- খোলা DM-এর পিয়ার লাইভ (আপডেট ৩, ৬, ৭) ----------
+        function mesesuRenderPeerHeader() {
+            if (mesesuMode !== 'dm' || !mesesuPeer) return;
+            const u = mesesuPeerLive || {};
+            const online = mesesuIsReallyOnline(u);
+            const tick = document.getElementById('threadBlueTick');
+            if (tick) tick.classList.toggle('hidden', !mesesuPeerBlue(mesesuPeer.id, u));
+            const dot = document.getElementById('adminStatusDot');
+            if (dot) {
+                dot.classList.remove('hidden');
+                dot.className = online
+                    ? 'w-3 h-3 bg-emerald-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse'
+                    : 'w-3 h-3 bg-slate-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
+            }
+            const label = document.getElementById('adminStatusLabel');
+            if (label) {
+                label.textContent = online ? 'অনলাইন' : mesesuActiveAgoText(u);
+                label.className = online ? 'text-[10px] text-emerald-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
+            }
+        }
+        function mesesuStopPeerWatch() {
+            if (mesesuUnsubPeerDoc) { try { mesesuUnsubPeerDoc(); } catch (e) {} mesesuUnsubPeerDoc = null; }
+        }
+        function mesesuStartPeerWatch(peerId) {
+            mesesuStopPeerWatch();
+            if (!firebaseReady || !peerId) return;
+            mesesuUnsubPeerDoc = onSnapshot(doc(db, 'users', peerId), snap => {
+                if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId || !snap.exists()) return;
+                mesesuPeerLive = { id: peerId, ...snap.data() };
+                mesesuPeer.isPremium = mesesuPeerBlue(peerId, mesesuPeerLive);
+                mesesuPeer.isOnline = mesesuIsReallyOnline(mesesuPeerLive);
+                mesesuRenderPeerHeader();
+                renderChatMessages({ keepScroll: true });
+            }, err => console.warn('peer watch', err?.code || err?.message));
+        }
+        // ---------- আপডেট ২/৬: DM পড়া হয়েছে মার্ক ----------
+        async function mesesuMarkDmRead() {
+            try {
+                if (!currentUser || !firebaseReady || mesesuMode !== 'dm' || !mesesuPeer) return;
+                if (currentTab !== 'chat' || document.visibilityState === 'hidden') return;
+                if (mesesuReadInFlight) return;
+                if (Date.now() - mesesuReadLastTry < 1500) {
+                    if (!mesesuReadRetry) mesesuReadRetry = setTimeout(() => { mesesuReadRetry = null; mesesuMarkDmRead(); }, 1600);
+                    return;
+                }
+                const peerId = mesesuPeer.id, myUid = currentUser.uid;
+                const tid = mesesuThreadId(myUid, peerId);
+                const row = (mesesuInboxCache || []).find(x => (x.peerId || x.id) === peerId);
+                const needInbox = !!row && (Number(row.unreadCount) || 0) > 0;
+                let lastPeerMs = 0;
+                (chatMessages || []).forEach(m => { if (m.isDm && m.sender === 'admin' && (m.createdMs || 0) > lastPeerMs) lastPeerMs = m.createdMs; });
+                const needThread = mesesuDmPermission !== 'none' && lastPeerMs > (mesesuThreadReadMap[myUid] || 0);
+                if (!needInbox && !needThread) return;
+                mesesuReadInFlight = true; mesesuReadLastTry = Date.now();
+                try {
+                    if (needThread) await setDoc(doc(db, 'dmThreads', tid), { readAt: { [myUid]: serverTimestamp() } }, { merge: true });
+                    if (needInbox) await setDoc(doc(db, 'users', myUid, 'inbox', peerId), { unreadCount: 0, lastReadAt: serverTimestamp() }, { merge: true });
+                } finally { mesesuReadInFlight = false; }
+            } catch (e) { console.warn('mark dm read', e?.code || e?.message); }
+        }
+        // ---------- আপডেট ৮: ইনবক্স রো-র স্ট্যাটাস ডটের জন্য পিয়ার ওয়াচার ----------
+        function mesesuScheduleThreadsRender() {
+            clearTimeout(mesesuRenderTimer);
+            mesesuRenderTimer = setTimeout(() => {
+                if (currentTab === 'chat' && mesesuMode === 'inbox' && !mesesuSubView) mesesuRenderThreads(mesesuApprovedThreads || []);
+            }, 250);
+        }
+        function mesesuStopPeerWatchers() {
+            mesesuPeerWatch.forEach(un => { try { un(); } catch (e) {} });
+            mesesuPeerWatch.clear();
+        }
+        function mesesuSyncPeerWatchers() {
+            if (!currentUser || !firebaseReady) return;
+            const ids = [];
+            (mesesuApprovedThreads || []).forEach(t => {
+                const id = t.peerId || t.id;
+                if (id && id !== currentUser.uid && !ids.includes(id)) ids.push(id);
+            });
+            const want = new Set(ids.slice(0, 40));
+            mesesuPeerWatch.forEach((un, id) => {
+                if (!want.has(id)) { try { un(); } catch (e) {} mesesuPeerWatch.delete(id); delete mesesuPeerData[id]; }
+            });
+            const sig = (x) => x ? [mesesuIsReallyOnline(x) ? 1 : 0, mesesuHasBlue(x) ? 1 : 0].join('|') : '';
+            want.forEach(id => {
+                if (mesesuPeerWatch.has(id)) return;
+                const un = onSnapshot(doc(db, 'users', id), snap => {
+                    if (!snap.exists()) return;
+                    const prev = mesesuPeerData[id];
+                    mesesuPeerData[id] = snap.data();
+                    if (sig(prev) !== sig(mesesuPeerData[id])) mesesuScheduleThreadsRender();
+                }, () => {});
+                mesesuPeerWatch.set(id, un);
+            });
+        }
+        // প্রতি ১ মিনিটে: "Active X ago", অনলাইন-মেয়াদ ও টিক রিফ্রেশ
+        if (!window.__mesesuMinuteTick) {
+            window.__mesesuMinuteTick = setInterval(() => {
+                try {
+                    if (!currentUser || currentTab !== 'chat') return;
+                    if (mesesuMode === 'dm') { mesesuRenderPeerHeader(); renderChatMessages({ keepScroll: true }); }
+                    else if (mesesuMode === 'inbox' && !mesesuSubView) mesesuRenderThreads(mesesuApprovedThreads || []);
+                } catch (e) {}
+            }, 60000);
+        }
         function mesesuShowInbox() {
             mesesuMode = 'inbox';
             mesesuPeer = null;
             if (unsubscribeDm) { try { unsubscribeDm(); } catch (e) {} unsubscribeDm = null; }
             if (unsubscribeDmThread) { try { unsubscribeDmThread(); } catch (e) {} unsubscribeDmThread = null; }
+            mesesuStopPeerWatch(); mesesuPeerLive = null; mesesuThreadReadMap = {};
             document.getElementById('mesesuInbox')?.classList.remove('hidden');
             document.getElementById('mesesuThreadView')?.classList.add('hidden');
             const search = document.getElementById('mesesuSearchInput');
@@ -10041,10 +10275,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const bottomNav = document.getElementById('bottomNav');
             if (bottomNav && currentTab === 'chat') bottomNav.classList.remove('nav-hidden');
             // Always show Admin Support row immediately
-            mesesuRenderThreads(mesesuInboxCache || []);
+            mesesuRenderThreads(mesesuApprovedThreads || []);
             if (currentUser && firebaseReady) {
                 mesesuLoadPeopleRow();
                 mesesuListenInbox();
+                mesesuSyncPeerWatchers();
             } else {
                 mesesuRenderPeopleRow([]);
             }
@@ -10102,7 +10337,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         }
         function mesesuListenInbox() {
             if (!currentUser || !firebaseReady) return;
-            if (unsubscribeInbox) { try { unsubscribeInbox(); } catch (e) {} }
+            // লগইনের পর থেকেই একটাই লিস্টেনার চলে (হোমপেজ ব্যাজের জন্য); একই ইউজারের জন্য আবার সাবস্ক্রাইব করে না
+            if (unsubscribeInbox && mesesuInboxUid === currentUser.uid) return;
+            if (unsubscribeInbox) { try { unsubscribeInbox(); } catch (e) {} unsubscribeInbox = null; }
+            mesesuInboxUid = currentUser.uid;
+            mesesuInboxCache = [];
             const q = query(collection(db, 'users', currentUser.uid, 'inbox'), orderBy('lastAt', 'desc'));
             unsubscribeInbox = onSnapshot(q, snap => {
                 mesesuInboxCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -10110,7 +10349,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             }, err => {
                 console.warn('inbox listen', err);
                 // fallback without orderBy if index missing
-                onSnapshot(collection(db, 'users', currentUser.uid, 'inbox'), snap2 => {
+                unsubscribeInbox = onSnapshot(collection(db, 'users', currentUser.uid, 'inbox'), snap2 => {
                     mesesuInboxCache = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
                     mesesuInboxCache.sort((a, b) => (b.lastAt?.toMillis?.() || 0) - (a.lastAt?.toMillis?.() || 0));
                     mesesuHandleInboxUpdate();
@@ -10183,10 +10422,15 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         function mesesuHandleInboxUpdate() {
             mesesuVerifyPendingInbox();
             mesesuPartitionInbox();
-            mesesuRenderThreads(mesesuApprovedThreads);
+            if (currentTab === 'chat') {
+                mesesuRenderThreads(mesesuApprovedThreads);
+                mesesuSyncPeerWatchers();
+            }
             mesesuUpdateReqBadge();
             if (!document.getElementById('mesesuRequestsView')?.classList.contains('hidden')) mesesuRenderRequestsList();
             if (!document.getElementById('mesesuRejectedView')?.classList.contains('hidden')) mesesuRenderRejectedList();
+            try { updateUnreadBadge(); } catch (e) {}
+            if (mesesuMode === 'dm') mesesuMarkDmRead();
         }
         // থ্রি-ডট মেনু খোলা/বন্ধ
         function mesesuToggleMenu(e) {
@@ -10293,6 +10537,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (!box) return;
             const adminOnline = !!isAdminOnline;
             const adminPreview = mesesuAdminLastPreview();
+            const adminUnread = mesesuAdminUnreadCount();
             // Pinned Admin Support — verified badge by name; online/offline on avatar corner
             let html = `<div class="mesesu-thread-row" onclick="mesesuOpenAdmin()">
                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center shrink-0 relative overflow-visible">
@@ -10307,25 +10552,38 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         </p>
                         <span class="text-[10px] text-slate-500 shrink-0">${adminOnline ? 'অনলাইন' : 'অফলাইন'}</span>
                     </div>
-                    <p class="text-xs text-slate-400 truncate mt-0.5">${esc(adminPreview)}</p>
+                    <div class="flex items-center justify-between gap-2 mt-0.5">
+                        <p class="text-xs text-slate-400 truncate ${adminUnread ? 'font-semibold' : ''}">${esc(adminPreview)}</p>
+                        ${mesesuRowBadge(adminUnread)}
+                    </div>
                 </div>
             </div>`;
             const rows = list || [];
             if (empty) empty.classList.add('hidden');
             rows.forEach(t => {
-                const tick = t.peerBlue ? '<i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-blue-400 shrink-0"></i>' : '';
+                const pid = t.peerId || t.id;
+                const live = mesesuPeerData[pid] || (mesesuUsersCache || []).find(u => u.id === pid) || null;
+                const tick = mesesuPeerBlue(pid, live) ? '<i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-blue-400 shrink-0"></i>' : '';
+                const isOn = live ? mesesuIsReallyOnline(live) : false;
                 const timeStr = t.lastAt?.toDate ? t.lastAt.toDate().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }) : '';
                 const preview = t._pendingSent ? 'অনুমতির অপেক্ষায়...' : mesesuPreviewText(t.lastMessage || '', 5);
-                html += `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(t.peerId || t.id)}')">
-                    <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-emerald-900/50 flex items-center justify-center">
-                        ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-emerald-300"></i>`}
+                const unread = t._pendingSent ? 0 : (Number(t.unreadCount) || 0);
+                html += `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(pid)}')">
+                    <div class="relative w-12 h-12 shrink-0">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-emerald-900/50 flex items-center justify-center">
+                            ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-emerald-300"></i>`}
+                        </div>
+                        <span class="mesesu-admin-online-dot ${isOn ? 'on' : 'off'}" title="${isOn ? 'অনলাইন' : 'অফলাইন'}"></span>
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center justify-between gap-2">
                             <p class="text-sm font-bold text-slate-100 truncate flex items-center gap-1">${esc(t.peerName || 'ইউজার')} ${tick}</p>
                             <span class="text-[10px] text-slate-500 shrink-0">${esc(timeStr)}</span>
                         </div>
-                        <p class="text-xs text-slate-400 truncate mt-0.5">${esc(preview)}</p>
+                        <div class="flex items-center justify-between gap-2 mt-0.5">
+                            <p class="text-xs text-slate-400 truncate ${unread ? 'font-semibold' : ''}">${esc(preview)}</p>
+                            ${mesesuRowBadge(unread)}
+                        </div>
                     </div>
                 </div>`;
             });
@@ -10342,6 +10600,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             // Switch mode first so a late DM snapshot cannot overwrite Admin Support state.
             mesesuMode = 'admin';
             mesesuPeer = null;
+            mesesuStopPeerWatch(); mesesuPeerLive = null; mesesuThreadReadMap = {};
             if (unsubscribeDm) { try { unsubscribeDm(); } catch (e) {} unsubscribeDm = null; }
             if (unsubscribeDmThread) { try { unsubscribeDmThread(); } catch (e) {} unsubscribeDmThread = null; }
             mesesuDmPermission = 'none';
@@ -10441,7 +10700,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 if (lockInput) { lockInput.value = ''; lockInput.readOnly = true; lockInput.placeholder = 'লোড হচ্ছে...'; }
             }
             const peerOnline = mesesuIsReallyOnline(peer);
-            mesesuPeer = { id: peer.id, fullName: peer.fullName || 'ইউজার', photoURL: peer.photoURL || '', isPremium: mesesuHasBlue(peer), isOnline: peerOnline };
+            mesesuPeer = { id: peer.id, fullName: peer.fullName || 'ইউজার', photoURL: peer.photoURL || '', isPremium: mesesuPeerBlue(peer.id, peer), isOnline: peerOnline };
+            mesesuPeerLive = peer; mesesuThreadReadMap = {};
             document.getElementById('mesesuInbox')?.classList.add('hidden');
             document.getElementById('mesesuThreadView')?.classList.remove('hidden');
             // থ্রেড মোড: দুই নেভ লুকানো + নোটিফ বন্ধ
@@ -10476,6 +10736,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 if (img) { img.classList.add('hidden'); img.src = ''; }
                 if (ic) { ic.classList.remove('hidden'); ic.setAttribute('data-lucide', 'user'); }
             }
+            mesesuRenderPeerHeader();
+            mesesuStartPeerWatch(peerId);
             chatMessages = [];
             renderChatMessages();
             await mesesuOpenDmThread(peerId);
@@ -10538,6 +10800,19 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (unsubscribeDmThread) { try { unsubscribeDmThread(); } catch (e) {} unsubscribeDmThread = null; }
             unsubscribeDmThread = onSnapshot(doc(db, 'dmThreads', tid), tSnap => {
                 if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId) return;
+                // পড়া-রসিদ (seen): dmThreads/{tid}.readAt = { uid: Timestamp }
+                try {
+                    const dd0 = tSnap.exists() ? tSnap.data() : null;
+                    const ra = dd0 && dd0.readAt;
+                    if (ra && typeof ra === 'object') {
+                        let ch = false;
+                        Object.keys(ra).forEach(k => {
+                            const ms = mesesuTsMillis(ra[k]);
+                            if (ms && ms !== mesesuThreadReadMap[k]) { mesesuThreadReadMap[k] = ms; ch = true; }
+                        });
+                        if (ch) renderChatMessages({ keepScroll: true });
+                    }
+                } catch (e) {}
                 // ক্যাশ থেকে আসা snapshot-এ পুরনো স্টেট থাকতে পারে; সার্ভারের snapshot-ই চূড়ান্ত
                 if (tSnap.metadata && tSnap.metadata.fromCache && tSnap.exists()) return;
                 const d = tSnap.exists() ? tSnap.data() : null;
@@ -10572,12 +10847,14 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         uid: m.senderId,
                         userName: m.senderName || '',
                         readByUser: true,
+                        createdMs: mesesuTsMillis(m.createdAt),
                         isDm: true
                     };
                 });
                 // নোট: এখন থেকে শুধু অপর পক্ষের রিপ্লাই দিলেই স্বয়ংক্রিয়ভাবে অনুমতি দেওয়া হয় না —
                 // প্রাপককে অবশ্যই এপ্রুভ/রিজেক্ট বাটনে ক্লিক করতে হবে (নিচের mesesuApproveCurrentRequest দেখুন)।
                 renderChatMessages();
+                mesesuMarkDmRead();
             }, err => console.warn('dm messages', err));
         }
         function mesesuApplyPermissionUi() {
@@ -10740,6 +11017,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             };
             await setDoc(doc(db, 'users', currentUser.uid, 'inbox', peerId), myInbox, { merge: true });
             await setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), peerInbox, { merge: true });
+            // আপডেট ২: প্রাপকের ইনবক্সে আনরিড +1 (আলাদা রাইট — ব্যর্থ হলেও মেসেজ পাঠানো ভাঙবে না)
+            setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), { unreadCount: increment(1) }, { merge: true })
+                .catch(e => console.warn('unread inc', e?.code || e?.message));
             mesesuApplyPermissionUi();
             try { playAppSound('send'); } catch (e) {}
         }
@@ -11070,7 +11350,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             lsSetJSON(`amar-chat-read-${currentUid()}`, arr.length > CHAT_READ_MAX ? arr.slice(-CHAT_READ_MAX) : arr);
         }
         async function markMessagesAsRead() {
-            if (!currentUser || !firebaseReady || isForcedProfileMode || mesesuMode === 'dm') return;
+            if (!currentUser || !firebaseReady || isForcedProfileMode || mesesuMode !== 'admin') return;
 
             // Only documents from the real Admin Support collection are eligible.
             const unread = adminChatMessages.filter(m =>
@@ -11107,10 +11387,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         function updateUnreadBadge() {
             const b = document.getElementById('adminUnreadBadge');
             if (!b) return;
-            const localRead = getLocallyReadMessageIds();
-            // Count only messages stored in chats/{uid}/messages, never dmThreads.
-            const unread = adminChatMessages.filter(m => m.sender === 'admin' && !m.isDm && m.readByUser !== true && !localRead.has(m.id)).length;
-            if (unread > 0 && currentTab !== 'chat') { b.textContent = unread > 9 ? '9+' : String(unread); b.classList.remove('hidden'); b.classList.add('flex'); }
+            // Mesesu-তে থাকলে সব "দেখা হয়েছে" ধরা হয় — হোমে ফিরলে ব্যাজ ফিরবে না
+            if (currentUser && currentTab === 'chat') { try { mesesuAckBadge(); } catch (e) {} }
+            // ব্যাজ = কতগুলো চ্যাটে নতুন অ্যাক্টিভিটি (মেসেজ সংখ্যা নয়); ৯-এর বেশি হলে "9+"
+            const n = (currentUser && currentTab !== 'chat') ? mesesuBadgeChatCount() : 0;
+            if (n > 0) { b.textContent = n > 9 ? '9+' : String(n); b.classList.remove('hidden'); b.classList.add('flex'); }
             else { b.classList.add('hidden'); b.classList.remove('flex'); }
         }
         function updateAdminStatus(isOnline, lastSeen) {
@@ -11479,7 +11760,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     const data = snap.data();
                     const lastSeen = data.lastSeen?.toDate?.() || null;
                     isAdminOnline = data.online === true && lastSeen && (Date.now() - lastSeen.getTime() < 5 * 60 * 1000);
+                    mesesuAdminLastSeenMs = lastSeen ? lastSeen.getTime() : 0;
                     updateAdminStatus(isAdminOnline, lastSeen);
+                    try { if (currentTab === 'chat' && mesesuMode === 'admin') renderChatMessages({ keepScroll: true }); } catch (e) {}
                 } else { isAdminOnline = false; updateAdminStatus(false, null); }
             }, (err) => { isAdminOnline = false; updateAdminStatus(false, null); });
         }
@@ -11882,7 +12165,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                                 renderChatMessages();
                             }
                             updateUnreadBadge();
-                            if (currentTab === 'chat' && mesesuMode !== 'dm') setTimeout(async () => await markMessagesAsRead(), 500);
+                            if (currentTab === 'chat' && mesesuMode === 'admin') setTimeout(async () => await markMessagesAsRead(), 500);
                             if (!isInitial) {
                                 snap.docChanges().forEach(change => {
                                     if (change.type === 'added') {
@@ -11894,6 +12177,12 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                                 });
                             }
                         }, err => console.warn('chat listener:', err.code || err.message));
+                        // Mesesu ইনবক্স লিস্টেনার লগইনের পর থেকেই চলবে (হোমপেজ ব্যাজ + আনরিড কাউন্ট)
+                        try {
+                            mesesuBadgeSeenMs = Math.max(Number(userProfile?.mesesuBadgeSeenAt) || 0, parseInt(lsGet('amar-mesesu-badgeseen-' + user.uid, '0'), 10) || 0);
+                            mesesuBadgeSavedMs = mesesuBadgeSeenMs;
+                            mesesuListenInbox();
+                        } catch (e) { console.warn('mesesu inbox start', e); }
                     } catch (e) {
                         console.error(e);
                         showToast('প্রোফাইল লোড ব্যর্থ: ' + e.message, 'circle-x', 'text-rose-400');
@@ -11903,6 +12192,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     isForcedProfileMode = false;
                     document.body.classList.remove('force-profile-mode');
                     if (unsubscribeChat) { unsubscribeChat(); unsubscribeChat = null; }
+                    try { if (unsubscribeInbox) unsubscribeInbox(); } catch (e) {}
+                    unsubscribeInbox = null; mesesuInboxUid = null;
+                    mesesuInboxCache = []; mesesuApprovedThreads = []; mesesuRequestsCache = []; mesesuRejectedCache = [];
+                    mesesuBadgeSeenMs = 0; mesesuBadgeSavedMs = 0;
+                    try { mesesuStopPeerWatchers(); mesesuStopPeerWatch(); } catch (e) {}
                     if (unsubscribeAdminStatus) { unsubscribeAdminStatus(); unsubscribeAdminStatus = null; }
                     [unsubCategories, unsubEmergency, unsubBlood, unsubNotices, unsubPromotions].forEach(fn => { try { fn?.(); } catch(e){} });
                     unsubCategories = unsubEmergency = unsubBlood = unsubNotices = unsubPromotions = null;

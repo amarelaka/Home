@@ -7286,7 +7286,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (list.find(n => n.id === notif.id)) return;
             // Chat notifications: keep only the latest one at the top (no spam)
             if ((notif.type || '') === 'chat' || (notif.clickAction || '') === 'chat') {
-                list = list.filter(n => n.type !== 'chat' && n.clickAction !== 'chat');
+                // প্রতি চ্যাটের জন্য শুধু সর্বশেষ নোটিফিকেশন (অ্যাডমিন = 'chat', DM = 'chat:<uid>')
+                const ca = notif.clickAction || 'chat';
+                list = list.filter(n => (n.clickAction || '') !== ca);
             }
             list.unshift({
                 id: notif.id,
@@ -7324,6 +7326,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         }
 
         function navigateFromNotification(action) {
+            if (typeof action === 'string' && action.startsWith('chat:')) { window.mesesuOpenFromPush(action.slice(5)); return; }
             const map = {
                 'subscription': 'subscription',
                 'chat': 'chat',
@@ -7591,10 +7594,10 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     const id = `push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
                     addNotification({
                         id,
-                        type: clickAction === 'chat' ? 'chat' : (clickAction === 'subscription' ? 'subscription' : 'info'),
+                        type: String(clickAction).split(':')[0] === 'chat' ? 'chat' : (clickAction === 'subscription' ? 'subscription' : 'info'),
                         title,
                         body,
-                        icon: clickAction === 'chat' ? 'headset' : (clickAction === 'subscription' ? 'crown' : 'bell'),
+                        icon: String(clickAction).startsWith('chat:') ? 'message-circle' : (clickAction === 'chat' ? 'headset' : (clickAction === 'subscription' ? 'crown' : 'bell')),
                         image,
                         clickAction
                     });
@@ -10256,6 +10259,36 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 } catch (e) {}
             }, 60000);
         }
+        // ================= Mesesu: ইউজার→ইউজার পুশ নোটিফিকেশন =================
+        const MESESU_PUSH_URL = 'https://script.google.com/macros/s/AKfycbzMd88SpoSVXIMYVBkKf9NYbD1OYuE2i_h51cnbu_ekdiAoMyT5N3oXR0Gi10fENsPk/exec';
+        async function mesesuPushToPeer(peerId, kind, text) {
+            try {
+                if (!currentUser || !peerId || !MESESU_PUSH_URL) return;
+                let token = (mesesuPeerLive && mesesuPeerLive.id === peerId && mesesuPeerLive.fcmToken) || '';
+                if (!token) {
+                    const u = (mesesuUsersCache || []).find(x => x.id === peerId);
+                    token = (u && u.fcmToken) || '';
+                }
+                if (!token) {
+                    try { const snap = await getDoc(doc(db, 'users', peerId)); if (snap.exists()) token = snap.data().fcmToken || ''; } catch (e) {}
+                }
+                // টোকেন নেই = প্রাপক নোটিফিকেশন Allow করেননি; একই ডিভাইসে নিজেকেও পাঠানো হবে না
+                if (!token || token === (userProfile && userProfile.fcmToken)) return;
+                const myName = (userProfile && userProfile.fullName) || (currentUser.displayName) || 'ইউজার';
+                let body;
+                if (kind === 'request') body = 'আপনাকে মেসেজের অনুরোধ পাঠিয়েছেন 👋🏻';
+                else {
+                    const t = String(text || '').trim();
+                    body = t.length > 100 ? t.slice(0, 100).trimEnd() + '...' : t;
+                }
+                const payload = { title: myName, body, tokens: [token], image: '', clickAction: 'chat:' + currentUser.uid, scheduleAt: null };
+                fetch(MESESU_PUSH_URL, { method: 'POST', body: JSON.stringify(payload), keepalive: true }).catch(() => {});
+            } catch (e) { console.warn('mesesu push', e); }
+        }
+        window.mesesuOpenFromPush = (uid) => {
+            if (!uid) return;
+            try { switchTab('chat'); setTimeout(() => { if (window.mesesuOpenUser) window.mesesuOpenUser(uid); }, 200); } catch (e) { console.warn(e); }
+        };
         function mesesuShowInbox() {
             mesesuMode = 'inbox';
             mesesuPeer = null;
@@ -11020,6 +11053,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             // আপডেট ২: প্রাপকের ইনবক্সে আনরিড +1 (আলাদা রাইট — ব্যর্থ হলেও মেসেজ পাঠানো ভাঙবে না)
             setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), { unreadCount: increment(1) }, { merge: true })
                 .catch(e => console.warn('unread inc', e?.code || e?.message));
+            mesesuPushToPeer(peerId, isPermission ? 'request' : 'message', msgText);
             mesesuApplyPermissionUi();
             try { playAppSound('send'); } catch (e) {}
         }
@@ -12149,6 +12183,14 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                             const savedTab = localStorage.getItem('amar-elaka-tab');
                             if (savedTab && document.getElementById('view-' + savedTab) && savedTab !== 'services') {
                                 switchTab(savedTab);
+                            }
+                        } catch (e) {}
+                        // নোটিফিকেশন লিংক ?chat=<uid> থাকলে সরাসরি ওই চ্যাট খুলবে
+                        try {
+                            const cu = new URLSearchParams(location.search).get('chat');
+                            if (cu) {
+                                history.replaceState(null, '', location.pathname + location.hash);
+                                setTimeout(() => window.mesesuOpenFromPush(cu), 600);
                             }
                         } catch (e) {}
 

@@ -1281,6 +1281,27 @@
         .mesesu-admin-online-dot.on { background: #22c55e; }
         .mesesu-admin-online-dot.off { background: #94a3b8; }
         body.light-mode .mesesu-admin-online-dot { border-color: #ffffff; }
+        /* ===== Mesesu: থ্রি-ডট মেনু, রিকুয়েস্ট/রিজেক্টেড ভিউ, এপ্রুভ-রিজেক্ট বার — ডার্ক + লাইট মোড ফিক্সড ===== */
+        #mesesuMenuBtn:hover { background: rgba(255,255,255,.08); }
+        body.light-mode #mesesuMenuBtn { color: #334155; }
+        body.light-mode #mesesuMenuBtn i { color: #475569 !important; }
+        body.light-mode #mesesuMenuBtn:hover { background: rgba(15,23,42,.06); }
+        body.light-mode #mesesuMenuDropdown { background: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 10px 30px rgba(15,23,42,.12); }
+        body.light-mode #mesesuMenuDropdown button { color: #0f172a !important; }
+        body.light-mode #mesesuMenuDropdown button:hover { background: #f1f5f9 !important; }
+        body.light-mode #mesesuMenuDropdown .bg-emerald-900\/40 { background: #e2e8f0 !important; }
+        #mesesuRequestsView, #mesesuRejectedView { background: inherit; }
+        body.light-mode #mesesuRequestsView h3, body.light-mode #mesesuRejectedView h3 { color: #0f172a !important; }
+        body.light-mode #mesesuRequestsView .border-b, body.light-mode #mesesuRejectedView .border-b { border-color: #e2e8f0 !important; }
+        body.light-mode #mesesuRequestsList .mesesu-thread-row p.text-slate-100,
+        body.light-mode #mesesuRejectedList .mesesu-thread-row p.text-slate-100 { color: #0f172a !important; }
+        body.light-mode #mesesuRequestsList .mesesu-thread-row p.text-slate-400,
+        body.light-mode #mesesuRejectedList .mesesu-thread-row p.text-slate-400 { color: #64748b !important; }
+        body.light-mode #dmRequestActionBar { background: #ffffff !important; border-color: #e2e8f0 !important; }
+        body.light-mode #dmPermissionBanner { background: #fffbeb !important; border-color: #fde68a !important; color: #b45309 !important; }
+        body.light-mode #dmRejectedBanner { background: #fef2f2 !important; border-color: #fecaca !important; color: #b91c1c !important; }
+        .mesesu-system-watermark { opacity: .62; font-style: italic; }
+        body.light-mode .mesesu-system-watermark { color: #64748b !important; opacity: .85; }
         /* থ্রেড হেডারের অনলাইন/অফলাইন ডট — লাইট মোডে সাদা বর্ডার */
         body.light-mode #adminStatusDot { border-color: #ffffff !important; }
         body.light-mode #threadAvatarWrap { box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2); }
@@ -3729,7 +3750,27 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 <!-- ===== MESESU INBOX (Messenger-style list) ===== -->
                 <div id="mesesuInbox" class="info-card overflow-hidden max-w-3xl mx-auto flex flex-col h-[calc(100dvh-11rem)] min-h-[420px] max-h-[640px]">
                     <div class="px-4 pt-4 pb-2 shrink-0 border-b border-emerald-900/30">
-                        <h2 class="text-2xl font-extrabold tracking-tight text-white leading-none">Mesesu</h2>
+                        <div class="flex items-center justify-between gap-2">
+                            <h2 class="text-2xl font-extrabold tracking-tight text-white leading-none">Mesesu</h2>
+                            <div class="relative" id="mesesuMenuWrap">
+                                <button type="button" id="mesesuMenuBtn" onclick="mesesuToggleMenu(event)" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 active:scale-95 transition relative shrink-0" title="মেনু" aria-label="মেনু">
+                                    <i data-lucide="ellipsis-vertical" class="w-5 h-5 text-slate-300"></i>
+                                    <span id="mesesuReqBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center leading-none"></span>
+                                </button>
+                                <div id="mesesuMenuDropdown" class="hidden absolute right-0 top-11 z-30 w-56 rounded-xl overflow-hidden border border-emerald-900/50 bg-[#0c1f16] shadow-2xl">
+                                    <button type="button" onclick="mesesuOpenRequests()" class="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-slate-100 hover:bg-emerald-900/40 text-left transition">
+                                        <i data-lucide="user-plus" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                                        <span class="flex-1">মেসেজ রিকুয়েস্ট</span>
+                                        <span id="mesesuReqCountInline" class="hidden min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center"></span>
+                                    </button>
+                                    <div class="h-px bg-emerald-900/40"></div>
+                                    <button type="button" onclick="mesesuOpenRejected()" class="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-slate-100 hover:bg-emerald-900/40 text-left transition">
+                                        <i data-lucide="user-x" class="w-4 h-4 text-rose-400 shrink-0"></i>
+                                        <span>রিজেক্টেড মেসেজ</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="mt-3 relative" id="mesesuSearchWrap">
                             <i data-lucide="search" class="mesesu-search-icon w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none z-10"></i>
                             <input type="search" id="mesesuSearchInput" placeholder="ব্যবহারকারী খুঁজুন" autocomplete="off" class="w-full bg-[#07140e] border border-emerald-900/50 text-white rounded-full pl-11 pr-4 py-2.5 text-sm outline-none focus:border-emerald-500 placeholder:text-slate-500">
@@ -3743,6 +3784,22 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     <div id="mesesuThreadList" class="flex-1 overflow-y-auto px-1 pb-2">
                         <div id="mesesuEmptyState" class="hidden"></div>
                         <div id="mesesuThreads" class="space-y-0.5"></div>
+                    </div>
+                    <!-- মেসেজ রিকুয়েস্ট সাব-ভিউ -->
+                    <div id="mesesuRequestsView" class="hidden flex-1 min-h-0 flex flex-col">
+                        <div class="flex items-center gap-2 px-3 py-2.5 border-b border-emerald-900/30 shrink-0">
+                            <button type="button" onclick="mesesuCloseSubView()" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center shrink-0" aria-label="পিছনে"><i data-lucide="arrow-left" class="w-4 h-4 text-slate-300"></i></button>
+                            <h3 class="text-sm font-bold text-slate-100">মেসেজ রিকুয়েস্ট</h3>
+                        </div>
+                        <div id="mesesuRequestsList" class="flex-1 overflow-y-auto px-1 pb-2"></div>
+                    </div>
+                    <!-- রিজেক্টেড মেসেজ সাব-ভিউ -->
+                    <div id="mesesuRejectedView" class="hidden flex-1 min-h-0 flex flex-col">
+                        <div class="flex items-center gap-2 px-3 py-2.5 border-b border-emerald-900/30 shrink-0">
+                            <button type="button" onclick="mesesuCloseSubView()" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center shrink-0" aria-label="পিছনে"><i data-lucide="arrow-left" class="w-4 h-4 text-slate-300"></i></button>
+                            <h3 class="text-sm font-bold text-slate-100">রিজেক্টেড মেসেজ</h3>
+                        </div>
+                        <div id="mesesuRejectedList" class="flex-1 overflow-y-auto px-1 pb-2"></div>
                     </div>
                 </div>
 
@@ -3777,6 +3834,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     </div>
                     <div id="chatMessages" class="p-3 sm:p-4 flex-1 overflow-y-auto space-y-3 bg-[#07140e] text-xs"></div>
                     <div id="dmPermissionBanner" class="hidden px-3 py-2 bg-amber-950/50 border-t border-amber-700/30 text-[11px] text-amber-200 text-center">উত্তর না আসা পর্যন্ত নতুন মেসেজ পাঠানো যাবে না</div>
+                    <div id="dmRejectedBanner" class="hidden px-3 py-2.5 bg-rose-950/50 border-t border-rose-700/30 text-[11px] text-rose-300 text-center font-medium"></div>
+                    <div id="dmRequestActionBar" class="hidden px-3 py-3 bg-[#0c1f16] border-t border-emerald-900/40 flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="mesesuRejectCurrentRequest()" class="flex-1 py-2.5 rounded-xl bg-rose-600/15 border border-rose-600/40 text-rose-300 text-sm font-bold active:scale-95 transition">রিজেক্ট</button>
+                        <button type="button" onclick="mesesuApproveCurrentRequest()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold active:scale-95 transition shadow-lg shadow-emerald-600/30">এপ্রুভ</button>
+                    </div>
                     <form id="chatForm" onsubmit="handleSendChatMessage(event)" class="p-2.5 sm:p-3 bg-[#10281c] border-t border-emerald-900/50 flex items-center gap-2 shrink-0">
                         <input type="text" id="chatInput" placeholder="আপনার বার্তা লিখুন..." autocomplete="off" inputmode="text" enterkeyhint="send" autocapitalize="sentences" class="flex-1 bg-[#07140e] border border-emerald-900/60 text-white rounded-2xl px-4 py-3 text-sm outline-none focus:border-emerald-500 placeholder:text-slate-500 min-w-0" style="font-size: 16px; -webkit-user-select: text; user-select: text;">
                         <button type="submit" id="chatSendBtn" data-mode="send" aria-label="পাঠান" class="chat-action-btn chat-send-mode shrink-0 touch-target flex items-center justify-center">
@@ -9864,6 +9926,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 refreshIcons(); return;
             }
             box.innerHTML = chatMessages.map(msg => {
+                if (msg.sender === 'system') {
+                    return `<div class="flex justify-center my-2 px-6">
+                        <span class="mesesu-system-watermark text-[11px] text-slate-400 text-center leading-relaxed select-none">${esc(msg.text)}</span>
+                    </div>`;
+                }
                 if (msg.sender === 'user') {
                     const pending = msg.pending === true;
                     const wasOffline = msg.offlineSent === true;
@@ -9894,7 +9961,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             // Refresh admin last-message preview on Mesesu inbox list
             try {
                 if (typeof mesesuMode !== 'undefined' && mesesuMode === 'inbox' && typeof mesesuRenderThreads === 'function') {
-                    mesesuRenderThreads(typeof mesesuInboxCache !== 'undefined' ? mesesuInboxCache : []);
+                    mesesuRenderThreads(typeof mesesuApprovedThreads !== 'undefined' ? mesesuApprovedThreads : []);
                 }
             } catch (e) {}
         }
@@ -9902,13 +9969,31 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         const DM_PERMISSION_TEXT = 'আমাকে কি আপনার সাথে মেসেজ করার অনুমতি দিবেন?';
         let mesesuMode = 'inbox'; // inbox | admin | dm
         let mesesuPeer = null; // { id, fullName, photoURL, isPremium }
-        let mesesuDmPermission = 'none'; // none | pending | approved
+        let mesesuDmPermission = 'none'; // none | pending | approved | rejected
         let mesesuPermissionRequester = null;
+        let mesesuPermissionRejectedBy = null; // রিজেক্ট করেছে এমন ব্যক্তির uid
+        let mesesuPermissionRejectedAt = 0; // রিজেক্টের সময় (ms)
         let unsubscribeDm = null;
         let unsubscribeDmThread = null; // থ্রেড ডকুমেন্টের লাইভ লিস্টেনার (permission স্টেট)
         let unsubscribeInbox = null;
         let mesesuInboxCache = [];
         let mesesuUsersCache = [];
+        // মেসেজ রিকুয়েস্ট / রিজেক্টেড মেসেজ লিস্ট (থ্রি-ডট মেনু)
+        let mesesuApprovedThreads = []; // মূল চ্যাট লিস্টে যা দেখা যাবে (approved + আমার পাঠানো pending)
+        let mesesuRequestsCache = []; // আমার কাছে আসা pending রিকুয়েস্ট (আমি requester নই)
+        let mesesuSubView = null; // null | 'requests' | 'rejected' — কোন সাব-ভিউ খোলা আছে
+        const mesesuVerifiedInbox = new Set(); // সার্ভার থেকে যাচাই করা pending ইনবক্স ডকুমেন্ট
+        let mesesuRejectedCache = []; // আমি যাদের রিজেক্ট করেছি, ৫ দিনের মধ্যে
+        const MESESU_FIVE_DAYS_MS = 5 * 24 * 60 * 60 * 1000; // চ্যাট মেসেজ + রিজেক্ট ব্লক মেয়াদ: ৫ দিন
+        const MESESU_ADMIN_ONE_DAY_MS = 24 * 60 * 60 * 1000; // অ্যাডমিন চ্যাট মেসেজ মেয়াদ: ১ দিন
+        function mesesuTsMillis(ts) {
+            try { return ts?.toDate ? ts.toDate().getTime() : (ts ? new Date(ts).getTime() : 0); } catch (e) { return 0; }
+        }
+        function mesesuRejectDaysLeft() {
+            if (!mesesuPermissionRejectedAt) return 5;
+            const passed = Date.now() - mesesuPermissionRejectedAt;
+            return Math.max(1, Math.ceil((MESESU_FIVE_DAYS_MS - passed) / MESESU_ADMIN_ONE_DAY_MS));
+        }
 
         function mesesuFirstName(full) {
             const p = String(full || '').trim().split(/\s+/).filter(Boolean);
@@ -9948,7 +10033,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const search = document.getElementById('mesesuSearchInput');
             if (search) search.value = '';
             document.getElementById('mesesuSearchResults')?.classList.add('hidden');
-            document.getElementById('mesesuThreadList')?.classList.remove('hidden');
+            mesesuApplySubViewVisibility(); // সাব-ভিউ (রিকুয়েস্ট/রিজেক্টেড) খোলা থাকলে মূল লিস্ট আর একসাথে দেখাবে না
             // ইনবক্স: থ্রেড মোড বন্ধ — নিচের নেভ দেখাবে
             document.body.classList.remove('chat-thread');
             document.body.classList.remove('chat-kb-open');
@@ -10021,17 +10106,172 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const q = query(collection(db, 'users', currentUser.uid, 'inbox'), orderBy('lastAt', 'desc'));
             unsubscribeInbox = onSnapshot(q, snap => {
                 mesesuInboxCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                mesesuRenderThreads(mesesuInboxCache);
+                mesesuHandleInboxUpdate();
             }, err => {
                 console.warn('inbox listen', err);
                 // fallback without orderBy if index missing
                 onSnapshot(collection(db, 'users', currentUser.uid, 'inbox'), snap2 => {
                     mesesuInboxCache = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
                     mesesuInboxCache.sort((a, b) => (b.lastAt?.toMillis?.() || 0) - (a.lastAt?.toMillis?.() || 0));
-                    mesesuRenderThreads(mesesuInboxCache);
+                    mesesuHandleInboxUpdate();
                 });
             });
         }
+        /** ইনবক্সের র‍্যাজ ডেটাকে ৩ ভাগে ভাগ করে: approved (মূল লিস্ট), requests (আমার কাছে আসা pending), rejected (আমি রিজেক্ট করেছি, ৫ দিনের মধ্যে) */
+        function mesesuPartitionInbox() {
+            const myUid = currentUser?.uid;
+            const approved = [], requests = [], rejected = [];
+            (mesesuInboxCache || []).forEach(t => {
+                const status = t.permissionStatus || 'approved'; // পুরনো থ্রেড যেগুলোতে স্ট্যাটাস নেই, সেগুলো approved ধরা হবে
+                if (status === 'pending') {
+                    if (t.permissionRequester === myUid) {
+                        approved.push(Object.assign({}, t, { _pendingSent: true }));
+                    } else {
+                        // আমার পাঠানো নয় — সার্ভারের থ্রেড দেখে দিক/স্ট্যাটাস যাচাই না হওয়া পর্যন্ত (পুরনো ডকুমেন্টে requester নেই) রিকুয়েস্টে দেখানো হবে না
+                        if (!mesesuVerifiedInbox.has(t.id + '|' + mesesuTsMillis(t.lastAt)) || !t.permissionRequester) return;
+                        requests.push(t);
+                    }
+                } else if (status === 'rejected') {
+                    const rejAt = mesesuTsMillis(t.rejectedAt);
+                    const within = rejAt && (Date.now() - rejAt) < MESESU_FIVE_DAYS_MS;
+                    if (t.rejectedBy === myUid && within) rejected.push(t);
+                    // মেয়াদ শেষ হলে বা আমি রিজেক্টার না হলে — কোথাও দেখানো হবে না (৫ দিন পর স্বয়ংক্রিয়ভাবে রিসেট হবে)
+                } else {
+                    approved.push(t);
+                }
+            });
+            mesesuApprovedThreads = approved;
+            mesesuRequestsCache = requests;
+            mesesuRejectedCache = rejected;
+        }
+        function mesesuUpdateReqBadge() {
+            const n = mesesuRequestsCache.length;
+            const badge = document.getElementById('mesesuReqBadge');
+            const inline = document.getElementById('mesesuReqCountInline');
+            if (badge) { if (n > 0) { badge.textContent = n > 99 ? '৯৯+' : String(n); badge.classList.remove('hidden'); } else badge.classList.add('hidden'); }
+            if (inline) { if (n > 0) { inline.textContent = String(n); inline.classList.remove('hidden'); } else inline.classList.add('hidden'); }
+        }
+        /** আমার পাঠানো নয় এমন pending ইনবক্স ডকুমেন্ট থ্রেডের আসল ডেটার সাথে মিলিয়ে ঠিক করে (পুরনো/বাসি ডেটার কারণে ভুল রিকুয়েস্ট এড়াতে) */
+        async function mesesuVerifyPendingInbox() {
+            if (!currentUser || !firebaseReady) return;
+            const myUid = currentUser.uid;
+            const todo = (mesesuInboxCache || []).filter(t => (t.permissionStatus || 'approved') === 'pending'
+                && t.permissionRequester !== myUid
+                && !mesesuVerifiedInbox.has(t.id + '|' + mesesuTsMillis(t.lastAt)));
+            if (!todo.length) return;
+            for (const t of todo) {
+                const key = t.id + '|' + mesesuTsMillis(t.lastAt);
+                mesesuVerifiedInbox.add(key); // ব্যর্থ হলেও লুপ এড়াতে একবারই চেষ্টা
+                try {
+                    const peerId = t.peerId || t.id;
+                    const tid = mesesuThreadId(myUid, peerId);
+                    let tSnap;
+                    try { tSnap = await getDocFromServer(doc(db, 'dmThreads', tid)); } catch (e) { tSnap = await getDoc(doc(db, 'dmThreads', tid)); }
+                    const patch = tSnap.exists()
+                        ? (() => { const d = tSnap.data(); return { permissionStatus: d.permissionStatus || 'approved', permissionRequester: d.permissionRequester || null, rejectedBy: d.rejectedBy || null, rejectedAt: d.rejectedAt || null }; })()
+                        : { permissionStatus: 'approved' };
+                    const differs = patch.permissionStatus !== t.permissionStatus
+                        || ('permissionRequester' in patch && (patch.permissionRequester || null) !== (t.permissionRequester || null));
+                    if (differs) {
+                        Object.assign(t, patch);
+                        setDoc(doc(db, 'users', myUid, 'inbox', t.id), patch, { merge: true }).catch(() => {});
+                    }
+                } catch (e) { console.warn('verify inbox', e); }
+            }
+            mesesuHandleInboxUpdate();
+        }
+        function mesesuHandleInboxUpdate() {
+            mesesuVerifyPendingInbox();
+            mesesuPartitionInbox();
+            mesesuRenderThreads(mesesuApprovedThreads);
+            mesesuUpdateReqBadge();
+            if (!document.getElementById('mesesuRequestsView')?.classList.contains('hidden')) mesesuRenderRequestsList();
+            if (!document.getElementById('mesesuRejectedView')?.classList.contains('hidden')) mesesuRenderRejectedList();
+        }
+        // থ্রি-ডট মেনু খোলা/বন্ধ
+        function mesesuToggleMenu(e) {
+            e?.stopPropagation();
+            document.getElementById('mesesuMenuDropdown')?.classList.toggle('hidden');
+        }
+        document.addEventListener('click', (e) => {
+            const wrap = document.getElementById('mesesuMenuWrap');
+            if (wrap && !wrap.contains(e.target)) document.getElementById('mesesuMenuDropdown')?.classList.add('hidden');
+        });
+        /** একটাই জায়গা থেকে ঠিক হয় কোন প্যানেল দেখা যাবে — একসাথে দুটো দেখানোর সুযোগ নেই */
+        function mesesuApplySubViewVisibility() {
+            const v = mesesuSubView;
+            const show = (id, on) => document.getElementById(id)?.classList.toggle('hidden', !on);
+            show('mesesuPeopleRow', !v);
+            show('mesesuThreadList', !v);
+            show('mesesuRequestsView', v === 'requests');
+            show('mesesuRejectedView', v === 'rejected');
+            if (v === 'requests') mesesuRenderRequestsList();
+            if (v === 'rejected') mesesuRenderRejectedList();
+        }
+        function mesesuOpenRequests() {
+            document.getElementById('mesesuMenuDropdown')?.classList.add('hidden');
+            document.getElementById('mesesuSearchResults')?.classList.add('hidden');
+            mesesuSubView = 'requests';
+            mesesuApplySubViewVisibility();
+        }
+        function mesesuOpenRejected() {
+            document.getElementById('mesesuMenuDropdown')?.classList.add('hidden');
+            document.getElementById('mesesuSearchResults')?.classList.add('hidden');
+            mesesuSubView = 'rejected';
+            mesesuApplySubViewVisibility();
+        }
+        function mesesuCloseSubView() {
+            mesesuSubView = null;
+            mesesuApplySubViewVisibility();
+        }
+        function mesesuRenderRequestsList() {
+            const box = document.getElementById('mesesuRequestsList');
+            if (!box) return;
+            if (!mesesuRequestsCache.length) {
+                box.innerHTML = `<div class="text-center py-12 px-4"><p class="text-sm font-bold text-slate-300">কোনো মেসেজ রিকুয়েস্ট নেই</p><p class="text-xs text-slate-500 mt-1">কেউ আপনাকে মেসেজ করার অনুরোধ পাঠালে এখানে দেখা যাবে</p></div>`;
+                refreshIcons(); return;
+            }
+            box.innerHTML = mesesuRequestsCache.map(t => {
+                const tick = t.peerBlue ? '<i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-blue-400 shrink-0"></i>' : '';
+                const preview = mesesuPreviewText(t.lastMessage || '', 6);
+                return `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(t.peerId || t.id)}')">
+                    <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-emerald-900/50 flex items-center justify-center">
+                        ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-emerald-300"></i>`}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-bold text-slate-100 truncate flex items-center gap-1">${esc(t.peerName || 'ইউজার')} ${tick}</p>
+                        <p class="text-xs text-slate-400 truncate mt-0.5">${esc(preview)}</p>
+                    </div>
+                </div>`;
+            }).join('');
+            refreshIcons();
+        }
+        function mesesuRenderRejectedList() {
+            const box = document.getElementById('mesesuRejectedList');
+            if (!box) return;
+            if (!mesesuRejectedCache.length) {
+                box.innerHTML = `<div class="text-center py-12 px-4"><p class="text-sm font-bold text-slate-300">কোনো রিজেক্টেড মেসেজ নেই</p><p class="text-xs text-slate-500 mt-1">আপনি যাদের রিকুয়েস্ট রিজেক্ট করেছেন তারা এখানে ৫ দিনের জন্য দেখা যাবে</p></div>`;
+                refreshIcons(); return;
+            }
+            box.innerHTML = mesesuRejectedCache.map(t => {
+                const rejAt = mesesuTsMillis(t.rejectedAt);
+                const daysLeft = Math.max(1, Math.ceil((MESESU_FIVE_DAYS_MS - (Date.now() - rejAt)) / MESESU_ADMIN_ONE_DAY_MS));
+                return `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(t.peerId || t.id)}')">
+                    <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-rose-900/30 flex items-center justify-center">
+                        ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover opacity-50" alt="">` : `<i data-lucide="user-x" class="w-6 h-6 text-rose-300"></i>`}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-bold text-slate-100 truncate">${esc(t.peerName || 'ইউজার')}</p>
+                        <p class="text-xs text-rose-400 truncate mt-0.5">আপনি রিজেক্ট করেছেন · আর ${daysLeft} দিন বাকি</p>
+                    </div>
+                </div>`;
+            }).join('');
+            refreshIcons();
+        }
+        window.mesesuToggleMenu = mesesuToggleMenu;
+        window.mesesuOpenRequests = mesesuOpenRequests;
+        window.mesesuOpenRejected = mesesuOpenRejected;
+        window.mesesuCloseSubView = mesesuCloseSubView;
         function mesesuPreviewText(text, maxWords) {
             const words = String(text || '').trim().split(/\s+/).filter(Boolean);
             if (!words.length) return '';
@@ -10075,7 +10315,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             rows.forEach(t => {
                 const tick = t.peerBlue ? '<i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-blue-400 shrink-0"></i>' : '';
                 const timeStr = t.lastAt?.toDate ? t.lastAt.toDate().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }) : '';
-                const preview = mesesuPreviewText(t.lastMessage || '', 5);
+                const preview = t._pendingSent ? 'অনুমতির অপেক্ষায়...' : mesesuPreviewText(t.lastMessage || '', 5);
                 html += `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(t.peerId || t.id)}')">
                     <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-emerald-900/50 flex items-center justify-center">
                         ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-emerald-300"></i>`}
@@ -10147,6 +10387,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
             // Fetch the real Admin Support thread again; never reuse DM messages.
             if (currentUser && firebaseReady) {
+                // ১ দিনের বেশি পুরনো অ্যাডমিন-চ্যাট মেসেজ নিরবে ক্লিনআপ (চ্যাট লিস্ট এন্ট্রি কখনো মুছবে না)
+                await mesesuAutoCleanAdminMessages().catch(() => {});
                 try {
                     const adminQuery = query(
                         collection(db, `chats/${currentUser.uid}/messages`),
@@ -10191,6 +10433,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             // আগের চ্যাটের permission স্টেট নতুন থ্রেডে ঢুকতে দেওয়া হবে না
             mesesuDmPermission = 'none';
             mesesuPermissionRequester = null;
+            mesesuPermissionRejectedBy = null;
+            mesesuPermissionRejectedAt = 0;
             if (unsubscribeDmThread) { try { unsubscribeDmThread(); } catch (e) {} unsubscribeDmThread = null; }
             {
                 const lockInput = document.getElementById('chatInput');
@@ -10238,6 +10482,19 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             refreshIcons();
         };
         /* থ্রেডের permission স্টেট সার্ভার থেকে সরাসরি পড়ে (অফলাইন ক্যাশের পুরনো ডেটা এড়াতে) */
+        /** ৫ দিন পার হয়ে গেলে রিজেক্ট করা থ্রেড স্বয়ংক্রিয়ভাবে 'none'-এ রিসেট হবে এবং সব মেসেজ (watermark বাদে) মুছে যাবে */
+        async function mesesuMaybeExpireRejection(tid, d, peerId) {
+            if (!d || d.permissionStatus !== 'rejected') return d;
+            const rejAt = mesesuTsMillis(d.rejectedAt);
+            if (!rejAt || (Date.now() - rejAt) < MESESU_FIVE_DAYS_MS) return d;
+            try {
+                await setDoc(doc(db, 'dmThreads', tid), { permissionStatus: 'none', permissionRequester: null, rejectedBy: null, rejectedAt: null }, { merge: true });
+                await mesesuClearThreadMessages(tid);
+                await setDoc(doc(db, 'users', currentUser.uid, 'inbox', peerId), { permissionStatus: 'none', rejectedBy: null, rejectedAt: null, lastMessage: '' }, { merge: true });
+                await setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), { permissionStatus: 'none', rejectedBy: null, rejectedAt: null, lastMessage: '' }, { merge: true });
+            } catch (e) { console.warn('expire reject', e); }
+            return Object.assign({}, d, { permissionStatus: 'none', permissionRequester: null, rejectedBy: null, rejectedAt: null });
+        }
         async function mesesuSyncThreadState(peerIdArg) {
             if (!currentUser || !firebaseReady) return;
             const peerId = peerIdArg || (mesesuPeer && mesesuPeer.id);
@@ -10256,21 +10513,28 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 } catch (e2) { ok = false; }
             }
             if (!ok) return;
+            d = await mesesuMaybeExpireRejection(tid, d, peerId);
             if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId) return;
             const np = d ? (d.permissionStatus || 'none') : 'none';
             const nr = d ? (d.permissionRequester || null) : null;
-            const changed = (np !== mesesuDmPermission) || (nr !== mesesuPermissionRequester);
+            const nrb = d ? (d.rejectedBy || null) : null;
+            const nra = d ? mesesuTsMillis(d.rejectedAt) : 0;
+            const changed = (np !== mesesuDmPermission) || (nr !== mesesuPermissionRequester) || (nrb !== mesesuPermissionRejectedBy);
             mesesuDmPermission = np;
             mesesuPermissionRequester = nr;
+            mesesuPermissionRejectedBy = nrb;
+            mesesuPermissionRejectedAt = nra;
             if (changed) mesesuApplyPermissionUi();
         }
         async function mesesuOpenDmThread(peerId) {
             const tid = mesesuThreadId(currentUser.uid, peerId);
-            // প্রথমে সার্ভার থেকে নিশ্চিত স্টেট নিন
+            // প্রথমে সার্ভার থেকে নিশ্চিত স্টেট নিন (এতে ৫ দিন পার হওয়া রিজেক্ট অটো-রিসেট হয়ে যাবে)
             await mesesuSyncThreadState(peerId);
             mesesuApplyPermissionUi();
+            // ৫ দিনের পুরনো মেসেজ (watermark বাদে) নিরবে ক্লিনআপ — ভিজিট করার সময় চলে
+            mesesuAutoCleanOldMessages(tid).catch(() => {});
 
-            // থ্রেড ডকুমেন্ট লাইভ শুনুন — permissionStatus/permissionRequester বদলালে সাথে সাথে UI আপডেট
+            // থ্রেড ডকুমেন্ট লাইভ শুনুন — permissionStatus/permissionRequester/rejectedBy বদলালে সাথে সাথে UI আপডেট
             if (unsubscribeDmThread) { try { unsubscribeDmThread(); } catch (e) {} unsubscribeDmThread = null; }
             unsubscribeDmThread = onSnapshot(doc(db, 'dmThreads', tid), tSnap => {
                 if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId) return;
@@ -10279,9 +10543,13 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 const d = tSnap.exists() ? tSnap.data() : null;
                 const np = d ? (d.permissionStatus || 'none') : 'none';
                 const nr = d ? (d.permissionRequester || null) : null;
-                if (np !== mesesuDmPermission || nr !== mesesuPermissionRequester) {
+                const nrb = d ? (d.rejectedBy || null) : null;
+                const nra = d ? mesesuTsMillis(d.rejectedAt) : 0;
+                if (np !== mesesuDmPermission || nr !== mesesuPermissionRequester || nrb !== mesesuPermissionRejectedBy) {
                     mesesuDmPermission = np;
                     mesesuPermissionRequester = nr;
+                    mesesuPermissionRejectedBy = nrb;
+                    mesesuPermissionRejectedAt = nra;
                     mesesuApplyPermissionUi();
                 }
             }, err => console.warn('dm thread', err));
@@ -10292,6 +10560,10 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId) return;
                 chatMessages = snap.docs.map(d => {
                     const m = d.data();
+                    // এপ্রুভের পর স্থায়ী watermark বার্তা — কোনো চ্যাট বাবল/বক্স ছাড়া হালকা জলছাপ টেক্সট হিসেবে দেখানো হবে
+                    if (m.senderId === 'system' || m.type === 'system-approved') {
+                        return { id: d.id, sender: 'system', text: m.text || '', time: m.time || '', isDm: true, permanent: true };
+                    }
                     return {
                         id: d.id,
                         sender: m.senderId === currentUser.uid ? 'user' : 'admin',
@@ -10303,28 +10575,32 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         isDm: true
                     };
                 });
-                // আমি অনুমতি চেয়ে অপেক্ষায় আছি, আর অপর পক্ষ কোনো মেসেজ (অনুমতির মেসেজ হলেও) পাঠিয়েছে → approved
-                if (mesesuDmPermission === 'pending' && mesesuPermissionRequester === currentUser.uid) {
-                    const peerMsg = snap.docs.some(d => d.data().senderId === peerId);
-                    if (peerMsg) {
-                        mesesuDmPermission = 'approved';
-                        setDoc(doc(db, 'dmThreads', tid), { permissionStatus: 'approved' }, { merge: true }).catch(() => {});
-                        mesesuApplyPermissionUi();
-                    }
-                }
+                // নোট: এখন থেকে শুধু অপর পক্ষের রিপ্লাই দিলেই স্বয়ংক্রিয়ভাবে অনুমতি দেওয়া হয় না —
+                // প্রাপককে অবশ্যই এপ্রুভ/রিজেক্ট বাটনে ক্লিক করতে হবে (নিচের mesesuApproveCurrentRequest দেখুন)।
                 renderChatMessages();
             }, err => console.warn('dm messages', err));
         }
         function mesesuApplyPermissionUi() {
             const input = document.getElementById('chatInput');
             const banner = document.getElementById('dmPermissionBanner');
+            const actionBar = document.getElementById('dmRequestActionBar');
+            const rejectedBanner = document.getElementById('dmRejectedBanner');
+            const chatForm = document.getElementById('chatForm');
             if (mesesuMode !== 'dm') {
                 banner?.classList.add('hidden');
+                actionBar?.classList.add('hidden');
+                rejectedBanner?.classList.add('hidden');
+                chatForm?.classList.remove('hidden');
                 if (input) { input.disabled = false; input.placeholder = 'আপনার বার্তা লিখুন...'; input.readOnly = false; }
                 return;
             }
+            // প্রতিবার আগে সব লুকিয়ে, নিচে যেটা প্রযোজ্য সেটাই দেখানো হবে
+            actionBar?.classList.add('hidden');
+            rejectedBanner?.classList.add('hidden');
+            banner?.classList.add('hidden');
+            chatForm?.classList.remove('hidden');
+
             if (mesesuDmPermission === 'none') {
-                banner?.classList.add('hidden');
                 if (input) {
                     input.value = DM_PERMISSION_TEXT;
                     input.readOnly = true;
@@ -10333,81 +10609,108 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 }
                 updateChatActionButton();
             } else if (mesesuDmPermission === 'pending' && mesesuPermissionRequester === currentUser?.uid) {
+                // আমি অনুমতি চেয়েছি, এখনো সিদ্ধান্ত আসেনি — অপেক্ষার ব্যানার, ইনপুট বন্ধ
                 banner?.classList.remove('hidden');
-                if (input) {
-                    input.value = '';
-                    input.readOnly = true;
-                    input.disabled = true;
-                    input.placeholder = 'উত্তরের অপেক্ষায়...';
-                }
-                updateChatActionButton();
+                chatForm?.classList.add('hidden');
+                if (input) { input.value = ''; input.readOnly = true; input.disabled = true; input.placeholder = 'উত্তরের অপেক্ষায়...'; }
             } else if (mesesuDmPermission === 'pending') {
-                // recipient can reply (that reply grants permission)
-                banner?.classList.add('hidden');
-                if (input) {
-                    input.value = '';
-                    input.readOnly = false;
-                    input.disabled = false;
-                    input.placeholder = 'আপনার বার্তা লিখুন...';
+                // আমি প্রাপক — এপ্রুভ/রিজেক্ট ছাড়া কিছুই করতে পারবো না, ফ্রি টেক্সট রিপ্লাই বন্ধ
+                chatForm?.classList.add('hidden');
+                actionBar?.classList.remove('hidden');
+                if (input) { input.value = ''; input.readOnly = true; input.disabled = true; input.placeholder = 'এপ্রুভ অথবা রিজেক্ট করুন'; }
+            } else if (mesesuDmPermission === 'rejected') {
+                // রিজেক্ট হওয়া অবস্থা — ৫ দিন উভয় পাশে ব্লক; কে রিজেক্ট করেছে তার ওপর ভিত্তি করে ভিন্ন বার্তা
+                chatForm?.classList.add('hidden');
+                const iAmRejecter = mesesuPermissionRejectedBy === currentUser?.uid;
+                const daysLeft = mesesuRejectDaysLeft();
+                if (rejectedBanner) {
+                    rejectedBanner.textContent = iAmRejecter
+                        ? `আপনি ${mesesuPeer?.fullName || 'এই ব্যবহারকারী'} কে রিজেক্ট করেছেন, দয়া করে ${daysLeft} দিন পর আবার চেষ্টা করুন`
+                        : 'আপনার মেসেজ এখনো এপ্রুভ করা হয়নি';
+                    rejectedBanner.classList.remove('hidden');
                 }
-                updateChatActionButton();
+                if (input) { input.value = ''; input.readOnly = true; input.disabled = true; input.placeholder = ''; }
             } else {
-                banner?.classList.add('hidden');
-                if (input) {
-                    input.value = '';
-                    input.readOnly = false;
-                    input.disabled = false;
-                    input.placeholder = 'আপনার বার্তা লিখুন...';
-                }
+                // approved — স্বাভাবিক চ্যাট
+                if (input) { input.value = ''; input.readOnly = false; input.disabled = false; input.placeholder = 'আপনার বার্তা লিখুন...'; }
                 updateChatActionButton();
             }
+        }
+        /** এপ্রুভের পর স্থায়ী watermark বার্তা — কখনো অটো-ডিলিট হবে না */
+        function mesesuApprovalWatermarkText() {
+            return currentLang === 'en' ? 'You can now message each other' : 'আপনারা এখন থেকে একে অপরকে মেসেজ করতে পারবেন';
+        }
+        async function mesesuInsertApprovalWatermark(tid) {
+            const time = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
+            try {
+                await addDoc(collection(db, 'dmThreads', tid, 'messages'), {
+                    senderId: 'system', type: 'system-approved', permanent: true,
+                    text: mesesuApprovalWatermarkText(), time, createdAt: serverTimestamp()
+                });
+            } catch (e) { console.warn('watermark insert', e); }
         }
         async function mesesuSendDm(text) {
             if (!mesesuPeer || !currentUser) return;
             const peerId = mesesuPeer.id;
             const tid = mesesuThreadId(currentUser.uid, peerId);
             const time = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
-            // পাঠানোর আগে সার্ভার থেকে সর্বশেষ permission স্টেট নিশ্চিত করা
+            // পাঠানোর আগে সার্ভার থেকে সর্বশেষ permission স্টেট নিশ্চিত করা (৫ দিন পার হওয়া রিজেক্ট এখানেই অটো-রিসেট হয়)
             const prevPerm = mesesuDmPermission;
             await mesesuSyncThreadState(peerId);
             if (mesesuMode !== 'dm' || !mesesuPeer || mesesuPeer.id !== peerId) return;
-            // দুজনেই একসাথে অনুমতি চাইলে: অপর পক্ষ আগেই চেয়ে থাকলে সরাসরি approved
+
+            // রিজেক্ট করা অবস্থায় — কে রিজেক্ট করেছে তার ওপর ভিত্তি করে ভিন্ন বার্তা, "রিজেক্ট হয়েছে" শব্দ কখনো অনুরোধকারীকে বলা হবে না
+            if (mesesuDmPermission === 'rejected') {
+                const iAmRejecter = mesesuPermissionRejectedBy === currentUser.uid;
+                const daysLeft = mesesuRejectDaysLeft();
+                mesesuApplyPermissionUi();
+                return showToast(
+                    iAmRejecter ? `আপনি এই ব্যবহারকারীকে রিজেক্ট করেছেন, দয়া করে ${daysLeft} দিন পর আবার চেষ্টা করুন` : 'আপনার মেসেজ এখনো এপ্রুভ করা হয়নি',
+                    'lock', 'text-rose-400'
+                );
+            }
+            // দুজনেই একসাথে অনুমতি চাইলে (কেউ কাউকে এপ্রুভ/রিজেক্ট করার আগেই): সরাসরি approved + watermark
             if (prevPerm === 'none' && mesesuDmPermission === 'pending' && mesesuPermissionRequester && mesesuPermissionRequester !== currentUser.uid) {
                 mesesuDmPermission = 'approved';
-                try { await setDoc(doc(db, 'dmThreads', tid), { permissionStatus: 'approved' }, { merge: true }); } catch (e) {}
+                try {
+                    await setDoc(doc(db, 'dmThreads', tid), { permissionStatus: 'approved', approvedAt: serverTimestamp(), rejectedBy: null, rejectedAt: null }, { merge: true });
+                    await mesesuInsertApprovalWatermark(tid);
+                    await setDoc(doc(db, 'users', currentUser.uid, 'inbox', peerId), { permissionStatus: 'approved' }, { merge: true });
+                    await setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), { permissionStatus: 'approved' }, { merge: true });
+                } catch (e) {}
                 mesesuApplyPermissionUi();
                 return showToast('অপর পক্ষ আগেই অনুমতি চেয়েছে — এখন মেসেজ করতে পারবেন', 'check', 'text-emerald-400');
             }
             if (mesesuDmPermission === 'pending' && mesesuPermissionRequester === currentUser.uid) {
                 return showToast('উত্তর না আসা পর্যন্ত মেসেজ পাঠানো যাবে না', 'lock', 'text-amber-400');
             }
+            if (mesesuDmPermission === 'pending' && mesesuPermissionRequester !== currentUser.uid) {
+                // আমি প্রাপক — এপ্রুভ/রিজেক্ট বাটন ছাড়া ফ্রি-টেক্সট রিপ্লাই দেওয়া যাবে না
+                mesesuApplyPermissionUi();
+                return showToast('অনুগ্রহ করে প্রথমে এপ্রুভ অথবা রিজেক্ট করুন', 'lock', 'text-amber-400');
+            }
             const isPermission = mesesuDmPermission === 'none';
-            const isGrantingReply = mesesuDmPermission === 'pending' && mesesuPermissionRequester && mesesuPermissionRequester !== currentUser.uid;
             const msgText = isPermission ? DM_PERMISSION_TEXT : text;
             if (isPermission) {
                 await setDoc(doc(db, 'dmThreads', tid), {
                     members: [currentUser.uid, peerId],
                     permissionStatus: 'pending',
                     permissionRequester: currentUser.uid,
+                    rejectedBy: null, rejectedAt: null,
                     updatedAt: serverTimestamp(),
                     lastMessage: msgText,
                     lastMessageAt: serverTimestamp()
                 }, { merge: true });
                 mesesuDmPermission = 'pending';
                 mesesuPermissionRequester = currentUser.uid;
-            } else if (mesesuDmPermission === 'pending' && !isGrantingReply) {
-                return showToast('অনুমতি ছাড়া মেসেজ পাঠানো যাবে না', 'lock', 'text-amber-400');
             } else {
+                // এই পয়েন্টে mesesuDmPermission === 'approved', কারণ 'none'/'pending'/'rejected' সব ওপরেই হ্যান্ডেল হয়ে গেছে
                 const payload = {
                     members: [currentUser.uid, peerId],
                     updatedAt: serverTimestamp(),
                     lastMessage: msgText,
                     lastMessageAt: serverTimestamp()
                 };
-                if (isGrantingReply) {
-                    payload.permissionStatus = 'approved';
-                    mesesuDmPermission = 'approved';
-                }
                 await setDoc(doc(db, 'dmThreads', tid), payload, { merge: true });
             }
             await addDoc(collection(db, 'dmThreads', tid, 'messages'), {
@@ -10423,7 +10726,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 peerId, peerName: mesesuPeer.fullName, peerPhoto: mesesuPeer.photoURL || '',
                 peerBlue: !!mesesuPeer.isPremium,
                 lastMessage: msgText, lastAt: serverTimestamp(),
-                permissionStatus: mesesuDmPermission
+                permissionStatus: mesesuDmPermission,
+                permissionRequester: mesesuPermissionRequester || null
             };
             const peerInbox = {
                 peerId: currentUser.uid,
@@ -10431,12 +10735,97 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 peerPhoto: userProfile?.photoURL || '',
                 peerBlue: !!isUserPremium,
                 lastMessage: msgText, lastAt: serverTimestamp(),
-                permissionStatus: mesesuDmPermission
+                permissionStatus: mesesuDmPermission,
+                permissionRequester: mesesuPermissionRequester || null
             };
             await setDoc(doc(db, 'users', currentUser.uid, 'inbox', peerId), myInbox, { merge: true });
             await setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), peerInbox, { merge: true });
             mesesuApplyPermissionUi();
             try { playAppSound('send'); } catch (e) {}
+        }
+        /** প্রাপক রিকুয়েস্ট এপ্রুভ করলে: স্ট্যাটাস approved, স্থায়ী watermark বার্তা যোগ হবে (কখনো অটো-ডিলিট হবে না) */
+        window.mesesuApproveCurrentRequest = async () => {
+            if (!mesesuPeer || !currentUser || !firebaseReady) return;
+            const peerId = mesesuPeer.id;
+            const tid = mesesuThreadId(currentUser.uid, peerId);
+            try {
+                await setDoc(doc(db, 'dmThreads', tid), { permissionStatus: 'approved', approvedAt: serverTimestamp(), rejectedBy: null, rejectedAt: null }, { merge: true });
+                await mesesuInsertApprovalWatermark(tid);
+                await setDoc(doc(db, 'users', currentUser.uid, 'inbox', peerId), { permissionStatus: 'approved' }, { merge: true });
+                await setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), { permissionStatus: 'approved' }, { merge: true });
+                mesesuDmPermission = 'approved';
+                mesesuPermissionRejectedBy = null;
+                mesesuApplyPermissionUi();
+                showToast('অনুমোদন করা হয়েছে, এখন থেকে মেসেজ করতে পারবেন', 'check', 'text-emerald-400');
+            } catch (e) {
+                console.warn('approve request', e);
+                showToast('এপ্রুভ ব্যর্থ হয়েছে', 'triangle-alert', 'text-rose-400');
+            }
+        };
+        /** প্রাপক রিকুয়েস্ট রিজেক্ট করলে: উভয় পক্ষ ৫ দিনের জন্য ব্লক, থ্রেড "রিজেক্টেড মেসেজ" লিস্টে চলে যায় */
+        window.mesesuRejectCurrentRequest = async () => {
+            if (!mesesuPeer || !currentUser || !firebaseReady) return;
+            const peerId = mesesuPeer.id;
+            const tid = mesesuThreadId(currentUser.uid, peerId);
+            try {
+                await setDoc(doc(db, 'dmThreads', tid), { permissionStatus: 'rejected', rejectedBy: currentUser.uid, rejectedAt: serverTimestamp() }, { merge: true });
+                await setDoc(doc(db, 'users', currentUser.uid, 'inbox', peerId), { permissionStatus: 'rejected', rejectedBy: currentUser.uid, rejectedAt: serverTimestamp() }, { merge: true });
+                await setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), { permissionStatus: 'rejected', rejectedBy: currentUser.uid, rejectedAt: serverTimestamp() }, { merge: true });
+                mesesuDmPermission = 'rejected';
+                mesesuPermissionRejectedBy = currentUser.uid;
+                mesesuPermissionRejectedAt = Date.now();
+                showToast('রিকুয়েস্ট রিজেক্ট করা হয়েছে', 'user-x', 'text-rose-400');
+                mesesuShowInbox();
+            } catch (e) {
+                console.warn('reject request', e);
+                showToast('রিজেক্ট ব্যর্থ হয়েছে', 'triangle-alert', 'text-rose-400');
+            }
+        };
+        /** watermark বাদে থ্রেডের সব মেসেজ ডিলিট করে — রিজেক্ট-মেয়াদ শেষে ব্যবহৃত হয় */
+        async function mesesuClearThreadMessages(tid) {
+            try {
+                const snap = await getDocs(collection(db, 'dmThreads', tid, 'messages'));
+                const batch = writeBatch(db);
+                let count = 0;
+                snap.docs.forEach(d => {
+                    const m = d.data();
+                    if (!m.permanent) { batch.delete(d.ref); count++; }
+                });
+                if (count > 0) await batch.commit();
+            } catch (e) { console.warn('clear thread messages', e); }
+        }
+        /** থ্রেড খোলার সময় ৫ দিনের বেশি পুরনো মেসেজ (watermark বাদে) স্বয়ংক্রিয়ভাবে মুছে ফেলে — স্টোরেজ বাঁচাতে */
+        async function mesesuAutoCleanOldMessages(tid) {
+            if (!firebaseReady) return;
+            try {
+                const snap = await getDocs(collection(db, 'dmThreads', tid, 'messages'));
+                const batch = writeBatch(db);
+                let count = 0;
+                const cutoff = Date.now() - MESESU_FIVE_DAYS_MS;
+                snap.docs.forEach(d => {
+                    const m = d.data();
+                    if (m.permanent) return; // approval watermark কখনো মুছবে না
+                    const t = mesesuTsMillis(m.createdAt);
+                    if (t && t < cutoff) { batch.delete(d.ref); count++; }
+                });
+                if (count > 0) await batch.commit();
+            } catch (e) { console.warn('auto clean dm messages', e); }
+        }
+        /** অ্যাডমিন সাপোর্ট চ্যাটের ১ দিনের বেশি পুরনো মেসেজ মুছে ফেলে — চ্যাট লিস্টে "অ্যাডমিন সাপোর্ট" এন্ট্রি কখনো মুছবে না */
+        async function mesesuAutoCleanAdminMessages() {
+            if (!currentUser || !firebaseReady) return;
+            try {
+                const snap = await getDocs(collection(db, `chats/${currentUser.uid}/messages`));
+                const batch = writeBatch(db);
+                let count = 0;
+                const cutoff = Date.now() - MESESU_ADMIN_ONE_DAY_MS;
+                snap.docs.forEach(d => {
+                    const m = d.data();
+                    const t = mesesuTsMillis(m.createdAt);
+                    if (t && t < cutoff) { batch.delete(d.ref); count++; }
+                });
+                if (count > 0) await batch.commit();
+            } catch (e) { console.warn('auto clean admin messages', e); }
         }
 
         // Search users as you type
@@ -10451,10 +10840,13 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     const listWrap = document.getElementById('mesesuThreadList');
                     if (!q) {
                         res?.classList.add('hidden');
-                        listWrap?.classList.remove('hidden');
+                        mesesuApplySubViewVisibility();
                         return;
                     }
                     listWrap?.classList.add('hidden');
+                    document.getElementById('mesesuPeopleRow')?.classList.add('hidden');
+                    document.getElementById('mesesuRequestsView')?.classList.add('hidden');
+                    document.getElementById('mesesuRejectedView')?.classList.add('hidden');
                     res?.classList.remove('hidden');
                     const hits = (mesesuUsersCache || []).filter(u =>
                         String(u.fullName || '').toLowerCase().includes(q) ||

@@ -3718,6 +3718,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
             <!-- BLOOD VIEW -->
             <div id="view-blood" class="tab-view hidden space-y-4">
+                <!-- Header + filters only (inside card). Grid is outside so long lists are not clipped by overflow:hidden / backdrop-filter. -->
                 <div class="info-card p-4 sm:p-5 space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div class="flex items-center gap-2.5 min-w-0 flex-1">
@@ -3747,8 +3748,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                             <option value="AB+">AB+</option><option value="AB-">AB-</option>
                         </select>
                     </div>
-                    <div id="bloodDonorsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
                 </div>
+                <!-- Grid outside info-card (same pattern as emergencyList) — prevents items disappearing on scroll -->
+                <div id="bloodDonorsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
             </div>
 
             <!-- CHAT VIEW -->

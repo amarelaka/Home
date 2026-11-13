@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn" class="dark">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -3227,6 +3227,17 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 </head>
 
 <body class="text-slate-100 min-h-[100dvh]">
+    <script>
+    /* Default theme = light. Applies the cached theme before first paint to avoid a dark flash. */
+    (function () {
+        try {
+            var th = localStorage.getItem('amar-elaka-theme') || 'light';
+            var dark = th === 'dark' || (th === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (dark) { document.documentElement.classList.add('dark'); }
+            else { document.body.classList.add('light-mode'); }
+        } catch (e) { document.body.classList.add('light-mode'); }
+    })();
+    </script>
 
     <!-- ✅ NEW: OFFLINE BANNER -->
     <div id="offlineBanner" class="hidden">
@@ -4787,6 +4798,10 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     <input type="file" id="profilePicInput" accept="image/*" class="hidden" onchange="previewProfilePic(event)">
                     <p class="text-[10px] text-slate-400 mt-2">ছবি পরিবর্তন করতে ক্লিক করুন</p>
                 </div>
+                <div id="editProfileLockNotice" class="hidden p-3 bg-amber-500/10 rounded-xl border border-amber-500/30 text-[11px] text-amber-300 flex items-start gap-2">
+                    <i data-lucide="lock" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
+                    <span id="editProfileLockText"></span>
+                </div>
                 <div>
                     <label class="block text-[11px] font-bold text-emerald-300 uppercase tracking-wider mb-1.5">পুরো নাম *</label>
                     <input type="text" id="editFullName" required placeholder="আপনার নাম" class="w-full bg-[#07140e] border border-emerald-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-emerald-500 placeholder:text-slate-500">
@@ -5673,7 +5688,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         const MY_UPAZILA_CAT = '__my_upazila__';
         let myUpazilaFilterOn = false; // লোকেশন ফিল্টার — ক্যাটাগরির সাথে আলাদাভাবে কাজ করে
         let currentTab = 'services';
-        let currentTheme = 'system'; // Default now system
+        let currentTheme = 'light'; // Default: light (saved per account)
         let _scrollLockY = 0;
         let unsubscribeChat = null;
         let unsubscribeAdminStatus = null;
@@ -6114,6 +6129,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             currentTheme = theme;
             localStorage.setItem('amar-elaka-theme', theme);
             applyTheme();
+            saveThemeToAccount(theme);
             showToast(theme === 'light' ? 'লাইট মোড চালু হয়েছে' : (theme === 'dark' ? 'ডার্ক মোড চালু হয়েছে' : 'সিস্টেম থিম চালু হয়েছে'), 'palette', 'text-emerald-400');
         };
 
@@ -6159,7 +6175,32 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             });
         }
 
-        currentTheme = localStorage.getItem('amar-elaka-theme') || 'system';
+
+        // ----- Theme saved per account (Firestore users/{uid}.theme); localStorage is only a fast cache -----
+        let themeMigratedUid = null;
+        async function saveThemeToAccount(theme) {
+            try {
+                if (!firebaseReady || !currentUser || !db) return;
+                await setDoc(doc(db, 'users', currentUser.uid), { theme }, { merge: true });
+            } catch (e) { console.warn('Theme save:', e.code || e.message); }
+        }
+        function syncThemeFromProfile(profile) {
+            if (!profile || !currentUser) return;
+            const valid = ['light', 'dark', 'system'];
+            if (valid.includes(profile.theme)) {
+                if (profile.theme !== currentTheme) {
+                    currentTheme = profile.theme;
+                    try { localStorage.setItem('amar-elaka-theme', currentTheme); } catch (e) {}
+                    applyTheme();
+                }
+            } else if (themeMigratedUid !== currentUser.uid) {
+                // Existing account with no saved theme yet: save the theme this browser is using
+                themeMigratedUid = currentUser.uid;
+                saveThemeToAccount(currentTheme);
+            }
+        }
+
+        currentTheme = localStorage.getItem('amar-elaka-theme') || 'light';
         applyTheme();
 
         // ========== LANGUAGE SYSTEM (bn / en) ==========
@@ -7953,7 +7994,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 try { sessionStorage.setItem('amar-welcome-pending', 'register'); } catch (e) {}
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 const profile = {
-                    fullName, phone, district, upazila, email, uid: cred.user.uid,
+                    fullName, phone, district, upazila, email, uid: cred.user.uid, profileEditedAt: serverTimestamp(),
                     isOnline: true, lastSeen: serverTimestamp(), lastLogin: serverTimestamp(),
                     createdAt: serverTimestamp(), subscriptionStatus: 'free'
                 };
@@ -8075,6 +8116,55 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         }
         window.openSupportFromProfile = () => { if (isForcedProfileMode) return; closeEditProfileModal(); switchTab('chat'); setTimeout(() => focusChatInput(), 400); };
         
+
+        // ========== PROFILE EDIT LOCK (3 days, account based) ==========
+        // Name, mobile, district and upazila are locked for 3 days after registration/profile completion
+        // and after every edit of those fields. Profile picture is never locked.
+        const PROFILE_LOCK_MS = 3 * 24 * 60 * 60 * 1000;
+        let serverClockOffsetMs = 0;
+        function serverNow() { return Date.now() + serverClockOffsetMs; }
+        async function syncServerClock(uid) {
+            // lastLogin was just written with serverTimestamp(); reading it back from the server gives the real server time
+            const t0 = Date.now();
+            const s = await getDocFromServer(doc(db, 'users', uid));
+            const ll = s.exists() ? s.data().lastLogin : null;
+            if (ll && typeof ll.toMillis === 'function') serverClockOffsetMs = ll.toMillis() - t0;
+        }
+        function getProfileLockInfo(profile) {
+            const p = profile || userProfile;
+            if (isForcedProfileMode || !p || !p.profileEditedAt) return { locked: false, remainingMs: 0 };
+            const e = p.profileEditedAt;
+            const ms = typeof e.toMillis === 'function' ? e.toMillis() : (e.seconds ? e.seconds * 1000 : null);
+            if (ms == null) return { locked: false, remainingMs: 0 };
+            const remaining = ms + PROFILE_LOCK_MS - serverNow();
+            return { locked: remaining > 0, remainingMs: Math.max(0, remaining) };
+        }
+        function formatLockRemaining(ms) {
+            const bn = (n) => Number(n).toLocaleString('bn-BD');
+            const day = 24 * 60 * 60 * 1000, hour = 60 * 60 * 1000;
+            const d = Math.floor(ms / day);
+            const h = Math.ceil((ms % day) / hour);
+            if (d > 0) return h > 0 && h < 24 ? `${bn(d)} দিন ${bn(h)} ঘণ্টা` : `${bn(d + (h >= 24 ? 1 : 0))} দিন`;
+            return h > 0 ? `${bn(h)} ঘণ্টা` : 'কিছুক্ষণ';
+        }
+        function applyProfileLockUI() {
+            const info = getProfileLockInfo();
+            ['editFullName', 'editPhone', 'editDistrict', 'editUpazila'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.disabled = info.locked;
+                el.classList.toggle('opacity-60', info.locked);
+                el.classList.toggle('cursor-not-allowed', info.locked);
+            });
+            const note = document.getElementById('editProfileLockNotice');
+            if (note) {
+                note.classList.toggle('hidden', !info.locked);
+                const txt = document.getElementById('editProfileLockText');
+                if (txt && info.locked) txt.textContent = `নাম, মোবাইল নম্বর, জেলা ও উপজেলা আর ${formatLockRemaining(info.remainingMs)} পর পরিবর্তন করতে পারবেন। প্রোফাইল ছবি যেকোনো সময় পরিবর্তন করা যাবে।`;
+            }
+            refreshIcons();
+        }
+
         window.openEditProfileModal = (force = false) => {
             if (!userProfile) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             
@@ -8090,6 +8180,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             else { pv.src = ''; pv.classList.add('hidden'); ph.classList.remove('hidden'); }
             selectedProfilePicFile = null;
             document.getElementById('profilePicInput').value = '';
+            applyProfileLockUI();
             
             const m = document.getElementById('editProfileModal');
             m.classList.remove('hidden'); m.classList.add('flex');
@@ -8123,14 +8214,25 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             e.preventDefault();
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
-            const fullName = document.getElementById('editFullName').value.trim();
-            const phone = document.getElementById('editPhone').value.trim();
-            const district = document.getElementById('editDistrict').value.trim();
-            const upazila = document.getElementById('editUpazila').value.trim();
-            if (fullName.length < 2) return showToast('সঠিক নাম দিন', 'circle-x', 'text-rose-400');
-            if (!/^01[3-9]\d{8}$/.test(phone)) return showToast('সঠিক মোবাইল নম্বর দিন', 'circle-x', 'text-rose-400');
-            if (!district) return showToast('জেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
-            if (!upazila) return showToast('উপজেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
+            // Re-check the lock against the latest server copy (not only the local state)
+            let lockInfo = getProfileLockInfo();
+            try {
+                const fresh = await getDocFromServer(doc(db, 'users', currentUser.uid));
+                if (fresh.exists()) lockInfo = getProfileLockInfo(fresh.data());
+            } catch (e) {}
+            const locked = lockInfo.locked;
+            const fullName = locked ? (userProfile.fullName || '') : document.getElementById('editFullName').value.trim();
+            const phone = locked ? (userProfile.phone || '') : document.getElementById('editPhone').value.trim();
+            const district = locked ? (userProfile.district || '') : document.getElementById('editDistrict').value.trim();
+            const upazila = locked ? (userProfile.upazila || '') : document.getElementById('editUpazila').value.trim();
+            if (locked) {
+                if (!selectedProfilePicFile) return showToast(`নাম, মোবাইল ও ঠিকানা আর ${formatLockRemaining(lockInfo.remainingMs)} পর পরিবর্তন করতে পারবেন। ছবি বদলাতে চাইলে নতুন ছবি বাছুন।`, 'lock', 'text-amber-400');
+            } else {
+                if (fullName.length < 2) return showToast('সঠিক নাম দিন', 'circle-x', 'text-rose-400');
+                if (!/^01[3-9]\d{8}$/.test(phone)) return showToast('সঠিক মোবাইল নম্বর দিন', 'circle-x', 'text-rose-400');
+                if (!district) return showToast('জেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
+                if (!upazila) return showToast('উপজেলা নির্বাচন করুন', 'circle-x', 'text-rose-400');
+            }
             
             const btn = document.getElementById('editProfileSaveBtn');
             btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> সংরক্ষণ...'; refreshIcons();
@@ -8140,9 +8242,15 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> ছবি আপলোড...'; refreshIcons();
                     photoURL = await uploadToCloudinary(selectedProfilePicFile);
                 }
-                await setDoc(doc(db, 'users', currentUser.uid), { fullName, phone, district, upazila, photoURL }, { merge: true });
-                userProfile = { ...userProfile, fullName, phone, district, upazila, photoURL };
+                const detailsChanged = !locked && (fullName !== (userProfile.fullName || '') || phone !== (userProfile.phone || '') || district !== (userProfile.district || '') || upazila !== (userProfile.upazila || ''));
+                const startLock = !locked && (isForcedProfileMode || detailsChanged);
+                const payload = locked ? { photoURL } : { fullName, phone, district, upazila, photoURL };
+                if (startLock) payload.profileEditedAt = serverTimestamp();
+                await setDoc(doc(db, 'users', currentUser.uid), payload, { merge: true });
+                userProfile = { ...userProfile, ...payload };
+                if (startLock) userProfile.profileEditedAt = { seconds: Math.floor(serverNow() / 1000) };
                 updateProfileUI();
+                applyProfileLockUI();
                 
                 if (isForcedProfileMode) {
                     if (isProfileComplete(userProfile)) {
@@ -8160,7 +8268,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         showToast('মোবাইল, জেলা ও উপজেলা সঠিকভাবে পূরণ করুন!', 'circle-x', 'text-rose-400');
                     }
                 } else {
-                    showToast('প্রোফাইল আপডেট হয়েছে!', 'circle-check', 'text-emerald-400');
+                    showToast(startLock ? 'প্রোফাইল আপডেট হয়েছে! পরবর্তী ৩ দিন নাম, মোবাইল ও ঠিকানা পরিবর্তন করা যাবে না।' : 'প্রোফাইল আপডেট হয়েছে!', 'circle-check', 'text-emerald-400');
                     closeEditProfileModal();
                 }
                 
@@ -9685,6 +9793,54 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             document.body.classList.remove('overflow-hidden');
         };
 
+        // ========== DUPLICATE NUMBER PREVENTION (per section: blood / emergency) ==========
+        // Same number cannot be added twice inside the SAME section; the same number may exist in the other section.
+        function normalizeNumber(raw) {
+            let s = String(raw || '');
+            const bnDigits = '০১২৩৪৫৬৭৮৯';
+            s = s.replace(/[০-৯]/g, d => String(bnDigits.indexOf(d)));
+            s = s.replace(/[^0-9]/g, '');
+            if (/^8801\d{9}$/.test(s)) s = '0' + s.slice(3);
+            else if (/^1[3-9]\d{8}$/.test(s)) s = '0' + s;
+            return s;
+        }
+        function dupMessage(section) {
+            return section === 'blood'
+                ? 'এই নাম্বারটি আগে থেকেই রক্ত সেকশনে আছে। একই নাম্বার দ্বিতীয়বার যোগ করা যাবে না।'
+                : 'এই নাম্বারটি আগে থেকেই জরুরি সেকশনে আছে। একই নাম্বার দ্বিতীয়বার যোগ করা যাবে না।';
+        }
+        async function checkDuplicateNumber(section, norm, ownSnap) {
+            if (!norm) return false;
+            const field = section === 'blood' ? 'phone' : 'number';
+            const live = section === 'blood' ? bloodDonors : emergencyList;
+            if (live.some(x => normalizeNumber(x[field]) === norm)) return true;
+            if (ownSnap && ownSnap.docs.some(d => { const x = d.data(); return x.status !== 'rejected' && normalizeNumber(x[field]) === norm; })) return true;
+            try {
+                const k = await getDoc(doc(db, 'uniqueNumbers', `${section}_${norm}`));
+                if (k.exists()) return true;
+            } catch (e) { /* rules not configured yet: the checks above still apply */ }
+            return false;
+        }
+        async function addRequestWithUniqueKey(section, collName, data, norm) {
+            const keyRef = doc(db, 'uniqueNumbers', `${section}_${norm}`);
+            const reqRef = doc(collection(db, collName));
+            try {
+                const b = writeBatch(db);
+                b.set(reqRef, data);
+                b.set(keyRef, { section, number: norm, requestId: reqRef.id, uid: currentUser.uid, createdAt: serverTimestamp() });
+                await b.commit();
+            } catch (err) {
+                if (err && err.code === 'permission-denied') {
+                    let exists = false;
+                    try { exists = (await getDoc(keyRef)).exists(); } catch (e) {}
+                    if (exists) { const e2 = new Error('duplicate-number'); e2.code = 'duplicate-number'; throw e2; }
+                    await addDoc(collection(db, collName), data); // uniqueNumbers rules not published yet
+                    return;
+                }
+                throw err;
+            }
+        }
+
         window.handleUserEmergencySubmit = async (e) => {
             e.preventDefault();
             if (isForcedProfileMode) return;
@@ -9703,6 +9859,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 startOfDay.setHours(0, 0, 0, 0);
                 const q = query(collection(db, 'emergencyRequests'), where('submitterUid', '==', currentUser.uid));
                 const snap = await getDocs(q);
+                const normNumber = normalizeNumber(emergencyPhone);
+                if (await checkDuplicateNumber('emergency', normNumber, snap)) {
+                    btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> অনুরোধ পাঠান'; refreshIcons();
+                    return showToast(dupMessage('emergency'), 'alert-circle', 'text-rose-400');
+                }
                 let todayCount = 0;
                 snap.forEach(doc => {
                     const data = doc.data();
@@ -9716,15 +9877,15 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     return showToast('আপনি আজ ইতিমধ্যে ২টি অনুরোধ পাঠিয়েছেন। আগামীকাল আবার চেষ্টা করুন।', 'alert-circle', 'text-rose-400');
                 }
                 btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> পাঠানো হচ্ছে...'; refreshIcons();
-                await addDoc(collection(db, 'emergencyRequests'), {
+                await addRequestWithUniqueKey('emergency', 'emergencyRequests', {
                     title, number: emergencyPhone, category, desc: description,
                     submitterPhone: userPhone, submitterName: userProfile?.fullName || '',
                     submitterUid: currentUser.uid, status: 'pending', createdAt: serverTimestamp()
-                });
+                }, normNumber);
                 showToast('অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে যোগ করবেন।', 'check-circle', 'text-emerald-400');
                 closeUserEmergencyRequestModal();
             } catch (err) {
-                showToast('পাঠাতে ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
+                showToast(err && err.code === 'duplicate-number' ? dupMessage('emergency') : 'পাঠাতে ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
             } finally {
                 btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> অনুরোধ পাঠান'; refreshIcons();
             }
@@ -9790,6 +9951,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 startOfDay.setHours(0, 0, 0, 0);
                 const q = query(collection(db, 'bloodDonorRequests'), where('submitterUid', '==', currentUser.uid));
                 const snap = await getDocs(q);
+                const normNumber = normalizeNumber(phone);
+                if (await checkDuplicateNumber('blood', normNumber, snap)) {
+                    btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> অনুরোধ পাঠান'; refreshIcons();
+                    return showToast(dupMessage('blood'), 'alert-circle', 'text-rose-400');
+                }
                 let todayCount = 0;
                 snap.forEach(doc => {
                     const data = doc.data();
@@ -9803,16 +9969,16 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     return showToast('আপনি আজ ইতিমধ্যে ২টি অনুরোধ পাঠিয়েছেন। আগামীকাল আবার চেষ্টা করুন।', 'alert-circle', 'text-rose-400');
                 }
                 btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> পাঠানো হচ্ছে...'; refreshIcons();
-                await addDoc(collection(db, 'bloodDonorRequests'), {
+                await addRequestWithUniqueKey('blood', 'bloodDonorRequests', {
                     name, group, phone, location, district, upazila, address: address || '',
                     submitterUid: currentUser.uid, submitterName: userProfile?.fullName || '',
                     submitterPhone: userProfile?.phone || '', submitterEmail: userProfile?.email || '',
                     status: 'pending', createdAt: serverTimestamp()
-                });
+                }, normNumber);
                 showToast('অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে রক্তদাতা তালিকায় যোগ করবেন।', 'check-circle', 'text-emerald-400');
                 closeUserBloodRequestModal();
             } catch (err) {
-                showToast('পাঠাতে ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
+                showToast(err && err.code === 'duplicate-number' ? dupMessage('blood') : 'পাঠাতে ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
             } finally {
                 btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> অনুরোধ পাঠান'; refreshIcons();
             }
@@ -12122,8 +12288,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     try {
                         onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
                             if (docSnap.exists()) { 
-                                userProfile = docSnap.data(); 
+                                userProfile = docSnap.data({ serverTimestamps: 'estimate' }); 
                                 updateProfileUI(); 
+                                syncThemeFromProfile(userProfile);
                                 // Re-check if profile becomes complete/incomplete dynamically
                                 if (!isForcedProfileMode && !isProfileComplete(userProfile)) {
                                     isForcedProfileMode = true;
@@ -12139,6 +12306,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         const snap = await getDoc(doc(db, 'users', user.uid));
                         userProfile = snap.exists() ? snap.data() : { email: user.email, fullName: user.displayName || user.email?.split('@')[0] || 'নাগরিক' };
                         updateProfileUI();
+                        syncThemeFromProfile(userProfile);
                         attachRealtimeListeners();
 
                         // ✅ NEW FORCE PROFILE CHECK
@@ -12154,7 +12322,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                             document.body.classList.remove('force-profile-mode');
                         }
 
-                        try { await setDoc(doc(db, 'users', user.uid), { lastLogin: serverTimestamp() }, { merge: true }); } catch (e) {}
+                        try { await setDoc(doc(db, 'users', user.uid), { lastLogin: serverTimestamp() }, { merge: true }); await syncServerClock(user.uid); } catch (e) {}
                         const authEntryKind = sessionStorage.getItem('amar-welcome-pending');
                         if (authEntryKind === 'register') writeSiteAnalyticsEvent('register');
                         else { logSessionEvent(user.uid, 'login'); writeSiteAnalyticsEvent('login'); }

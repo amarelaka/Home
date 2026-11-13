@@ -3325,6 +3325,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                                 <i data-lucide="lock" class="w-4 h-4"></i>
                                 <input type="password" id="loginPassword" required minlength="6" placeholder="••••••••" class="flex-1 bg-transparent border-none outline-none text-white text-sm min-w-0 placeholder:text-slate-500" autocomplete="current-password">
                             </div>
+                            <div class="flex justify-end mt-2">
+                                <button type="button" onclick="handleForgotPassword()" class="text-xs font-bold text-emerald-300 hover:text-emerald-200 underline underline-offset-4">পাসওয়ার্ড ভুলে গেছেন?</button>
+                            </div>
                         </div>
                         <button type="submit" id="loginBtn" class="btn-glow w-full text-white font-bold py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 touch-target">
                             <i data-lucide="log-in" class="w-4 h-4"></i><span>প্রবেশ করুন</span>
@@ -4818,6 +4821,20 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     <i data-lucide="info" class="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0"></i>
                     <span>ইমেইল পরিবর্তন করতে পারবেন না। <button type="button" onclick="openSupportFromProfile()" class="text-emerald-300 underline font-bold">সাপোর্টে যোগাযোগ করুন</button></span>
                 </div>
+                <div id="googlePasswordSetupSection" class="hidden p-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/5 space-y-3">
+                    <div>
+                        <h4 class="text-sm font-bold text-emerald-300 flex items-center gap-2"><i data-lucide="key-round" class="w-4 h-4"></i> ইমেইল ও পাসওয়ার্ড লগইন চালু করুন</h4>
+                        <p class="text-[10px] text-slate-400 mt-1 leading-relaxed">Google Login-এর পাশাপাশি অন্য ডিভাইসে ইমেইল ও পাসওয়ার্ড দিয়েও প্রবেশ করতে চাইলে এখানে পাসওয়ার্ড তৈরি করুন। এটি ঐচ্ছিক।</p>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-emerald-300 mb-1.5">নতুন পাসওয়ার্ড</label>
+                        <input type="password" id="googleNewPassword" minlength="6" autocomplete="new-password" placeholder="কমপক্ষে ৬ অক্ষর" class="w-full bg-[#07140e] border border-emerald-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-emerald-500 placeholder:text-slate-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-emerald-300 mb-1.5">পাসওয়ার্ড নিশ্চিত করুন</label>
+                        <input type="password" id="googleConfirmPassword" minlength="6" autocomplete="new-password" placeholder="আবার পাসওয়ার্ড লিখুন" class="w-full bg-[#07140e] border border-emerald-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-emerald-500 placeholder:text-slate-500">
+                    </div>
+                </div>
                 <button type="submit" id="editProfileSaveBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> সংরক্ষণ করুন</button>
                 <button type="button" onclick="openChangePasswordModal()" class="w-full mt-2 bg-transparent border border-emerald-700/50 hover:bg-emerald-950/40 text-emerald-300 font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 transition">
                     <i data-lucide="key-round" class="w-4 h-4"></i> পাসওয়ার্ড পরিবর্তন করুন
@@ -5503,7 +5520,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, updatePassword, EmailAuthProvider, reauthenticateWithCredential, linkWithCredential, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocFromServer, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
 
@@ -7931,6 +7948,27 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 btn.disabled = false; btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i> <span>প্রবেশ করুন</span>'; refreshIcons();
             }
         };
+        window.handleForgotPassword = async () => {
+            if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
+            const emailInput = document.getElementById('loginIdentifier');
+            const email = (emailInput?.value || '').trim();
+            if (!email) {
+                emailInput?.focus();
+                return showToast('আগে আপনার রেজিস্ট্রেশন করা ইমেইল লিখুন', 'mail', 'text-amber-400');
+            }
+            const btn = document.querySelector('button[onclick="handleForgotPassword()"]');
+            if (btn) btn.disabled = true;
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showToast('যদি এই ইমেইলে পাসওয়ার্ড লগইন চালু থাকে, তাহলে পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে। ইনবক্স ও স্প্যাম ফোল্ডার দেখুন।', 'mail-check', 'text-emerald-400');
+            } catch (err) {
+                console.warn('Password reset request:', err?.code || err?.message);
+                if (err.code === 'auth/invalid-email') showToast('সঠিক ইমেইল ঠিকানা লিখুন', 'circle-x', 'text-rose-400');
+                else if (err.code === 'auth/too-many-requests') showToast('অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।', 'alert-circle', 'text-amber-400');
+                else showToast('রিসেট লিংক পাঠানো যায়নি। ইমেইল ঠিকানা যাচাই করে আবার চেষ্টা করুন।', 'circle-x', 'text-rose-400');
+            } finally { if (btn) btn.disabled = false; }
+        };
+
         window.handleGoogleLogin = async () => {
             if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
             const btns = document.querySelectorAll('[onclick="handleGoogleLogin()"]');
@@ -7938,6 +7976,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             try {
                 try { sessionStorage.setItem('amar-welcome-pending', 'login'); } catch (e) {}
                 const provider = new GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                // Popup keeps the user on this site; do not switch to signInWithRedirect here.
                 const result = await signInWithPopup(auth, provider);
                 await checkAndCreateUser(result.user);
                 showToast('গুগল লগইন সফল!', 'check-circle', 'text-emerald-400');
@@ -8027,8 +8067,19 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 document.body.classList.remove('force-profile-mode');
                 currentUser = null;
                 userProfile = null;
-                showAuthScreen();
-                switchAuthTab('login');
+                // লগআউটের পর লগইন পেজ নয় — গেস্ট মোডে হোম পেজ, নতুন করে ৩ মিনিট
+                try { sessionStorage.removeItem('ae_guest_started_at'); sessionStorage.removeItem('ae_guest_preview_expired'); } catch (e) {}
+                try { stopGuestPreviewTimer(); } catch (e) {}
+                ['settingsModal','contactModal','aboutModal','termsModal','feedbackModal','ratingModal','editProfileModal','changePasswordModal','premiumActionModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','providerModal','chatInfoModal','noticeModal','categoryModal','downloadAppModal'].forEach(id => {
+                    const fn = window['close' + id.charAt(0).toUpperCase() + id.slice(1)];
+                    const el = document.getElementById(id);
+                    if (el && !el.classList.contains('hidden') && typeof fn === 'function') { try { fn(); } catch (e) {} }
+                });
+                try { if (document.body.classList.contains('notif-page-open')) closeNotifPanel(); } catch (e) {}
+                try { window.switchTab('services'); } catch (e) {}
+                try { window.__aeNavReset && window.__aeNavReset(); } catch (e) {}
+                showGuestApp();
+                try { window.scrollTo(0, 0); } catch (e) {}
                 const toastMsg = (typeof t === 'function' && currentLang === 'en') ? 'Logged out' : 'লগআউট হয়েছে';
                 showToast(toastMsg, 'circle-check', 'text-emerald-400');
                 // Fire analytics + Firebase signOut in background (do not block UI)
@@ -8174,6 +8225,14 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             document.getElementById('editPhone').value = userProfile.phone || '';
             document.getElementById('editDistrict').value = userProfile.district || '';
             document.getElementById('editUpazila').value = userProfile.upazila || '';
+            const passwordSetupSection = document.getElementById('googlePasswordSetupSection');
+            const hasPasswordProvider = !!currentUser?.providerData?.some(p => p.providerId === 'password');
+            const isGoogleAccount = !!currentUser?.providerData?.some(p => p.providerId === 'google.com');
+            if (passwordSetupSection) passwordSetupSection.classList.toggle('hidden', !(isGoogleAccount && !hasPasswordProvider));
+            const googlePass = document.getElementById('googleNewPassword');
+            const googlePassConfirm = document.getElementById('googleConfirmPassword');
+            if (googlePass) googlePass.value = '';
+            if (googlePassConfirm) googlePassConfirm.value = '';
             const pv = document.getElementById('editProfilePicPreview');
             const ph = document.getElementById('editProfilePicPlaceholder');
             if (userProfile.photoURL) { pv.src = userProfile.photoURL; pv.classList.remove('hidden'); ph.classList.add('hidden'); }
@@ -8235,6 +8294,15 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             }
             
             const btn = document.getElementById('editProfileSaveBtn');
+            const passwordSetupSection = document.getElementById('googlePasswordSetupSection');
+            const pendingGooglePassword = document.getElementById('googleNewPassword')?.value || '';
+            const pendingGooglePasswordConfirm = document.getElementById('googleConfirmPassword')?.value || '';
+            const shouldLinkGooglePassword = !!currentUser?.providerData?.some(p => p.providerId === 'google.com') &&
+                !currentUser?.providerData?.some(p => p.providerId === 'password');
+            if (shouldLinkGooglePassword && (pendingGooglePassword || pendingGooglePasswordConfirm)) {
+                if (pendingGooglePassword.length < 6) return showToast('নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।', 'circle-x', 'text-rose-400');
+                if (pendingGooglePassword !== pendingGooglePasswordConfirm) return showToast('নতুন পাসওয়ার্ড ও নিশ্চিতকরণ মিলছে না।', 'circle-x', 'text-rose-400');
+            }
             btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> সংরক্ষণ...'; refreshIcons();
             try {
                 let photoURL = userProfile.photoURL || '';
@@ -8247,6 +8315,21 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 const payload = locked ? { photoURL } : { fullName, phone, district, upazila, photoURL };
                 if (startLock) payload.profileEditedAt = serverTimestamp();
                 await setDoc(doc(db, 'users', currentUser.uid), payload, { merge: true });
+
+                // Google users may optionally link an email/password credential to this SAME Firebase account.
+                const googlePassword = document.getElementById('googleNewPassword')?.value || '';
+                const googlePasswordConfirm = document.getElementById('googleConfirmPassword')?.value || '';
+                const needsPasswordLink = !!currentUser?.providerData?.some(p => p.providerId === 'google.com') &&
+                    !currentUser?.providerData?.some(p => p.providerId === 'password');
+                if (needsPasswordLink && (googlePassword || googlePasswordConfirm)) {
+                    if (!currentUser.email) throw new Error('এই Google অ্যাকাউন্টে ব্যবহারযোগ্য ইমেইল পাওয়া যায়নি।');
+                    const emailCredential = EmailAuthProvider.credential(currentUser.email, googlePassword);
+                    await linkWithCredential(currentUser, emailCredential);
+                    if (passwordSetupSection) passwordSetupSection.classList.add('hidden');
+                    document.getElementById('googleNewPassword').value = '';
+                    document.getElementById('googleConfirmPassword').value = '';
+                    showToast('এই অ্যাকাউন্টে ইমেইল ও পাসওয়ার্ড লগইনও চালু হয়েছে।', 'check-circle', 'text-emerald-400');
+                }
                 userProfile = { ...userProfile, ...payload };
                 if (startLock) userProfile.profileEditedAt = { seconds: Math.floor(serverNow() / 1000) };
                 updateProfileUI();
@@ -8272,7 +8355,16 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     closeEditProfileModal();
                 }
                 
-            } catch (err) { showToast('ব্যর্থ: ' + (err.message || err), 'circle-x', 'text-rose-400'); }
+            } catch (err) {
+                console.error('Profile save / Google password linking failed:', err);
+                let message = err?.message || 'অজানা সমস্যা';
+                if (err?.code === 'auth/email-already-in-use' || err?.code === 'auth/credential-already-in-use') {
+                    message = 'এই ইমেইল দিয়ে আগে থেকেই অন্য একটি অ্যাকাউন্ট রয়েছে। সেই অ্যাকাউন্টে লগইন করে সাপোর্টের সাহায্য নিন।';
+                } else if (err?.code === 'auth/weak-password') {
+                    message = 'পাসওয়ার্ডটি আরও শক্তিশালী করুন (কমপক্ষে ৬ অক্ষর)।';
+                }
+                showToast('ব্যর্থ: ' + message, 'circle-x', 'text-rose-400');
+            }
             finally { btn.disabled = false; btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> সংরক্ষণ করুন'; refreshIcons(); }
         };
         
@@ -12322,6 +12414,13 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                             document.body.classList.remove('force-profile-mode');
                         }
 
+                        // Start homepage services immediately — do not wait for lastLogin / push / favorites.
+                        // loadServiceBatch is guarded by servicesLoading so duplicate calls are safe.
+                        let earlyServicesPromise = null;
+                        if (!isForcedProfileMode) {
+                            earlyServicesPromise = loadServiceBatch(true);
+                        }
+
                         try { await setDoc(doc(db, 'users', user.uid), { lastLogin: serverTimestamp() }, { merge: true }); await syncServerClock(user.uid); } catch (e) {}
                         const authEntryKind = sessionStorage.getItem('amar-welcome-pending');
                         if (authEntryKind === 'register') writeSiteAnalyticsEvent('register');
@@ -12346,8 +12445,10 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         updateNotifBadge();
                         renderNotifications();
 
-                        await loadUserFavorites(); 
-                        await loadServiceBatch(true);
+                        // Favorites in parallel; services already started earlier when profile is complete.
+                        const favoritesLoadPromise = loadUserFavorites();
+                        const servicesLoadPromise = earlyServicesPromise || loadServiceBatch(true);
+                        await Promise.all([servicesLoadPromise, favoritesLoadPromise]);
                         // Restore last tab after login
                         try {
                             const savedTab = localStorage.getItem('amar-elaka-tab');
@@ -12702,16 +12803,196 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             updatePtrIcon();
         })();
 
+        // ========== BACK BUTTON নেভিগেশন (ওয়েবসাইট থেকে বের না করে আগের পেজে ফেরা) ==========
+        (function aeBackNavigation() {
+            const TAB_HOME = 'services';
+            const EXIT_WINDOW_MS = 2000;
+            const MODAL_IDS = ['providerModal','serviceDetailModal','promotionDetailModal','categoryModal','noticeModal','feedbackModal','settingsModal','ratingModal','aboutModal','termsModal','resultModal','contactModal','editProfileModal','changePasswordModal','chatInfoModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','premiumActionModal','downloadAppModal','otherDownloadSourcesModal'];
+            let tabStack = [{ tab: TAB_HOME, scroll: 0 }];
+            let internalNav = false;
+            let armed = false;
+            let lastHomeBackAt = 0;
+
+            function visible(el) {
+                if (!el || el.classList.contains('hidden')) return false;
+                const cs = getComputedStyle(el);
+                return cs.display !== 'none' && cs.visibility !== 'hidden';
+            }
+            function capName(id) { return 'close' + id.charAt(0).toUpperCase() + id.slice(1); }
+
+            // সবচেয়ে উপরের খোলা মোডাল/ফর্ম খুঁজে বের করা
+            function topOpenModal() {
+                const set = new Set();
+                MODAL_IDS.forEach(id => { const el = document.getElementById(id); if (el) set.add(el); });
+                document.querySelectorAll('.modal-sheet-parent').forEach(el => set.add(el));
+                let best = null, bestZ = -1, bestIdx = -1, idx = 0;
+                set.forEach(el => {
+                    idx++;
+                    if (!visible(el)) return;
+                    const cs = getComputedStyle(el);
+                    if (cs.position !== 'fixed') return;
+                    const z = parseInt(cs.zIndex, 10) || 0;
+                    if (z > bestZ || (z === bestZ && idx > bestIdx)) { best = el; bestZ = z; bestIdx = idx; }
+                });
+                return best;
+            }
+            function closeModalEl(el) {
+                const id = el.id || '';
+                const fn = id ? window[capName(id)] : null;
+                if (typeof fn === 'function') { try { fn(); } catch (e) {} }
+                if (visible(el)) {
+                    el.classList.add('hidden'); el.classList.remove('flex');
+                    try { document.body.classList.remove('overflow-hidden'); } catch (e) {}
+                }
+            }
+            function sidebarOpen() {
+                const d = document.getElementById('sidebarDrawer');
+                return !!d && d.classList.contains('translate-x-0');
+            }
+            function toastSafe(msg, icon, color) { try { showToast(msg, icon, color); } catch (e) {} }
+
+            function scrollTo(y) {
+                const go = () => { try { window.scrollTo(0, y || 0); } catch (e) {} };
+                requestAnimationFrame(go); setTimeout(go, 80); setTimeout(go, 250);
+            }
+
+            // ব্যাক চাপলে কী হবে — true মানে ওয়েবসাইট থেকে বের হওয়া যাবে
+            function handleBack() {
+                // ১) প্রোফাইল সম্পূর্ণ করা বাধ্যতামূলক হলে বের/ক্লোজ হবে না
+                if (isForcedProfileMode) {
+                    toastSafe('অনুগ্রহ করে আগে প্রোফাইল সম্পূর্ণ করুন!', 'shield-alert', 'text-rose-400');
+                    return false;
+                }
+                // ২) খোলা ফর্ম / মোডাল / ডিটেইল পপআপ
+                const modal = topOpenModal();
+                if (modal) { closeModalEl(modal); return false; }
+                // ৩) চ্যাট মেনু ড্রপডাউন
+                const dd = document.getElementById('mesesuMenuDropdown');
+                if (dd && !dd.classList.contains('hidden')) { dd.classList.add('hidden'); return false; }
+                // ৪) সাইডবার
+                if (sidebarOpen()) { try { closeSidebar(); } catch (e) {} return false; }
+                // ৫) নোটিফিকেশন পেজ
+                if (document.body.classList.contains('notif-page-open')) { try { closeNotifPanel(); } catch (e) {} return false; }
+                // ৬) চ্যাটের ভেতরের পেজ (রিকুয়েস্ট/থ্রেড) → আগের চ্যাট স্তরে
+                if (currentTab === 'chat') {
+                    try {
+                        if (typeof mesesuSubView !== 'undefined' && mesesuSubView) { mesesuCloseSubView(); return false; }
+                        if (document.body.classList.contains('chat-thread')) { mesesuBackToInbox(); return false; }
+                    } catch (e) {}
+                }
+                // ৭) লগইন/রেজিস্টার পেজ
+                const authEl = document.getElementById('authSection');
+                if (authEl && !authEl.classList.contains('hidden')) {
+                    const rForm = document.getElementById('registerForm');
+                    if (rForm && !rForm.classList.contains('hidden')) { try { switchAuthTab('login'); } catch (e) {} return false; }
+                    let expired = false;
+                    try { expired = sessionStorage.getItem('ae_guest_preview_expired') === '1'; } catch (e) {}
+                    if (!currentUser && !expired) { showGuestApp(); return false; }
+                    // গেস্ট সময় শেষ: লগইন বাধ্যতামূলক, তাই ভেতরে ফেরানো যাবে না → বের হওয়ার নিয়ম
+                    return confirmExit();
+                }
+                // ৮) আগের পেজে (ট্যাবে) ফেরা
+                while (tabStack.length > 1) {
+                    tabStack.pop();
+                    const target = tabStack[tabStack.length - 1];
+                    internalNav = true;
+                    try { window.switchTab(target.tab); } catch (e) {}
+                    internalNav = false;
+                    if (currentTab === target.tab) { scrollTo(target.scroll); return false; }
+                }
+                // ৯) স্ট্যাক ফাঁকা কিন্তু হোমে নেই (যেমন সরাসরি শেষ দেখা ট্যাবে খুলেছে) → হোমে
+                if (currentTab !== TAB_HOME) {
+                    internalNav = true;
+                    try { window.switchTab(TAB_HOME); } catch (e) {}
+                    internalNav = false;
+                    tabStack = [{ tab: TAB_HOME, scroll: 0 }];
+                    if (currentTab === TAB_HOME) { scrollTo(0); return false; }
+                }
+                // ১০) হোম পেজ: ২ বার ব্যাক চাপলে তবেই বের হবে
+                return confirmExit();
+            }
+            function confirmExit() {
+                const now = Date.now();
+                if (now - lastHomeBackAt <= EXIT_WINDOW_MS) { lastHomeBackAt = 0; return true; }
+                lastHomeBackAt = now;
+                toastSafe('বের হতে আবার ব্যাক চাপুন', 'log-out', 'text-slate-300');
+                return false;
+            }
+
+            // --- ব্রাউজার হিস্টরি গার্ড ---
+            function arm() {
+                if (armed) return;
+                try {
+                    if (history.state && history.state.ae === 'app') { armed = true; return; }
+                    history.replaceState({ ae: 'guard' }, '', location.href);
+                    history.pushState({ ae: 'app' }, '', location.href);
+                    armed = true;
+                } catch (e) {}
+            }
+            ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(ev => {
+                window.addEventListener(ev, function once() {
+                    arm();
+                    if (armed) window.removeEventListener(ev, once, true);
+                }, { capture: true, passive: true });
+            });
+            // পেজ রিলোডের পর আগের গার্ড থাকলে সেটিই ব্যবহার হবে
+            try { if (history.state && history.state.ae === 'app') armed = true; } catch (e) {}
+
+            window.addEventListener('popstate', (e) => {
+                const st = e.state;
+                if (!st || st.ae !== 'guard') return;   // শুধু গার্ড এন্ট্রিতে ফেরাই "ব্যাক"
+                let exit = false;
+                try { exit = handleBack(); } catch (err) { console.warn('back handler', err); }
+                if (exit) {
+                    armed = false;
+                    try { history.back(); } catch (err) {}
+                } else {
+                    try { history.pushState({ ae: 'app' }, '', location.href); } catch (err) {}
+                }
+            });
+
+            // --- ট্যাব পরিবর্তনের ইতিহাস রাখা ---
+            const origSwitchTab = window.switchTab;
+            if (typeof origSwitchTab === 'function') {
+                window.switchTab = function (tabName, ...rest) {
+                    const before = currentTab;
+                    const scrollBefore = window.scrollY || 0;
+                    const result = origSwitchTab.call(this, tabName, ...rest);
+                    if (!internalNav && currentTab !== before) {
+                        if (currentTab === TAB_HOME) {
+                            tabStack = [{ tab: TAB_HOME, scroll: 0 }];
+                        } else {
+                            if (tabStack.length) tabStack[tabStack.length - 1].scroll = scrollBefore;
+                            tabStack.push({ tab: currentTab, scroll: 0 });
+                            if (tabStack.length > 40) tabStack.shift();
+                        }
+                    }
+                    return result;
+                };
+            }
+            window.__aeNavReset = () => { tabStack = [{ tab: TAB_HOME, scroll: 0 }]; lastHomeBackAt = 0; };
+        })();
+
+
 </script>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/firebase-messaging-sw.js')
-                .then((registration) => {
+        // Service Worker: শুধু http/https এ এবং ফাইলটি সত্যিই থাকলে রেজিস্টার হবে (প্রিভিউ/ফাইল মোডে TypeError আসবে না)
+        if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+            window.addEventListener('load', async () => {
+                try {
+                    const swUrl = '/firebase-messaging-sw.js';
+                    const res = await fetch(swUrl, { method: 'GET', cache: 'no-store' });
+                    const type = (res.headers.get('content-type') || '').toLowerCase();
+                    if (!res.ok || (type && !/javascript|ecmascript/.test(type))) {
+                        console.info('SW skipped: firebase-messaging-sw.js not found at root');
+                        return;
+                    }
+                    const registration = await navigator.serviceWorker.register(swUrl);
                     console.log('SW Registered with scope: ', registration.scope);
-                })
-                .catch(err => console.log('SW Error', err));
+                } catch (err) {
+                    console.info('SW not registered:', (err && err.message) || err);
+                }
             });
         }
     </script>

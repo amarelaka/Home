@@ -5101,7 +5101,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
     <style>
     #downloadAppModal{--ap-bg:#06120c;--ap-card:#0d241a;--ap-line:rgba(110,231,183,.16);--ap-text:#ecfdf5;--ap-sub:#8fb5a2;--ap-track:rgba(255,255,255,.1);--ap-g:#10b981}
     body.light-mode #downloadAppModal{--ap-bg:#f2f5f4;--ap-card:#ffffff;--ap-line:#e2e8f0;--ap-text:#0f172a;--ap-sub:#64748b;--ap-track:#e2e8f0}
-    #downloadAppModal{background:var(--ap-bg)!important;color:var(--ap-text);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+    #downloadAppModal{background:var(--ap-bg)!important;color:var(--ap-text);overflow-y:auto;overscroll-behavior:none;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+    html:has(#downloadAppModal:not(.hidden)),body:has(#downloadAppModal:not(.hidden)){overscroll-behavior:none!important;overflow:hidden!important}
     #downloadAppModal.hidden{display:none!important}
     #downloadAppModal .ap-wrap{max-width:720px;margin:0 auto;padding-bottom:140px}
     .ap-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;background:color-mix(in srgb,var(--ap-bg) 82%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--ap-line)}
@@ -12241,6 +12242,17 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             m.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
         };
+        // পুল-টু-রিফ্রেশ সম্পূর্ণ বন্ধ: ডাউনলোড পেজ খোলা থাকলে উপরে টেনে নামালে রিফ্রেশ হবে না
+        (function aeBlockPullRefresh() {
+            let y0 = 0;
+            document.addEventListener('touchstart', e => { if (e.touches.length === 1) y0 = e.touches[0].clientY; }, { passive: true });
+            document.addEventListener('touchmove', e => {
+                const m = document.getElementById('downloadAppModal');
+                if (!m || m.classList.contains('hidden')) return;
+                const dy = e.touches[0].clientY - y0;
+                if (dy > 0 && m.scrollTop <= 0 && e.cancelable) e.preventDefault();
+            }, { passive: false });
+        })();
         window.closeOtherDownloadSources = () => {};
         window.handleMainAppDownload = () => { openDownloadAppModal(); };
         window.aeShareApp = async () => {

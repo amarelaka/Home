@@ -3510,7 +3510,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     <button type="button" onclick="shareApp()" class="sidebar-item"><i data-lucide="share-2"></i><span>অ্যাপটি শেয়ার করুন</span></button>
                     <button type="button" onclick="rateApp()" class="sidebar-item"><i data-lucide="star"></i><span>রেটিং দিন</span></button>
                     <button type="button" onclick="window.open('https://www.amarelaka.shop', '_blank')" class="sidebar-item"><i data-lucide="globe"></i><span data-i18n="settings.website">আমাদের ওয়েবসাইট</span></button>
-                    <button type="button" onclick="openDownloadAppModal()" class="sidebar-item"><i data-lucide="download"></i><span data-i18n="settings.downloadApp">অ্যাপ ডাউনলোড</span></button>
+                    <button type="button" onclick="openDownloadAppModal()" class="sidebar-item ae-dl-btn"><i data-lucide="download"></i><span data-i18n="settings.downloadApp">অ্যাপ ডাউনলোড</span><span class="ae-dl-tag">APK</span></button>
                 </div>
             </div>
         </nav>
@@ -5097,66 +5097,142 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
     </div>
 
 
-    <!-- DOWNLOAD APP MODAL -->
-    <div id="downloadAppModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog" aria-modal="true">
-        <div class="w-full max-w-sm rounded-3xl border border-emerald-800/50 bg-[#10281c] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
-                <div>
-                    <h3 class="font-bold text-sm flex items-center gap-1.5" data-i18n="download.title">
-                        <i data-lucide="download" class="w-4 h-4"></i>
-                        অ্যাপ ডাউনলোড
-                    </h3>
-                    <p class="text-[10px] text-emerald-200" data-i18n="download.subtitle">মূল অ্যাপ বা অন্যান্য সোর্স থেকে ডাউনলোড করুন</p>
-                </div>
-                <button type="button" onclick="closeDownloadAppModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center" aria-label="Close"><i data-lucide="x" class="w-4 h-4"></i></button>
-            </div>
-            <div class="p-5 space-y-3 overflow-y-auto">
-                <button type="button" id="mainDownloadAppBtn" onclick="handleMainAppDownload()" class="w-full flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-600 hover:from-emerald-500 hover:to-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/30 transition active:scale-[0.98]">
-                    <div class="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                        <i data-lucide="smartphone" class="w-5 h-5"></i>
-                    </div>
-                    <div class="text-left flex-1 min-w-0">
-                        <p class="font-bold" data-i18n="download.mainBtn">ডাউনলোড অ্যাপ্লিকেশন</p>
-                        <p class="text-[11px] text-emerald-100 font-medium opacity-90" data-i18n="download.mainDesc">মূল অফিসিয়াল লিংক</p>
-                    </div>
-                    <i data-lucide="external-link" class="w-4 h-4 opacity-80 shrink-0"></i>
-                </button>
-                <button type="button" onclick="openOtherDownloadSources()" class="w-full flex items-center gap-3 p-4 rounded-2xl bg-[#07140e] border border-emerald-900/50 hover:border-emerald-600/60 text-white font-bold text-sm transition active:scale-[0.98]">
-                    <div class="w-11 h-11 rounded-xl bg-emerald-950/80 border border-emerald-800/50 flex items-center justify-center shrink-0 text-emerald-300">
-                        <i data-lucide="layers" class="w-5 h-5"></i>
-                    </div>
-                    <div class="text-left flex-1 min-w-0">
-                        <p class="font-bold" data-i18n="download.otherBtn">অন্যান্য সোর্স থেকে ডাউনলোড</p>
-                        <p class="text-[11px] text-slate-400 font-medium" data-i18n="download.otherDesc">বিকল্প ডাউনলোড লিংকসমূহ</p>
-                    </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 shrink-0"></i>
-                </button>
-            </div>
+    <!-- ===== APP STORE STYLE DOWNLOAD PAGE ===== -->
+    <style>
+    #downloadAppModal{--ap-bg:#06120c;--ap-card:#0d241a;--ap-line:rgba(110,231,183,.16);--ap-text:#ecfdf5;--ap-sub:#8fb5a2;--ap-track:rgba(255,255,255,.1);--ap-g:#10b981}
+    body.light-mode #downloadAppModal{--ap-bg:#f2f5f4;--ap-card:#ffffff;--ap-line:#e2e8f0;--ap-text:#0f172a;--ap-sub:#64748b;--ap-track:#e2e8f0}
+    #downloadAppModal{background:var(--ap-bg)!important;color:var(--ap-text);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+    #downloadAppModal.hidden{display:none!important}
+    #downloadAppModal .ap-wrap{max-width:720px;margin:0 auto;padding-bottom:140px}
+    .ap-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;background:color-mix(in srgb,var(--ap-bg) 82%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--ap-line)}
+    .ap-top b{font-size:17px}
+    .ap-ib{width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--ap-card);color:var(--ap-text);border:1px solid var(--ap-line);cursor:pointer}
+    .ap-ib i,.ap-ib svg{width:20px;height:20px}
+    .ap-hero{position:relative;margin:14px 14px 0;border-radius:28px;overflow:hidden;padding:24px 18px;color:#fff;background:radial-gradient(130% 120% at 20% 0%,#34d399 0%,#059669 38%,#064e3b 100%);box-shadow:0 18px 40px rgba(5,150,105,.28)}
+    .ap-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 90% 10%,rgba(255,255,255,.25),transparent 70%);pointer-events:none}
+    .ap-hrow{position:relative;z-index:1;display:flex;gap:16px;align-items:center}
+    .ap-icon{width:104px;height:104px;border-radius:25%;flex:none;object-fit:cover;background:#fff;box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.3)}
+    .ap-hrow h1{font-size:25px;font-weight:800;line-height:1.15}
+    .ap-hrow p{margin-top:4px;font-size:13.5px;opacity:.92}
+    .ap-badge{display:inline-flex;gap:5px;align-items:center;margin-top:8px;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.2);font-size:11.5px;font-weight:600}
+    .ap-acts{position:relative;z-index:1;display:flex;gap:10px;margin-top:18px}
+    .ap-get{flex:1;height:50px;border:0;border-radius:99px;background:#fff;color:#047857;font:800 16px inherit;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.22);transition:transform .15s}
+    .ap-get:active{transform:scale(.97)}
+    .ap-get[disabled]{opacity:.8;cursor:default}
+    .ap-get svg,.ap-get i{width:20px;height:20px}
+    .ap-share{width:50px;height:50px;border-radius:50%;border:0;background:rgba(255,255,255,.22);color:#fff;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px)}
+    .ap-stats{display:flex;overflow-x:auto;margin:16px 14px 0;padding:14px 0;border-radius:20px;background:var(--ap-card);border:1px solid var(--ap-line);scrollbar-width:none}
+    .ap-stats::-webkit-scrollbar{display:none}
+    .ap-st{flex:1 0 96px;text-align:center;padding:0 8px;border-right:1px solid var(--ap-line)}
+    .ap-st:last-child{border:0}
+    .ap-st small{display:block;font-size:10.5px;letter-spacing:.05em;color:var(--ap-sub);text-transform:uppercase}
+    .ap-st b{display:block;font-size:19px;margin:5px 0 1px;font-variant-numeric:tabular-nums}
+    .ap-st span{font-size:11px;color:var(--ap-sub)}
+    .ap-card{margin:14px 14px 0;padding:16px;border-radius:20px;background:var(--ap-card);border:1px solid var(--ap-line)}
+    .ap-card h2{font-size:16px;font-weight:800;margin-bottom:10px}
+    .ap-live{display:none}
+    .ap-live.show{display:block;animation:apIn .35s ease}
+    @keyframes apIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    .ap-pct{font-size:40px;font-weight:800;color:var(--ap-g);font-variant-numeric:tabular-nums;line-height:1}
+    .ap-ptop{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+    .ap-ptop small{font-size:12.5px;color:var(--ap-sub)}
+    .ap-track{height:12px;border-radius:99px;background:var(--ap-track);overflow:hidden}
+    .ap-bar{height:100%;width:0;border-radius:99px;transition:width .15s linear;background:linear-gradient(90deg,#059669,#34d399,#059669);background-size:200% 100%;animation:apShine 1.3s linear infinite}
+    @keyframes apShine{to{background-position:-200% 0}}
+    .ap-live.done .ap-bar,.ap-live.fail .ap-bar{animation:none}
+    .ap-live.fail .ap-bar{background:#dc2626}
+    .ap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}
+    .ap-cell{padding:10px 12px;border-radius:14px;background:var(--ap-bg);border:1px solid var(--ap-line)}
+    .ap-cell small{display:block;font-size:11px;color:var(--ap-sub)}
+    .ap-cell b{font-size:15.5px;font-variant-numeric:tabular-nums}
+    .ap-msg{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;font-size:14px;line-height:1.6}
+    .ap-live.done .ap-msg.ok{display:block;background:rgba(16,185,129,.14);color:#10b981}
+    .ap-live.fail .ap-msg.er{display:block;background:rgba(220,38,38,.12);color:#ef4444}
+    .ap-msg a{color:inherit;font-weight:700;text-decoration:underline}
+    .ap-li{display:flex;gap:12px;align-items:flex-start;padding:9px 0}
+    .ap-li+.ap-li{border-top:1px solid var(--ap-line)}
+    .ap-li i,.ap-li svg.ic{width:34px;height:34px;padding:7px;border-radius:11px;flex:none;background:rgba(16,185,129,.15);color:var(--ap-g)}
+    .ap-li b{display:block;font-size:14.5px}
+    .ap-li span{font-size:13px;color:var(--ap-sub);line-height:1.5}
+    .ap-num{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--ap-g);color:#fff}
+    /* নিচের ফিক্সড প্রগ্রেস বার */
+    #apDock{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto;height:56px;border-radius:99px;overflow:hidden;background:#e5e7eb;box-shadow:0 12px 32px rgba(0,0,0,.28);z-index:195;cursor:pointer;transform:translateY(150%);opacity:0;transition:transform .35s,opacity .35s}
+    body:not(.light-mode) #apDock{background:#12301f}
+    #apDock.show{transform:none;opacity:1}
+    #apDock.err .ap-df{background:#dc2626}
+    .ap-df{position:absolute;inset:0 auto 0 0;width:0;background:#06c167;border-radius:99px;transition:width .15s linear}
+    .ap-t1,.ap-t2{position:absolute;inset:0;display:grid;place-items:center;font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;color:#06c167}
+    .ap-t2{color:#fff;clip-path:inset(0 100% 0 0);transition:clip-path .15s linear}
+    /* সাইডবারের প্রিমিয়াম ডাউনলোড বাটন */
+    #sidebarDrawer .ae-dl-btn,.sidebar-item.ae-dl-btn{position:relative;overflow:hidden;background:linear-gradient(135deg,#059669,#10b981 55%,#34d399)!important;color:#fff!important;font-weight:800!important;border:0!important;box-shadow:0 8px 20px rgba(16,185,129,.38),inset 0 1px 0 rgba(255,255,255,.35)!important}
+    .ae-dl-btn svg,.ae-dl-btn i{color:#fff!important;stroke:#fff!important}
+    .ae-dl-btn::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:aeDlSheen 3.2s ease-in-out infinite}
+    @keyframes aeDlSheen{0%,55%{left:-60%}100%{left:130%}}
+    .ae-dl-tag{margin-left:auto;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.25)}
+    @media (prefers-reduced-motion:reduce){.ap-bar,.ae-dl-btn::after{animation:none}}
+    </style>
+
+    <div id="downloadAppModal" class="hidden fixed inset-0 z-[180]" role="dialog" aria-modal="true">
+      <div class="ap-wrap">
+        <div class="ap-top">
+          <button type="button" class="ap-ib" onclick="closeDownloadAppModal()" aria-label="Back"><i data-lucide="chevron-left"></i></button>
+          <b data-bn="অ্যাপ ডাউনলোড" data-en="Download App">অ্যাপ ডাউনলোড</b>
+          <button type="button" class="ap-ib" onclick="aeShareApp()" aria-label="Share"><i data-lucide="share-2"></i></button>
         </div>
+
+        <section class="ap-hero">
+          <div class="ap-hrow">
+            <img class="ap-icon" src="icon-512.png" alt="Amar Elaka">
+            <div>
+              <h1>আমার এলাকা</h1>
+              <p data-bn="সকল সেবা এখন হাতের মুঠোয়" data-en="All services in your hand">সকল সেবা এখন হাতের মুঠোয়</p>
+              <span class="ap-badge"><i data-lucide="shield-check" style="width:13px;height:13px"></i><span data-bn="অফিসিয়াল Android অ্যাপ" data-en="Official Android app">অফিসিয়াল Android অ্যাপ</span></span>
+            </div>
+          </div>
+          <div class="ap-acts">
+            <button type="button" class="ap-get" id="apGet" onclick="aeStartApkDownload()"><i data-lucide="download"></i><span id="apGetT">ডাউনলোড</span></button>
+            <button type="button" class="ap-share" onclick="aeShareApp()" aria-label="Share"><i data-lucide="share-2" style="width:20px;height:20px"></i></button>
+          </div>
+        </section>
+
+        <div class="ap-stats">
+          <div class="ap-st"><small data-bn="সাইজ" data-en="Size">সাইজ</small><b id="apSize">—</b><span>APK</span></div>
+          <div class="ap-st"><small data-bn="মূল্য" data-en="Price">মূল্য</small><b data-bn="ফ্রি" data-en="Free">ফ্রি</b><span data-bn="কোনো চার্জ নেই" data-en="No charges">কোনো চার্জ নেই</span></div>
+          <div class="ap-st"><small data-bn="ভার্সন" data-en="Version">ভার্সন</small><b id="apVer">1.0</b><span data-bn="সর্বশেষ" data-en="Latest">সর্বশেষ</span></div>
+          <div class="ap-st"><small data-bn="প্ল্যাটফর্ম" data-en="Platform">প্ল্যাটফর্ম</small><b>Android</b><span data-bn="৮.০ বা নতুন" data-en="8.0 or newer">৮.০ বা নতুন</span></div>
+        </div>
+
+        <div class="ap-card ap-live" id="apLive" aria-live="polite">
+          <h2 id="apLiveT" data-bn="ডাউনলোডের অবস্থা" data-en="Download status">ডাউনলোডের অবস্থা</h2>
+          <div class="ap-ptop"><div class="ap-pct" id="apPct">0%</div><small id="apState">—</small></div>
+          <div class="ap-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="apTrack"><div class="ap-bar" id="apBar"></div></div>
+          <div class="ap-grid">
+            <div class="ap-cell"><small data-bn="ডাউনলোড হয়েছে" data-en="Downloaded">ডাউনলোড হয়েছে</small><b id="apDone">0 MB</b></div>
+            <div class="ap-cell"><small data-bn="বাকি আছে" data-en="Remaining">বাকি আছে</small><b id="apLeft">—</b></div>
+            <div class="ap-cell"><small data-bn="গতি" data-en="Speed">গতি</small><b id="apSpd">—</b></div>
+            <div class="ap-cell"><small data-bn="সময় বাকি" data-en="Time left">সময় বাকি</small><b id="apEta">—</b></div>
+          </div>
+          <div class="ap-msg ok" id="apOk"></div>
+          <div class="ap-msg er" id="apEr"></div>
+        </div>
+
+        <div class="ap-card">
+          <h2 data-bn="কেন এই অ্যাপ?" data-en="Why this app?">কেন এই অ্যাপ?</h2>
+          <div class="ap-li"><i data-lucide="layout-grid"></i><div><b data-bn="সব সেবা এক জায়গায়" data-en="All services in one place">সব সেবা এক জায়গায়</b><span data-bn="আপনার এলাকার সার্ভিস প্রোভাইডার ও তথ্য সহজে খুঁজুন।" data-en="Find local service providers and information easily.">আপনার এলাকার সার্ভিস প্রোভাইডার ও তথ্য সহজে খুঁজুন।</span></div></div>
+          <div class="ap-li"><i data-lucide="bell-ring"></i><div><b data-bn="নোটিফিকেশন ও চ্যাট" data-en="Notifications & chat">নোটিফিকেশন ও চ্যাট</b><span data-bn="নতুন খবর ও বার্তা সরাসরি ফোনে পান।" data-en="Get news and messages right on your phone.">নতুন খবর ও বার্তা সরাসরি ফোনে পান।</span></div></div>
+          <div class="ap-li"><i data-lucide="phone-call"></i><div><b data-bn="জরুরি হেল্পলাইন ও রক্ত" data-en="Emergency & blood">জরুরি হেল্পলাইন ও রক্ত</b><span data-bn="প্রয়োজনের মুহূর্তে দ্রুত যোগাযোগ।" data-en="Quick contacts when you need them most.">প্রয়োজনের মুহূর্তে দ্রুত যোগাযোগ।</span></div></div>
+        </div>
+
+        <div class="ap-card">
+          <h2 data-bn="ইনস্টল করবেন যেভাবে" data-en="How to install">ইনস্টল করবেন যেভাবে</h2>
+          <div class="ap-li"><div class="ap-num">১</div><div><b data-bn="ডাউনলোড চাপুন" data-en="Tap Download">ডাউনলোড চাপুন</b><span data-bn="১০০% সম্পন্ন হওয়া পর্যন্ত অপেক্ষা করুন।" data-en="Wait until it reaches 100%.">১০০% সম্পন্ন হওয়া পর্যন্ত অপেক্ষা করুন।</span></div></div>
+          <div class="ap-li"><div class="ap-num">২</div><div><b data-bn="ফাইলটি খুলুন" data-en="Open the file">ফাইলটি খুলুন</b><span data-bn="নোটিফিকেশন বা ডাউনলোড ফোল্ডার থেকে APK ফাইলে ট্যাপ করুন।" data-en="Tap the APK from notifications or your Downloads folder.">নোটিফিকেশন বা ডাউনলোড ফোল্ডার থেকে APK ফাইলে ট্যাপ করুন।</span></div></div>
+          <div class="ap-li"><div class="ap-num">৩</div><div><b data-bn="Install চাপুন" data-en="Tap Install">Install চাপুন</b><span data-bn="প্রথমবার ফোন চাইলে “Install unknown apps” অনুমতি দিন।" data-en="If asked the first time, allow “Install unknown apps”.">প্রথমবার ফোন চাইলে “Install unknown apps” অনুমতি দিন।</span></div></div>
+        </div>
+      </div>
     </div>
 
-    <!-- OTHER DOWNLOAD SOURCES PAGE / MODAL -->
-    <div id="otherDownloadSourcesModal" class="hidden fixed inset-0 z-[185] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog" aria-modal="true">
-        <div class="w-full max-w-md rounded-3xl border border-emerald-800/50 bg-[#10281c] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="closeOtherDownloadSources()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center shrink-0" aria-label="Back"><i data-lucide="arrow-left" class="w-4 h-4"></i></button>
-                    <div>
-                        <h3 class="font-bold text-sm flex items-center gap-1.5" data-i18n="download.otherTitle">
-                            <i data-lucide="layers" class="w-4 h-4"></i>
-                            অন্যান্য সোর্স
-                        </h3>
-                        <p class="text-[10px] text-emerald-200" data-i18n="download.otherSubtitle">Admin নির্ধারিত ডাউনলোড সোর্স</p>
-                    </div>
-                </div>
-                <button type="button" onclick="closeOtherDownloadSources()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center" aria-label="Close"><i data-lucide="x" class="w-4 h-4"></i></button>
-            </div>
-            <div id="otherDownloadSourcesList" class="p-4 space-y-2.5 overflow-y-auto flex-1">
-                <div class="text-center py-10 text-slate-400 text-sm" data-i18n="download.loading">লোড হচ্ছে...</div>
-            </div>
-        </div>
-    </div>
-
+    <div id="apDock" role="button" tabindex="0" aria-label="Download progress" onclick="openDownloadAppModal()"><div class="ap-df" id="apDF"></div><div class="ap-t1" id="apT1">0%</div><div class="ap-t2" id="apT2">0%</div></div>
 
     <!-- TOAST -->
     <div id="toast" class="fixed bottom-24 md:bottom-5 right-3 sm:right-5 left-3 sm:left-auto z-[200] bg-[#10281c] border border-emerald-700/60 text-white px-4 py-3 rounded-2xl shadow-2xl shadow-emerald-900/40 flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
@@ -12123,139 +12199,136 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
 
 
-        // ========== DOWNLOAD APP SYSTEM ==========
-        let mainAppDownloadLink = ''; // from appSettings/config.appDownloadUrl or similar
-        let downloadSourcesCache = [];
-        let unsubDownloadSources = null;
-
+        // ========== DOWNLOAD APP SYSTEM (App Store style + real streamed progress) ==========
+        let mainAppDownloadLink = '';
+        const AE_APK_PATH = '/downloads/amar-elaka.apk';   // একই ডোমেইনে APK
+        const AE_APK_NAME = 'Amar-Elaka.apk';
+        const AE_APK_FALLBACK_BYTES = 50 * 1024 * 1024;     // Content-Length না পেলে
+        const AE_APP_VERSION = '1.0';
+        let aeApkBusy = false, aeApkTotal = 0, aeApkSizeKnown = false;
+        const aeL = (bn, en) => (typeof currentLang !== 'undefined' && currentLang === 'en') ? en : bn;
+        const aeMB = b => (b / 1048576).toFixed(1) + ' MB';
+        const aeApkUrl = () => {
+            const u = mainAppDownloadLink || window.__appDownloadUrl || '';
+            return (typeof u === 'string' && (u.startsWith('/') || u.startsWith(location.origin))) ? u : AE_APK_PATH;
+        };
+        function aeApplyPageTexts() {
+            const m = document.getElementById('downloadAppModal'); if (!m) return;
+            m.querySelectorAll('[data-bn]').forEach(el => { el.textContent = aeL(el.dataset.bn, el.dataset.en); });
+            const v = document.getElementById('apVer'); if (v) v.textContent = AE_APP_VERSION;
+            if (!aeApkBusy) { const g = document.getElementById('apGetT'); if (g) g.textContent = aeL('ডাউনলোড', 'Download'); }
+        }
+        async function aeLoadApkSize() {
+            if (aeApkSizeKnown) return;
+            try {
+                const r = await fetch(aeApkUrl(), { method: 'HEAD', cache: 'no-store' });
+                const n = parseInt(r.headers.get('Content-Length'), 10);
+                if (r.ok && n > 0) { aeApkTotal = n; aeApkSizeKnown = true; }
+            } catch (e) {}
+            const el = document.getElementById('apSize');
+            if (el) el.textContent = aeApkSizeKnown ? aeMB(aeApkTotal) : '~' + Math.round(AE_APK_FALLBACK_BYTES / 1048576) + ' MB';
+        }
         window.openDownloadAppModal = () => {
-            const m = document.getElementById('downloadAppModal');
-            if (!m) return;
-            m.classList.remove('hidden'); m.classList.add('flex');
+            const m = document.getElementById('downloadAppModal'); if (!m) return;
+            m.classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
+            try { if (typeof closeSidebar === 'function') closeSidebar(); } catch (e) {}
+            aeApplyPageTexts(); aeLoadApkSize();
             if (typeof refreshIcons === 'function') refreshIcons();
-            if (typeof applyLanguage === 'function') applyLanguage();
         };
         window.closeDownloadAppModal = () => {
-            const m = document.getElementById('downloadAppModal');
-            if (!m) return;
-            m.classList.add('hidden'); m.classList.remove('flex');
+            const m = document.getElementById('downloadAppModal'); if (!m) return;
+            m.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
         };
-        window.handleMainAppDownload = () => {
-            // Prefer live config from appSettings; fallback empty
-            let link = mainAppDownloadLink || '';
+        window.closeOtherDownloadSources = () => {};
+        window.handleMainAppDownload = () => { openDownloadAppModal(); };
+        window.aeShareApp = async () => {
+            const d = { title: 'আমার এলাকা', text: aeL('আমার এলাকা অ্যাপ ডাউনলোড করুন', 'Download the Amar Elaka app'), url: location.origin };
             try {
-                // also check global if set from listener
-                if (!link && window.__appDownloadUrl) link = window.__appDownloadUrl;
-            } catch(e) {}
-            if (link && typeof link === 'string' && link.startsWith('http')) {
-                window.open(link, '_blank', 'noopener,noreferrer');
-            } else {
-                showToast(typeof t === 'function' ? t('download.noMainLink') : 'ডাউনলোড লিংক এখনো সেট করা হয়নি', 'circle-x', 'text-amber-400');
-            }
+                if (navigator.share) await navigator.share(d);
+                else if (navigator.clipboard) { await navigator.clipboard.writeText(d.url); showToast(aeL('লিংক কপি হয়েছে', 'Link copied')); }
+            } catch (e) {}
         };
-        window.openOtherDownloadSources = () => {
-            closeDownloadAppModal();
-            const m = document.getElementById('otherDownloadSourcesModal');
-            if (!m) return;
-            m.classList.remove('hidden'); m.classList.add('flex');
-            document.body.classList.add('overflow-hidden');
-            loadDownloadSources();
-            if (typeof refreshIcons === 'function') refreshIcons();
-            if (typeof applyLanguage === 'function') applyLanguage();
-        };
-        window.closeOtherDownloadSources = () => {
-            const m = document.getElementById('otherDownloadSourcesModal');
-            if (!m) return;
-            m.classList.add('hidden'); m.classList.remove('flex');
-            document.body.classList.remove('overflow-hidden');
-        };
-        function renderDownloadSources(list) {
-            const box = document.getElementById('otherDownloadSourcesList');
-            if (!box) return;
-            if (!list || !list.length) {
-                box.innerHTML = `<div class="text-center py-10 text-slate-400 text-sm">${typeof t === 'function' ? t('download.empty') : 'কোনো ডাউনলোড সোর্স পাওয়া যায়নি'}</div>`;
-                if (typeof refreshIcons === 'function') refreshIcons();
-                return;
-            }
-            box.innerHTML = list.map(item => {
-                const title = (item.title || item.name || 'Download').replace(/</g, '&lt;');
-                const id = item.id || '';
-                return `<button type="button" onclick="openDownloadSourceLink('${id}')" class="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-[#07140e] border border-emerald-900/40 hover:border-emerald-600/50 text-left transition active:scale-[0.98]">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-950/70 border border-emerald-800/40 flex items-center justify-center text-emerald-300 shrink-0"><i data-lucide="download" class="w-4 h-4"></i></div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-bold text-slate-100 truncate">${title}</p>
-                        <p class="text-[10px] text-slate-500 mt-0.5">${typeof t === 'function' ? t('download.tapToOpen') : 'ট্যাপ করে ডাউনলোড করুন'}</p>
-                    </div>
-                    <i data-lucide="external-link" class="w-4 h-4 text-slate-500 shrink-0"></i>
-                </button>`;
-            }).join('');
-            if (typeof refreshIcons === 'function') refreshIcons();
+        function aeDock(on, err) {
+            const d = document.getElementById('apDock'); if (!d) return;
+            d.classList.toggle('show', on); d.classList.toggle('err', !!err);
         }
-        window.openDownloadSourceLink = (id) => {
-            const item = downloadSourcesCache.find(x => x.id === id);
-            if (!item || !item.link) {
-                showToast(typeof t === 'function' ? t('download.invalidLink') : 'লিংক পাওয়া যায়নি', 'circle-x', 'text-rose-400');
-                return;
+        function aeRender(loaded, total, speed) {
+            const pct = total ? Math.min(100, loaded / total * 100) : 0, p1 = pct.toFixed(1) + '%';
+            const $ = id => document.getElementById(id);
+            $('apBar').style.width = pct + '%';
+            $('apPct').textContent = Math.floor(pct) + '%';
+            $('apTrack').setAttribute('aria-valuenow', Math.floor(pct));
+            $('apDone').textContent = aeMB(loaded);
+            $('apLeft').textContent = aeMB(Math.max(0, total - loaded));
+            if (speed != null) {
+                $('apSpd').textContent = speed > 0 ? (speed / 1048576).toFixed(1) + ' MB/s' : '—';
+                const sec = speed > 0 ? Math.ceil((total - loaded) / speed) : 0;
+                $('apEta').textContent = speed > 0 ? (sec >= 60 ? Math.floor(sec / 60) + aeL(' মি ', 'm ') + (sec % 60) + aeL(' সে', 's') : sec + aeL(' সে', 's')) : '—';
             }
-            const url = String(item.link).trim();
-            if (!url.startsWith('http')) {
-                showToast(typeof t === 'function' ? t('download.invalidLink') : 'লিংক সঠিক নয়', 'circle-x', 'text-rose-400');
-                return;
-            }
-            window.open(url, '_blank', 'noopener,noreferrer');
-        };
-        async function loadDownloadSources() {
-            const box = document.getElementById('otherDownloadSourcesList');
-            if (box) box.innerHTML = `<div class="text-center py-10 text-slate-400 text-sm">${typeof t === 'function' ? t('download.loading') : 'লোড হচ্ছে...'}</div>`;
-            if (!firebaseReady) {
-                renderDownloadSources([]);
-                return;
-            }
+            $('apDF').style.width = pct + '%'; $('apT1').textContent = p1; $('apT2').textContent = p1;
+            $('apT2').style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
+        }
+        function aeFail(msg) {
+            aeApkBusy = false; aeDock(false);
+            const $ = id => document.getElementById(id);
+            $('apGet').disabled = false; $('apGetT').textContent = aeL('আবার চেষ্টা করুন', 'Try again');
+            $('apLive').className = 'ap-card ap-live show fail';
+            $('apState').textContent = aeL('ব্যর্থ', 'Failed');
+            $('apEr').innerHTML = '❌ <b>' + aeL('ডাউনলোড ব্যর্থ হয়েছে', 'Download failed') + '</b><br>' + msg +
+                '<br><a href="' + aeApkUrl() + '" download>' + aeL('সরাসরি ডাউনলোড লিংক (প্রগ্রেস ছাড়া)', 'Direct download link (no progress)') + '</a>';
+        }
+        window.aeStartApkDownload = async () => {
+            if (aeApkBusy) return;
+            aeApkBusy = true;
+            const $ = id => document.getElementById(id);
+            $('apGet').disabled = true; $('apGetT').textContent = aeL('ডাউনলোড চলছে…', 'Downloading…');
+            $('apLive').className = 'ap-card ap-live show';
+            $('apState').textContent = aeL('সংযোগ হচ্ছে…', 'Connecting…');
+            const guess = aeApkTotal || AE_APK_FALLBACK_BYTES;
+            aeRender(0, guess, 0); aeDock(true);
             try {
-                // Collection structure for future Admin Panel compatibility:
-                // Collection: downloadSources
-                // Documents: { title: string, link: string, order?: number, active?: boolean, createdAt?: timestamp }
-                const snap = await getDocs(query(collection(db, 'downloadSources'), orderBy('order', 'asc')));
-                let list = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(x => x.active !== false && x.link);
-                if (!list.length) {
-                    // fallback without order if index missing
-                    const snap2 = await getDocs(collection(db, 'downloadSources'));
-                    list = snap2.docs.map(d => ({ id: d.id, ...d.data() })).filter(x => x.active !== false && x.link);
-                    list.sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+                const res = await fetch(aeApkUrl(), { cache: 'no-store' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                if (!res.body || !res.body.getReader) throw new Error('NO_STREAM');
+                let total = parseInt(res.headers.get('Content-Length'), 10);
+                if (!total || isNaN(total)) total = guess;
+                aeApkTotal = total; aeApkSizeKnown = true; $('apSize').textContent = aeMB(total);
+                $('apState').textContent = aeL('ডাউনলোড হচ্ছে…', 'Downloading…');
+                const rd = res.body.getReader(), chunks = []; let loaded = 0, lastT = performance.now(), lastB = 0, speed = 0;
+                for (;;) {
+                    const r = await rd.read(); if (r.done) break;
+                    chunks.push(r.value); loaded += r.value.length;
+                    const now = performance.now();
+                    if (now - lastT > 400) { speed = (loaded - lastB) / ((now - lastT) / 1000); lastT = now; lastB = loaded; }
+                    aeRender(loaded, Math.max(total, loaded), speed);
                 }
-                downloadSourcesCache = list;
-                renderDownloadSources(list);
-            } catch (err) {
-                console.warn('downloadSources load:', err.code || err.message);
-                // try simple collection read
-                try {
-                    const snap2 = await getDocs(collection(db, 'downloadSources'));
-                    const list = snap2.docs.map(d => ({ id: d.id, ...d.data() })).filter(x => x.active !== false && x.link);
-                    list.sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
-                    downloadSourcesCache = list;
-                    renderDownloadSources(list);
-                } catch (e2) {
-                    console.warn('downloadSources fallback:', e2);
-                    downloadSourcesCache = [];
-                    renderDownloadSources([]);
-                }
+                aeRender(loaded, loaded, 0); $('apEta').textContent = '0';
+                const blob = new Blob(chunks, { type: 'application/vnd.android.package-archive' });
+                if (blob.size < 1048576) throw new Error('BAD_FILE');
+                const url = URL.createObjectURL(blob), a = document.createElement('a');
+                a.href = url; a.download = AE_APK_NAME; document.body.appendChild(a); a.click(); a.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 60000);
+                aeApkBusy = false; $('apGet').disabled = false; $('apGetT').textContent = aeL('আবার ডাউনলোড', 'Download again');
+                $('apLive').className = 'ap-card ap-live show done';
+                $('apState').textContent = aeL('সম্পন্ন ✓', 'Completed ✓');
+                $('apOk').innerHTML = '🎉 <b>' + aeL('ডাউনলোড সম্পন্ন!', 'Download complete!') + '</b><br>' +
+                    aeL('ফাইলটি খুলে Install করুন। প্রয়োজনে “Install unknown apps” অনুমতি দিন।', 'Open the file and tap Install. Allow “Install unknown apps” if asked.');
+                setTimeout(() => aeDock(false), 3500);
+            } catch (e) {
+                const m = String(e && e.message || e);
+                aeFail(m === 'NO_STREAM' ? aeL('আপনার ব্রাউজার লাইভ প্রগ্রেস সমর্থন করে না।', 'Your browser does not support live progress.') :
+                       m.indexOf('HTTP') === 0 ? aeL('সার্ভার থেকে ফাইল পাওয়া যায়নি (' + m + ').', 'File not found on server (' + m + ').') :
+                       m === 'BAD_FILE' ? aeL('ফাইলটি সম্পূর্ণ আসেনি, আবার চেষ্টা করুন।', 'The file was incomplete, please retry.') :
+                       aeL('ইন্টারনেট সংযোগ বিচ্ছিন্ন হয়েছে বা সার্ভার অনুরোধ আটকে দিয়েছে।', 'Connection lost or the server blocked the request.'));
             }
-        }
-        // Hook main download link from appSettings if available
+        };
+        // Admin settings (appSettings) থেকে একই-ডোমেইন লিংক এলে সেটি ব্যবহার হবে
         function applyDownloadConfigFromSettings(data) {
             if (!data) return;
-            if (data.appDownloadUrl) {
-                mainAppDownloadLink = data.appDownloadUrl;
-                window.__appDownloadUrl = data.appDownloadUrl;
-            } else if (data.downloadAppUrl) {
-                mainAppDownloadLink = data.downloadAppUrl;
-                window.__appDownloadUrl = data.downloadAppUrl;
-            } else if (data.mainDownloadLink) {
-                mainAppDownloadLink = data.mainDownloadLink;
-                window.__appDownloadUrl = data.mainDownloadLink;
-            }
+            const u = data.appDownloadUrl || data.downloadAppUrl || data.mainDownloadLink;
+            if (u) { mainAppDownloadLink = u; window.__appDownloadUrl = u; }
         }
 
 

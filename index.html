@@ -5649,7 +5649,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, updatePassword, EmailAuthProvider, reauthenticateWithCredential, linkWithCredential, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocFromServer, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocFromServer, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
 
         // ========== ANTI-ZOOM ==========
@@ -7721,7 +7721,105 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         lsSet(pk, String((parseInt(lsGet(pk, '0'), 10) || 0) + elapsed));
                     }
                 }
+                try { endUserActivitySession(); } catch (e) {}
             }
+        });
+
+        // ========== USER ACTIVITY LOGS (user_activity_logs) ==========
+        let aeActivitySessionDocId = null;
+        let aeActivityLoginMs = null;
+        let aeActivityEnding = false;
+
+        async function startUserActivitySession() {
+            if (!currentUser || !firebaseReady || !db) return;
+            if (aeActivitySessionDocId) return; // one active session per page load
+            try {
+                const uid = currentUser.uid;
+                const name = (userProfile && (userProfile.fullName || userProfile.name)) || currentUser.displayName || '';
+                const email = (userProfile && userProfile.email) || currentUser.email || '';
+                const phone = (userProfile && userProfile.phone) || '';
+                const district = (userProfile && userProfile.district) || '';
+                const upazila = (userProfile && userProfile.upazila) || '';
+                const sessionId = (crypto?.randomUUID?.() || ('sess-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10)));
+                const loginTime = new Date();
+                const dateKey = loginTime.toISOString().slice(0, 10);
+
+                // Count how many times this user already logged in today
+                let loginCountToday = 1;
+                try {
+                    const qToday = query(collection(db, 'user_activity_logs'), where('uid', '==', uid), where('dateKey', '==', dateKey));
+                    const snapToday = await getDocs(qToday);
+                    loginCountToday = snapToday.size + 1;
+                } catch (e) {
+                    // Fallback without composite index: fetch recent and filter client-side
+                    try {
+                        const qUid = query(collection(db, 'user_activity_logs'), where('uid', '==', uid), limit(50));
+                        const snapUid = await getDocs(qUid);
+                        const count = snapUid.docs.filter(d => (d.data().dateKey === dateKey)).length;
+                        loginCountToday = count + 1;
+                    } catch (e2) { loginCountToday = 1; }
+                }
+
+                const ref = await addDoc(collection(db, 'user_activity_logs'), {
+                    uid,
+                    name,
+                    email,
+                    phone,
+                    district,
+                    upazila,
+                    sessionId,
+                    dateKey,
+                    loginTime,
+                    loginCountToday,
+                    logoutTime: null,
+                    durationInMinutes: null,
+                    createdAt: serverTimestamp()
+                });
+                aeActivitySessionDocId = ref.id;
+                aeActivityLoginMs = loginTime.getTime();
+                try {
+                    sessionStorage.setItem('ae_activity_session_doc', ref.id);
+                    sessionStorage.setItem('ae_activity_login_ms', String(aeActivityLoginMs));
+                } catch (e) {}
+            } catch (e) {
+                console.warn('startUserActivitySession', e);
+            }
+        }
+
+        async function endUserActivitySession() {
+            if (aeActivityEnding) return;
+            const docId = aeActivitySessionDocId || (function () {
+                try { return sessionStorage.getItem('ae_activity_session_doc'); } catch (e) { return null; }
+            })();
+            if (!docId || !firebaseReady || !db) return;
+            aeActivityEnding = true;
+            try {
+                const loginMs = aeActivityLoginMs || parseInt((function () {
+                    try { return sessionStorage.getItem('ae_activity_login_ms') || '0'; } catch (e) { return '0'; }
+                })(), 10) || Date.now();
+                const logoutTime = new Date();
+                const durationInMinutes = Math.max(0, Math.round((logoutTime.getTime() - loginMs) / 60000));
+                await updateDoc(doc(db, 'user_activity_logs', docId), {
+                    logoutTime,
+                    durationInMinutes,
+                    updatedAt: serverTimestamp()
+                });
+            } catch (e) {
+                console.warn('endUserActivitySession', e);
+            } finally {
+                aeActivitySessionDocId = null;
+                aeActivityLoginMs = null;
+                try {
+                    sessionStorage.removeItem('ae_activity_session_doc');
+                    sessionStorage.removeItem('ae_activity_login_ms');
+                } catch (e) {}
+                aeActivityEnding = false;
+            }
+        }
+
+        // Best-effort on mobile/back navigation
+        window.addEventListener('pagehide', () => {
+            try { endUserActivitySession(); } catch (e) {}
         });
 
         // ========== ONLINE / OFFLINE UI HANDLERS ==========
@@ -8322,6 +8420,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const msg = (typeof t === 'function' && currentLang === 'en') ? 'Do you really want to log out?' : 'আপনি কি সত্যিই লগআউট করতে চান?';
             if (!confirm(msg)) return;
             try {
+                try { await endUserActivitySession(); } catch (e) {}
                 stopUserHeartbeat(); stopActivityTracking();
                 // UI first so user lands on login instantly
                 try { closeSidebar?.(); } catch (e) {}
@@ -12709,6 +12808,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         startChatAutoClear();
                         startActivityTracking();
                         setupPushNotifications();
+                        try { startUserActivitySession(); } catch (e) { console.warn(e); }
 
                         // ফ্লাটার থেকে আসা pending FCM টোকেন থাকলে লগইনের সাথে সাথে সেভ করুন
                         try {

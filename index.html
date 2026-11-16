@@ -3506,7 +3506,6 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     <button type="button" onclick="sidebarNav('settings')" class="sidebar-item"><i data-lucide="settings"></i><span>সেটিংস</span></button>
                     <button type="button" onclick="sidebarNav('contact')" class="sidebar-item"><i data-lucide="mail"></i><span>যোগাযোগ</span></button>
                     <button type="button" onclick="sidebarNav('about')" class="sidebar-item"><i data-lucide="info"></i><span>আমাদের সম্বন্ধে</span></button>
-                    <button type="button" onclick="sidebarNav('terms')" class="sidebar-item"><i data-lucide="file-text"></i><span>শর্তাবলী ও নীতিমালা</span></button>
                     <button type="button" onclick="shareApp()" class="sidebar-item"><i data-lucide="share-2"></i><span>অ্যাপটি শেয়ার করুন</span></button>
                     <button type="button" onclick="rateApp()" class="sidebar-item"><i data-lucide="star"></i><span>রেটিং দিন</span></button>
                     <button type="button" onclick="window.open('https://www.amarelaka.shop', '_blank')" class="sidebar-item"><i data-lucide="globe"></i><span data-i18n="settings.website">আমাদের ওয়েবসাইট</span></button>
@@ -4076,6 +4075,104 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     </div>
                 </div>
             </div>
+
+            <!-- SETTINGS PAGE (পূর্ণ পেজ — মোডাল নয়) -->
+            <div id="view-settings" class="tab-view hidden space-y-4 pb-10">
+                <div class="max-w-xl mx-auto space-y-4">
+                    <div class="text-center pb-1">
+                        <div class="w-14 h-14 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-2 shadow-lg shadow-emerald-600/30">
+                            <i data-lucide="settings" class="w-7 h-7 text-white"></i>
+                        </div>
+                        <h2 class="text-lg font-extrabold text-white" data-i18n="settings.title">সেটিংস</h2>
+                        <p class="text-xs text-slate-400 mt-0.5" data-i18n="settings.subtitle">অ্যাপ কাস্টমাইজ করুন ও অ্যাকাউন্ট পরিচালনা করুন</p>
+                    </div>
+
+                    <!-- থিম -->
+                    <div class="info-card p-4 sm:p-5 rounded-2xl">
+                        <div class="mb-3">
+                            <p class="text-sm font-bold text-white" data-i18n="settings.theme">অ্যাপের থিম</p>
+                            <p class="text-[10px] text-slate-400" data-i18n="settings.themeDesc">আপনার পছন্দমতো থিম বেছে নিন</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 bg-[#10281c] p-1 rounded-xl border border-emerald-900/50">
+                            <button type="button" onclick="setTheme('light')" id="themeBtn-light" class="theme-btn flex flex-col items-center justify-center gap-1 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                                <i data-lucide="sun" class="w-4 h-4"></i> <span data-i18n="settings.light">লাইট</span>
+                            </button>
+                            <button type="button" onclick="setTheme('dark')" id="themeBtn-dark" class="theme-btn flex flex-col items-center justify-center gap-1 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                                <i data-lucide="moon" class="w-4 h-4"></i> <span data-i18n="settings.dark">ডার্ক</span>
+                            </button>
+                            <button type="button" onclick="setTheme('system')" id="themeBtn-system" class="theme-btn flex flex-col items-center justify-center gap-1 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                                <i data-lucide="smartphone" class="w-4 h-4"></i> <span data-i18n="settings.system">সিস্টেম</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ভাষা -->
+                    <div class="info-card p-4 sm:p-5 rounded-2xl">
+                        <div class="mb-3">
+                            <p class="text-sm font-bold text-white" data-i18n="settings.language">ভাষা / Language</p>
+                            <p class="text-[10px] text-slate-400" data-i18n="settings.languageDesc">অ্যাপের ভাষা পরিবর্তন করুন</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 bg-[#10281c] p-1 rounded-xl border border-emerald-900/50">
+                            <button type="button" onclick="setLanguage('bn')" id="langBtn-bn" class="lang-btn flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                                <span class="text-base">🇧🇩</span> বাংলা
+                            </button>
+                            <button type="button" onclick="setLanguage('en')" id="langBtn-en" class="lang-btn flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                                <span class="text-base">🇬🇧</span> English
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Push Notifications (user must click to request permission) -->
+                    <div class="info-card p-4 sm:p-5 rounded-2xl">
+                        <div class="mb-3">
+                            <p class="text-sm font-bold text-white flex items-center gap-1.5"><i data-lucide="bell-ring" class="w-4 h-4 text-emerald-400"></i> পুশ নোটিফিকেশন</p>
+                            <p class="text-[10px] text-slate-400">জরুরি আপডেট ও বার্তা সরাসরি ফোনে পেতে নোটিফিকেশন চালু করুন</p>
+                            <p class="text-[10px] text-slate-500 mt-1">স্ট্যাটাস: <span id="notifPermissionStatus" class="font-bold text-emerald-300">—</span></p>
+                        </div>
+                        <button type="button" id="enableNotifBtn" onclick="enablePushNotifications()" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/25">
+                            <i data-lucide="bell" class="w-4 h-4"></i> <span data-enable-notif-label>নোটিফিকেশন চালু করুন</span>
+                        </button>
+                    </div>
+
+                    <!-- অ্যাকাউন্ট নিরাপত্তা: পাসওয়ার্ড পরিবর্তন -->
+                    <div class="info-card p-4 sm:p-5 rounded-2xl">
+                        <div class="mb-3">
+                            <p class="text-sm font-bold text-white flex items-center gap-1.5"><i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i> অ্যাকাউন্ট নিরাপত্তা</p>
+                            <p class="text-[10px] text-slate-400">আপনার লগইন পাসওয়ার্ড পরিবর্তন করুন</p>
+                        </div>
+                        <button type="button" onclick="openChangePasswordModal()" class="w-full bg-transparent border border-emerald-700/50 hover:bg-emerald-950/40 text-emerald-300 font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 transition">
+                            <i data-lucide="key-round" class="w-4 h-4"></i> পাসওয়ার্ড পরিবর্তন করুন
+                        </button>
+                    </div>
+
+                    <!-- প্রিমিয়াম ম্যানেজ করুন: শুধুমাত্র একটিভ প্রিমিয়াম ইউজারদের জন্য দৃশ্যমান -->
+                    <div id="settingsManagePremiumCard" class="hidden premium-feature info-card p-4 sm:p-5 rounded-2xl border border-amber-700/40">
+                        <div class="flex items-center gap-2.5 mb-3">
+                            <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0"><i data-lucide="crown" class="w-4 h-4 text-amber-400"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-white">প্রিমিয়াম ম্যানেজ করুন</p>
+                                <p class="text-[10px] text-slate-400" id="settingsPremiumSubtext">—</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" onclick="switchTab('subscription')" class="bg-gradient-to-br from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                                <i data-lucide="repeat" class="w-3.5 h-3.5"></i> প্ল্যান দেখুন/এক্সটেন্ড
+                            </button>
+                            <button type="button" onclick="requestSubscriptionCancel()" class="bg-transparent border border-rose-700/50 hover:bg-rose-950/40 text-rose-400 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                                <i data-lucide="circle-x" class="w-3.5 h-3.5"></i> সাবস্ক্রিপশন বাতিল করুন
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- শর্তাবলী ও নীতিমালা -->
+                    <div class="info-card p-2 rounded-2xl">
+                        <button type="button" onclick="openTermsModal()" class="w-full flex items-center justify-between p-3 bg-[#07140e] rounded-2xl border border-emerald-900/40 hover:bg-emerald-950/40 transition">
+                            <span class="flex items-center gap-2 text-sm font-bold text-white"><i data-lucide="file-text" class="w-4 h-4 text-emerald-400"></i> শর্তাবলী ও নীতিমালা</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <footer class="hidden md:block bg-[#050a08] text-slate-500 text-xs mt-8 border-t border-emerald-900/30">
@@ -4339,49 +4436,6 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 <p id="feedbackCooldownText" class="text-[10px] text-amber-400 hidden flex items-center gap-1.5 px-1"><i data-lucide="clock" class="w-3 h-3"></i><span>পরবর্তী পাঠানোর জন্য অপেক্ষা করুন...</span></p>
                 <button type="submit" id="feedbackSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2"><i data-lucide="send" class="w-4 h-4"></i> পাঠান</button>
             </form>
-        </div>
-    </div>
-
-    <!-- SETTINGS MODAL (UPDATED THEME) -->
-    <div id="settingsModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
-        <div class="w-full max-w-sm rounded-3xl border border-emerald-800/50 bg-[#10281c] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
-                <div><h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="settings" class="w-4 h-4"></i> সেটিংস</h3><p class="text-[10px] text-emerald-200">অ্যাপ কাস্টমাইজ করুন</p></div>
-                <button onclick="closeSettingsModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
-            </div>
-            <div class="p-5 space-y-4 overflow-y-auto">
-                <div class="p-3 bg-[#07140e] rounded-2xl border border-emerald-900/40">
-                    <div class="mb-3">
-                        <p class="text-sm font-bold text-white" data-i18n="settings.theme">অ্যাপের থিম</p>
-                        <p class="text-[10px] text-slate-400" data-i18n="settings.themeDesc">আপনার পছন্দমতো থিম বেছে নিন</p>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 bg-[#10281c] p-1 rounded-xl border border-emerald-900/50">
-                        <button type="button" onclick="setTheme('light')" id="themeBtn-light" class="theme-btn flex flex-col items-center justify-center gap-1 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
-                            <i data-lucide="sun" class="w-4 h-4"></i> <span data-i18n="settings.light">লাইট</span>
-                        </button>
-                        <button type="button" onclick="setTheme('dark')" id="themeBtn-dark" class="theme-btn flex flex-col items-center justify-center gap-1 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
-                            <i data-lucide="moon" class="w-4 h-4"></i> <span data-i18n="settings.dark">ডার্ক</span>
-                        </button>
-                        <button type="button" onclick="setTheme('system')" id="themeBtn-system" class="theme-btn flex flex-col items-center justify-center gap-1 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
-                            <i data-lucide="smartphone" class="w-4 h-4"></i> <span data-i18n="settings.system">সিস্টেম</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="p-3 bg-[#07140e] rounded-2xl border border-emerald-900/40">
-                    <div class="mb-3">
-                        <p class="text-sm font-bold text-white" data-i18n="settings.language">ভাষা / Language</p>
-                        <p class="text-[10px] text-slate-400" data-i18n="settings.languageDesc">অ্যাপের ভাষা পরিবর্তন করুন</p>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 bg-[#10281c] p-1 rounded-xl border border-emerald-900/50">
-                        <button type="button" onclick="setLanguage('bn')" id="langBtn-bn" class="lang-btn flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
-                            <span class="text-base">🇧🇩</span> বাংলা
-                        </button>
-                        <button type="button" onclick="setLanguage('en')" id="langBtn-en" class="lang-btn flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
-                            <span class="text-base">🇬🇧</span> English
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -4836,9 +4890,6 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     </div>
                 </div>
                 <button type="submit" id="editProfileSaveBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> সংরক্ষণ করুন</button>
-                <button type="button" onclick="openChangePasswordModal()" class="w-full mt-2 bg-transparent border border-emerald-700/50 hover:bg-emerald-950/40 text-emerald-300 font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 transition">
-                    <i data-lucide="key-round" class="w-4 h-4"></i> পাসওয়ার্ড পরিবর্তন করুন
-                </button>
             </form>
         </div>
     </div>
@@ -5798,7 +5849,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         let activityUpdateInterval = null;
         let lastActivityTimestamp = null;
         let messaging = null;
-        const VAPID_PUBLIC_KEY = "BEqIzHv8EGO51Exv3PhQdygFql-wdz5S9Y6YpSanhuE9R3vKq1Sthl7mvUG4vDYWLlrhU2rKHD8NtzIdsmm-Bok";
+        const VAPID_PUBLIC_KEY = 'BOo1psv4kSDGAgxMpMgYOTZRx1rnx5uDhN329QMoz3LmlaZvHkQrlFNwS2A-MYD8TIX3x_JEKDyZSNEZ2HrHi1U'; // <-- Put your Firebase Web Push certificates (VAPID) Public Key here
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMd88SpoSVXIMYVBkKf9NYbD1OYuE2i_h51cnbu_ekdiAoMyT5N3oXR0Gi10fENsPk/exec';
+        const PUSH_SECRET = '_XZAtN4drI35Q1Rw2N_j-DG0XWuX0sRyAgVVHbrdbgY';
         let selectedProfilePicFile = null;
         const CLOUDINARY_CLOUD_NAME = "y2k19sbu";
         const CLOUDINARY_UPLOAD_PRESET = "amar_elaka_preset";
@@ -7019,16 +7072,6 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 if (icon) callBtn.appendChild(icon);
                 callBtn.appendChild(document.createTextNode(' ' + t('common.call')));
             }
-            // Settings header
-            const settingsH = document.querySelector('#settingsModal h3');
-            if (settingsH) {
-                const icon = settingsH.querySelector('i');
-                settingsH.innerHTML = '';
-                if (icon) settingsH.appendChild(icon);
-                settingsH.appendChild(document.createTextNode(' ' + t('settings.title')));
-            }
-            const settingsSub = document.querySelector('#settingsModal .text-emerald-200');
-            if (settingsSub) settingsSub.textContent = t('settings.subtitle');
             translateStaticUiText(document);
             startUiTranslationObserver();
             updateLangButtonsUI();
@@ -7233,7 +7276,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 else if (action === 'feedback') openFeedbackModal();
                 else if (action === 'about') openAboutModal();
                 else if (action === 'terms') openTermsModal();
-                else if (action === 'settings') openSettingsModal();
+                else if (action === 'settings') switchTab('settings');
                 else if (action === 'contact') openContactModal();
                 else if (action === 'result') openResultModal();
                 else switchTab(action);
@@ -7338,8 +7381,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         };
 
         // ========== SETTINGS & CONTACT ==========
-        window.openSettingsModal = () => { if (isForcedProfileMode) return; document.getElementById('settingsModal').classList.remove('hidden'); document.getElementById('settingsModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
-        window.closeSettingsModal = () => { document.getElementById('settingsModal').classList.add('hidden'); document.getElementById('settingsModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
+
 
         window.openContactModal = () => { if (isForcedProfileMode) return; document.getElementById('contactModal').classList.remove('hidden'); document.getElementById('contactModal').classList.add('flex'); document.body.classList.add('overflow-hidden'); refreshIcons(); };
         window.closeContactModal = () => { document.getElementById('contactModal').classList.add('hidden'); document.getElementById('contactModal').classList.remove('flex'); document.body.classList.remove('overflow-hidden'); };
@@ -7707,43 +7749,181 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 
         // ========== PUSH ==========
         async function setupPushNotifications() {
+            // Permission is NOT requested on page load / login.
+            // User must click "Enable Notifications" (enablePushNotifications).
+            // If permission was already granted earlier, we still register SW + refresh token.
             if (!currentUser || !firebaseReady) return;
             try {
-                if (!('Notification' in window)) return;
-                const permission = await Notification.requestPermission();
-                // Flutter WebView অ্যাপের ভেতরে নেটিভ টোকেনই সোর্স; ব্রাউজারের notifDevice/fcmToken যেন ওভাররাইট না হয়
+                if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
                 const isFlutterApp = !!(window.flutterFcmBridgeReady || window.FlutterBridge);
+                const permission = Notification.permission;
                 if (!isFlutterApp) {
-                    try { await setDoc(doc(db, 'users', currentUser.uid), { notifPermission: permission, notifPermissionAt: serverTimestamp(), notifDevice: (navigator.userAgent || '').slice(0, 120) }, { merge: true }); } catch (e) {}
+                    try {
+                        await setDoc(doc(db, 'users', currentUser.uid), {
+                            notifPermission: permission,
+                            notifPermissionAt: serverTimestamp(),
+                            notifDevice: (navigator.userAgent || '').slice(0, 120)
+                        }, { merge: true });
+                    } catch (e) {}
                 }
-                if (permission === 'granted') {
-                    messaging = getMessaging(app);
-                    if (!isFlutterApp) {
-                        const token = await getToken(messaging, { vapidKey: VAPID_PUBLIC_KEY });
-                        if (token) await setDoc(doc(db, 'users', currentUser.uid), { fcmToken: token }, { merge: true });
+                if (permission !== 'granted') {
+                    try { updateNotifEnableUI(); } catch (e) {}
+                    return;
+                }
+                messaging = getMessaging(app);
+                if (!isFlutterApp) {
+                    try {
+                        const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                        await navigator.serviceWorker.ready;
+                        const token = await getToken(messaging, {
+                            vapidKey: VAPID_PUBLIC_KEY,
+                            serviceWorkerRegistration: reg
+                        });
+                        if (token) {
+                            await setDoc(doc(db, 'users', currentUser.uid), { fcmToken: token }, { merge: true });
+                        }
+                    } catch (tokenErr) {
+                        console.log('FCM token setup error:', tokenErr);
                     }
                 }
-                onMessage(messaging, (payload) => {
-                    const n = payload.notification || {};
-                    const d = payload.data || {};
-                    const title = n.title || d.title || 'Amar Elaka';
-                    const body = n.body || d.body || '';
-                    const clickAction = d.clickAction || d.click_action || 'home';
-                    const image = n.image || d.image || '';
-                    const id = `push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-                    addNotification({
-                        id,
-                        type: String(clickAction).split(':')[0] === 'chat' ? 'chat' : (clickAction === 'subscription' ? 'subscription' : 'info'),
-                        title,
-                        body,
-                        icon: String(clickAction).startsWith('chat:') ? 'message-circle' : (clickAction === 'chat' ? 'headset' : (clickAction === 'subscription' ? 'crown' : 'bell')),
-                        image,
-                        clickAction
+                try {
+                    onMessage(messaging, (payload) => {
+                        const n = payload.notification || {};
+                        const d = payload.data || {};
+                        const title = n.title || d.title || 'Amar Elaka';
+                        const body = n.body || d.body || '';
+                        const clickAction = d.clickAction || d.click_action || 'home';
+                        const image = n.image || d.image || '';
+                        const id = `push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+                        addNotification({
+                            id,
+                            type: String(clickAction).split(':')[0] === 'chat' ? 'chat' : (clickAction === 'subscription' ? 'subscription' : 'info'),
+                            title,
+                            body,
+                            icon: String(clickAction).startsWith('chat:') ? 'message-circle' : (clickAction === 'chat' ? 'headset' : (clickAction === 'subscription' ? 'crown' : 'bell')),
+                            image,
+                            clickAction
+                        });
+                        showToast(`${title}: ${body}`, 'bell', 'text-emerald-400');
                     });
-                    showToast(`${title}: ${body}`, 'bell', 'text-emerald-400');
-                });
-            } catch (e) { console.warn('setupPushNotifications', e); }
+                } catch (msgErr) {
+                    console.log('onMessage setup:', msgErr);
+                }
+                try { updateNotifEnableUI(); } catch (e) {}
+            } catch (e) {
+                console.log('setupPushNotifications', e);
+            }
         }
+
+        /** User-initiated only: requests Notification permission, registers SW, gets FCM token, saves to users/{uid}.fcmToken */
+        async function enablePushNotifications() {
+            if (!currentUser || !firebaseReady) {
+                try { showToast('নোটিফিকেশন চালু করতে লগইন করুন', 'circle-x', 'text-rose-400'); } catch (e) {}
+                return;
+            }
+            try {
+                if (!('Notification' in window)) {
+                    try { showToast('এই ব্রাউজার নোটিফিকেশন সাপোর্ট করে না', 'circle-x', 'text-rose-400'); } catch (e) {}
+                    return;
+                }
+                if (!('serviceWorker' in navigator)) {
+                    try { showToast('সার্ভিস ওয়ার্কার সাপোর্ট নেই', 'circle-x', 'text-rose-400'); } catch (e) {}
+                    return;
+                }
+                const permission = await Notification.requestPermission();
+                const isFlutterApp = !!(window.flutterFcmBridgeReady || window.FlutterBridge);
+                if (!isFlutterApp) {
+                    try {
+                        await setDoc(doc(db, 'users', currentUser.uid), {
+                            notifPermission: permission,
+                            notifPermissionAt: serverTimestamp(),
+                            notifDevice: (navigator.userAgent || '').slice(0, 120)
+                        }, { merge: true });
+                    } catch (e) {}
+                }
+                if (permission !== 'granted') {
+                    try { showToast('নোটিফিকেশন অনুমতি দেওয়া হয়নি', 'bell-off', 'text-amber-400'); } catch (e) {}
+                    try { updateNotifEnableUI(); } catch (e) {}
+                    return;
+                }
+                messaging = getMessaging(app);
+                if (!isFlutterApp) {
+                    const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                    await navigator.serviceWorker.ready;
+                    const token = await getToken(messaging, {
+                        vapidKey: VAPID_PUBLIC_KEY,
+                        serviceWorkerRegistration: reg
+                    });
+                    if (token) {
+                        await setDoc(doc(db, 'users', currentUser.uid), { fcmToken: token }, { merge: true });
+                        try { showToast('নোটিফিকেশন সফলভাবে চালু হয়েছে!', 'bell', 'text-emerald-400'); } catch (e) {}
+                    } else {
+                        try { showToast('FCM টোকেন পাওয়া যায়নি', 'circle-x', 'text-amber-400'); } catch (e) {}
+                    }
+                } else {
+                    try { showToast('নোটিফিকেশন অনুমতি দেওয়া হয়েছে', 'bell', 'text-emerald-400'); } catch (e) {}
+                }
+                try {
+                    onMessage(messaging, (payload) => {
+                        const n = payload.notification || {};
+                        const d = payload.data || {};
+                        const title = n.title || d.title || 'Amar Elaka';
+                        const body = n.body || d.body || '';
+                        const clickAction = d.clickAction || d.click_action || 'home';
+                        const image = n.image || d.image || '';
+                        const id = `push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+                        addNotification({
+                            id,
+                            type: String(clickAction).split(':')[0] === 'chat' ? 'chat' : (clickAction === 'subscription' ? 'subscription' : 'info'),
+                            title,
+                            body,
+                            icon: String(clickAction).startsWith('chat:') ? 'message-circle' : (clickAction === 'chat' ? 'headset' : (clickAction === 'subscription' ? 'crown' : 'bell')),
+                            image,
+                            clickAction
+                        });
+                        showToast(`${title}: ${body}`, 'bell', 'text-emerald-400');
+                    });
+                } catch (msgErr) {
+                    console.log('onMessage setup:', msgErr);
+                }
+                try { updateNotifEnableUI(); } catch (e) {}
+            } catch (e) {
+                console.log('enablePushNotifications error:', e);
+                try { showToast('নোটিফিকেশন সেটআপ ব্যর্থ হয়েছে', 'circle-x', 'text-rose-400'); } catch (err) {}
+            }
+        }
+        window.enablePushNotifications = enablePushNotifications;
+
+        function updateNotifEnableUI() {
+            const btn = document.getElementById('enableNotifBtn');
+            const status = document.getElementById('notifPermissionStatus');
+            if (!btn && !status) return;
+            const perm = (typeof Notification !== 'undefined' && Notification.permission) ? Notification.permission : 'default';
+            if (status) {
+                if (perm === 'granted') status.textContent = 'চালু ✓';
+                else if (perm === 'denied') status.textContent = 'ব্লক করা হয়েছে';
+                else status.textContent = 'বন্ধ';
+            }
+            if (btn) {
+                if (perm === 'granted') {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-60', 'cursor-not-allowed');
+                    const t = btn.querySelector('[data-enable-notif-label]');
+                    if (t) t.textContent = 'নোটিফিকেশন চালু আছে';
+                } else if (perm === 'denied') {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-60', 'cursor-not-allowed');
+                    const t = btn.querySelector('[data-enable-notif-label]');
+                    if (t) t.textContent = 'ব্রাউজার সেটিংস থেকে অনুমতি দিন';
+                } else {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-60', 'cursor-not-allowed');
+                    const t = btn.querySelector('[data-enable-notif-label]');
+                    if (t) t.textContent = 'নোটিফিকেশন চালু করুন';
+                }
+            }
+        }
+        window.updateNotifEnableUI = updateNotifEnableUI;
 
         // ========== CHAT AUTO CLEAR ==========
         async function clearOldChatMessages() {
@@ -7970,6 +8150,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (profPlanName) profPlanName.textContent = planName;
             if (profPlanSub) profPlanSub.textContent = profSub;
             if (profPlanAction) profPlanAction.textContent = profAction;
+            // সেটিংস পেজের "প্রিমিয়াম ম্যানেজ করুন" কার্ড — শুধুমাত্র একটিভ প্রিমিয়াম সাবস্ক্রিপশন থাকলেই দৃশ্যমান হবে
+            const settingsPremiumCard = document.getElementById('settingsManagePremiumCard');
+            const settingsPremiumSub = document.getElementById('settingsPremiumSubtext');
+            if (settingsPremiumCard) settingsPremiumCard.classList.toggle('hidden', status !== 'active');
+            if (settingsPremiumSub) settingsPremiumSub.textContent = `${planName} — ${profSub}`;
             refreshIcons();
             try { renderSubscriptionPackages(); } catch (e) {}
         }
@@ -8149,7 +8334,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 // লগআউটের পর লগইন পেজ নয় — গেস্ট মোডে হোম পেজ, নতুন করে ৩ মিনিট
                 try { sessionStorage.removeItem('ae_guest_started_at'); sessionStorage.removeItem('ae_guest_preview_expired'); } catch (e) {}
                 try { stopGuestPreviewTimer(); } catch (e) {}
-                ['settingsModal','contactModal','aboutModal','termsModal','feedbackModal','ratingModal','editProfileModal','changePasswordModal','premiumActionModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','providerModal','chatInfoModal','noticeModal','categoryModal','downloadAppModal'].forEach(id => {
+                ['contactModal','aboutModal','termsModal','feedbackModal','ratingModal','editProfileModal','changePasswordModal','premiumActionModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','providerModal','chatInfoModal','noticeModal','categoryModal','downloadAppModal'].forEach(id => {
                     const fn = window['close' + id.charAt(0).toUpperCase() + id.slice(1)];
                     const el = document.getElementById(id);
                     if (el && !el.classList.contains('hidden') && typeof fn === 'function') { try { fn(); } catch (e) {} }
@@ -8524,7 +8709,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             updateSearchPlaceholders(tabName);
             
             renderNotices();
-            if (tabName === 'subscription' || tabName === 'payment') updateCurrentPlanDisplay();
+            if (tabName === 'subscription' || tabName === 'payment' || tabName === 'settings') updateCurrentPlanDisplay();
             if (tabName === 'chat') {
                 if (typeof mesesuShowInbox === 'function') mesesuShowInbox();
                 updateUnreadBadge();
@@ -10599,10 +10784,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             }, 60000);
         }
         // ================= Mesesu: ইউজার→ইউজার পুশ নোটিফিকেশন =================
-        const MESESU_PUSH_URL = 'https://script.google.com/macros/s/AKfycbzMd88SpoSVXIMYVBkKf9NYbD1OYuE2i_h51cnbu_ekdiAoMyT5N3oXR0Gi10fENsPk/exec';
         async function mesesuPushToPeer(peerId, kind, text) {
             try {
-                if (!currentUser || !peerId || !MESESU_PUSH_URL) return;
+                if (!currentUser || !peerId || !APPS_SCRIPT_URL) return;
                 let token = (mesesuPeerLive && mesesuPeerLive.id === peerId && mesesuPeerLive.fcmToken) || '';
                 if (!token) {
                     const u = (mesesuUsersCache || []).find(x => x.id === peerId);
@@ -10620,8 +10804,16 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     const t = String(text || '').trim();
                     body = t.length > 100 ? t.slice(0, 100).trimEnd() + '...' : t;
                 }
-                const payload = { title: myName, body, tokens: [token], image: '', clickAction: 'chat:' + currentUser.uid, scheduleAt: null };
-                fetch(MESESU_PUSH_URL, { method: 'POST', body: JSON.stringify(payload), keepalive: true }).catch(() => {});
+                const payload = {
+                    title: myName,
+                    body,
+                    tokens: [token],
+                    image: '',
+                    clickAction: 'chat:' + currentUser.uid,
+                    scheduleAt: null,
+                    secret: PUSH_SECRET
+                };
+                fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), keepalive: true }).catch(() => {});
             } catch (e) { console.warn('mesesu push', e); }
         }
         window.mesesuOpenFromPush = (uid) => {
@@ -12009,13 +12201,12 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             document.body.classList.remove('overflow-hidden');
         };
 
-        ['feedbackModal', 'aboutModal', 'termsModal', 'settingsModal', 'providerModal', 'categoryModal', 'userEmergencyRequestModal', 'userBloodRequestModal', 'premiumActionModal', 'contactModal', 'ratingModal'].forEach(id => {
+        ['feedbackModal', 'aboutModal', 'termsModal', 'providerModal', 'categoryModal', 'userEmergencyRequestModal', 'userBloodRequestModal', 'premiumActionModal', 'contactModal', 'ratingModal'].forEach(id => {
             document.getElementById(id)?.addEventListener('click', (e) => {
                 if (e.target.id === id) {
                     if (id === 'feedbackModal') closeFeedbackModal();
                     else if (id === 'aboutModal') closeAboutModal();
                     else if (id === 'termsModal') closeTermsModal();
-                    else if (id === 'settingsModal') closeSettingsModal();
                     else if (id === 'providerModal') closeProviderModal();
                     else if (id === 'categoryModal') closeCategoryModal();
                     else if (id === 'userEmergencyRequestModal') closeUserEmergencyRequestModal();
@@ -12030,7 +12221,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (event.key === 'Escape') {
                 closeNoticeModal(); closeFeedbackModal(); closeAboutModal(); closeTermsModal(); closeResultModal();
                 closeProviderModal(); closeCategoryModal(); closeEditProfileModal();
-                closeSidebar(); closeNotifPanel(); closeSettingsModal(); closeServiceDetailModal();
+                closeSidebar(); closeNotifPanel(); closeServiceDetailModal();
                 closeUserEmergencyRequestModal();
                 closeUserBloodRequestModal();
                 closePremiumActionModal();
@@ -12894,7 +13085,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         (function aeBackNavigation() {
             const TAB_HOME = 'services';
             const EXIT_WINDOW_MS = 2000;
-            const MODAL_IDS = ['providerModal','serviceDetailModal','promotionDetailModal','categoryModal','noticeModal','feedbackModal','settingsModal','ratingModal','aboutModal','termsModal','resultModal','contactModal','editProfileModal','changePasswordModal','chatInfoModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','premiumActionModal','downloadAppModal','otherDownloadSourcesModal'];
+            const MODAL_IDS = ['providerModal','serviceDetailModal','promotionDetailModal','categoryModal','noticeModal','feedbackModal','ratingModal','aboutModal','termsModal','resultModal','contactModal','editProfileModal','changePasswordModal','chatInfoModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','premiumActionModal','downloadAppModal','otherDownloadSourcesModal'];
             let tabStack = [{ tab: TAB_HOME, scroll: 0 }];
             let internalNav = false;
             let armed = false;

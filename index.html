@@ -982,6 +982,12 @@
         @keyframes bounceDot { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
 
         /* ========== IMAGE UPLOAD ========== */
+        /* Provider form: media type toggle */
+        .prov-media-opt { display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 10px; border-radius:12px; border:1px solid rgba(6,78,59,.5); background:#07140e; color:#cbd5e1; font-size:12px; font-weight:700; cursor:pointer; user-select:none; transition:all .15s ease; }
+        .prov-media-opt:hover { border-color:rgba(16,185,129,.6); }
+        .prov-media-opt.active { border-color:#10b981; background:rgba(16,185,129,.14); color:#6ee7b7; }
+        body.light-mode .prov-media-opt { background:#f1f5f4; border-color:#cbd5d1; color:#475569; }
+        body.light-mode .prov-media-opt.active { background:#d1fae5; border-color:#059669; color:#047857; }
         .img-upload-zone {
             border: 2px dashed rgba(16, 185, 129, 0.35);
             border-radius: 14px; padding: 16px; text-align: center; cursor: pointer;
@@ -3224,6 +3230,21 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         body.light-mode #locDropdown .loc-item.selected { background: #d1fae5; color: #064e3b; }
         body.light-mode #locDropdown .loc-item svg { color: #059669; }
     </style>
+<style id="ae-video-player-css">
+.ae-vthumb{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#000;cursor:pointer}
+.ae-vthumb>img,.ae-vthumb>video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.ae-vthumb .ae-vshade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,.12));pointer-events:none}
+.ae-vplay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.ae-vplay>span{width:54px;height:54px;border-radius:9999px;background:rgba(16,185,129,.94);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(0,0,0,.5);transition:transform .15s}
+.ae-vthumb:hover .ae-vplay>span{transform:scale(1.08)}
+.ae-vplay svg{margin-left:3px}
+#svcModalVideo .ae-vthumb,#promoModalVideo .ae-vthumb{height:100%;aspect-ratio:auto}
+#aeVideoModal{z-index:10001;background:rgba(0,0,0,.94);padding:12px}
+.ae-vm-box{position:relative;width:min(96vw,calc((100vh - 110px) * 16 / 9));width:min(96vw,calc((100dvh - 110px) * 16 / 9));aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.ae-vm-box iframe,.ae-vm-box video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;object-fit:contain}
+.ae-vm-close{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;width:42px;height:42px;border-radius:9999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
+.ae-vm-close:hover{background:rgba(244,63,94,.85)}
+</style>
 </head>
 
 <body class="text-slate-100 min-h-[100dvh]">
@@ -3255,12 +3276,20 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         </div>
     </div>
 
+    <!-- GLOBAL VIDEO PLAYER MODAL (YouTube / Facebook / direct MP4) -->
+    <div id="aeVideoModal" class="hidden fixed inset-0 items-center justify-center" role="dialog" aria-modal="true" onclick="if(event.target===this)closeAeVideoModal()">
+        <button type="button" class="ae-vm-close" onclick="closeAeVideoModal()" aria-label="Close video">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <div class="ae-vm-box"><div id="aeVideoModalBody" style="position:absolute;inset:0"></div></div>
+    </div>
+
     <!-- ✅ SPLASH SCREEN -->
     <div id="splashScreen" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-center" style="display:none;background:linear-gradient(180deg,#050a08 0%,#0d1f17 50%,#000 100%);">
         <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-600 flex items-center justify-center mb-4 shadow-2xl shadow-emerald-600/40 animate-pulse">
             <i data-lucide="house" class="w-10 h-10 text-white"></i>
         </div>
-        <h1 class="text-white font-extrabold text-xl">আমার এলাকা</h1>
+        <h1 class="text-white font-extrabold text-xl notranslate" translate="no" data-brand="text">আমার এলাকা</h1>
         <p class="text-emerald-300 text-xs mt-1">লোড হচ্ছে...</p>
         <div class="flex items-center gap-1.5 mt-4">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style="animation-delay:0s"></span>
@@ -3291,7 +3320,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                             <i data-lucide="house" class="w-6 h-6"></i>
                         </div>
                         <div class="min-w-0">
-                            <h1 class="text-white font-extrabold text-lg leading-tight">আমার এলাকা</h1>
+                            <h1 class="text-white font-extrabold text-lg leading-tight notranslate" translate="no" data-brand="text">আমার এলাকা</h1>
                             <p class="text-[11px] text-emerald-300 font-medium">ইউজার সেবা পোর্টাল</p>
                         </div>
                     </div>
@@ -3548,7 +3577,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-emerald-600 via-emerald-600 to-emerald-700 flex items-center justify-center text-white shadow-lg shadow-emerald-600/40 ring-1 ring-emerald-400/30">
                             <i data-lucide="house" class="w-5 h-5"></i>
                         </div>
-                        <h1 class="text-base sm:text-lg font-extrabold leading-tight tracking-tight">
+                        <h1 class="text-base sm:text-lg font-extrabold leading-tight tracking-tight notranslate" translate="no" data-brand="split">
                             <span class="brand-text-1">আমার</span><span class="brand-text-2"> এলাকা</span>
                         </h1>
                     </div>
@@ -4217,17 +4246,34 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 <button onclick="closeProviderModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center touch-target"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
             <form id="providerForm" onsubmit="handleProviderSubmit(event)" class="p-4 sm:p-5 overflow-y-auto flex-1 space-y-3.5">
-                <div>
-                    <label class="block text-[11px] font-bold text-emerald-300 uppercase tracking-wider mb-1.5 ml-1">সেবার ছবি (ঐচ্ছিক)</label>
-                    <div id="provImageZone" class="img-upload-zone" onclick="document.getElementById('provImageInput').click()">
-                        <img id="provImagePreview" src="" class="hidden" alt="">
-                        <div id="provImagePrompt">
-                            <i data-lucide="image-plus" class="w-7 h-7 text-emerald-400 mx-auto mb-1"></i>
-                            <p class="text-xs text-slate-300 font-semibold">ছবি আপলোড করতে ক্লিক করুন</p>
-                            <p class="text-[10px] text-slate-500 mt-0.5">JPG/PNG, সর্বোচ্চ ৩MB</p>
-                        </div>
+                <div id="provMediaBlock">
+                    <label class="block text-[11px] font-bold text-emerald-300 uppercase tracking-wider mb-1.5 ml-1" data-i18n="prov.media">সেবার মিডিয়া (ঐচ্ছিক)</label>
+                    <div class="grid grid-cols-2 gap-2 mb-2.5" role="radiogroup" aria-label="Media type">
+                        <label id="provMediaOptImage" class="prov-media-opt active">
+                            <input type="radio" name="provMediaType" value="image" checked class="sr-only" onchange="setProviderMediaType('image')">
+                            <i data-lucide="image" class="w-4 h-4"></i><span data-i18n="prov.typeImage">ছবি</span>
+                        </label>
+                        <label id="provMediaOptVideo" class="prov-media-opt">
+                            <input type="radio" name="provMediaType" value="video" class="sr-only" onchange="setProviderMediaType('video')">
+                            <i data-lucide="video" class="w-4 h-4"></i><span data-i18n="prov.typeVideo">ভিডিও</span>
+                        </label>
                     </div>
-                    <input type="file" id="provImageInput" accept="image/*" class="hidden" onchange="previewProviderImage(event)">
+                    <div id="provImageWrap">
+                        <div id="provImageZone" class="img-upload-zone" onclick="document.getElementById('provImageInput').click()">
+                            <img id="provImagePreview" src="" class="hidden" alt="">
+                            <div id="provImagePrompt">
+                                <i data-lucide="image-plus" class="w-7 h-7 text-emerald-400 mx-auto mb-1"></i>
+                                <p class="text-xs text-slate-300 font-semibold">ছবি আপলোড করতে ক্লিক করুন</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">JPG/PNG, সর্বোচ্চ ৩MB</p>
+                            </div>
+                        </div>
+                        <input type="file" id="provImageInput" accept="image/*" class="hidden" onchange="previewProviderImage(event)">
+                    </div>
+                    <div id="provVideoWrap" class="hidden">
+                        <label class="block text-[10px] font-bold text-emerald-300 mb-1 ml-1" data-i18n="prov.videoLabel">ভিডিও লিংক *</label>
+                        <input type="url" id="provVideoUrl" inputmode="url" autocomplete="off" maxlength="500" oninput="onProviderVideoInput()" placeholder="https://youtube.com/watch?v=... / https://example.com/video.mp4" data-i18n-placeholder="prov.videoPlaceholder" class="w-full bg-[#07140e] border border-emerald-900/50 text-white rounded-xl px-3 py-2.5 text-sm focus:border-emerald-500 outline-none placeholder:text-slate-500">
+                        <p class="text-[10px] text-slate-500 mt-1 ml-1" data-i18n="prov.videoHint">YouTube / Facebook / সরাসরি .mp4 লিংক। সরাসরি ভিডিও অবশ্যই 1920x1080 (HD) হতে হবে।</p>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-[11px] font-bold text-emerald-300 uppercase tracking-wider mb-1.5 ml-1">সেবার নাম *</label>
@@ -4286,6 +4332,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         <div class="w-full max-w-lg rounded-3xl border border-emerald-800/50 bg-[#10281c] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[92dvh]">
             <div class="relative h-48 sm:h-56 w-full shrink-0 bg-[#07140e]">
                 <img id="svcModalImage" src="" alt="" loading="lazy" class="w-full h-full object-cover">
+                <div id="svcModalVideo" class="hidden absolute inset-0 z-10"></div>
                 <div id="svcModalImageFallback" class="absolute inset-0 hidden items-center justify-center bg-gradient-to-br from-emerald-900/50 to-emerald-900/30">
                     <i data-lucide="briefcase" class="w-12 h-12 text-emerald-400/60"></i>
                 </div>
@@ -4342,6 +4389,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         <div class="w-full max-w-lg rounded-3xl border border-amber-700/40 bg-[#10281c] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[92dvh]">
             <div class="relative h-48 sm:h-56 w-full shrink-0 bg-[#07140e]">
                 <img id="promoModalImage" src="" alt="" loading="lazy" class="w-full h-full object-cover">
+                <div id="promoModalVideo" class="hidden absolute inset-0 z-10"></div>
                 <div id="promoModalImageFallback" class="absolute inset-0 hidden items-center justify-center bg-gradient-to-br from-amber-900/50 to-orange-900/30">
                     <i data-lucide="megaphone" class="w-12 h-12 text-amber-400/60"></i>
                 </div>
@@ -5063,7 +5111,16 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 </div>
                 <div id="promoStep2" class="hidden space-y-3.5">
                     <div>
-                        <label class="promo-label">📷 ছবি *</label>
+                        <label class="promo-label">📷 ছবি / 🎬 ভিডিও *</label>
+                        <input type="hidden" id="promoMediaType" value="image">
+                        <div class="flex gap-4 mb-2">
+                            <label class="flex items-center gap-1.5 text-xs text-slate-200 cursor-pointer"><input type="radio" name="promoMediaTypeRadio" value="image" checked onchange="setPromoMediaType('image')" class="accent-amber-500"> ছবি</label>
+                            <label class="flex items-center gap-1.5 text-xs text-slate-200 cursor-pointer"><input type="radio" name="promoMediaTypeRadio" value="video" onchange="setPromoMediaType('video')" class="accent-amber-500"> ভিডিও লিংক</label>
+                        </div>
+                        <div id="promoVideoSection" class="hidden space-y-1.5">
+                            <input id="promoVideoUrl" type="url" class="promo-input" placeholder="YouTube / Facebook / সরাসরি ভিডিও লিংক" oninput="onPromoVideoUrlInput()">
+                            <p class="text-[10px] text-slate-500">ছবি বা ভিডিও — যেকোনো একটি দিতে পারবেন।</p>
+                        </div>
                         <div id="promoImageZone" class="img-upload-zone" onclick="document.getElementById('promoImageInput').click()">
                             <img id="promoImagePreview" src="" class="hidden" alt="">
                             <div id="promoImagePrompt">
@@ -5236,7 +5293,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
           <div class="ap-hrow">
             <img class="ap-icon" src="icon-512.png" alt="Amar Elaka">
             <div>
-              <h1>আমার এলাকা</h1>
+              <h1 class="notranslate" translate="no" data-brand="text">আমার এলাকা</h1>
               <p data-bn="সকল সেবা এখন হাতের মুঠোয়" data-en="All services in your hand">সকল সেবা এখন হাতের মুঠোয়</p>
               <span class="ap-badge"><i data-lucide="shield-check" style="width:13px;height:13px"></i><span data-bn="অফিসিয়াল Android অ্যাপ" data-en="Official Android app">অফিসিয়াল Android অ্যাপ</span></span>
             </div>
@@ -6434,6 +6491,17 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 'common.search': 'খুঁজুন...',
                 'common.loading': 'লোড হচ্ছে...',
                 'common.details': 'বিস্তারিত বর্ণনা',
+                'prov.media': 'সেবার মিডিয়া (ঐচ্ছিক)',
+                'prov.typeImage': 'ছবি',
+                'prov.typeVideo': 'ভিডিও',
+                'prov.videoLabel': 'ভিডিও লিংক *',
+                'prov.videoPlaceholder': 'https://youtube.com/watch?v=... / https://example.com/video.mp4',
+                'prov.videoHint': 'YouTube / Facebook / সরাসরি .mp4 লিংক। সরাসরি ভিডিও অবশ্যই 1920x1080 (HD) হতে হবে।',
+                'prov.videoRequired': 'ভিডিও লিংক দিন',
+                'prov.videoInvalid': 'ভিডিও লিংক সঠিক নয় (http/https দিয়ে শুরু করুন)',
+                'prov.videoRes': 'অনুগ্রহ করে 1920x1080 (HD) রেজোলিউশনের ভিডিও ব্যবহার করুন।',
+                'prov.videoMeta': 'ভিডিওটি লোড করা যায়নি। লিংকটি সরাসরি, পাবলিক ও https ভিডিও ফাইলের (যেমন .mp4) কিনা দেখুন।',
+                'prov.videoChecking': 'ভিডিও যাচাই হচ্ছে...',
                 'common.provider': 'সেবাদানকারী',
                 'common.location': 'অবস্থান',
                 'common.noData': 'কোনো তথ্য নেই',
@@ -6547,6 +6615,17 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 'common.search': 'Search...',
                 'common.loading': 'Loading...',
                 'common.details': 'Details',
+                'prov.media': 'Service media (optional)',
+                'prov.typeImage': 'Image',
+                'prov.typeVideo': 'Video',
+                'prov.videoLabel': 'Video URL *',
+                'prov.videoPlaceholder': 'https://youtube.com/watch?v=... / https://example.com/video.mp4',
+                'prov.videoHint': 'YouTube / Facebook / direct .mp4 link. Direct videos must be exactly 1920x1080 (HD).',
+                'prov.videoRequired': 'Please enter a video URL',
+                'prov.videoInvalid': 'Invalid video link (must start with http:// or https://)',
+                'prov.videoRes': 'Please use a 1920x1080 (HD) resolution video.',
+                'prov.videoMeta': 'Could not load the video. Make sure the link is a direct, public, https video file (e.g. .mp4).',
+                'prov.videoChecking': 'Checking video...',
                 'common.provider': 'Provider',
                 'common.location': 'Location',
                 'common.noData': 'No data',
@@ -6750,7 +6829,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             'শেয়ার করতে প্রথমে লগইন বা রেজিস্ট্রেশন করুন': 'Please log in or register to share',
             'রক্তদাতা খুঁজতে আমার এলাকার রক্তদাতা বিভাগটি দেখুন।': 'Visit the Blood Donors section to find donors.',
             'জরুরি যোগাযোগের নম্বর ও সহায়তার জন্য আমার এলাকার জরুরি বিভাগটি দেখুন।': 'Visit the Emergency section for emergency contact numbers and assistance.',
-            'আমার এলাকার সেবা': 'Services in My Area', 'এইমাত্র': 'Just now', 'সব নোটিফিকেশন পড়া হিসেবে চিহ্নিত হয়েছে': 'All notifications marked as read',
+            'আমার এলাকার সেবা': 'Amar Elaka Services', 'এইমাত্র': 'Just now', 'সব নোটিফিকেশন পড়া হিসেবে চিহ্নিত হয়েছে': 'All notifications marked as read',
             'সব নোটিফিকেশন আগেই পড়া হয়েছে': 'All notifications were already read', 'ব্যবহারকারী': 'User',
             'আপনার অ্যাকাউন্ট তৈরি হয়েছে। এখন সব সেবা ব্যবহার করতে পারবেন।': 'Your account has been created. You can now use all services.',
             'সফলভাবে লগইন করেছেন।': 'You have logged in successfully.', '✅ ইন্টারনেট ফিরেছে — sync হচ্ছে': '✅ Internet restored — syncing',
@@ -7003,6 +7082,29 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             return message;
         }
 
+        // ========== BRAND NAME (never translated to "My Area") ==========
+        const BRAND_NAME_BN = 'আমার এলাকা';
+        const BRAND_NAME_EN = 'Amar Elaka';
+        const BRAND_TITLE_BN = 'আমার এলাকা - সকল সেবা এখন হাতের মুঠোয়';
+        const BRAND_TITLE_EN = 'Amar Elaka - All Services at Your Fingertips';
+        function applyBrandName() {
+            const en = currentLang === 'en';
+            document.querySelectorAll('[data-brand="text"]').forEach(el => {
+                const v = en ? BRAND_NAME_EN : BRAND_NAME_BN;
+                if (el.textContent !== v) el.textContent = v;
+            });
+            document.querySelectorAll('[data-brand="split"]').forEach(el => {
+                el.innerHTML = en
+                    ? '<span class="brand-text-1">Amar</span><span class="brand-text-2"> Elaka</span>'
+                    : '<span class="brand-text-1">আমার</span><span class="brand-text-2"> এলাকা</span>';
+            });
+            const title = en ? BRAND_TITLE_EN : BRAND_TITLE_BN;
+            document.title = title;
+            ['meta[property="og:title"]', 'meta[property="twitter:title"]'].forEach(sel => {
+                const m = document.querySelector(sel); if (m) m.setAttribute('content', title);
+            });
+        }
+
         function applyLanguage() {
             document.documentElement.lang = currentLang === 'en' ? 'en' : 'bn';
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -7074,6 +7176,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             }
             translateStaticUiText(document);
             startUiTranslationObserver();
+            applyBrandName();
             updateLangButtonsUI();
             refreshIcons();
         }
@@ -9604,12 +9707,35 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             }
             return cta;
         }
+        function clearPromoImage() {
+            promoImageFile = null;
+            if (promoImageObjUrl) { URL.revokeObjectURL(promoImageObjUrl); promoImageObjUrl = ''; }
+            const inp = document.getElementById('promoImageInput'); if (inp) inp.value = '';
+            const pv = document.getElementById('promoImagePreview'); if (pv) { pv.removeAttribute('src'); pv.classList.add('hidden'); }
+            document.getElementById('promoImagePrompt')?.classList.remove('hidden');
+            document.getElementById('promoImageZone')?.classList.remove('has-image');
+        }
+        window.setPromoMediaType = (type) => {
+            type = type === 'video' ? 'video' : 'image';
+            document.getElementById('promoMediaType').value = type;
+            document.querySelectorAll('input[name="promoMediaTypeRadio"]').forEach(r => { r.checked = (r.value === type); });
+            document.getElementById('promoImageZone').classList.toggle('hidden', type !== 'image');
+            document.getElementById('promoVideoSection').classList.toggle('hidden', type !== 'video');
+            if (type === 'image') { const u = document.getElementById('promoVideoUrl'); if (u) u.value = ''; }
+            else clearPromoImage();
+            if (promoStep === 4) updatePromoPreview();
+        };
+        window.onPromoVideoUrlInput = () => {
+            if (document.getElementById('promoVideoUrl').value.trim()) clearPromoImage();
+            if (promoStep === 4) updatePromoPreview();
+        };
         window.previewPromoImage = (input) => {
             if (isForcedProfileMode) return;
             const f = input.files && input.files[0]; if (!f) return;
             if (!/^image\/(jpeg|png)$/i.test(f.type)) { input.value = ''; return showToast('শুধু JPG/PNG ছবি দিন', 'circle-x', 'text-rose-400'); }
             if (f.size > 3 * 1024 * 1024) { input.value = ''; return showToast('ছবি সর্বোচ্চ ৩MB হতে পারবে', 'circle-x', 'text-rose-400'); }
             promoImageFile = f;
+            const vInp = document.getElementById('promoVideoUrl'); if (vInp) vInp.value = '';
             if (promoImageObjUrl) URL.revokeObjectURL(promoImageObjUrl);
             promoImageObjUrl = URL.createObjectURL(f);
             const img = document.getElementById('promoImagePreview'); img.src = promoImageObjUrl; img.classList.remove('hidden');
@@ -9624,7 +9750,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 userName: userProfile?.fullName || 'বিজ্ঞাপনদাতা',
                 district: document.getElementById('promoDistrict')?.value.trim() || '',
                 upazila: document.getElementById('promoUpazila')?.value.trim() || '',
-                image: promoImageObjUrl, cta: collectPromoCtas(false)
+                image: promoImageObjUrl,
+                videoUrl: (document.getElementById('promoMediaType')?.value === 'video') ? (document.getElementById('promoVideoUrl')?.value.trim() || '') : '',
+                cta: collectPromoCtas(false)
             };
         }
         function updatePromoPreview() {
@@ -9652,7 +9780,11 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (n === 1) return promoType ? true : bad('প্রমোশনের ধরন বেছে নিন');
             if (n === 2) {
                 const t = document.getElementById('promoTitle').value.trim(), s = document.getElementById('promoShortDesc').value.trim(), d = document.getElementById('promoFullDesc').value.trim();
-                if (!promoImageFile) return bad('ছবি আপলোড করুন');
+                if (document.getElementById('promoMediaType').value === 'video') {
+                    const vu = document.getElementById('promoVideoUrl').value.trim();
+                    if (!vu) return bad('ভিডিও লিংক দিন (অথবা ছবি বেছে নিন)');
+                    if (!aeParseVideo(vu)) return bad('ভিডিও লিংক সঠিক নয় (http/https দিয়ে শুরু করুন)');
+                } else if (!promoImageFile) return bad('ছবি আপলোড করুন');
                 if (t.length < 3 || t.length > 80) return bad('শিরোনাম ৩-৮০ অক্ষরের হতে হবে');
                 if (s.length < 5 || s.length > 150) return bad('সংক্ষিপ্ত বিবরণ ৫-১৫০ অক্ষরের হতে হবে');
                 if (d.length < 10 || d.length > 600) return bad('বিস্তারিত বর্ণনা ১০-৬০০ অক্ষরের হতে হবে');
@@ -9700,6 +9832,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             document.getElementById('promoImagePrompt').classList.remove('hidden');
             document.getElementById('promoImageZone').classList.remove('has-image');
             document.getElementById('promoImageInput').value = '';
+            { const vu = document.getElementById('promoVideoUrl'); if (vu) vu.value = ''; }
+            setPromoMediaType('image');
             const sc = document.getElementById('promoShortDesc'), fc = document.getElementById('promoFullDesc');
             sc.oninput = () => { document.getElementById('promoShortCount').textContent = `${sc.value.length}/150`; };
             fc.oninput = () => { document.getElementById('promoFullCount').textContent = `${fc.value.length}/600`; };
@@ -9744,8 +9878,14 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const btn = document.getElementById('promoSubmitBtn');
             promoSubmitting = true; btn.disabled = true; btn.classList.add('opacity-60');
             try {
-                btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> ছবি আপলোড...'; refreshIcons();
-                const imageUrl = await uploadToCloudinary(promoImageFile);
+                const promoMediaType = document.getElementById('promoMediaType').value === 'video' ? 'video' : 'image';
+                let imageUrl = '', videoUrl = '';
+                if (promoMediaType === 'video') {
+                    videoUrl = document.getElementById('promoVideoUrl').value.trim();
+                } else {
+                    btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> ছবি আপলোড...'; refreshIcons();
+                    imageUrl = await uploadToCloudinary(promoImageFile);
+                }
                 btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> পাঠানো হচ্ছে...'; refreshIcons();
                 await addDoc(collection(db, 'promotions'), {
                     uid: currentUser.uid,
@@ -9754,7 +9894,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     title: document.getElementById('promoTitle').value.trim(),
                     shortDescription: document.getElementById('promoShortDesc').value.trim(),
                     fullDescription: document.getElementById('promoFullDesc').value.trim(),
+                    mediaType: promoMediaType,
                     image: imageUrl,
+                    videoUrl: videoUrl,
                     district: document.getElementById('promoDistrict').value.trim(),
                     upazila: document.getElementById('promoUpazila').value.trim(),
                     extraFields: collectPromoExtra(),
@@ -9787,10 +9929,74 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (!key) return null;
             return { key, label: key === 'custom' ? cta.custom.label : PROMO_CTA_OPTIONS[key].btn, icon: PROMO_CTA_OPTIONS[key].icon, href: promoCtaHref(key, key === 'custom' ? cta.custom : cta[key]) };
         }
+        // ========== VIDEO HELPERS + GLOBAL VIDEO MODAL ==========
+        function aeParseVideo(url) {
+            url = String(url || '').trim();
+            if (!/^https?:\/\//i.test(url)) return null;
+            const m = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
+            if (m) return { type: 'youtube', id: m[1], url };
+            if (/(facebook\.com|fb\.watch|fb\.com)/i.test(url)) return { type: 'facebook', url };
+            return { type: 'direct', url };
+        }
+        window.aeYtThumbFallback = (img, id) => {
+            if (img.dataset.fb) return;
+            img.dataset.fb = '1';
+            img.src = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+        };
+        // 16:9 thumbnail with a play overlay; click opens the global video modal
+        function aeVideoThumbHTML(url, title, extra = '') {
+            const v = aeParseVideo(url);
+            if (!v) return '';
+            let media;
+            if (v.type === 'youtube') {
+                media = `<img src="https://img.youtube.com/vi/${v.id}/maxresdefault.jpg" alt="${esc(title || '')}" loading="lazy" decoding="async" onerror="aeYtThumbFallback(this,'${v.id}')" onload="if(this.naturalWidth&&this.naturalWidth<=120)aeYtThumbFallback(this,'${v.id}')">`;
+            } else if (v.type === 'direct') {
+                media = `<video src="${esc(v.url)}#t=0.5" preload="metadata" muted playsinline></video>`;
+            } else {
+                media = `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1877F2]/40 to-slate-900"><svg class="w-12 h-12 fill-[#1877F2]" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>`;
+            }
+            return `<div class="ae-vthumb" data-video-url="${esc(v.url)}" role="button" tabindex="0" aria-label="Play video" onclick="event.stopPropagation(); openVideoModal(this.dataset.videoUrl)" onkeydown="if(event.key==='Enter'){event.stopPropagation();openVideoModal(this.dataset.videoUrl)}">${media}<div class="ae-vshade"></div><div class="ae-vplay"><span><svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M8 5v14l11-7z"/></svg></span></div>${extra}</div>`;
+        }
+        let aeVideoAddedOverflow = false;
+        window.openVideoModal = (url) => {
+            const v = aeParseVideo(url);
+            if (!v) return;
+            const modal = document.getElementById('aeVideoModal');
+            const body = document.getElementById('aeVideoModalBody');
+            if (!modal || !body) return;
+            let html;
+            if (v.type === 'youtube') {
+                html = `<iframe src="https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0&playsinline=1" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+            } else if (v.type === 'facebook') {
+                html = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(v.url)}&show_text=false&autoplay=true" title="Video" scrolling="no" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe>`;
+            } else {
+                html = `<video src="${esc(v.url)}" controls autoplay playsinline controlsList="nodownload"></video>`;
+            }
+            body.innerHTML = html;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            if (!document.body.classList.contains('overflow-hidden')) { document.body.classList.add('overflow-hidden'); aeVideoAddedOverflow = true; }
+        };
+        window.closeAeVideoModal = () => {
+            const modal = document.getElementById('aeVideoModal');
+            const body = document.getElementById('aeVideoModalBody');
+            if (body) body.innerHTML = ''; // stops playback
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+            if (aeVideoAddedOverflow) { document.body.classList.remove('overflow-hidden'); aeVideoAddedOverflow = false; }
+        };
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const m = document.getElementById('aeVideoModal');
+                if (m && !m.classList.contains('hidden')) closeAeVideoModal();
+            }
+        });
+
         function buildPromotionCard(promo, preview = false) {
             const t = PROMO_TYPES[promo.type] || PROMO_TYPES.other;
             const loc = esc([promo.upazila, promo.district].filter(Boolean).join(', ') || '—');
-            const img = /^(https?:|blob:)/i.test(promo.image || '') ? promo.image : '';
+            const img = /^(https?:|blob:)/i.test(promo.imageUrl || promo.image || '') ? (promo.imageUrl || promo.image) : '';
+            const promoVideoUrl = String(promo.videoUrl || '').trim();
+            const promoHasVideo = !!aeParseVideo(promoVideoUrl);
             const primary = getPromoPrimaryCTA(promo);
             const cta = promo.cta || {};
             const smallKeys = ['call', 'website', 'whatsapp', 'facebook', 'youtube', 'tiktok', 'instagram', 'telegram', 'custom'].filter(k => k !== (primary && primary.key) && (k === 'custom' ? (cta.custom && promoCtaHref('custom', cta.custom)) : (cta[k] && promoCtaHref(k, cta[k])))).slice(0, 3);
@@ -9799,12 +10005,12 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             function smalls_(keys) { return keys.map(k => link(promoCtaHref(k, k === 'custom' ? cta.custom : cta[k]), 'promo-cta-small', `<i data-lucide="${PROMO_CTA_OPTIONS[k].icon}" class="w-4 h-4"></i>`, k === 'custom' ? cta.custom.label : PROMO_CTA_OPTIONS[k].btn)).join(''); }
             return `<div class="promotion-card cursor-pointer" data-promo-id="${esc(promo.id || '')}" onclick="openPromotionDetail('${esc(promo.id || '')}')">
                 <div>
-                    <div class="h-40 bg-[#0f0a03] overflow-hidden relative">
+                    ${promoHasVideo ? aeVideoThumbHTML(promoVideoUrl, promo.title, '<span class="promo-ad-badge">AD</span><span class="promo-sponsored-badge">⭐ স্পন্সরড</span>') : `<div class="h-40 bg-[#0f0a03] overflow-hidden relative">
                         ${img ? `<img src="${esc(img)}" alt="${esc(promo.title || '')}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-900/40 to-orange-900/20"><i data-lucide="megaphone" class="w-10 h-10 text-amber-400/60"></i></div>`}
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0d1f17]/85 via-transparent to-transparent pointer-events-none"></div>
                         <span class="promo-ad-badge">AD</span>
                         <span class="promo-sponsored-badge">⭐ স্পন্সরড</span>
-                    </div>
+                    </div>`}
                     <div class="p-4">
                         <span class="promo-type-tag mb-1.5" style="background:${t.color}"><i data-lucide="${t.icon}" class="w-3 h-3"></i> ${esc(t.label)}</span>
                         <h4 class="font-bold text-slate-100 text-sm sm:text-base leading-snug mb-1.5">${esc(promo.title || '')}</h4>
@@ -9898,8 +10104,10 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const location = esc([item.upazila, item.district].filter(Boolean).join(', ') || item.location || '—');
             const providerName = esc(item.providerName || item.applicantName || item.userName || 'অজানা');
             const phoneRaw = String(item.phone || '').replace(/[^0-9+]/g, '');
-            const imageUrl = String(item.image || '').trim();
+            const imageUrl = String(item.imageUrl || item.image || '').trim();
             const safeImage = /^https?:\/\//i.test(imageUrl) ? imageUrl : '';
+            const svcVideoUrl = String(item.videoUrl || '').trim();
+            const svcHasVideo = !!aeParseVideo(svcVideoUrl);
             const website = /^https?:\/\//i.test(item.website || '') ? item.website : '';
             const facebook = /^https?:\/\//i.test(item.facebook || '') ? item.facebook : '';
             const whatsapp = String(item.whatsapp || '').replace(/[^0-9]/g, '');
@@ -9907,14 +10115,14 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const isFav = userFavorites.has(item.id);
             return `<div class="service-card" onclick="openServiceDetail('${id}')" data-service-id="${id}">
                 <div>
-                    <div class="h-40 bg-[#07140e] overflow-hidden relative">
+                    ${svcHasVideo ? aeVideoThumbHTML(svcVideoUrl, item.title || '') : `<div class="h-40 bg-[#07140e] overflow-hidden relative">
                         ${safeImage
                             ? `<img src="${esc(safeImage)}" alt="${title}" loading="lazy" decoding="async" class="w-full h-full object-cover">`
                             : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-900/50 to-emerald-900/30"><i data-lucide="briefcase" class="w-10 h-10 text-emerald-400/60"></i></div>`
                         }
                         <div class="absolute inset-0 bg-gradient-to-t from-[#10281c]/85 via-transparent to-transparent pointer-events-none"></div>
                         <!-- Favorite action is intentionally kept only in the detail modal footer to avoid duplicate heart controls. -->
-                    </div>
+                    </div>`}
                     <div class="p-4">
                         <div class="flex items-center flex-wrap gap-2 mb-1.5">
                             <h4 data-user-content="true" class="font-bold text-slate-100 text-sm sm:text-base leading-snug flex-1 min-w-0">${title}</h4>
@@ -10071,6 +10279,13 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const fb = document.getElementById('svcModalImageFallback');
             if (imageUrl) { imgEl.src = imageUrl; imgEl.classList.remove('hidden'); fb.classList.add('hidden'); fb.classList.remove('flex'); }
             else { imgEl.removeAttribute('src'); imgEl.classList.add('hidden'); fb.classList.remove('hidden'); fb.classList.add('flex'); }
+            const svcVidBox = document.getElementById('svcModalVideo');
+            if (svcVidBox) {
+                const vHtml = aeVideoThumbHTML(service.videoUrl, title);
+                svcVidBox.innerHTML = vHtml;
+                svcVidBox.classList.toggle('hidden', !vHtml);
+                if (vHtml) { imgEl.classList.add('hidden'); fb.classList.add('hidden'); fb.classList.remove('flex'); }
+            }
             const setLink = (id, href, show) => {
                 const el = document.getElementById(id); if (!el) return;
                 if (show) { el.href = href; el.classList.remove('hidden'); el.classList.add('flex'); }
@@ -10126,6 +10341,13 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             const fb = document.getElementById('promoModalImageFallback');
             if (img) { imgEl.src = img; imgEl.classList.remove('hidden'); fb.classList.add('hidden'); fb.classList.remove('flex'); }
             else { imgEl.removeAttribute('src'); imgEl.classList.add('hidden'); fb.classList.remove('hidden'); fb.classList.add('flex'); }
+            const promoVidBox = document.getElementById('promoModalVideo');
+            if (promoVidBox) {
+                const pvHtml = aeVideoThumbHTML(promo.videoUrl, promo.title || '');
+                promoVidBox.innerHTML = pvHtml;
+                promoVidBox.classList.toggle('hidden', !pvHtml);
+                if (pvHtml) { imgEl.classList.add('hidden'); fb.classList.add('hidden'); fb.classList.remove('flex'); }
+            }
 
             // Extra type fields (read-only)
             const extraBox = document.getElementById('promoModalExtra');
@@ -12084,6 +12306,58 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         }
 
         // ========== PROVIDER FORM ==========
+        // ----- Provider media type (Image OR Video, never both) -----
+        function getProviderMediaType() {
+            const r = document.querySelector('#providerForm input[name="provMediaType"]:checked');
+            return r && r.value === 'video' ? 'video' : 'image';
+        }
+        function clearProviderImage() {
+            selectedProviderImage = null;
+            const inp = document.getElementById('provImageInput'); if (inp) inp.value = '';
+            const pv = document.getElementById('provImagePreview'); if (pv) { pv.classList.add('hidden'); pv.removeAttribute('src'); }
+            const pr = document.getElementById('provImagePrompt'); if (pr) pr.classList.remove('hidden');
+            const zn = document.getElementById('provImageZone'); if (zn) zn.classList.remove('has-image');
+        }
+        window.setProviderMediaType = (type) => {
+            type = type === 'video' ? 'video' : 'image';
+            const radio = document.querySelector('#providerForm input[name="provMediaType"][value="' + type + '"]');
+            if (radio) radio.checked = true;
+            document.getElementById('provMediaOptImage')?.classList.toggle('active', type === 'image');
+            document.getElementById('provMediaOptVideo')?.classList.toggle('active', type === 'video');
+            document.getElementById('provImageWrap')?.classList.toggle('hidden', type !== 'image');
+            document.getElementById('provVideoWrap')?.classList.toggle('hidden', type !== 'video');
+            if (type === 'image') {
+                const v = document.getElementById('provVideoUrl'); if (v) v.value = '';
+            } else {
+                clearProviderImage();
+            }
+        };
+        window.onProviderVideoInput = () => {
+            const v = document.getElementById('provVideoUrl');
+            if (v && v.value.trim()) clearProviderImage();
+        };
+        // Loads a direct video in a hidden <video>, resolves with its real size (or an error reason)
+        function checkProviderVideoResolution(url) {
+            return new Promise((resolve) => {
+                const vid = document.createElement('video');
+                vid.preload = 'metadata'; vid.muted = true; vid.playsInline = true;
+                vid.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+                let done = false;
+                const finish = (res) => {
+                    if (done) return; done = true;
+                    clearTimeout(timer);
+                    vid.onloadedmetadata = null; vid.onerror = null;
+                    try { vid.removeAttribute('src'); vid.load(); } catch (_) {}
+                    vid.remove();
+                    resolve(res);
+                };
+                const timer = setTimeout(() => finish({ ok: false }), 15000);
+                vid.onloadedmetadata = () => finish({ ok: true, w: vid.videoWidth, h: vid.videoHeight });
+                vid.onerror = () => finish({ ok: false });
+                document.body.appendChild(vid);
+                vid.src = url;
+            });
+        }
         window.previewProviderImage = (e) => {
             if (isForcedProfileMode) return;
             const file = e.target.files[0];
@@ -12091,6 +12365,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (file.size > 3 * 1024 * 1024) { showToast('ছবির সাইজ ৩MB এর কম হতে হবে', 'circle-x', 'text-rose-400'); e.target.value = ''; return; }
             if (!file.type.startsWith('image/')) { showToast('শুধু ছবি ফাইল দিন', 'circle-x', 'text-rose-400'); e.target.value = ''; return; }
             selectedProviderImage = file;
+            const _pvu = document.getElementById('provVideoUrl'); if (_pvu) _pvu.value = '';
             const r = new FileReader();
             r.onload = ev => {
                 const pv = document.getElementById('provImagePreview');
@@ -12118,6 +12393,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             document.getElementById('provImageZone').classList.remove('has-image');
             document.getElementById('provImageInput').value = '';
             selectedProviderImage = null;
+            document.getElementById('provVideoUrl').value = '';
+            setProviderMediaType('image');
             const desc = document.getElementById('provServiceDetails');
             desc.oninput = () => { document.getElementById('provDescCount').textContent = desc.value.length; };
             updateProviderCooldownUI();
@@ -12132,6 +12409,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             document.getElementById('provImagePrompt').classList.remove('hidden');
             document.getElementById('provImageZone').classList.remove('has-image');
             selectedProviderImage = null;
+            document.getElementById('provVideoUrl').value = '';
+            setProviderMediaType('image');
             document.body.classList.remove('overflow-hidden');
         };
         function updateProviderCooldownUI() {
@@ -12171,11 +12450,24 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (details.length < 10) return showToast('বিস্তারিত কমপক্ষে ১০ অক্ষর', 'circle-x', 'text-rose-400');
             if (website && !/^https?:\/\//i.test(website)) return showToast('ওয়েবসাইট লিংক http/https দিয়ে শুরু করুন', 'circle-x', 'text-rose-400');
             if (facebook && !/^https?:\/\//i.test(facebook)) return showToast('Facebook লিংক http/https দিয়ে শুরু করুন', 'circle-x', 'text-rose-400');
+            const mediaType = getProviderMediaType();
+            let videoUrl = '';
+            if (mediaType === 'video') {
+                videoUrl = (document.getElementById('provVideoUrl').value || '').trim();
+                if (!videoUrl) return showToast(t('prov.videoRequired'), 'circle-x', 'text-rose-400');
+                if (!/^https?:\/\//i.test(videoUrl) || !aeParseVideo(videoUrl)) return showToast(t('prov.videoInvalid'), 'circle-x', 'text-rose-400');
+            }
             const btn = document.getElementById('providerSubmitBtn');
             btn.disabled = true;
             try {
+                if (mediaType === 'video' && aeParseVideo(videoUrl).type === 'direct') {
+                    btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> ' + t('prov.videoChecking'); refreshIcons();
+                    const chk = await checkProviderVideoResolution(videoUrl);
+                    if (!chk.ok || !chk.w || !chk.h) return showToast(t('prov.videoMeta'), 'circle-x', 'text-rose-400');
+                    if (chk.w !== 1920 || chk.h !== 1080) return showToast(t('prov.videoRes'), 'circle-x', 'text-rose-400');
+                }
                 let imageUrl = '';
-                if (selectedProviderImage) {
+                if (mediaType === 'image' && selectedProviderImage) {
                     btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> ছবি আপলোড...'; refreshIcons();
                     imageUrl = await uploadToCloudinary(selectedProviderImage);
                 }
@@ -12183,7 +12475,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 await addDoc(collection(db, 'providerApplications'), {
                     title, providerName, district, upazila, location: `${upazila}, ${district}`,
                     phone, website: website || '', whatsapp: whatsapp || '', facebook: facebook || '',
-                    details, description: details, image: imageUrl,
+                    details, description: details,
+                    mediaType, image: imageUrl, imageUrl: imageUrl, videoUrl: videoUrl,
                     applicantName: providerName, applicantEmail: userProfile?.email || '', applicantUid: currentUser.uid,
                     status: 'pending', createdAt: serverTimestamp()
                 });
@@ -13185,7 +13478,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
         (function aeBackNavigation() {
             const TAB_HOME = 'services';
             const EXIT_WINDOW_MS = 2000;
-            const MODAL_IDS = ['providerModal','serviceDetailModal','promotionDetailModal','categoryModal','noticeModal','feedbackModal','ratingModal','aboutModal','termsModal','resultModal','contactModal','editProfileModal','changePasswordModal','chatInfoModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','premiumActionModal','downloadAppModal','otherDownloadSourcesModal'];
+            const MODAL_IDS = ['aeVideoModal','providerModal','serviceDetailModal','promotionDetailModal','categoryModal','noticeModal','feedbackModal','ratingModal','aboutModal','termsModal','resultModal','contactModal','editProfileModal','changePasswordModal','chatInfoModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','premiumActionModal','downloadAppModal','otherDownloadSourcesModal'];
             let tabStack = [{ tab: TAB_HOME, scroll: 0 }];
             let internalNav = false;
             let armed = false;

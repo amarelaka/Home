@@ -3840,58 +3840,51 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     <button type="button" onclick="weatherRetry()" class="mt-2 px-4 py-2 rounded-xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold">আবার চেষ্টা করুন</button>
                 </div>
 
-                <!-- Current weather card — live scene + glass -->
+                <!-- Current weather card — realistic canvas scene + glass -->
+                <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+                    <radialGradient id="wxg-sun" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fff3a8"/><stop offset=".55" stop-color="#ffc83d"/><stop offset="1" stop-color="#ff9a1f"/></radialGradient>
+                    <linearGradient id="wxg-cloud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9d5e4"/></linearGradient>
+                    <linearGradient id="wxg-cloud-d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b3bfce"/><stop offset="1" stop-color="#6b7788"/></linearGradient>
+                    <linearGradient id="wxg-moon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbe6"/><stop offset="1" stop-color="#c9d2e6"/></linearGradient>
+                </defs></svg>
                 <div id="weatherCurrentCard" class="hidden weather-glass-card">
-                    <div id="weatherScene" class="weather-scene wx-clear" aria-hidden="true">
-                        <div class="wx-sky"></div>
-                        <div class="wx-sun"></div>
-                        <div class="wx-moon"></div>
-                        <div class="wx-clouds">
-                            <span class="wx-cloud c1"></span>
-                            <span class="wx-cloud c2"></span>
-                            <span class="wx-cloud c3"></span>
-                        </div>
-                        <div class="wx-rain" id="weatherRainLayer"></div>
-                        <div class="wx-snow" id="weatherSnowLayer"></div>
-                        <div class="wx-fog"></div>
-                        <div class="wx-lightning" id="weatherLightning"></div>
-                        <div class="wx-stars"></div>
-                    </div>
+                    <canvas id="weatherCanvas" class="wx-canvas" aria-hidden="true"></canvas>
                     <div class="weather-glass-content">
                         <div class="flex items-start justify-between gap-3">
                             <div class="min-w-0">
-                                <p id="weatherLocationName" class="text-base sm:text-lg font-bold text-white drop-shadow"></p>
-                                <p id="weatherLocalTime" class="text-[11px] text-white/70 mt-0.5"></p>
+                                <span id="weatherSourceBadge" class="wx-badge"></span>
+                                <p id="weatherLocationName" class="wx-name"></p>
+                                <p id="weatherLocalTime" class="wx-time"></p>
                             </div>
                             <div class="text-right shrink-0">
-                                <p id="weatherTemp" class="text-4xl sm:text-5xl font-extrabold text-white leading-none drop-shadow-lg"></p>
-                                <p id="weatherFeelsLike" class="text-[11px] text-white/75 mt-1"></p>
+                                <p id="weatherTemp" class="wx-temp"></p>
+                                <p id="weatherFeelsLike" class="wx-feels"></p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3 mt-5">
-                            <img id="weatherIcon" src="" alt="" class="w-16 h-16 object-contain drop-shadow-xl">
+                        <div class="flex items-center gap-3 mt-4">
+                            <div id="weatherIcon" class="wx-icon-lg"></div>
                             <div>
-                                <p id="weatherCondition" class="text-sm font-semibold text-white drop-shadow"></p>
-                                <p id="weatherLastUpdated" class="text-[10px] text-white/60 mt-0.5"></p>
+                                <p id="weatherCondition" class="wx-cond"></p>
+                                <p id="weatherLastUpdated" class="wx-upd"></p>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-5">
-                            <div class="wx-stat">
-                                <p class="wx-stat-label">আর্দ্রতা</p>
-                                <p id="weatherHumidity" class="wx-stat-value"></p>
-                            </div>
-                            <div class="wx-stat">
-                                <p class="wx-stat-label">বাতাস</p>
-                                <p id="weatherWind" class="wx-stat-value"></p>
-                            </div>
-                            <div class="wx-stat">
-                                <p class="wx-stat-label">বৃষ্টির সম্ভাবনা</p>
-                                <p id="weatherRainChance" class="wx-stat-value"></p>
-                            </div>
-                            <div class="wx-stat">
-                                <p class="wx-stat-label">UV সূচক</p>
-                                <p id="weatherUv" class="wx-stat-value"></p>
-                            </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-auto pt-5">
+                            <div class="wx-stat"><p class="wx-stat-label">আর্দ্রতা</p><p id="weatherHumidity" class="wx-stat-value"></p></div>
+                            <div class="wx-stat"><p class="wx-stat-label">বাতাস</p><p id="weatherWind" class="wx-stat-value"></p></div>
+                            <div class="wx-stat"><p class="wx-stat-label">বৃষ্টির সম্ভাবনা</p><p id="weatherRainChance" class="wx-stat-value"></p></div>
+                            <div class="wx-stat"><p class="wx-stat-label">UV সূচক</p><p id="weatherUv" class="wx-stat-value"></p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- আবহাওয়া অনুযায়ী মজার কথা (ট্যাপ করলে পরেরটা) -->
+                <div id="weatherFunCard" class="hidden wx-fun-card" onclick="weatherFunNext()" role="button" aria-label="পরের মজার কথা">
+                    <div class="wx-fun-row wx-fun-body">
+                        <div class="wx-fun-emoji"></div>
+                        <div class="min-w-0 flex-1">
+                            <span class="wx-fun-tag"></span>
+                            <p class="wx-fun-text"></p>
+                            <div class="wx-fun-dots"></div>
                         </div>
                     </div>
                 </div>
@@ -3908,7 +3901,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <img id="weatherTomorrowIcon" src="" alt="" class="w-12 h-12 object-contain">
+                        <div id="weatherTomorrowIcon" class="wx-icon-md shrink-0"></div>
                         <div class="flex-1 min-w-0">
                             <p id="weatherTomorrowCond" class="text-sm font-semibold text-emerald-300"></p>
                             <p id="weatherTomorrowTemp" class="text-xs text-slate-300 mt-0.5"></p>
@@ -5430,327 +5423,115 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
     </style>
 
     <style id="weather-live-scene-glass">
-    /* ===== Live weather glass card + animated scene ===== */
+    /* ===== Weather v2: realistic canvas scene + glass content ===== */
     .weather-glass-card {
-      position: relative;
-      border-radius: 28px;
-      overflow: hidden;
-      min-height: 280px;
-      border: 1px solid rgba(255,255,255,.22);
-      box-shadow:
-        0 24px 60px rgba(0,0,0,.35),
-        inset 0 1px 0 rgba(255,255,255,.25);
-      isolation: isolate;
+      position: relative; border-radius: 28px; overflow: hidden; min-height: 310px;
+      border: 1px solid rgba(255,255,255,.28); background: #0b1838; isolation: isolate;
+      box-shadow: 0 22px 50px rgba(8,20,40,.28), inset 0 1px 0 rgba(255,255,255,.3);
       animation: wxCardIn .55s cubic-bezier(.22,1,.36,1) both;
     }
-    @keyframes wxCardIn {
-      from { opacity: 0; transform: translateY(18px) scale(.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .weather-scene {
-      position: absolute; inset: 0; z-index: 0;
-      overflow: hidden; pointer-events: none;
-    }
+    @keyframes wxCardIn { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
+    .wx-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
     .weather-glass-content {
-      position: relative; z-index: 2;
-      padding: 18px 16px 16px;
-      background: linear-gradient(180deg, rgba(8,20,16,.18) 0%, rgba(5,14,12,.55) 100%);
-      -webkit-backdrop-filter: blur(2px) saturate(120%);
-      backdrop-filter: blur(2px) saturate(120%);
-      min-height: 280px;
+      position: relative; z-index: 2; padding: 18px 16px 16px; min-height: 310px;
       display: flex; flex-direction: column;
+      background: linear-gradient(180deg, rgba(0,0,0,.34) 0%, rgba(0,0,0,.06) 40%, rgba(0,0,0,.10) 58%, rgba(0,0,0,.40) 100%);
     }
-    .wx-stat {
-      border-radius: 16px;
-      padding: 10px 8px;
-      text-align: center;
-      background: rgba(255,255,255,.14);
-      border: 1px solid rgba(255,255,255,.22);
-      -webkit-backdrop-filter: blur(12px) saturate(160%);
-      backdrop-filter: blur(12px) saturate(160%);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.2);
+    /* সবসময় সাদা লেখা (লাইট/ডার্ক মোড নির্বিশেষে) — আকাশের উপর স্পষ্ট দেখা যাবে */
+    body #weatherCurrentCard .wx-name { color:#fff !important; font-weight:800; font-size:17px; line-height:1.25; text-shadow:0 2px 10px rgba(0,0,0,.55); }
+    body #weatherCurrentCard .wx-time { color:rgba(255,255,255,.92) !important; font-size:11.5px; margin-top:3px; text-shadow:0 1px 6px rgba(0,0,0,.6); }
+    body #weatherCurrentCard .wx-temp { color:#fff !important; font-weight:800; font-size:50px; line-height:1; text-shadow:0 3px 16px rgba(0,0,0,.5); }
+    body #weatherCurrentCard .wx-feels { color:rgba(255,255,255,.92) !important; font-size:12px; margin-top:4px; text-shadow:0 1px 6px rgba(0,0,0,.6); }
+    body #weatherCurrentCard .wx-cond { color:#fff !important; font-weight:700; font-size:16px; text-shadow:0 2px 10px rgba(0,0,0,.55); }
+    body #weatherCurrentCard .wx-upd { color:rgba(255,255,255,.85) !important; font-size:10.5px; margin-top:2px; text-shadow:0 1px 6px rgba(0,0,0,.6); }
+    .wx-badge { display:inline-block; margin-bottom:6px; padding:2px 9px; border-radius:99px; font-size:10px; font-weight:700; color:#fff !important;
+      background: rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.35); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    #weatherCurrentCard .wx-stat {
+      border-radius: 16px; padding: 10px 8px; text-align: center; min-height: 58px;
+      background: rgba(255,255,255,.17); border: 1px solid rgba(255,255,255,.32);
+      -webkit-backdrop-filter: blur(14px) saturate(150%); backdrop-filter: blur(14px) saturate(150%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 4px 14px rgba(0,0,0,.12);
     }
-    .wx-stat-label { font-size: 10px; color: rgba(255,255,255,.72); font-weight: 600; margin-bottom: 2px; }
-    .wx-stat-value { font-size: 13px; font-weight: 800; color: #fff; }
+    body #weatherCurrentCard .wx-stat-label { font-size: 10.5px; color: rgba(255,255,255,.9) !important; font-weight: 600; margin-bottom: 2px; text-shadow:0 1px 4px rgba(0,0,0,.5); }
+    body #weatherCurrentCard .wx-stat-value { font-size: 14px; font-weight: 800; color: #fff !important; text-shadow:0 1px 6px rgba(0,0,0,.5); }
 
-    /* Sky base */
-    .wx-sky {
-      position: absolute; inset: 0;
-      transition: background 1s ease;
-    }
-    .wx-clear .wx-sky { background: linear-gradient(160deg, #1d9fe8 0%, #3ecf8e 55%, #0b6e4f 100%); }
-    .wx-cloudy .wx-sky { background: linear-gradient(160deg, #5b7c99 0%, #3d5a6e 50%, #1f3340 100%); }
-    .wx-overcast .wx-sky { background: linear-gradient(160deg, #4a5568 0%, #2d3748 60%, #1a202c 100%); }
-    .wx-rain .wx-sky, .wx-heavyrain .wx-sky { background: linear-gradient(160deg, #2c3e50 0%, #1a2a3a 50%, #0d1b2a 100%); }
-    .wx-thunder .wx-sky { background: linear-gradient(160deg, #1a1a2e 0%, #16213e 45%, #0f0f1a 100%); }
-    .wx-fog .wx-sky, .wx-mist .wx-sky { background: linear-gradient(160deg, #8a9ba8 0%, #6b7c88 50%, #4a5864 100%); }
-    .wx-snow .wx-sky { background: linear-gradient(160deg, #a8c0d8 0%, #6e8eae 50%, #3d5a7a 100%); }
-    .wx-cold .wx-sky { background: linear-gradient(160deg, #7eb6d9 0%, #4a8fbe 50%, #2a5f8f 100%); }
-    .wx-night .wx-sky { background: linear-gradient(160deg, #0b1026 0%, #1a2744 50%, #0d1b2a 100%); }
+    /* SVG আইকন */
+    .wx-icon-lg { width: 78px; height: 78px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.35)); }
+    .wx-icon-md { width: 56px; height: 56px; }
+    .wx-icon-sm { width: 38px; height: 38px; }
+    .wxi { width: 100%; height: 100%; overflow: visible; }
+    .wxi-rays { animation: wxiSpin 18s linear infinite; transform-box: fill-box; transform-origin: center; }
+    .wxi-cloud { animation: wxiFloat 6s ease-in-out infinite; }
+    .wxi-drop { animation: wxiDrop 1.1s linear infinite; }
+    .wxi-drop.d1 { animation-delay: .25s; } .wxi-drop.d2 { animation-delay: .55s; } .wxi-drop.d3 { animation-delay: .8s; }
+    .wxi-flake { animation: wxiDrop 2.2s linear infinite; } .wxi-flake.f1 { animation-delay: .7s; } .wxi-flake.f2 { animation-delay: 1.4s; }
+    .wxi-bolt { animation: wxiFlick 2.4s infinite; transform-box: fill-box; }
+    .wxi-fog { animation: wxiFogSlide 3.5s ease-in-out infinite; } .wxi-fog.fg1 { animation-delay: .6s; } .wxi-fog.fg2 { animation-delay: 1.2s; }
+    .wxi-tw { animation: wxiTw 2.4s ease-in-out infinite; } .wxi-tw.t2 { animation-delay: 1s; }
+    @keyframes wxiSpin { to { transform: rotate(360deg); } }
+    @keyframes wxiFloat { 0%,100% { transform: translateX(-1.5px); } 50% { transform: translateX(1.5px); } }
+    @keyframes wxiDrop { 0% { transform: translateY(-5px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(10px); opacity: 0; } }
+    @keyframes wxiFlick { 0%,52%,60%,100% { opacity: 1; } 54%,58% { opacity: .15; } }
+    @keyframes wxiFogSlide { 0%,100% { transform: translateX(-3px); opacity: .6; } 50% { transform: translateX(4px); opacity: 1; } }
+    @keyframes wxiTw { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
 
-    /* Sun */
-    .wx-sun {
-      position: absolute; top: 18px; right: 28px;
-      width: 56px; height: 56px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fff9c4, #ffd54f 40%, #ff9800 75%, transparent 76%);
-      box-shadow: 0 0 40px 12px rgba(255,193,7,.45), 0 0 80px 24px rgba(255,152,0,.2);
-      opacity: 0; transform: scale(.6);
-      transition: opacity .6s, transform .6s;
+    /* মজার কথা কার্ড */
+    #weatherFunCard.wx-fun-card {
+      position: relative; border-radius: 22px; padding: 14px 16px; cursor: pointer; overflow: hidden;
+      background: linear-gradient(135deg, rgba(16,185,129,.16), rgba(245,158,11,.14));
+      border: 1px solid rgba(110,231,183,.28);
     }
-    .wx-clear:not(.wx-night) .wx-sun { opacity: 1; transform: scale(1); animation: wxSunPulse 4s ease-in-out infinite; }
-    .wx-cloudy:not(.wx-night) .wx-sun { opacity: .45; transform: scale(.85); }
-    @keyframes wxSunPulse {
-      0%,100% { box-shadow: 0 0 40px 12px rgba(255,193,7,.4), 0 0 80px 24px rgba(255,152,0,.18); }
-      50% { box-shadow: 0 0 55px 18px rgba(255,193,7,.55), 0 0 100px 32px rgba(255,152,0,.28); }
-    }
+    .wx-fun-row { display: flex; align-items: center; gap: 12px; transition: opacity .22s, transform .22s; }
+    .wx-fun-row.out { opacity: 0; transform: translateY(6px); }
+    .wx-fun-emoji { font-size: 34px; line-height: 1; flex: 0 0 auto; filter: drop-shadow(0 3px 6px rgba(0,0,0,.2)); }
+    .wx-fun-tag { display: inline-block; font-size: 10px; font-weight: 800; padding: 1px 8px; border-radius: 99px; background: rgba(16,185,129,.22); color: #6ee7b7; margin-bottom: 4px; }
+    .wx-fun-text { font-size: 13.5px; font-weight: 600; line-height: 1.55; color: #e2e8f0; }
+    .wx-fun-dots { display: flex; gap: 5px; margin-top: 9px; }
+    .wx-fun-dots i { width: 6px; height: 6px; border-radius: 99px; background: rgba(148,163,184,.45); transition: all .25s; }
+    .wx-fun-dots i.on { width: 18px; background: #34d399; }
+    body.light-mode #weatherFunCard.wx-fun-card { background: linear-gradient(135deg,#ecfdf5,#fffbeb); border-color: #a7f3d0; }
+    body.light-mode #weatherFunCard .wx-fun-text { color: #1e293b; }
+    body.light-mode #weatherFunCard .wx-fun-tag { background: #d1fae5; color: #047857; }
+    body.light-mode #weatherFunCard .wx-fun-dots i { background: #cbd5e1; }
+    body.light-mode #weatherFunCard .wx-fun-dots i.on { background: #059669; }
 
-    /* Moon */
-    .wx-moon {
-      position: absolute; top: 20px; right: 32px;
-      width: 42px; height: 42px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #f5f5f5, #cfd8dc 70%);
-      box-shadow: 0 0 24px 6px rgba(207,216,220,.35);
-      opacity: 0; transition: opacity .6s;
-    }
-    .wx-night .wx-moon { opacity: 1; }
-
-    /* Stars (night) */
-    .wx-stars {
-      position: absolute; inset: 0; opacity: 0;
-      background-image:
-        radial-gradient(1.5px 1.5px at 12% 20%, #fff, transparent),
-        radial-gradient(1.5px 1.5px at 28% 45%, #fff, transparent),
-        radial-gradient(1px 1px at 55% 18%, #fff, transparent),
-        radial-gradient(1.5px 1.5px at 72% 38%, #fff, transparent),
-        radial-gradient(1px 1px at 88% 22%, #fff, transparent),
-        radial-gradient(1.5px 1.5px at 40% 70%, #fff, transparent),
-        radial-gradient(1px 1px at 65% 60%, #fff, transparent);
-      transition: opacity .6s;
-    }
-    .wx-night .wx-stars { opacity: .85; animation: wxTwinkle 3s ease-in-out infinite; }
-    @keyframes wxTwinkle { 0%,100%{opacity:.7} 50%{opacity:1} }
-
-    /* Clouds */
-    .wx-clouds { position: absolute; inset: 0; }
-    .wx-cloud {
-      position: absolute;
-      background: rgba(255,255,255,.55);
-      border-radius: 40px;
-      filter: blur(1px);
-      opacity: 0;
-      transition: opacity .5s;
-    }
-    .wx-cloud.c1 { width: 90px; height: 28px; top: 28%; left: -20%; animation: wxCloudDrift 22s linear infinite; }
-    .wx-cloud.c2 { width: 120px; height: 34px; top: 42%; left: -30%; animation: wxCloudDrift 28s linear infinite -6s; background: rgba(255,255,255,.4); }
-    .wx-cloud.c3 { width: 70px; height: 22px; top: 18%; left: -15%; animation: wxCloudDrift 18s linear infinite -12s; background: rgba(255,255,255,.35); }
-    .wx-cloudy .wx-cloud, .wx-overcast .wx-cloud, .wx-rain .wx-cloud, .wx-heavyrain .wx-cloud, .wx-thunder .wx-cloud { opacity: 1; }
-    .wx-overcast .wx-cloud, .wx-rain .wx-cloud, .wx-thunder .wx-cloud { background: rgba(180,190,200,.55); filter: blur(2px); }
-    @keyframes wxCloudDrift {
-      from { transform: translateX(0); }
-      to { transform: translateX(140vw); }
-    }
-
-    /* Rain drops */
-    .wx-rain {
-      position: absolute; inset: 0; overflow: hidden;
-      opacity: 0; transition: opacity .4s;
-      pointer-events: none;
-    }
-    .wx-rain.on, .wx-rain.wx-rain-on { opacity: 1; }
-    .wx-rain .drop {
-      position: absolute; top: -12%;
-      width: 1.5px; height: 14px;
-      background: linear-gradient(to bottom, transparent, rgba(180,220,255,.85));
-      border-radius: 2px;
-      animation: wxRainFall linear infinite;
-    }
-    .wx-heavyrain .wx-rain .drop {
-      height: 18px; width: 2px;
-      background: linear-gradient(to bottom, transparent, rgba(160,200,255,.95));
-    }
-    @keyframes wxRainFall {
-      0% { transform: translateY(0) translateX(0); opacity: 1; }
-      100% { transform: translateY(110vh) translateX(12px); opacity: .3; }
-    }
-
-    /* Snow */
-    .wx-snow {
-      position: absolute; inset: 0; overflow: hidden;
-      opacity: 0; transition: opacity .4s;
-    }
-    .wx-snow.on { opacity: 1; }
-    .wx-snow .flake {
-      position: absolute; top: -8%;
-      width: 5px; height: 5px; border-radius: 50%;
-      background: #fff; box-shadow: 0 0 4px #fff;
-      animation: wxSnowFall linear infinite;
-    }
-    @keyframes wxSnowFall {
-      0% { transform: translateY(0) translateX(0); opacity: 1; }
-      100% { transform: translateY(110vh) translateX(30px); opacity: .2; }
-    }
-
-    /* Fog */
-    .wx-fog {
-      position: absolute; inset: 0;
-      background:
-        linear-gradient(90deg, transparent, rgba(255,255,255,.25) 40%, transparent 70%),
-        linear-gradient(180deg, rgba(255,255,255,.15), transparent 40%, rgba(255,255,255,.2));
-      opacity: 0; transition: opacity .6s;
-      animation: wxFogDrift 8s ease-in-out infinite;
-    }
-    .wx-fog.wx-fog-on, .wx-mist .wx-fog, .wx-fog .wx-fog { opacity: 1; }
-    .weather-scene.wx-fog .wx-fog, .weather-scene.wx-mist .wx-fog { opacity: .85; }
-    @keyframes wxFogDrift {
-      0%,100% { transform: translateX(-4%); opacity: .6; }
-      50% { transform: translateX(4%); opacity: .9; }
-    }
-
-    /* Lightning */
-    .wx-lightning {
-      position: absolute; inset: 0;
-      background: rgba(255,255,255,0);
-      opacity: 0; pointer-events: none;
-    }
-    .wx-thunder .wx-lightning {
-      animation: wxFlash 4.5s ease-in-out infinite;
-    }
-    @keyframes wxFlash {
-      0%, 88%, 100% { opacity: 0; background: rgba(255,255,255,0); }
-      90% { opacity: 1; background: rgba(255,255,255,.55); }
-      92% { opacity: 0; }
-      94% { opacity: .9; background: rgba(200,220,255,.7); }
-      96% { opacity: 0; }
-    }
-
-    /* Cold frost edge */
-    .wx-cold .weather-glass-content,
-    .wx-snow .weather-glass-content {
-      box-shadow: inset 0 0 40px rgba(180,220,255,.12);
-    }
-
-    body.light-mode .weather-glass-card {
-      border-color: rgba(255,255,255,.5);
-      box-shadow: 0 20px 50px rgba(15,23,42,.15), inset 0 1px 0 rgba(255,255,255,.6);
-    }
-    body.light-mode .wx-stat {
-      background: rgba(255,255,255,.55);
-      border-color: rgba(255,255,255,.7);
-    }
-    body.light-mode .wx-stat-label { color: rgba(15,23,42,.65); }
-    body.light-mode .wx-stat-value { color: #0f172a; }
-    body.light-mode .weather-glass-content {
-      background: linear-gradient(180deg, rgba(255,255,255,.12) 0%, rgba(15,30,25,.35) 100%);
-    }
-    /* Keep white text readable on animated skies even in light mode */
-    body.light-mode #weatherLocationName,
-    body.light-mode #weatherTemp,
-    body.light-mode #weatherCondition { color: #fff !important; text-shadow: 0 1px 8px rgba(0,0,0,.35); }
-    body.light-mode #weatherLocalTime,
-    body.light-mode #weatherFeelsLike,
-    body.light-mode #weatherLastUpdated { color: rgba(255,255,255,.8) !important; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .wx-cloud, .wx-rain .drop, .wx-snow .flake, .wx-sun, .wx-lightning, .wx-fog, .wx-stars {
-        animation: none !important;
-      }
-    }
+    @media (prefers-reduced-motion: reduce) { .wxi-rays,.wxi-cloud,.wxi-drop,.wxi-flake,.wxi-bolt,.wxi-fog,.wxi-tw { animation: none !important; } }
     </style>
 
     <style id="weather-light-mode-and-suggestions">
-    /* Weather page: light mode clarity + suggestions always on top */
+    /* Weather page: light mode clarity + suggestions always on top (body-তে fixed, কোনো কার্ডের নিচে চাপা পড়ে না) */
     #view-weather .info-card { overflow: visible !important; }
-    #weatherSearchWrap { overflow: visible !important; position: relative; z-index: 50; }
+    #weatherSearchWrap { overflow: visible !important; position: relative; z-index: 50; scroll-margin-top: 84px; }
     #weatherSuggestions {
-      z-index: 90 !important;
-      box-shadow: 0 12px 40px rgba(0,0,0,.45);
+      position: fixed; z-index: 150 !important; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+      background: #0c1f16; border: 1px solid rgba(6,95,70,.6); border-radius: 18px; box-shadow: 0 16px 44px rgba(0,0,0,.5);
     }
-    body.light-mode #weatherSuggestions {
-      background: #ffffff !important;
-      border: 1px solid #cbd5e1 !important;
-      box-shadow: 0 12px 32px rgba(15,23,42,.14) !important;
-    }
-    body.light-mode #weatherSuggestions button {
-      color: #0f172a !important;
-      border-bottom-color: #e2e8f0 !important;
-    }
-    body.light-mode #weatherSuggestions button:hover {
-      background: #f1f5f9 !important;
-    }
+    body.light-mode #weatherSuggestions { background: #ffffff !important; border: 1px solid #cbd5e1 !important; box-shadow: 0 14px 36px rgba(15,23,42,.18) !important; }
+    body.light-mode #weatherSuggestions button { color: #0f172a !important; border-bottom-color: #e2e8f0 !important; }
+    body.light-mode #weatherSuggestions button:hover { background: #f1f5f9 !important; }
     body.light-mode #weatherSuggestions .text-slate-400 { color: #64748b !important; }
     body.light-mode #weatherSuggestions i { color: #059669 !important; }
 
-    /* Current card stats — readable in light mode */
-    body.light-mode #weatherCurrentCard .rounded-xl.bg-\[\#07140e\]\/80,
-    body.light-mode #weatherCurrentCard [class*="bg-[#07140e]"] {
-      background: #f1f5f9 !important;
-      border-color: #cbd5e1 !important;
-    }
-    body.light-mode #weatherCurrentCard .text-slate-100 { color: #0f172a !important; }
-    body.light-mode #weatherCurrentCard .text-slate-500 { color: #64748b !important; }
-    body.light-mode #weatherCurrentCard .text-white { color: #0f172a !important; }
-    body.light-mode #weatherCurrentCard .text-emerald-300 { color: #047857 !important; }
-    body.light-mode #weatherCurrentCard .text-slate-400 { color: #475569 !important; }
-
-    body.light-mode #weatherTomorrowCard .bg-sky-950\/40 {
-      background: #e0f2fe !important;
-      border-color: #7dd3fc !important;
-    }
-    body.light-mode #weatherTomorrowCard .text-sky-200,
-    body.light-mode #weatherTomorrowCard .text-sky-400\/80 { color: #0369a1 !important; }
-    body.light-mode #weatherTomorrowCard .bg-amber-950\/30 {
-      background: #fef3c7 !important;
-      border-color: #fcd34d !important;
-    }
-    body.light-mode #weatherTomorrowCard .text-amber-200,
-    body.light-mode #weatherTomorrowCard .text-amber-400\/80 { color: #b45309 !important; }
+    body.light-mode #weatherTomorrowCard .bg-sky-950\/40 { background: #e0f2fe !important; border-color: #7dd3fc !important; }
+    body.light-mode #weatherTomorrowCard .text-sky-200, body.light-mode #weatherTomorrowCard .text-sky-400\/80 { color: #0369a1 !important; }
+    body.light-mode #weatherTomorrowCard .bg-amber-950\/30 { background: #fef3c7 !important; border-color: #fcd34d !important; }
+    body.light-mode #weatherTomorrowCard .text-amber-200, body.light-mode #weatherTomorrowCard .text-amber-400\/80 { color: #b45309 !important; }
     body.light-mode #weatherTomorrowCard .text-emerald-300 { color: #047857 !important; }
     body.light-mode #weatherTomorrowCard .text-slate-100 { color: #0f172a !important; }
-    body.light-mode #weatherTomorrowCard .text-slate-300,
-    body.light-mode #weatherTomorrowCard .text-slate-400 { color: #475569 !important; }
-
-    body.light-mode #weatherForecastList > div {
-      background: #f8fafc !important;
-      border-color: #e2e8f0 !important;
-    }
-    body.light-mode #weatherForecastList .text-slate-100,
-    body.light-mode #weatherForecastList .text-white { color: #0f172a !important; }
+    body.light-mode #weatherTomorrowCard .text-slate-300, body.light-mode #weatherTomorrowCard .text-slate-400 { color: #475569 !important; }
+    body.light-mode #weatherForecastList > div { background: #f8fafc !important; border-color: #e2e8f0 !important; }
+    body.light-mode #weatherForecastList .text-slate-100, body.light-mode #weatherForecastList .text-white { color: #0f172a !important; }
     body.light-mode #weatherForecastList .text-slate-400 { color: #64748b !important; }
     body.light-mode #weatherForecastList .text-sky-400 { color: #0284c7 !important; }
-
     body.light-mode #weatherSearchInput { color: #0f172a !important; }
     body.light-mode #weatherSearchInput::placeholder { color: #94a3b8 !important; }
     body.light-mode #weatherLocBtn { color: #047857 !important; }
     body.light-mode #weatherLocBtn i { color: #047857 !important; stroke: #047857 !important; }
     body.light-mode #weatherSearchClear { color: #64748b !important; }
-    body.light-mode #view-weather h3,
-    body.light-mode #view-weather h4 { color: #0f172a !important; }
+    body.light-mode #view-weather h3, body.light-mode #view-weather h4 { color: #0f172a !important; }
     body.light-mode #view-weather .text-slate-400 { color: #64748b !important; }
-    body.light-mode #weatherDistrictTip {
-      background: #ecfdf5 !important;
-      border-color: #6ee7b7 !important;
-      color: #065f46 !important;
-    }
-    body.light-mode #weatherDistrictTip .text-emerald-300,
-    body.light-mode #weatherDistrictTip span.font-bold { color: #047857 !important; }
-
-    /* Force visible contrast on the 4 metric tiles */
-    #weatherCurrentCard .grid > div {
-      min-height: 58px;
-    }
-    body.light-mode #weatherCurrentCard .grid > div {
-      background: #ffffff !important;
-      border: 1.5px solid #cbd5e1 !important;
-      box-shadow: 0 2px 8px rgba(15,23,42,.06);
-    }
-    body.light-mode #weatherCurrentCard .grid > div p:first-child {
-      color: #64748b !important;
-      font-weight: 600;
-    }
-    body.light-mode #weatherCurrentCard .grid > div p:last-child {
-      color: #0f172a !important;
-      font-weight: 800;
-    }
+    body.light-mode #weatherDistrictTip { background: #ecfdf5 !important; border-color: #6ee7b7 !important; color: #065f46 !important; }
+    body.light-mode #weatherDistrictTip .text-emerald-300, body.light-mode #weatherDistrictTip span.font-bold { color: #047857 !important; }
     </style>
 
     <div id="downloadAppModal" class="hidden fixed inset-0 z-[180]" role="dialog" aria-modal="true">
@@ -13403,45 +13184,584 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (u) { mainAppDownloadLink = u; window.__appDownloadUrl = u; }
         }
 
-        // ========== WEATHER (WeatherAPI.com) ==========
+        // ========== WEATHER v2 (WeatherAPI.com) — বাস্তবধর্মী ক্যানভাস অ্যানিমেশন + জেলা ভিত্তিক ডিফল্ট ==========
         const WEATHER_API_KEY = '26598531301d4ad2b4e170112262111';
         const WEATHER_BASE = 'https://api.weatherapi.com/v1';
-        let weatherLastQuery = '';
-        let weatherSearchTimer = null;
-        let weatherAbort = null;
-        let weatherLoadedOnce = false;
 
+        // ৬৪ জেলার সদরের সঠিক স্থানাঙ্ক (নাম দিয়ে সার্চ করলে ভুল জায়গা আসত, তাই lat/lon দিয়ে লোড হয়)
+        const WX_DISTRICTS = {
+            'ঢাকা':[23.8103,90.4125,'Dhaka'],'গাজীপুর':[23.9999,90.4203,'Gazipur'],'নারায়ণগঞ্জ':[23.6238,90.5000,'Narayanganj'],'নরসিংদী':[23.9322,90.7151,'Narsingdi'],
+            'মানিকগঞ্জ':[23.8617,90.0003,'Manikganj'],'মুন্সিগঞ্জ':[23.5422,90.5305,'Munshiganj'],'রাজবাড়ী':[23.7574,89.6444,'Rajbari'],'ফরিদপুর':[23.6070,89.8429,'Faridpur'],
+            'গোপালগঞ্জ':[23.0051,89.8266,'Gopalganj'],'মাদারীপুর':[23.1641,90.1896,'Madaripur'],'শরীয়তপুর':[23.2423,90.4348,'Shariatpur'],'কিশোরগঞ্জ':[24.4449,90.7766,'Kishoreganj'],
+            'টাঙ্গাইল':[24.2513,89.9167,'Tangail'],'শেরপুর':[25.0204,90.0153,'Sherpur'],'ময়মনসিংহ':[24.7471,90.4203,'Mymensingh'],'জামালপুর':[24.9375,89.9372,'Jamalpur'],
+            'নেত্রকোণা':[24.8708,90.7279,'Netrokona'],'চট্টগ্রাম':[22.3569,91.7832,'Chattogram'],'কুমিল্লা':[23.4607,91.1809,'Cumilla'],'ফেনী':[23.0159,91.3976,'Feni'],
+            'ব্রাহ্মণবাড়িয়া':[23.9571,91.1115,'Brahmanbaria'],'রাঙ্গামাটি':[22.6567,92.1732,'Rangamati'],'নোয়াখালী':[22.8696,91.0995,'Noakhali'],'চাঁদপুর':[23.2333,90.6713,'Chandpur'],
+            'লক্ষ্মীপুর':[22.9425,90.8412,'Lakshmipur'],'কক্সবাজার':[21.4272,92.0058,'Coxs Bazar'],'খাগড়াছড়ি':[23.1193,91.9847,'Khagrachhari'],'বান্দরবান':[22.1953,92.2184,'Bandarban'],
+            'রাজশাহী':[24.3745,88.6042,'Rajshahi'],'চাঁপাইনবাবগঞ্জ':[24.5965,88.2775,'Chapainawabganj'],'নওগাঁ':[24.8078,88.9411,'Naogaon'],'নাটোর':[24.4206,89.0000,'Natore'],
+            'পাবনা':[24.0064,89.2372,'Pabna'],'সিরাজগঞ্জ':[24.4534,89.7006,'Sirajganj'],'বগুড়া':[24.8465,89.3773,'Bogura'],'জয়পুরহাট':[25.0947,89.0945,'Joypurhat'],
+            'খুলনা':[22.8456,89.5403,'Khulna'],'বাগেরহাট':[22.6602,89.7856,'Bagerhat'],'সাতক্ষীরা':[22.7185,89.0705,'Satkhira'],'যশোর':[23.1667,89.2081,'Jashore'],
+            'ঝিনাইদহ':[23.5448,89.1539,'Jhenaidah'],'মাগুরা':[23.4873,89.4199,'Magura'],'নড়াইল':[23.1725,89.5126,'Narail'],'কুষ্টিয়া':[23.9013,89.1200,'Kushtia'],
+            'চুয়াডাঙ্গা':[23.6402,88.8418,'Chuadanga'],'মেহেরপুর':[23.7622,88.6318,'Meherpur'],'বরিশাল':[22.7010,90.3535,'Barishal'],'ভোলা':[22.6859,90.6482,'Bhola'],
+            'পটুয়াখালী':[22.3596,90.3299,'Patuakhali'],'পিরোজপুর':[22.5841,89.9720,'Pirojpur'],'ঝালকাঠি':[22.6406,90.1987,'Jhalokathi'],'বরগুনা':[22.1590,90.1256,'Barguna'],
+            'সিলেট':[24.8949,91.8687,'Sylhet'],'মৌলভীবাজার':[24.4829,91.7774,'Moulvibazar'],'হবিগঞ্জ':[24.3740,91.4156,'Habiganj'],'সুনামগঞ্জ':[25.0658,91.3950,'Sunamganj'],
+            'রংপুর':[25.7439,89.2752,'Rangpur'],'গাইবান্ধা':[25.3297,89.5430,'Gaibandha'],'কুড়িগ্রাম':[25.8054,89.6361,'Kurigram'],'লালমনিরহাট':[25.9923,89.2847,'Lalmonirhat'],
+            'নীলফামারী':[25.9318,88.8560,'Nilphamari'],'ঠাকুরগাঁও':[26.0337,88.4617,'Thakurgaon'],'পঞ্চগড়':[26.3411,88.5541,'Panchagarh'],'দিনাজপুর':[25.6279,88.6332,'Dinajpur']
+        };
+        const WX_EN_ALIAS = { chittagong:'চট্টগ্রাম', comilla:'কুমিল্লা', jessore:'যশোর', bogra:'বগুড়া', barisal:'বরিশাল', coxbazar:'কক্সবাজার', coxsbazar:'কক্সবাজার', laxmipur:'লক্ষ্মীপুর', chapainawabganj:'চাঁপাইনবাবগঞ্জ', nawabganj:'চাঁপাইনবাবগঞ্জ', jhalakathi:'ঝালকাঠি', moulvibazar:'মৌলভীবাজার', netrakona:'নেত্রকোণা', khagrachari:'খাগড়াছড়ি' };
+
+        const WX_BN_DIGITS = '০১২৩৪৫৬৭৮৯';
+        const WX_WEEKDAYS = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+        const WX_MONTHS = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+        const wxBn = n => String(n).replace(/\d/g, d => WX_BN_DIGITS[d]);
+
+        let weatherLastReq = null;      // শেষ রিকোয়েস্ট (Retry-এর জন্য)
+        let weatherReqId = 0;
+        let weatherSearchTimer = null;
+        let weatherLoadedOnce = false;
+        let wxMainAbort = null, wxSearchAbort = null;
+        let wxSugItems = [];
+        const wxCache = new Map();      // key -> {t, data}
+        const WX_CACHE_MS = 10 * 60 * 1000;
+        let wxState = { tz: 'Asia/Dhaka', sr: null, ss: null, ill: 50, wax: true, phase: 'day' };
+        let wxClockTimer = null;
+
+        /* ---------- জেলা খোঁজা ---------- */
+        function wxDistInfo(bn) { const d = WX_DISTRICTS[bn]; return d ? { bn, lat: d[0], lon: d[1], en: d[2] } : null; }
+        function wxFindDistrict(raw) {
+            let v = String(raw || '').trim().replace(/\s*(জেলা|district|zila|zilla)\s*$/i, '').trim();
+            if (!v) return null;
+            if (WX_DISTRICTS[v]) return wxDistInfo(v);
+            const low = v.toLowerCase().replace(/[^a-z]/g, '');
+            if (low) {
+                if (WX_EN_ALIAS[low]) return wxDistInfo(WX_EN_ALIAS[low]);
+                for (const k in WX_DISTRICTS) if (WX_DISTRICTS[k][2].toLowerCase().replace(/[^a-z]/g, '') === low) return wxDistInfo(k);
+            }
+            for (const k in WX_DISTRICTS) if (v.includes(k) || k.includes(v)) return wxDistInfo(k);
+            return null;
+        }
+        function wxNearestDistrict(lat, lon) {
+            const R = 6371, rad = Math.PI / 180;
+            let best = null, bd = 1e9;
+            for (const k in WX_DISTRICTS) {
+                const [la, lo] = WX_DISTRICTS[k];
+                const a = Math.sin((la - lat) * rad / 2) ** 2 + Math.cos(lat * rad) * Math.cos(la * rad) * Math.sin((lo - lon) * rad / 2) ** 2;
+                const d = 2 * R * Math.asin(Math.sqrt(a));
+                if (d < bd) { bd = d; best = k; }
+            }
+            return { bn: best, km: bd };
+        }
+        const wxInBD = (lat, lon) => lat > 20.5 && lat < 26.8 && lon > 88.0 && lon < 92.8;
+
+        /* ---------- সময় (বাংলাদেশ সময় / ১২-ঘণ্টা বাংলা) ---------- */
+        function wxParts(tz) {
+            const now = new Date();
+            try {
+                const f = new Intl.DateTimeFormat('en-US', { timeZone: tz, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', weekday: 'short' });
+                const o = {}; f.formatToParts(now).forEach(p => { o[p.type] = p.value; });
+                const wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(o.weekday);
+                return { y: +o.year, mo: +o.month, d: +o.day, h: (+o.hour) % 24, m: +o.minute, wd: wd < 0 ? 0 : wd };
+            } catch (e) {
+                const u = new Date(now.getTime() + 6 * 3600 * 1000); // UTC+6 (বাংলাদেশ)
+                return { y: u.getUTCFullYear(), mo: u.getUTCMonth() + 1, d: u.getUTCDate(), h: u.getUTCHours(), m: u.getUTCMinutes(), wd: u.getUTCDay() };
+            }
+        }
+        function wxPeriod(h) {
+            if (h >= 4 && h < 6) return 'ভোর';
+            if (h >= 6 && h < 12) return 'সকাল';
+            if (h >= 12 && h < 15) return 'দুপুর';
+            if (h >= 15 && h < 17) return 'বিকাল';
+            if (h >= 17 && h < 19) return 'সন্ধ্যা';
+            return 'রাত';
+        }
+        function wxTimeBn(h, m) { return `${wxPeriod(h)} ${wxBn(h % 12 || 12)}:${wxBn(String(m).padStart(2, '0'))}`; }
+        function wxParseAstro(t) {
+            const m = /(\d+):(\d+)\s*(AM|PM)/i.exec(t || '');
+            if (!m) return null;
+            let h = (+m[1]) % 12; if (/PM/i.test(m[3])) h += 12;
+            return h * 60 + (+m[2]);
+        }
+        function wxPhaseAt(min, sr, ss) {
+            if (sr == null || ss == null) return (min >= 360 && min < 1080) ? 'day' : 'night';
+            if (min >= sr - 35 && min < sr + 35) return 'dawn';
+            if (min >= ss - 35 && min < ss + 35) return 'dusk';
+            if (min >= sr + 35 && min < ss - 35) return 'day';
+            return 'night';
+        }
+        function wxStampBn(raw) {
+            const m = String(raw || '').match(/(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})/);
+            if (!m) return '';
+            return `${wxBn(+m[3])} ${WX_MONTHS[+m[2] - 1]}, ${wxTimeBn(+m[4], +m[5])}`;
+        }
+        function wxTickClock() {
+            const p = wxParts(wxState.tz);
+            const isBD = wxState.tz === 'Asia/Dhaka';
+            const el = document.getElementById('weatherLocalTime');
+            if (el) el.textContent = `${isBD ? 'বাংলাদেশ সময়' : 'স্থানীয় সময়'}: ${WX_WEEKDAYS[p.wd]}, ${wxBn(p.d)} ${WX_MONTHS[p.mo - 1]} · ${wxTimeBn(p.h, p.m)}`;
+            const ph = wxPhaseAt(p.h * 60 + p.m, wxState.sr, wxState.ss);
+            if (ph !== wxState.phase) { wxState.phase = ph; try { WxScene.set(wxSceneTime()); } catch (e) {} }
+        }
+        function wxSceneTime() {
+            const p = wxParts(wxState.tz), min = p.h * 60 + p.m, { sr, ss } = wxState;
+            let sunP = .5, moonP = .5;
+            if (sr != null && ss != null) {
+                sunP = Math.max(0, Math.min(1, (min - sr) / Math.max(1, ss - sr)));
+                const nightLen = ((sr + 1440 - ss) % 1440) || 720;
+                moonP = Math.max(0, Math.min(1, (((min - ss) % 1440 + 1440) % 1440) / nightLen));
+            }
+            return { phase: wxState.phase, sunP, moonP, ill: wxState.ill, wax: wxState.wax };
+        }
+
+        /* ---------- আবহাওয়ার ধরন ---------- */
+        function wxKind(code, text, precip, temp) {
+            code = Number(code) || 0; text = String(text || '').toLowerCase(); precip = Number(precip) || 0;
+            const inn = (arr) => arr.includes(code);
+            if (inn([1087, 1273, 1276, 1279, 1282]) || /বজ্র|thunder/.test(text)) return { kind: 'thunder', cover: 1, dark: .9, rain: .8, snow: 0, fog: 0, thunder: true };
+            if (inn([1066, 1069, 1072, 1114, 1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1237, 1249, 1252, 1255, 1258, 1261, 1264]) || /তুষার|snow|বরফ|sleet/.test(text)) return { kind: 'snow', cover: .9, dark: .1, rain: 0, snow: 1, fog: 0 };
+            if (inn([1192, 1195, 1201, 1243, 1246]) || precip >= 4 || /ভারী বৃষ্টি|heavy rain|torrential/.test(text)) return { kind: 'heavyrain', cover: 1, dark: .55, rain: 1, snow: 0, fog: 0 };
+            if (inn([1186, 1189])) return { kind: 'rain', cover: .95, dark: .38, rain: .65, snow: 0, fog: 0 };
+            if (inn([1063, 1150, 1153, 1168, 1171, 1180, 1183, 1198, 1240]) || precip > 0 || /বৃষ্টি|rain|drizzle|shower/.test(text)) return { kind: 'rain', cover: .9, dark: .28, rain: .35, snow: 0, fog: 0 };
+            if (inn([1135, 1147]) || /fog/.test(text)) return { kind: 'fog', cover: .55, dark: .05, rain: 0, snow: 0, fog: 1 };
+            if (inn([1030]) || /কুয়াশা|mist|ধোঁয়া|haze/.test(text)) return { kind: 'mist', cover: .45, dark: .02, rain: 0, snow: 0, fog: .6 };
+            if (code === 1009 || /overcast|ঘন মেঘ/.test(text)) return { kind: 'overcast', cover: .9, dark: .22, rain: 0, snow: 0, fog: 0 };
+            if (code === 1006 || /মেঘ|cloud/.test(text) && code !== 1003) return { kind: 'cloudy', cover: .65, dark: .08, rain: 0, snow: 0, fog: 0 };
+            if (code === 1003 || /আংশিক|partly/.test(text)) return { kind: 'partly', cover: .38, dark: 0, rain: 0, snow: 0, fog: 0 };
+            return { kind: 'clear', cover: .05, dark: 0, rain: 0, snow: 0, fog: 0 };
+        }
+
+        /* ---------- প্রফেশনাল SVG আইকন ---------- */
+        function wxIcon(kind, isDay) {
+            const CL = (fill, tr) => `<g class="wxi-cloud" ${tr ? `transform="${tr}"` : ''} fill="url(#${fill})"><circle cx="25" cy="38" r="10"/><circle cx="36" cy="31" r="12"/><circle cx="47" cy="39" r="9"/><rect x="15" y="37" width="40" height="11" rx="5.5"/></g>`;
+            const SUN = (cx, cy, r, rays) => `<g transform="translate(${cx} ${cy})"><g class="wxi-rays" stroke="#ffc83d" stroke-width="3" stroke-linecap="round">${[0,45,90,135,180,225,270,315].map(a => `<line x1="0" y1="${-(r + 5)}" x2="0" y2="${-(r + 5 + rays)}" transform="rotate(${a})"/>`).join('')}</g><circle r="${r}" fill="url(#wxg-sun)"/></g>`;
+            const MOON = (tr) => `<g ${tr ? `transform="${tr}"` : ''}><path d="M38 12a19 19 0 1 0 14 31A16 16 0 0 1 38 12z" fill="url(#wxg-moon)"/><circle class="wxi-tw" cx="50" cy="16" r="1.6" fill="#fff"/><circle class="wxi-tw t2" cx="56" cy="27" r="1.2" fill="#fff"/></g>`;
+            let body = '';
+            switch (kind) {
+                case 'clear': body = isDay ? SUN(32, 32, 12, 7) : MOON(); break;
+                case 'partly': body = (isDay ? SUN(24, 24, 9, 5) : MOON('translate(-12 -8) scale(.8)')) + CL('wxg-cloud', 'translate(3 5)'); break;
+                case 'cloudy': body = CL('wxg-cloud-d', 'translate(-6 -6) scale(.85)') + CL('wxg-cloud', 'translate(4 4)'); break;
+                case 'overcast': body = CL('wxg-cloud-d', 'translate(-5 -5) scale(.85)') + CL('wxg-cloud-d', 'translate(3 5)'); break;
+                case 'rain': case 'heavyrain': {
+                    const n = kind === 'heavyrain' ? 4 : 3;
+                    let drops = ''; for (let i = 0; i < n; i++) { const x = 22 + i * (kind === 'heavyrain' ? 7 : 10); drops += `<line class="wxi-drop d${i}" x1="${x}" y1="50" x2="${x - 3}" y2="57" stroke="#5ab4ff" stroke-width="2.8" stroke-linecap="round"/>`; }
+                    body = CL('wxg-cloud-d', 'translate(0 -6)') + drops; break; }
+                case 'thunder': body = CL('wxg-cloud-d', 'translate(0 -7)') + `<path class="wxi-bolt" d="M35 38 L26 53 H32 L29 63 L42 46 H35 L39 38Z" fill="#ffd23f" stroke="#ff9a1f" stroke-width=".8" stroke-linejoin="round"/>`; break;
+                case 'snow': body = CL('wxg-cloud', 'translate(0 -6)') + [24, 34, 44].map((x, i) => `<circle class="wxi-flake f${i}" cx="${x}" cy="52" r="2.4" fill="#fff"/>`).join(''); break;
+                case 'fog': case 'mist': body = CL('wxg-cloud', 'translate(0 -8)') + [50, 55, 60].map((y, i) => `<line class="wxi-fog fg${i}" x1="${16 + i * 3}" y1="${y}" x2="${46 + i * 3}" y2="${y}" stroke="#dbe4ee" stroke-width="3" stroke-linecap="round"/>`).join(''); break;
+                default: body = SUN(32, 32, 12, 7);
+            }
+            return `<svg viewBox="0 0 64 64" class="wxi" aria-hidden="true">${body}</svg>`;
+        }
+
+        /* ---------- আবহাওয়া অনুযায়ী মজার কথা ---------- */
+        function wxFunLines(o) {
+            const L = [];
+            const add = (arr, n, tag) => { arr.slice().sort(() => Math.random() - .5).slice(0, n).forEach(([e, t]) => L.push({ e, t, tag })); };
+            const tm = o.tom;
+            if (tm) {
+                const ch = tm.chance || 0;
+                if (ch >= 60) add([
+                    ['☔', `কালকে ছাতা নিয়ে বের হন — বৃষ্টির সম্ভাবনা ${ch}%!`],
+                    ['🥘', 'বৃষ্টির দিনে খিচুড়ি আর ইলিশ ভাজা — আজই বাজার সেরে রাখুন'],
+                    ['👟', 'কালকে নতুন জুতা তুলে রাখুন, কাদাপানিতে মন খারাপ হবে 😄'],
+                    ['👕', 'কালকের জন্য কাপড় রোদে শুকাতে দেবেন না, বৃষ্টি সব ভিজিয়ে দিতে পারে'],
+                    ['🎒', 'ব্যাগে রেইনকোট বা পলিথিন রাখুন, বই-খাতা ভিজলে মুশকিল!'],
+                    ['🚌', 'বৃষ্টিতে রাস্তায় জ্যাম হতে পারে, একটু আগে রওনা দিন']], 4, 'আগামীকাল');
+                else if (ch >= 30) add([
+                    ['🌦️', 'কালকে বৃষ্টি আসতে পারে — ছাতাটা ব্যাগে রাখলে ক্ষতি নেই'],
+                    ['☁️', 'আকাশের মেজাজের ভরসা নেই, বের হওয়ার আগে একবার আকাশটা দেখে নিন'],
+                    ['🧥', 'কালকে হালকা জ্যাকেট বা ওড়না সঙ্গে রাখুন']], 2, 'আগামীকাল');
+                else add([
+                    ['😎', 'কালকে বৃষ্টির ভয় নেই — ছাতা বাসায় রেখে নির্ভয়ে ঘুরুন'],
+                    ['👕', 'কালকে কাপড় ধোয়ার সেরা দিন, রোদে ঝটপট শুকিয়ে যাবে']], 2, 'আগামীকাল');
+                if (tm.max >= 33) add([
+                    ['🥤', 'কালকে গরম বেশি — সাথে পানির বোতল রাখুন'],
+                    ['🧢', 'রোদে বের হলে টুপি বা ছাতা মাথায় দিন'],
+                    ['🍉', 'ডাবের পানি বা লেবুর শরবতে শরীর ঠান্ডা রাখুন']], 2, 'আগামীকাল');
+                if (tm.min <= 16) add([
+                    ['🧣', 'কালকে সকালে বেশ ঠান্ডা — হালকা সোয়েটার গায়ে দিন'],
+                    ['🥮', 'শীতের দিনে ভাপা পিঠা আর খেজুরের রসের কথা মনে পড়ছে না?']], 1, 'আগামীকাল');
+            }
+            const c = o.cur;
+            if (c.thunder) add([['⚡', 'বজ্রপাতের সময় খোলা মাঠে বা গাছের নিচে দাঁড়াবেন না'], ['🏠', 'ঝড়-বৃষ্টিতে নিরাপদ আশ্রয়ে থাকুন, দরকার ছাড়া বের হবেন না'], ['🔌', 'ঝড়ের সময় ফোন চার্জে দিয়ে কথা বলা এড়িয়ে চলুন']], 2, 'এখন');
+            if (c.fog) add([['🚗', 'কুয়াশায় রাস্তা ঝাপসা — গাড়ি চালালে হেডলাইট জ্বালান'], ['😷', 'কুয়াশায় ধুলাবালি বেশি, বাইরে গেলে মাস্ক পরুন']], 2, 'এখন');
+            if (c.rain > 0 && !c.thunder) add([['🌧️', 'এখন বৃষ্টি হচ্ছে — জানালার পাশে বসে চায়ের কাপে চুমুক দেওয়ার সময়'], ['🎶', 'বৃষ্টির শব্দে পুরনো গান শুনলে মন ভালো হয়ে যায়']], 1, 'এখন');
+            if (c.temp <= 17) add([['☕', 'এমন ঠান্ডায় গরম চায়ের কাপই আসল সঙ্গী'], ['🛏️', 'কম্বলের নিচে আজ ঘুম বেশি মিষ্টি লাগবে']], 1, 'এখন');
+            if (c.temp >= 34) add([['🔥', 'বাইরে বেশ গরম — দুপুরে অকারণে রোদে ঘুরবেন না']], 1, 'এখন');
+            if (c.uv >= 8) add([['🧴', 'ইউভি অনেক বেশি — সানস্ক্রিন বা ছাতা ব্যবহার করুন']], 1, 'এখন');
+            if (c.humidity >= 85) add([['💦', 'আর্দ্রতা বেশি, গা চিটচিট করবে — ফ্যান ছেড়ে বসুন']], 1, 'এখন');
+            if (c.wind >= 25) add([['🪁', 'বাতাস জোরালো — ঘুড়ি ওড়ানোর পারফেক্ট দিন! তবে ছাতা সামলে 😄']], 1, 'এখন');
+            if (c.night) add([['🌙', 'রাত হয়েছে — মোবাইল রেখে আজ তাড়াতাড়ি ঘুমিয়ে পড়ুন 😴'], ['⭐', 'আকাশ পরিষ্কার থাকলে একটু তারা গুনে দেখুন']], 1, 'এখন');
+            else if (c.kind === 'clear' || c.kind === 'partly') add([['☀️', 'চমৎকার আবহাওয়া — বন্ধুদের সাথে চা-আড্ডার জন্য পারফেক্ট'], ['🚶', 'আজ একটু হেঁটে আসুন, শরীরও ভালো থাকবে মনও']], 1, 'এখন');
+            const fill = [['💧', 'দিনে অন্তত ৮ গ্লাস পানি খেতে ভুলবেন না'], ['📲', 'বের হওয়ার আগে একবার আবহাওয়া দেখে নিন — ঠিক যেমন এখন দেখছেন 😉'], ['🌿', 'আবহাওয়া যেমনই হোক, হাসিমুখে দিন শুরু করুন'], ['🧼', 'বাইরে থেকে ফিরে হাত ধুতে ভুলবেন না']];
+            add(fill, Math.max(0, 6 - L.length), 'টিপস');
+            const seen = new Set();
+            return L.filter(x => !seen.has(x.t) && seen.add(x.t)).slice(0, 8);
+        }
+        let wxFunList = [], wxFunIdx = 0, wxFunTimer = null;
+        function wxFunShow(i) {
+            const card = document.getElementById('weatherFunCard'); if (!card || !wxFunList.length) return;
+            wxFunIdx = (i + wxFunList.length) % wxFunList.length;
+            const it = wxFunList[wxFunIdx];
+            const box = card.querySelector('.wx-fun-body');
+            box.classList.add('out');
+            setTimeout(() => {
+                card.querySelector('.wx-fun-emoji').textContent = it.e;
+                card.querySelector('.wx-fun-tag').textContent = it.tag;
+                card.querySelector('.wx-fun-text').textContent = it.t;
+                card.querySelector('.wx-fun-dots').innerHTML = wxFunList.map((_, k) => `<i class="${k === wxFunIdx ? 'on' : ''}"></i>`).join('');
+                box.classList.remove('out');
+            }, 220);
+        }
+        window.weatherFunNext = () => { wxFunShow(wxFunIdx + 1); wxFunRestart(); };
+        function wxFunRestart() {
+            clearInterval(wxFunTimer);
+            wxFunTimer = setInterval(() => {
+                const v = document.getElementById('view-weather');
+                if (!v || v.classList.contains('hidden') || document.hidden) return;
+                wxFunShow(wxFunIdx + 1);
+            }, 6500);
+        }
+        function wxFunSet(list) {
+            wxFunList = list; wxFunIdx = 0;
+            const card = document.getElementById('weatherFunCard');
+            if (!card) return;
+            if (!list.length) { card.classList.add('hidden'); return; }
+            card.classList.remove('hidden');
+            const it = list[0];
+            card.querySelector('.wx-fun-emoji').textContent = it.e;
+            card.querySelector('.wx-fun-tag').textContent = it.tag;
+            card.querySelector('.wx-fun-text').textContent = it.t;
+            card.querySelector('.wx-fun-dots').innerHTML = list.map((_, k) => `<i class="${k === 0 ? 'on' : ''}"></i>`).join('');
+            wxFunRestart();
+        }
+
+        /* =====================================================================
+           WxScene — ক্যানভাস ভিত্তিক বাস্তবধর্মী আবহাওয়া দৃশ্য
+           (আকাশের গ্রেডিয়েন্ট, সূর্য/চাঁদ/তারা, নরম মেঘ, বৃষ্টি, কাচে পানির ফোঁটা,
+            বজ্রপাত, কুয়াশা, তুষার)
+           ===================================================================== */
+        const WxScene = (() => {
+            const hex = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+            const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+            const shade = (a, f) => a.map(v => v * f);
+            const rgba = (a, al) => `rgba(${a[0] | 0},${a[1] | 0},${a[2] | 0},${al})`;
+            const rnd = (seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647);
+            const BASE = { day: ['#1672d0', '#4aa6ee', '#b6e2f8'], dawn: ['#35457f', '#d9806f', '#ffd7a3'], dusk: ['#28366e', '#bf5468', '#ffb067'], night: ['#040918', '#0b1838', '#1a2d58'] };
+            const GREY = { day: ['#6d7c8b', '#92a0ad', '#c1cad2'], dawn: ['#4b5266', '#8c8189', '#c7ae9a'], dusk: ['#3f4559', '#85737d', '#c29a86'], night: ['#0a1019', '#121a26', '#1d2836'] };
+            const CLOUD = { day: ['#ffffff', '#b4c2d3'], dawn: ['#ffe2c4', '#9d7a98'], dusk: ['#ffc89a', '#7a5679'], night: ['#8493b2', '#1e2a45'] };
+            const CLOUDG = { day: ['#cdd4dc', '#76808c'], dawn: ['#b9aeb3', '#6f6670'], dusk: ['#b59a94', '#5f5360'], night: ['#4a566b', '#171e2d'] };
+            const FOGC = { day: '#e6edf2', dawn: '#f0d9cf', dusk: '#e0c3bf', night: '#4a5a74' };
+
+            let cv, ctx, W = 0, H = 0, dpr = 1, raf = 0, running = false, visible = true, last = 0, t = 0, io = null, ro = null;
+            const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const P = { kind: 'clear', cover: .05, dark: 0, rain: 0, snow: 0, fog: 0, thunder: false, wind: 8, phase: 'day', sunP: .5, moonP: .5, ill: 60, wax: true };
+            let sprites = [], clouds = [], drops = [], glass = [], flakes = [], stars = [], fogSpr = null, fogBanks = [], moonSpr = null;
+            let bolt = null, flash = 0, nextBolt = 3, shoot = null, nextShoot = 6;
+
+            const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+            function blob(x, px, py, r, col, a) {
+                const g = x.createRadialGradient(px, py, r * .1, px, py, r);
+                g.addColorStop(0, rgba(col, a)); g.addColorStop(.6, rgba(col, a * .72)); g.addColorStop(1, rgba(col, 0));
+                x.fillStyle = g; x.beginPath(); x.arc(px, py, r, 0, 6.2832); x.fill();
+            }
+            function cloudColors() {
+                const base = CLOUD[P.phase], grey = CLOUDG[P.phase], k = Math.min(1, P.cover * .95);
+                const f = 1 - P.dark * .55;
+                return [shade(mix(hex(base[0]), hex(grey[0]), k), f), shade(mix(hex(base[1]), hex(grey[1]), k), f)];
+            }
+            function makeCloud(seed, top, bot) {
+                const w = 300, h = 140, c = mk(w, h), x = c.getContext('2d'), r = rnd(seed), puffs = [];
+                const n = 16 + Math.floor(r() * 8);
+                for (let i = 0; i < n; i++) {
+                    const px = w * (.18 + .64 * r()), spread = 1 - Math.abs(px / w - .5) * 1.7;
+                    const rad = h * (.16 + .22 * r()) * (.55 + spread * .6);
+                    puffs.push([px, h * (.64 - .34 * spread * r()), rad]);
+                }
+                for (let i = 0; i < 6; i++) puffs.push([w * (.2 + .12 * i), h * .68, h * .16]);
+                puffs.forEach(([px, py, rad]) => blob(x, px, py, rad, bot, .95));
+                puffs.forEach(([px, py, rad]) => blob(x, px - rad * .12, py - rad * .3, rad * .78, top, .82));
+                x.globalCompositeOperation = 'destination-out';
+                const g = x.createLinearGradient(0, h * .74, 0, h); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
+                x.fillStyle = g; x.fillRect(0, h * .74, w, h * .26);
+                return c;
+            }
+            function makeMoon() {
+                const s = 160, c = mk(s, s), x = c.getContext('2d'), r = 62, cx = 80, cy = 80;
+                const g = x.createRadialGradient(cx - 18, cy - 18, 8, cx, cy, r); g.addColorStop(0, '#fffef4'); g.addColorStop(1, '#d6dcea');
+                x.fillStyle = g; x.beginPath(); x.arc(cx, cy, r, 0, 6.2832); x.fill();
+                [[-22, -14, 13], [14, 10, 17], [-6, 28, 9], [26, -26, 8], [-30, 16, 7]].forEach(([dx, dy, rr]) => blob(x, cx + dx, cy + dy, rr, [150, 160, 182], .35));
+                const k = Math.max(0, Math.min(1, P.ill / 100));
+                if (k < .985) {
+                    x.globalCompositeOperation = 'destination-out';
+                    const sx = cx + (P.wax ? -1 : 1) * 2 * r * k;
+                    const sg = x.createRadialGradient(sx, cy, r * .86, sx, cy, r * 1.06); sg.addColorStop(0, 'rgba(0,0,0,1)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+                    x.fillStyle = sg; x.beginPath(); x.arc(sx, cy, r * 1.08, 0, 6.2832); x.fill();
+                    x.globalCompositeOperation = 'destination-over';
+                    x.fillStyle = 'rgba(170,185,215,.16)'; x.beginPath(); x.arc(cx, cy, r, 0, 6.2832); x.fill();
+                }
+                return c;
+            }
+            function makeFog() {
+                const w = 640, h = 190, c = mk(w, h), x = c.getContext('2d'), r = rnd(77), col = hex(FOGC[P.phase]);
+                for (let i = 0; i < 26; i++) blob(x, w * r(), h * (.3 + .4 * r()), h * (.28 + .3 * r()), col, .2);
+                return c;
+            }
+            function skyColors() {
+                const b = BASE[P.phase].map(hex), g = GREY[P.phase].map(hex);
+                const f = 1 - P.dark * (P.phase === 'night' ? .5 : .62);
+                const fc = hex(FOGC[P.phase]);
+                return b.map((c, i) => {
+                    let m = shade(mix(c, g[i], P.cover), f);
+                    if (P.fog > 0) m = mix(m, shade(fc, P.phase === 'night' ? .55 : .8), P.fog * .5);
+                    return m;
+                });
+            }
+
+            function rebuild() {
+                if (!W) return;
+                const [top, bot] = cloudColors();
+                sprites = [1, 2, 3, 4].map(i => makeCloud(i * 977, top, bot));
+                const night = P.phase === 'night';
+                let cnt = Math.round(2 + P.cover * 9);
+                if (P.kind === 'clear') cnt = night ? 1 : 3;
+                const r = rnd(4242), sc0 = Math.max(.7, W / 360);
+                clouds = [];
+                for (let i = 0; i < cnt; i++) {
+                    const sc = (.7 + r() * 1.3) * sc0;
+                    clouds.push({ s: Math.floor(r() * 4), x: r() * (W + 300 * sc) - 300 * sc * .5, y: H * (.0 + r() * .5), sc, sp: (5 + r() * 9) * (.5 + P.wind / 22), a: .55 + r() * .4, front: r() > .5 });
+                }
+                clouds.sort((a, b) => a.sc - b.sc);
+                // বৃষ্টির রেখা
+                const area = (W * H) / (360 * 300);
+                const dn = P.rain > 0 ? Math.max(40, Math.min(420, Math.round((50 + 280 * P.rain) * area))) : 0;
+                drops = Array.from({ length: dn }, () => { const z = .4 + Math.random() * .6; return { x: Math.random() * (W + 80) - 40, y: Math.random() * H, z, len: 9 + z * 20, sp: 520 + z * 620 }; });
+                // কাচে পানির ফোঁটা
+                const gn = P.rain > 0 ? Math.round((8 + P.rain * 14) * Math.min(1.4, area)) : 0;
+                glass = Array.from({ length: gn }, () => ({ x: Math.random() * W, y: Math.random() * H * .95, r: 1.6 + Math.random() * 2.8, vy: 0, wait: Math.random() * 6, sliding: false, dist: 0, trail: 0 }));
+                flakes = P.snow > 0 ? Array.from({ length: Math.round(90 * area) }, () => ({ x: Math.random() * W, y: Math.random() * H, r: .8 + Math.random() * 2.6, sp: 25 + Math.random() * 55, ph: Math.random() * 6.28 })) : [];
+                if (!stars.length || stars.length !== 110) stars = Array.from({ length: 110 }, () => ({ x: Math.random(), y: Math.random() * .75, r: .4 + Math.random() * 1.1, ph: Math.random() * 6.28, sp: 1 + Math.random() * 2.5 }));
+                moonSpr = makeMoon();
+                fogSpr = P.fog > 0 ? makeFog() : null;
+                fogBanks = P.fog > 0 ? [0, 1, 2, 3].map(i => ({ y: H * (.18 + i * .22), x: -Math.random() * 300, sp: (i % 2 ? -1 : 1) * (4 + Math.random() * 7), a: P.fog * (.55 + Math.random() * .35), sc: 1 + Math.random() * .6 })) : [];
+            }
+
+            function resize() {
+                if (!cv) return;
+                const w = cv.clientWidth, h = cv.clientHeight;
+                if (w < 10 || h < 10) return;
+                dpr = Math.min(2, window.devicePixelRatio || 1);
+                if (Math.abs(w - W) > 1 || Math.abs(h - H) > 1) {
+                    W = w; H = h; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+                    rebuild();
+                }
+            }
+
+            function genBolt(x1, y1, x2, y2, d, out) {
+                const L = Math.hypot(x2 - x1, y2 - y1);
+                if (d <= 0 || L < 8) { out.push([x2, y2]); return; }
+                const mx = (x1 + x2) / 2 + (Math.random() - .5) * L * .5, my = (y1 + y2) / 2 + (Math.random() - .5) * 8;
+                genBolt(x1, y1, mx, my, d - 1, out); genBolt(mx, my, x2, y2, d - 1, out);
+            }
+            function newBolt() {
+                const x0 = W * (.15 + Math.random() * .7), y1 = H * (.5 + Math.random() * .3);
+                const main = [[x0, 0]]; genBolt(x0, 0, x0 + (Math.random() - .5) * 80, y1, 5, main);
+                const br = [];
+                for (let i = 0; i < 2; i++) {
+                    const p = main[Math.floor(main.length * (.3 + Math.random() * .4))], pts = [p];
+                    genBolt(p[0], p[1], p[0] + (Math.random() - .5) * 120, p[1] + 50 + Math.random() * 60, 3, pts); br.push(pts);
+                }
+                bolt = { main, br, life: 0 };
+                flash = 1;
+            }
+
+            function update(dt) {
+                t += dt;
+                const slant = Math.min(.55, P.wind / 70) + .08;
+                clouds.forEach(c => { c.x += c.sp * dt; if (c.x > W + 20) c.x = -300 * c.sc; });
+                drops.forEach(d => { d.y += d.sp * dt; d.x += d.sp * slant * dt; if (d.y > H + 20) { d.y = -d.len; d.x = Math.random() * (W + 80) - 60; } });
+                glass.forEach(g => {
+                    g.wait -= dt;
+                    if (g.sliding) {
+                        g.vy = Math.min(75, g.vy + 65 * dt); g.y += g.vy * dt; g.trail += g.vy * dt; g.dist -= g.vy * dt;
+                        if (g.dist <= 0) { g.sliding = false; g.vy = 0; g.wait = 2 + Math.random() * 6; }
+                    } else {
+                        if (g.wait <= 0) { g.sliding = true; g.dist = 25 + Math.random() * 110; g.vy = 8; }
+                        if (g.trail > 0) g.trail = Math.max(0, g.trail - 9 * dt);
+                    }
+                    if (g.y > H + 10) { g.y = -4; g.x = Math.random() * W; g.trail = 0; g.sliding = false; g.wait = 1 + Math.random() * 4; }
+                });
+                flakes.forEach(f => { f.y += f.sp * dt; f.x += Math.sin(t * .8 + f.ph) * 14 * dt + P.wind * .3 * dt; if (f.y > H + 6) { f.y = -6; f.x = Math.random() * W; } if (f.x > W + 6) f.x = -6; });
+                fogBanks.forEach(b => { b.x += b.sp * dt; const w = 640 * b.sc; if (b.x > W) b.x = -w; if (b.x < -w) b.x = W; });
+                if (P.thunder) {
+                    nextBolt -= dt;
+                    if (nextBolt <= 0) { if (Math.random() < .6) newBolt(); else flash = .8; nextBolt = 3 + Math.random() * 6; }
+                }
+                if (bolt) { bolt.life += dt; if (bolt.life > .5) bolt = null; }
+                flash = Math.max(0, flash - dt * 2.6);
+                if (P.phase === 'night' && P.cover < .3) {
+                    nextShoot -= dt;
+                    if (nextShoot <= 0 && !shoot) { shoot = { x: W * (.2 + Math.random() * .6), y: H * (.05 + Math.random() * .25), life: 0 }; nextShoot = 7 + Math.random() * 9; }
+                }
+                if (shoot) { shoot.life += dt; if (shoot.life > .8) shoot = null; }
+            }
+
+            function draw() {
+                if (!ctx || !W) return;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.clearRect(0, 0, W, H);
+                // আকাশ
+                const sc = skyColors();
+                const sg = ctx.createLinearGradient(0, 0, 0, H);
+                sg.addColorStop(0, rgba(sc[0], 1)); sg.addColorStop(.55, rgba(sc[1], 1)); sg.addColorStop(1, rgba(sc[2], 1));
+                ctx.fillStyle = sg; ctx.fillRect(0, 0, W, H);
+
+                const clear = 1 - Math.min(1, P.cover * 1.05);
+                // তারা
+                const sa = P.phase === 'night' ? clear : (P.phase === 'dawn' || P.phase === 'dusk') ? clear * .25 : 0;
+                if (sa > .02) {
+                    stars.forEach(s => {
+                        const a = sa * (.55 + .45 * Math.sin(t * s.sp + s.ph));
+                        ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.beginPath(); ctx.arc(s.x * W, s.y * H, s.r, 0, 6.2832); ctx.fill();
+                        if (s.r > 1.2) { ctx.fillStyle = `rgba(200,220,255,${a * .25})`; ctx.beginPath(); ctx.arc(s.x * W, s.y * H, s.r * 3, 0, 6.2832); ctx.fill(); }
+                    });
+                    if (shoot) {
+                        const p = shoot.life / .8, x = shoot.x + p * 150, y = shoot.y + p * 70, a = Math.sin(p * Math.PI);
+                        const g = ctx.createLinearGradient(x, y, x - 60, y - 28); g.addColorStop(0, `rgba(255,255,255,${a})`); g.addColorStop(1, 'rgba(255,255,255,0)');
+                        ctx.strokeStyle = g; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 60, y - 28); ctx.stroke();
+                    }
+                }
+                // চাঁদ
+                if (P.phase === 'night') {
+                    const a = Math.max(.12, 1 - P.cover * .88), mx = W * (.14 + .72 * P.moonP), my = H * (.52 - .4 * Math.sin(Math.PI * P.moonP)) + 6;
+                    const gl = ctx.createRadialGradient(mx, my, 6, mx, my, W * .42);
+                    gl.addColorStop(0, `rgba(190,210,255,${.32 * a})`); gl.addColorStop(1, 'rgba(190,210,255,0)');
+                    ctx.fillStyle = gl; ctx.fillRect(0, 0, W, H);
+                    ctx.globalAlpha = a; ctx.drawImage(moonSpr, mx - 24, my - 24, 48, 48); ctx.globalAlpha = 1;
+                }
+                // সূর্য
+                if (P.phase !== 'night') {
+                    const a = Math.max(0, 1 - P.cover * .92), sx = W * (.1 + .8 * P.sunP), sy = H * (.58 - .46 * Math.sin(Math.PI * P.sunP)) + 4;
+                    if (a > .03) {
+                        const warm = P.phase === 'day' ? [255, 236, 170] : [255, 150, 90];
+                        const gl = ctx.createRadialGradient(sx, sy, 4, sx, sy, W * .62);
+                        gl.addColorStop(0, rgba(warm, .55 * a)); gl.addColorStop(.25, rgba(warm, .22 * a)); gl.addColorStop(1, rgba(warm, 0));
+                        ctx.fillStyle = gl; ctx.fillRect(0, 0, W, H);
+                        if (P.cover < .55) {
+                            ctx.save(); ctx.translate(sx, sy); ctx.rotate(t * .03); ctx.globalCompositeOperation = 'lighter';
+                            for (let i = 0; i < 10; i++) {
+                                ctx.rotate(6.2832 / 10);
+                                const rg = ctx.createLinearGradient(0, 0, 0, -W * .8); rg.addColorStop(0, rgba(warm, .13 * a)); rg.addColorStop(1, rgba(warm, 0));
+                                ctx.fillStyle = rg; ctx.beginPath(); ctx.moveTo(-5, 0); ctx.lineTo(5, 0); ctx.lineTo(20, -W * .8); ctx.lineTo(-20, -W * .8); ctx.fill();
+                            }
+                            ctx.restore();
+                        }
+                        const core = ctx.createRadialGradient(sx, sy, 0, sx, sy, 24);
+                        core.addColorStop(0, `rgba(255,255,245,${a})`); core.addColorStop(.5, rgba(P.phase === 'day' ? [255, 238, 160] : [255, 170, 100], .95 * a)); core.addColorStop(1, rgba(warm, 0));
+                        ctx.fillStyle = core; ctx.beginPath(); ctx.arc(sx, sy, 24, 0, 6.2832); ctx.fill();
+                    }
+                }
+                // মেঘ (পেছনের স্তর)
+                const ca = .35 + .65 * Math.min(1, P.cover * 1.6);
+                const drawCloud = c => { ctx.globalAlpha = c.a * ca; ctx.drawImage(sprites[c.s], c.x, c.y, 300 * c.sc, 140 * c.sc); };
+                clouds.forEach(c => { if (!c.front) drawCloud(c); });
+                // ঘন মেঘের ছাদ
+                if (P.cover > .6) {
+                    ctx.globalAlpha = 1;
+                    const dk = shade(hex(GREY[P.phase][0]), (P.phase === 'night' ? .55 : .7) * (1 - P.dark * .5));
+                    const cg = ctx.createLinearGradient(0, 0, 0, H * .62);
+                    cg.addColorStop(0, rgba(dk, .75 * Math.min(1, (P.cover - .5) * 2))); cg.addColorStop(1, rgba(dk, 0));
+                    ctx.fillStyle = cg; ctx.fillRect(0, 0, W, H * .62);
+                }
+                clouds.forEach(c => { if (c.front) drawCloud(c); });
+                ctx.globalAlpha = 1;
+                // কুয়াশা
+                if (P.fog > 0 && fogSpr) {
+                    fogBanks.forEach(b => { ctx.globalAlpha = b.a; ctx.drawImage(fogSpr, b.x, b.y, 640 * b.sc, 190 * b.sc); });
+                    ctx.globalAlpha = 1;
+                    const fc = hex(FOGC[P.phase]), vg = ctx.createLinearGradient(0, 0, 0, H);
+                    vg.addColorStop(0, rgba(fc, .06 * P.fog)); vg.addColorStop(1, rgba(fc, .34 * P.fog));
+                    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+                }
+                // বৃষ্টি
+                if (drops.length) {
+                    const slant = Math.min(.55, P.wind / 70) + .08;
+                    [[.7, .22, .8], [1.01, .5, 1.4]].forEach(([zmax, al, lw], bi) => {
+                        ctx.strokeStyle = `rgba(205,228,255,${al})`; ctx.lineWidth = lw; ctx.beginPath();
+                        drops.forEach(d => { if ((bi === 0 && d.z <= .7) || (bi === 1 && d.z > .7)) { ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.len * slant, d.y - d.len); } });
+                        ctx.stroke();
+                    });
+                    const mg = ctx.createLinearGradient(0, H * .7, 0, H); mg.addColorStop(0, 'rgba(220,235,255,0)'); mg.addColorStop(1, `rgba(220,235,255,${.12 * P.rain})`);
+                    ctx.fillStyle = mg; ctx.fillRect(0, H * .7, W, H * .3);
+                }
+                // তুষার
+                flakes.forEach(f => { ctx.fillStyle = `rgba(255,255,255,${.4 + f.r * .18})`; ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.2832); ctx.fill(); });
+                // বজ্রপাত
+                if (bolt) {
+                    const l = bolt.life, a = l < .08 ? 1 : l < .14 ? .25 : l < .22 ? 1 : Math.max(0, 1 - (l - .22) / .28);
+                    const strokePts = (pts, w, al) => { ctx.lineWidth = w; ctx.strokeStyle = `rgba(255,255,255,${al})`; ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke(); };
+                    ctx.save(); ctx.lineJoin = 'round'; ctx.shadowColor = 'rgba(160,195,255,.95)'; ctx.shadowBlur = 18;
+                    strokePts(bolt.main, 2.6, a); bolt.br.forEach(b => strokePts(b, 1.4, a * .8));
+                    ctx.restore();
+                }
+                if (flash > .01) { ctx.fillStyle = `rgba(205,220,255,${flash * .38})`; ctx.fillRect(0, 0, W, H); }
+                // কাচে পানির ফোঁটা
+                glass.forEach(g => {
+                    if (g.trail > 0) { ctx.strokeStyle = 'rgba(255,255,255,.10)'; ctx.lineWidth = g.r * .8; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(g.x, g.y - g.trail); ctx.lineTo(g.x, g.y); ctx.stroke(); }
+                    const gr = ctx.createRadialGradient(g.x - g.r * .3, g.y - g.r * .35, g.r * .1, g.x, g.y, g.r * 1.05);
+                    gr.addColorStop(0, 'rgba(255,255,255,.6)'); gr.addColorStop(.4, 'rgba(255,255,255,.07)'); gr.addColorStop(1, 'rgba(255,255,255,.3)');
+                    ctx.fillStyle = gr; ctx.beginPath(); ctx.ellipse(g.x, g.y, g.r * .82, g.r * 1.05, 0, 0, 6.2832); ctx.fill();
+                });
+                // ভিগনেট
+                const vg2 = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .35, W / 2, H / 2, Math.max(W, H) * .75);
+                vg2.addColorStop(0, 'rgba(0,0,0,0)'); vg2.addColorStop(1, 'rgba(0,0,0,.28)');
+                ctx.fillStyle = vg2; ctx.fillRect(0, 0, W, H);
+            }
+
+            function loop(ts) {
+                if (!running) return;
+                raf = requestAnimationFrame(loop);
+                const dt = Math.min(.05, (ts - last) / 1000); last = ts;
+                if (dt <= 0) return;
+                if (!W) resize();
+                if (!W) return;
+                update(dt); draw();
+            }
+            function start() {
+                if (running || reduced || !cv || !visible || document.hidden) return;
+                running = true; last = performance.now(); raf = requestAnimationFrame(loop);
+            }
+            function stop() { running = false; cancelAnimationFrame(raf); }
+
+            return {
+                mount(canvas) {
+                    if (cv === canvas) return;
+                    cv = canvas; ctx = cv.getContext('2d');
+                    if ('ResizeObserver' in window) { ro = new ResizeObserver(() => { resize(); if (!running) draw(); }); ro.observe(cv); }
+                    if ('IntersectionObserver' in window) { io = new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) { resize(); start(); } else stop(); }, { threshold: .01 }); io.observe(cv); }
+                    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
+                },
+                set(p) { Object.assign(P, p); resize(); rebuild(); if (W) { draw(); start(); } },
+                _P: P, _draw: draw, _resize: resize, _update: update
+            };
+        })();
+
+        /* ---------- UI সাহায্যকারী ---------- */
         function weatherHideAll() {
-            ['weatherLoading', 'weatherError', 'weatherCurrentCard', 'weatherTomorrowCard', 'weatherForecastCard', 'weatherDistrictTip'].forEach(id => {
-                document.getElementById(id)?.classList.add('hidden');
-            });
+            ['weatherLoading', 'weatherError', 'weatherCurrentCard', 'weatherFunCard', 'weatherTomorrowCard', 'weatherForecastCard', 'weatherDistrictTip'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
             document.getElementById('weatherSuggestions')?.classList.add('hidden');
         }
-        function weatherShowLoading() {
-            weatherHideAll();
-            document.getElementById('weatherLoading')?.classList.remove('hidden');
-        }
+        function weatherShowLoading() { weatherHideAll(); document.getElementById('weatherLoading')?.classList.remove('hidden'); }
         function weatherShowError(msg) {
             weatherHideAll();
-            const el = document.getElementById('weatherError');
             const t = document.getElementById('weatherErrorText');
             if (t) t.textContent = msg || 'আবহাওয়া পাওয়া যায়নি। ইন্টারনেট চেক করে আবার চেষ্টা করুন।';
-            el?.classList.remove('hidden');
+            document.getElementById('weatherError')?.classList.remove('hidden');
         }
-
-        async function weatherFetchJson(path, params = {}) {
+        async function weatherFetchJson(path, params = {}, signal) {
             const q = new URLSearchParams({ key: WEATHER_API_KEY, lang: 'bn', ...params });
-            const url = `${WEATHER_BASE}${path}?${q.toString()}`;
-            if (weatherAbort) try { weatherAbort.abort(); } catch (e) {}
-            weatherAbort = new AbortController();
-            const res = await fetch(url, { signal: weatherAbort.signal, cache: 'no-store' });
-            if (!res.ok) {
-                const errBody = await res.text().catch(() => '');
-                throw new Error(`HTTP ${res.status}${errBody ? ': ' + errBody.slice(0, 80) : ''}`);
-            }
+            const res = await fetch(`${WEATHER_BASE}${path}?${q.toString()}`, { signal, cache: 'no-store' });
+            if (!res.ok) { const b = await res.text().catch(() => ''); throw new Error(`HTTP ${res.status}${b ? ': ' + b.slice(0, 80) : ''}`); }
             return res.json();
         }
-
         function weatherBnChance(pct) {
             const n = Number(pct) || 0;
             if (n >= 70) return `${n}% — বৃষ্টি হওয়ার সম্ভাবনা বেশি`;
@@ -13450,423 +13770,309 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             return `${n}% — প্রায় বৃষ্টিহীন`;
         }
         function weatherBnSun(day) {
-            const code = day?.condition?.code;
-            const text = (day?.condition?.text || '').toLowerCase();
-            if (code === 1000 || text.includes('রৌদ্রোজ্জ্বল') || text.includes('সূর্য') || text.includes('sunny') || text.includes('clear')) return 'রোদ উঠবে / আকাশ পরিষ্কার';
-            if (code === 1003 || text.includes('আংশিক') || text.includes('partly')) return 'আংশিক মেঘলা, মাঝে মাঝে রোদ';
-            if (text.includes('মেঘ') || text.includes('cloud') || text.includes('overcast')) return 'মেঘলা আকাশ';
-            if (text.includes('বৃষ্টি') || text.includes('rain') || text.includes('বজ্র')) return 'মেঘলা ও বৃষ্টির সম্ভাবনা';
-            return day?.condition?.text || 'সাধারণ আবহাওয়া';
+            const k = wxKind(day?.condition?.code, day?.condition?.text, day?.totalprecip_mm, day?.avgtemp_c).kind;
+            return ({ clear: 'রোদ উঠবে / আকাশ পরিষ্কার', partly: 'আংশিক মেঘলা, মাঝে মাঝে রোদ', cloudy: 'মেঘলা আকাশ', overcast: 'ঘন মেঘে ঢাকা আকাশ', rain: 'মেঘলা ও বৃষ্টির সম্ভাবনা', heavyrain: 'মেঘলা ও ভারী বৃষ্টি', thunder: 'বজ্রসহ ঝড়-বৃষ্টি', snow: 'তুষারপাত', fog: 'ঘন কুয়াশা', mist: 'কুয়াশাচ্ছন্ন আকাশ' })[k] || (day?.condition?.text || 'সাধারণ আবহাওয়া');
         }
         function weatherFormatDateBn(dateStr) {
-            try {
-                const d = new Date(dateStr + 'T12:00:00');
-                return d.toLocaleDateString('bn-BD', { weekday: 'long', day: 'numeric', month: 'long' });
-            } catch (e) { return dateStr; }
-        }
-        /** Map WeatherAPI condition → live animated scene */
-        function weatherApplyScene(cur) {
-            const scene = document.getElementById('weatherScene');
-            if (!scene || !cur) return;
-            const code = Number(cur.condition?.code) || 0;
-            const text = String(cur.condition?.text || '').toLowerCase();
-            const isDay = cur.is_day === 1;
-            const temp = Number(cur.temp_c);
-            const precip = Number(cur.precip_mm) || 0;
-
-            // Remove previous scene classes
-            scene.className = 'weather-scene';
-
-            let kind = 'wx-clear';
-            // Thunder
-            if ([1087, 1273, 1276, 1279, 1282].includes(code) || text.includes('বজ্র') || text.includes('thunder')) {
-                kind = 'wx-thunder';
-            } else if ([1114, 1117, 1210, 1213, 1216, 1219, 1222, 1225, 1237, 1255, 1258, 1261, 1264].includes(code) || text.includes('তুষার') || text.includes('snow') || text.includes('বরফ')) {
-                kind = 'wx-snow';
-            } else if ([1186, 1189, 1192, 1195, 1201, 1243, 1246].includes(code) || precip >= 4 || text.includes('ভারী বৃষ্টি') || text.includes('heavy rain')) {
-                kind = 'wx-heavyrain';
-            } else if ([1063, 1150, 1153, 1168, 1171, 1180, 1183, 1198, 1240].includes(code) || precip > 0 || text.includes('বৃষ্টি') || text.includes('rain') || text.includes('drizzle')) {
-                kind = 'wx-rain';
-            } else if ([1030, 1135, 1147].includes(code) || text.includes('কুয়াশা') || text.includes('fog') || text.includes('mist') || text.includes('হাওয়া')) {
-                kind = (text.includes('কুয়াশা') || text.includes('fog')) ? 'wx-fog' : 'wx-mist';
-            } else if ([1006, 1009].includes(code) || text.includes('মেঘ') || text.includes('overcast') || text.includes('cloud')) {
-                kind = code === 1009 || text.includes('overcast') ? 'wx-overcast' : 'wx-cloudy';
-            } else if (temp <= 12) {
-                kind = 'wx-cold';
-            } else {
-                kind = 'wx-clear';
-            }
-
-            scene.classList.add(kind);
-            if (!isDay) scene.classList.add('wx-night');
-
-            // Rain drops density
-            const rainLayer = document.getElementById('weatherRainLayer');
-            if (rainLayer) {
-                rainLayer.innerHTML = '';
-                rainLayer.classList.remove('on', 'wx-rain-on');
-                if (kind === 'wx-rain' || kind === 'wx-heavyrain' || kind === 'wx-thunder') {
-                    const count = kind === 'wx-heavyrain' || kind === 'wx-thunder' ? 48 : 28;
-                    for (let i = 0; i < count; i++) {
-                        const d = document.createElement('span');
-                        d.className = 'drop';
-                        d.style.left = (Math.random() * 100) + '%';
-                        d.style.animationDuration = (0.45 + Math.random() * 0.7) + 's';
-                        d.style.animationDelay = (Math.random() * 1.8) + 's';
-                        d.style.opacity = String(0.35 + Math.random() * 0.55);
-                        rainLayer.appendChild(d);
-                    }
-                    rainLayer.classList.add('on');
-                }
-            }
-
-            // Snow flakes
-            const snowLayer = document.getElementById('weatherSnowLayer');
-            if (snowLayer) {
-                snowLayer.innerHTML = '';
-                snowLayer.classList.remove('on');
-                if (kind === 'wx-snow') {
-                    for (let i = 0; i < 32; i++) {
-                        const f = document.createElement('span');
-                        f.className = 'flake';
-                        f.style.left = (Math.random() * 100) + '%';
-                        f.style.width = f.style.height = (3 + Math.random() * 5) + 'px';
-                        f.style.animationDuration = (2.5 + Math.random() * 4) + 's';
-                        f.style.animationDelay = (Math.random() * 3) + 's';
-                        snowLayer.appendChild(f);
-                    }
-                    snowLayer.classList.add('on');
-                }
-            }
+            const m = String(dateStr).match(/(\d{4})-(\d{2})-(\d{2})/);
+            if (!m) return dateStr;
+            const d = new Date(+m[1], +m[2] - 1, +m[3], 12);
+            return `${WX_WEEKDAYS[d.getDay()]} ${wxBn(+m[3])} ${WX_MONTHS[+m[2] - 1]}`;
         }
 
-        /** 24-hour local time display — e.g. "২১ নভেম্বর, ২৩:১৪" */
-        function weatherFormatLocalTime(raw) {
-            if (!raw) return '—';
-            try {
-                // WeatherAPI: "2026-11-21 23:14" or "2026-11-21 23:14"
-                const m = String(raw).match(/(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})/);
-                if (m) {
-                    const y = +m[1], mo = +m[2], da = +m[3], hh = +m[4], mi = +m[5];
-                    const d = new Date(y, mo - 1, da, hh, mi);
-                    const datePart = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long' });
-                    const hh24 = String(hh).padStart(2, '0');
-                    const mm = String(mi).padStart(2, '0');
-                    return `${datePart}, ${hh24}:${mm}`;
-                }
-                const d = new Date(raw);
-                if (!isNaN(d.getTime())) {
-                    const datePart = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long' });
-                    const hh = String(d.getHours()).padStart(2, '0');
-                    const mi = String(d.getMinutes()).padStart(2, '0');
-                    return `${datePart}, ${hh}:${mi}`;
-                }
-            } catch (e) {}
-            return String(raw);
-        }
-
-        function weatherRender(data, queryLabel) {
-            if (!data || !data.location || !data.current) {
-                weatherShowError('ডেটা পাওয়া যায়নি');
-                return;
-            }
+        /* ---------- রেন্ডার ---------- */
+        function weatherRender(data, meta) {
+            meta = meta || {};
+            if (!data || !data.location || !data.current) { weatherShowError('ডেটা পাওয়া যায়নি'); return; }
             weatherHideAll();
-            const loc = data.location;
-            const cur = data.current;
-            const forecast = data.forecast?.forecastday || [];
+            const loc = data.location, cur = data.current, forecast = data.forecast?.forecastday || [];
+            const astro = forecast[0]?.astro || {};
+            wxState.tz = loc.tz_id || 'Asia/Dhaka';
+            wxState.sr = wxParseAstro(astro.sunrise); wxState.ss = wxParseAstro(astro.sunset);
+            wxState.ill = Number(astro.moon_illumination); if (isNaN(wxState.ill)) wxState.ill = 60;
+            wxState.wax = !/wan|last/i.test(astro.moon_phase || '');
+            const pp = wxParts(wxState.tz);
+            wxState.phase = (wxState.sr == null) ? (cur.is_day === 1 ? 'day' : 'night') : wxPhaseAt(pp.h * 60 + pp.m, wxState.sr, wxState.ss);
+            const isDay = wxState.phase !== 'night';
 
-            const nameEl = document.getElementById('weatherLocationName');
-            const timeEl = document.getElementById('weatherLocalTime');
-            const tempEl = document.getElementById('weatherTemp');
-            const feelsEl = document.getElementById('weatherFeelsLike');
-            const condEl = document.getElementById('weatherCondition');
-            const iconEl = document.getElementById('weatherIcon');
-            const updatedEl = document.getElementById('weatherLastUpdated');
-            const humEl = document.getElementById('weatherHumidity');
-            const windEl = document.getElementById('weatherWind');
-            const rainEl = document.getElementById('weatherRainChance');
-            const uvEl = document.getElementById('weatherUv');
+            const K = wxKind(cur.condition?.code, cur.condition?.text, cur.precip_mm, cur.temp_c);
+            const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
 
-            if (nameEl) {
-                // Prefer clean BD name: City, Region
-                const parts = [loc.name];
-                if (loc.region && loc.region !== loc.name) parts.push(loc.region);
-                if (loc.country) parts.push(loc.country);
-                nameEl.textContent = parts.join(' · ');
-            }
-            if (timeEl) timeEl.textContent = 'স্থানীয় সময়: ' + weatherFormatLocalTime(loc.localtime);
-            if (tempEl) tempEl.textContent = `${Math.round(cur.temp_c)}°`;
-            if (feelsEl) feelsEl.textContent = `অনুভূত ${Math.round(cur.feelslike_c)}°`;
-            if (condEl) condEl.textContent = cur.condition?.text || '—';
-            if (iconEl && cur.condition?.icon) {
-                iconEl.src = cur.condition.icon.startsWith('//') ? 'https:' + cur.condition.icon : cur.condition.icon;
-                iconEl.alt = cur.condition?.text || '';
-            }
-            if (updatedEl) updatedEl.textContent = cur.last_updated ? 'আপডেট: ' + weatherFormatLocalTime(cur.last_updated) : '';
-            if (humEl) humEl.textContent = `${cur.humidity}%`;
-            if (windEl) windEl.textContent = `${Math.round(cur.wind_kph)} কিমি/ঘণ্টা`;
+            const isBD = /bangladesh/i.test(loc.country || '');
+            const name = meta.label || [loc.name, loc.region].filter(Boolean).join(', ');
+            set('weatherLocationName', `${name} · ${isBD ? 'বাংলাদেশ' : (loc.country || '')}`);
+            set('weatherSourceBadge', meta.kind === 'home' ? '📍 আপনার জেলা' : meta.kind === 'gps' ? '🎯 লাইভ লোকেশন' : '🔎 সার্চ করা স্থান');
+            wxTickClock();
+            clearInterval(wxClockTimer); wxClockTimer = setInterval(wxTickClock, 20000);
+            set('weatherTemp', `${Math.round(cur.temp_c)}°`);
+            set('weatherFeelsLike', `অনুভূত ${Math.round(cur.feelslike_c)}°`);
+            set('weatherCondition', cur.condition?.text || '—');
+            document.getElementById('weatherIcon').innerHTML = wxIcon(K.kind, isDay);
+            set('weatherLastUpdated', cur.last_updated ? 'আপডেট: ' + wxStampBn(cur.last_updated) : '');
+            set('weatherHumidity', `${cur.humidity}%`);
+            set('weatherWind', `${Math.round(cur.wind_kph)} কিমি/ঘণ্টা`);
             const todayChance = forecast[0]?.day?.daily_chance_of_rain;
-            if (rainEl) rainEl.textContent = todayChance != null ? `${todayChance}%` : (cur.precip_mm > 0 ? 'হ্যাঁ' : 'কম');
-            if (uvEl) uvEl.textContent = String(cur.uv ?? '—');
-
+            set('weatherRainChance', todayChance != null ? `${todayChance}%` : (cur.precip_mm > 0 ? 'হ্যাঁ' : 'কম'));
+            set('weatherUv', String(cur.uv ?? '—'));
+        
             document.getElementById('weatherCurrentCard')?.classList.remove('hidden');
-            try { weatherApplyScene(cur); } catch (e) { console.warn('weather scene', e); }
+            try {
+                WxScene.mount(document.getElementById('weatherCanvas'));
+                WxScene.set(Object.assign({ kind: K.kind, cover: K.cover, dark: K.dark, rain: K.rain, snow: K.snow, fog: K.fog, thunder: !!K.thunder, wind: Number(cur.wind_kph) || 0 }, wxSceneTime()));
+            } catch (e) { console.warn('weather scene', e); }
 
-            // Tomorrow (day index 1)
+            // আগামীকাল
             const tomorrow = forecast[1];
+            let tomInfo = null;
             if (tomorrow) {
+                const d = tomorrow.day, chance = d.daily_chance_of_rain ?? 0;
+                tomInfo = { chance, max: d.maxtemp_c, min: d.mintemp_c };
                 document.getElementById('weatherTomorrowCard')?.classList.remove('hidden');
-                const d = tomorrow.day;
-                document.getElementById('weatherTomorrowDate').textContent = weatherFormatDateBn(tomorrow.date);
-                const tIcon = document.getElementById('weatherTomorrowIcon');
-                if (tIcon && d.condition?.icon) {
-                    tIcon.src = d.condition.icon.startsWith('//') ? 'https:' + d.condition.icon : d.condition.icon;
-                }
-                document.getElementById('weatherTomorrowCond').textContent = d.condition?.text || '—';
-                document.getElementById('weatherTomorrowTemp').textContent = `সর্বোচ্চ ${Math.round(d.maxtemp_c)}° · সর্বনিম্ন ${Math.round(d.mintemp_c)}°`;
-                const chance = d.daily_chance_of_rain ?? 0;
-                document.getElementById('weatherTomorrowRain').textContent = weatherBnChance(chance);
-                document.getElementById('weatherTomorrowSun').textContent = weatherBnSun(d);
-                let note = '';
-                if (chance >= 60) note = 'আগামীকাল ছাতা সাথে রাখুন। বাইরে বের হলে সাবধানে থাকুন।';
-                else if (chance >= 30) note = 'হালকা বৃষ্টি হতে পারে। প্রয়োজনে ছাতা নিন।';
-                else note = 'আগামীকাল সাধারণত শুষ্ক থাকার সম্ভাবনা বেশি।';
+                set('weatherTomorrowDate', weatherFormatDateBn(tomorrow.date));
+                document.getElementById('weatherTomorrowIcon').innerHTML = wxIcon(wxKind(d.condition?.code, d.condition?.text, d.totalprecip_mm, d.avgtemp_c).kind, true);
+                set('weatherTomorrowCond', d.condition?.text || '—');
+                set('weatherTomorrowTemp', `সর্বোচ্চ ${Math.round(d.maxtemp_c)}° · সর্বনিম্ন ${Math.round(d.mintemp_c)}°`);
+                set('weatherTomorrowRain', weatherBnChance(chance));
+                set('weatherTomorrowSun', weatherBnSun(d));
+                let note = chance >= 60 ? 'আগামীকাল ছাতা সাথে রাখুন। বাইরে বের হলে সাবধানে থাকুন।' : chance >= 30 ? 'হালকা বৃষ্টি হতে পারে। প্রয়োজনে ছাতা নিন।' : 'আগামীকাল সাধারণত শুষ্ক থাকার সম্ভাবনা বেশি।';
                 if (d.maxtemp_c >= 35) note += ' তাপমাত্রা বেশ বেশি থাকতে পারে।';
-                document.getElementById('weatherTomorrowNote').textContent = note;
+                set('weatherTomorrowNote', note);
             }
 
-            // Multi-day list
+            // মজার কথা
+            wxFunSet(wxFunLines({ tom: tomInfo, cur: { kind: K.kind, temp: cur.temp_c, humidity: cur.humidity, wind: cur.wind_kph, uv: cur.uv, rain: K.rain, thunder: !!K.thunder, fog: K.fog > 0, night: !isDay } }));
+
+            // আজ ও আগামীকাল
             const list = document.getElementById('weatherForecastList');
             if (list && forecast.length) {
                 list.innerHTML = forecast.slice(0, 2).map((fd, i) => {
-                    const day = fd.day;
-                    const label = i === 0 ? 'আজ' : 'আগামীকাল';
-                    const icon = day.condition?.icon ? (day.condition.icon.startsWith('//') ? 'https:' + day.condition.icon : day.condition.icon) : '';
+                    const day = fd.day, kk = wxKind(day.condition?.code, day.condition?.text, day.totalprecip_mm, day.avgtemp_c).kind;
                     return `<div class="flex items-center gap-3 rounded-xl bg-[#07140e]/70 border border-emerald-900/25 px-3 py-2.5">
-                        <img src="${icon}" alt="" class="w-9 h-9 object-contain shrink-0">
-                        <div class="flex-1 min-w-0">
-                            <p class="text-xs font-bold text-slate-100">${label}</p>
-                            <p class="text-[10px] text-slate-400 truncate">${day.condition?.text || ''}</p>
-                        </div>
-                        <div class="text-right shrink-0">
-                            <p class="text-xs font-bold text-white">${Math.round(day.maxtemp_c)}° / ${Math.round(day.mintemp_c)}°</p>
-                            <p class="text-[10px] text-sky-400">বৃষ্টি ${day.daily_chance_of_rain ?? 0}%</p>
-                        </div>
+                        <div class="wx-icon-sm shrink-0">${wxIcon(kk, true)}</div>
+                        <div class="flex-1 min-w-0"><p class="text-xs font-bold text-slate-100">${i === 0 ? 'আজ' : 'আগামীকাল'}</p><p class="text-[10px] text-slate-400 truncate">${day.condition?.text || ''}</p></div>
+                        <div class="text-right shrink-0"><p class="text-xs font-bold text-white">${Math.round(day.maxtemp_c)}° / ${Math.round(day.mintemp_c)}°</p><p class="text-[10px] text-sky-400">বৃষ্টি ${day.daily_chance_of_rain ?? 0}%</p></div>
                     </div>`;
                 }).join('');
                 document.getElementById('weatherForecastCard')?.classList.remove('hidden');
             }
 
-            // District tip from profile
-            const tip = document.getElementById('weatherDistrictTip');
-            const tipText = document.getElementById('weatherDistrictTipText');
-            const myDistrict = (userProfile?.district || '').trim();
-            if (tip && tipText && myDistrict) {
-                const isMyArea = (loc.name || '').includes(myDistrict) || (loc.region || '').includes(myDistrict) || (queryLabel || '').includes(myDistrict);
-                if (isMyArea && tomorrow) {
-                    tipText.textContent = ` আপনার জেলা (${myDistrict})-এ আগামীকাল ${weatherBnChance(tomorrow.day.daily_chance_of_rain || 0).toLowerCase()}। ${weatherBnSun(tomorrow.day)}।`;
-                    tip.classList.remove('hidden');
-                } else {
-                    tip.classList.add('hidden');
-                }
+            // নিজ জেলার টিপ
+            const tip = document.getElementById('weatherDistrictTip'), tipText = document.getElementById('weatherDistrictTipText');
+            if (tip && tipText && meta.kind === 'home' && tomorrow) {
+                tipText.textContent = ` আপনার জেলা (${meta.label})-এ আগামীকাল ${weatherBnChance(tomorrow.day.daily_chance_of_rain || 0)}। ${weatherBnSun(tomorrow.day)}।`;
+                tip.classList.remove('hidden');
             } else if (tip) tip.classList.add('hidden');
 
             weatherLoadedOnce = true;
-            weatherLastQuery = queryLabel || loc.name || '';
             if (typeof refreshIcons === 'function') refreshIcons();
         }
 
-        async function weatherLoadByQuery(q) {
-            if (!q || !String(q).trim()) return;
-            let query = String(q).trim();
-            // Avoid wrong foreign matches for BD place names (e.g. Chandpur → Abadpur issues)
-            if (!/,/.test(query) && !/bangladesh/i.test(query) && !/^\-?\d+(\.\d+)?\s*,\s*\-?\d+/.test(query)) {
-                query = query + ', Bangladesh';
-            }
+        /* ---------- লোড ---------- */
+        async function weatherLoad(lat, lon, meta, opts = {}) {
+            weatherLastReq = { lat, lon, meta };
+            const key = `${(+lat).toFixed(3)},${(+lon).toFixed(3)}`;
+            const hit = wxCache.get(key);
+            const reqId = ++weatherReqId;
+            if (hit && !opts.force && Date.now() - hit.t < WX_CACHE_MS) { weatherRender(hit.data, meta); return; }
             weatherShowLoading();
+            try { wxMainAbort?.abort(); } catch (e) {}
+            wxMainAbort = new AbortController();
             try {
-                const data = await weatherFetchJson('/forecast.json', { q: query, days: '3', aqi: 'no' });
-                weatherRender(data, query);
+                const data = await weatherFetchJson('/forecast.json', { q: `${lat},${lon}`, days: '3', aqi: 'no' }, wxMainAbort.signal);
+                if (reqId !== weatherReqId) return;
+                wxCache.set(key, { t: Date.now(), data });
+                weatherRender(data, meta);
             } catch (err) {
-                if (err.name === 'AbortError') return;
+                if (err.name === 'AbortError' || reqId !== weatherReqId) return;
                 console.warn('weather load', err);
-                // Retry without country suffix if first attempt failed
-                if (query.endsWith(', Bangladesh')) {
-                    try {
-                        const data2 = await weatherFetchJson('/forecast.json', { q: String(q).trim(), days: '3', aqi: 'no' });
-                        weatherRender(data2, String(q).trim());
-                        return;
-                    } catch (e2) {}
-                }
-                weatherShowError('আবহাওয়া লোড করা যায়নি। পরে আবার চেষ্টা করুন।');
+                weatherShowError('আবহাওয়া লোড করা যায়নি। ইন্টারনেট চেক করে আবার চেষ্টা করুন।');
             }
         }
-
-        async function weatherLoadByCoords(lat, lon) {
+        async function wxWaitDistrict() {
+            for (let i = 0; i < 14; i++) {
+                const d = (typeof userProfile !== 'undefined' && userProfile && userProfile.district) ? String(userProfile.district).trim() : '';
+                if (d) return d;
+                await new Promise(r => setTimeout(r, 250));
+            }
+            return '';
+        }
+        async function weatherLoadHome(force) {
             weatherShowLoading();
-            try {
-                const data = await weatherFetchJson('/forecast.json', { q: `${lat},${lon}`, days: '3', aqi: 'no' });
-                weatherRender(data, `${lat},${lon}`);
-            } catch (err) {
-                if (err.name === 'AbortError') return;
-                console.warn('weather coords', err);
-                // fallback to district
-                const d = (userProfile?.district || '').trim();
-                if (d) await weatherLoadByQuery(d + ', Bangladesh');
-                else weatherShowError('লোকেশন পাওয়া যায়নি। সার্চ করে দেখুন।');
+            const d = await wxWaitDistrict();
+            const info = wxFindDistrict(d);
+            if (info) return weatherLoad(info.lat, info.lon, { label: info.bn, kind: 'home' }, { force });
+            if (d) { // তালিকায় নেই — নাম দিয়ে চেষ্টা
+                try {
+                    const data = await weatherFetchJson('/forecast.json', { q: `${d}, Bangladesh`, days: '3', aqi: 'no' });
+                    return weatherRender(data, { label: d, kind: 'home' });
+                } catch (e) {}
             }
+            const dh = wxDistInfo('ঢাকা');
+            weatherLoad(dh.lat, dh.lon, { label: dh.bn, kind: 'search' }, { force });
         }
 
-        window.weatherUseMyLocation = () => {
-            if (!navigator.geolocation) {
-                showToast('এই ডিভাইসে লোকেশন সাপোর্ট নেই', 'map-pin-off', 'text-amber-400');
-                const d = (userProfile?.district || '').trim();
-                if (d) weatherLoadByQuery(d + ', Bangladesh');
+        /* ---------- লাইভ লোকেশন ---------- */
+        async function wxReverseName(lat, lon) {
+            try {
+                const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 4500);
+                const r = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=bn`, { signal: ctl.signal });
+                clearTimeout(tm);
+                if (!r.ok) return '';
+                const j = await r.json();
+                const a = j.locality || j.city || '';
+                const b = j.principalSubdivision ? String(j.principalSubdivision).replace(/\s*(বিভাগ|Division)\s*$/i, '') : '';
+                return [a, b && b !== a ? b : ''].filter(Boolean).join(', ');
+            } catch (e) { return ''; }
+        }
+        function wxGeo(opts) { return new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, opts)); }
+        window.weatherUseMyLocation = async () => {
+            const homeFallback = () => weatherLoadHome(false);
+            if (!navigator.geolocation) { showToast('এই ডিভাইসে লোকেশন সাপোর্ট নেই', 'map-pin-off', 'text-amber-400'); return homeFallback(); }
+            if (window.isSecureContext === false) { showToast('লোকেশনের জন্য https সংযোগ লাগবে', 'map-pin-off', 'text-amber-400'); return homeFallback(); }
+            if (/FBAN|FBAV|FB_IAB|Instagram|Messenger|Line\//i.test(navigator.userAgent)) {
+                weatherShowError('এই অ্যাপের ভেতরের ব্রাউজারে লোকেশন বন্ধ থাকে। ওয়েবসাইটটি Chrome/ডিফল্ট ব্রাউজারে খুলে লাইভ লোকেশন চেষ্টা করুন।');
                 return;
             }
+            try {
+                if (navigator.permissions?.query) {
+                    const st = await navigator.permissions.query({ name: 'geolocation' });
+                    if (st.state === 'denied') {
+                        weatherShowError('লোকেশন অনুমতি বন্ধ আছে। ব্রাউজারের ঠিকানা-বারের 🔒 আইকনে চাপ দিন → সাইট সেটিংস → লোকেশন → "অনুমতি দিন" করে আবার চেষ্টা করুন।');
+                        return;
+                    }
+                }
+            } catch (e) {}
             weatherShowLoading();
-            navigator.geolocation.getCurrentPosition(
-                (pos) => weatherLoadByCoords(pos.coords.latitude, pos.coords.longitude),
-                (err) => {
-                    console.warn('geo', err);
-                    showToast('লোকেশন অনুমতি দিন বা জেলা সার্চ করুন', 'map-pin-off', 'text-amber-400');
-                    const d = (userProfile?.district || '').trim();
-                    if (d) weatherLoadByQuery(d + ', Bangladesh');
-                    else weatherShowError('লোকেশন পাওয়া যায়নি। সার্চ বক্সে জেলা লিখুন।');
-                },
-                { enableHighAccuracy: false, timeout: 12000, maximumAge: 300000 }
-            );
+            let pos;
+            try { pos = await wxGeo({ enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }); }
+            catch (e1) {
+                if (e1 && e1.code === 1) { weatherShowError('লোকেশন অনুমতি দেওয়া হয়নি। ব্রাউজারের সাইট সেটিংস থেকে লোকেশন "অনুমতি দিন" করে আবার চেষ্টা করুন।'); return; }
+                try { pos = await wxGeo({ enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }); }
+                catch (e2) { showToast('লোকেশন পাওয়া যায়নি — আপনার জেলার আবহাওয়া দেখানো হচ্ছে', 'map-pin-off', 'text-amber-400'); return homeFallback(); }
+            }
+            const lat = pos.coords.latitude, lon = pos.coords.longitude;
+            let label = await wxReverseName(lat, lon);
+            if (!label) {
+                if (wxInBD(lat, lon)) { const n = wxNearestDistrict(lat, lon); label = `${n.bn} এর কাছাকাছি`; } else label = 'আপনার অবস্থান';
+            }
+            weatherLoad(lat, lon, { label, kind: 'gps' }, { force: true });
         };
 
         window.weatherOnOpen = () => {
-            document.getElementById('weatherSearchInput') && (document.getElementById('weatherSearchInput').value = '');
+            const inp = document.getElementById('weatherSearchInput'); if (inp) inp.value = '';
             document.getElementById('weatherSearchClear')?.classList.add('hidden');
             document.getElementById('weatherSuggestions')?.classList.add('hidden');
-            if (weatherLoadedOnce && weatherLastQuery) {
-                // soft refresh
-                weatherLoadByQuery(weatherLastQuery);
-                return;
-            }
-            const d = (userProfile?.district || '').trim();
-            if (d) {
-                // First show district weather (tomorrow details without extra search)
-                weatherLoadByQuery(d + ', Bangladesh');
-            } else {
-                weatherUseMyLocation();
-            }
+            weatherLoadHome(false); // সবসময় নিজের জেলা দিয়ে শুরু
         };
-
+        window.weatherRefreshHome = () => { window.weatherClearSearch(); return weatherLoadHome(true); };   // পুল-টু-রিফ্রেশ: আগের সার্চ মুছে নিজের জেলা
         window.weatherRetry = () => {
-            if (weatherLastQuery) weatherLoadByQuery(weatherLastQuery);
-            else weatherOnOpen();
+            if (weatherLastReq) weatherLoad(weatherLastReq.lat, weatherLastReq.lon, weatherLastReq.meta, { force: true });
+            else weatherLoadHome(true);
         };
-
         window.weatherClearSearch = () => {
-            const inp = document.getElementById('weatherSearchInput');
-            if (inp) inp.value = '';
+            const inp = document.getElementById('weatherSearchInput'); if (inp) inp.value = '';
             document.getElementById('weatherSearchClear')?.classList.add('hidden');
             document.getElementById('weatherSuggestions')?.classList.add('hidden');
         };
 
-        window.weatherOnSearchInput = (val) => {
-            const clearBtn = document.getElementById('weatherSearchClear');
-            if (clearBtn) clearBtn.classList.toggle('hidden', !String(val || '').trim());
-            clearTimeout(weatherSearchTimer);
-            const q = String(val || '').trim();
-            if (q.length < 1) {
-                document.getElementById('weatherSuggestions')?.classList.add('hidden');
-                return;
+        /* ---------- সার্চ ---------- */
+        function wxLocalMatches(q) {
+            const ql = q.toLowerCase().replace(/\s+/g, ''), out = [];
+            for (const k in WX_DISTRICTS) {
+                const en = WX_DISTRICTS[k][2].toLowerCase().replace(/\s+/g, '');
+                if (k.startsWith(q) || k.includes(q) || en.startsWith(ql) || (ql.length > 2 && en.includes(ql))) out.push({ label: k, title: `${k} জেলা`, sub: WX_DISTRICTS[k][2], lat: WX_DISTRICTS[k][0], lon: WX_DISTRICTS[k][1], bd: true, local: true });
             }
+            return out.sort((a, b) => (a.label.startsWith(q) ? 0 : 1) - (b.label.startsWith(q) ? 0 : 1)).slice(0, 6);
+        }
+        async function wxApiMatches(q) {
+            try { wxSearchAbort?.abort(); } catch (e) {}
+            wxSearchAbort = new AbortController();
+            let list = await weatherFetchJson('/search.json', { q }, wxSearchAbort.signal);
+            if (!Array.isArray(list)) return [];
+            const ql = q.toLowerCase();
+            list = list.slice().sort((a, b) => {
+                const ab = /bangladesh/i.test(a.country || '') ? 0 : 1, bb = /bangladesh/i.test(b.country || '') ? 0 : 1;
+                if (ab !== bb) return ab - bb;
+                const as = (a.name || '').toLowerCase().startsWith(ql) ? 0 : 1, bs = (b.name || '').toLowerCase().startsWith(ql) ? 0 : 1;
+                return as - bs;
+            });
+            return list.slice(0, 8).map(i => ({ label: [i.name, i.region].filter(Boolean).join(', '), title: [i.name, i.region, i.country].filter(Boolean).join(', '), sub: '', lat: i.lat, lon: i.lon, bd: /bangladesh/i.test(i.country || ''), local: false }));
+        }
+        function wxPlaceSuggestions() {
+            const box = document.getElementById('weatherSuggestions'), wrap = document.getElementById('weatherSearchWrap');
+            if (!box || !wrap) return;
+            const r = wrap.getBoundingClientRect(), vv = window.visualViewport;
+            const top = r.bottom + 6, bottomLimit = vv ? (vv.offsetTop + vv.height) : window.innerHeight;
+            box.style.left = r.left + 'px'; box.style.width = r.width + 'px'; box.style.top = top + 'px';
+            box.style.maxHeight = Math.max(130, Math.min(bottomLimit - top - 10, 380)) + 'px';
+        }
+        function wxRenderSuggestions(items) {
+            const box = document.getElementById('weatherSuggestions'); if (!box) return;
+            wxSugItems = items;
+            if (!items.length) box.innerHTML = '<div class="px-3 py-3 text-xs text-slate-400">কোনো স্থান পাওয়া যায়নি</div>';
+            else box.innerHTML = items.map((it, i) => `<button type="button" class="weather-sug-btn w-full text-left px-3 py-2.5 text-xs text-slate-100 hover:bg-emerald-900/40 border-b border-emerald-900/20 last:border-0 flex items-center gap-2" onclick="weatherPickSuggestion(${i})">
+                <i data-lucide="${it.local ? 'map-pinned' : 'map-pin'}" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
+                <span class="truncate flex-1">${it.title.replace(/</g, '&lt;')}${it.sub ? ` <span class="text-slate-400">· ${it.sub}</span>` : ''}</span>
+                ${it.bd ? '<span class="text-[9px] font-bold text-emerald-400 shrink-0">BD</span>' : ''}</button>`).join('');
+            wxPlaceSuggestions();
+            box.classList.remove('hidden');
+            if (typeof refreshIcons === 'function') refreshIcons();
+        }
+        window.weatherOnSearchInput = (val) => {
+            const q = String(val || '').trim();
+            document.getElementById('weatherSearchClear')?.classList.toggle('hidden', !q);
+            clearTimeout(weatherSearchTimer);
+            if (!q) { document.getElementById('weatherSuggestions')?.classList.add('hidden'); return; }
+            const local = wxLocalMatches(q);
+            if (local.length) wxRenderSuggestions(local);
             weatherSearchTimer = setTimeout(async () => {
                 try {
-                    // Prefer Bangladesh results first by appending country hint when short query
-                    const searchQ = q.length <= 3 ? q : q;
-                    let list = await weatherFetchJson('/search.json', { q: searchQ });
-                    if (!Array.isArray(list)) list = [];
-
-                    // Rank: Bangladesh first, then name starts with query, then contains
-                    const ql = q.toLowerCase();
-                    list = list.slice().sort((a, b) => {
-                        const aBd = (a.country || '').toLowerCase().includes('bangladesh') ? 0 : 1;
-                        const bBd = (b.country || '').toLowerCase().includes('bangladesh') ? 0 : 1;
-                        if (aBd !== bBd) return aBd - bBd;
-                        const aStart = (a.name || '').toLowerCase().startsWith(ql) ? 0 : 1;
-                        const bStart = (b.name || '').toLowerCase().startsWith(ql) ? 0 : 1;
-                        if (aStart !== bStart) return aStart - bStart;
-                        return (a.name || '').localeCompare(b.name || '');
-                    });
-
-                    const box = document.getElementById('weatherSuggestions');
-                    if (!box) return;
-                    if (!list.length) {
-                        box.innerHTML = '<div class="px-3 py-2.5 text-xs text-slate-400">কোনো স্থান পাওয়া যায়নি</div>';
-                        box.classList.remove('hidden');
-                        return;
-                    }
-                    box.innerHTML = list.slice(0, 10).map((item, idx) => {
-                        const label = [item.name, item.region, item.country].filter(Boolean).join(', ');
-                        const lat = item.lat != null ? item.lat : '';
-                        const lon = item.lon != null ? item.lon : '';
-                        // Use lat,lon for exact match (avoids Abadpur when user meant Chandpur)
-                        const safeLabel = String(label).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
-                        return `<button type="button" data-w-idx="${idx}" data-w-lat="${lat}" data-w-lon="${lon}" data-w-name="${safeLabel}"
-                            class="weather-sug-btn w-full text-left px-3 py-2.5 text-xs text-slate-100 hover:bg-emerald-900/40 border-b border-emerald-900/20 last:border-0 flex items-center gap-2"
-                            onclick="weatherSelectSuggestionLatLon(this)">
-                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
-                            <span class="truncate flex-1">${label}</span>
-                            ${ (item.country || '').toLowerCase().includes('bangladesh') ? '<span class="text-[9px] font-bold text-emerald-400 shrink-0">BD</span>' : '' }
-                        </button>`;
-                    }).join('');
-                    box.classList.remove('hidden');
-                    if (typeof refreshIcons === 'function') refreshIcons();
-                } catch (e) {
-                    if (e.name !== 'AbortError') console.warn('weather search', e);
-                }
-            }, 220);
+                    const api = q.length >= 2 ? await wxApiMatches(q) : [];
+                    const seen = new Set(local.map(l => `${l.lat.toFixed(1)},${l.lon.toFixed(1)}`));
+                    const merged = local.concat(api.filter(a => !seen.has(`${(+a.lat).toFixed(1)},${(+a.lon).toFixed(1)}`)));
+                    if ((document.getElementById('weatherSearchInput')?.value || '').trim() === q) wxRenderSuggestions(merged);
+                } catch (e) { if (e.name !== 'AbortError') console.warn('weather search', e); }
+            }, 240);
         };
-
-        window.weatherSelectSuggestionLatLon = (btn) => {
-            if (!btn) return;
-            const lat = btn.getAttribute('data-w-lat');
-            const lon = btn.getAttribute('data-w-lon');
-            const name = (btn.getAttribute('data-w-name') || '').replace(/&#39;/g, "'").replace(/&quot;/g, '"');
-            const inp = document.getElementById('weatherSearchInput');
-            if (inp) inp.value = name;
+        window.weatherPickSuggestion = (i) => {
+            const it = wxSugItems[i]; if (!it) return;
+            const inp = document.getElementById('weatherSearchInput'); if (inp) { inp.value = it.label; inp.blur(); }
             document.getElementById('weatherSuggestions')?.classList.add('hidden');
             document.getElementById('weatherSearchClear')?.classList.remove('hidden');
-            if (lat && lon && lat !== 'null' && lon !== 'null') {
-                weatherLoadByCoords(parseFloat(lat), parseFloat(lon));
-                weatherLastQuery = `${lat},${lon}`;
-            } else if (name) {
-                weatherLoadByQuery(name);
-            }
+            weatherLoad(+it.lat, +it.lon, { label: it.label, kind: 'search' }, {});
         };
-
-        // backward-compatible alias
-        window.weatherSelectSuggestion = (q) => {
-            const inp = document.getElementById('weatherSearchInput');
-            if (inp) inp.value = q;
+        window.weatherSearchSubmit = async () => {
+            const q = (document.getElementById('weatherSearchInput')?.value || '').trim(); if (!q) return;
             document.getElementById('weatherSuggestions')?.classList.add('hidden');
-            document.getElementById('weatherSearchClear')?.classList.remove('hidden');
-            weatherLoadByQuery(q);
+            let items = wxLocalMatches(q);
+            if (!items.length) { try { items = await wxApiMatches(q); } catch (e) {} }
+            if (!items.length) { wxRenderSuggestions([]); return; }
+            wxSugItems = items; weatherPickSuggestion(0);
         };
+        window.weatherSelectSuggestion = (q) => { const i = document.getElementById('weatherSearchInput'); if (i) i.value = q; weatherSearchSubmit(); };
 
-        window.weatherSearchSubmit = () => {
-            const inp = document.getElementById('weatherSearchInput');
-            const q = (inp?.value || '').trim();
-            if (!q) return;
-            document.getElementById('weatherSuggestions')?.classList.add('hidden');
-            // Prefer Bangladesh when user types a local name without country
-            const looksLocal = !/,/.test(q) && !/bangladesh/i.test(q);
-            weatherLoadByQuery(looksLocal ? (q + ', Bangladesh') : q);
-        };
-
-        // Close suggestions on outside click
-        document.addEventListener('click', (e) => {
+        (function wxInit() {
+            // সার্চ লিস্ট body-তে নিয়ে যাওয়া — যাতে কোনো কার্ডের নিচে চাপা/কাটা না পড়ে
             const box = document.getElementById('weatherSuggestions');
-            const wrap = e.target.closest?.('#weatherSearchWrap, #weatherSuggestions, #weatherSearchInput');
-            if (box && !wrap) box.classList.add('hidden');
-        });
+            if (box && box.parentElement !== document.body) {
+                document.body.appendChild(box);
+                box.classList.remove('absolute', 'left-0', 'right-0', 'top-full', 'mt-1.5', 'z-[80]');
+                box.style.position = 'fixed'; box.style.zIndex = '150';
+            }
+            const inp = document.getElementById('weatherSearchInput'), wrap = document.getElementById('weatherSearchWrap');
+            inp?.addEventListener('focus', () => {
+                setTimeout(() => { wrap?.scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(wxPlaceSuggestions, 350); }, 250);
+                if (inp.value.trim()) window.weatherOnSearchInput(inp.value);
+            });
+            const rep = () => { if (!document.getElementById('weatherSuggestions')?.classList.contains('hidden')) wxPlaceSuggestions(); };
+            window.addEventListener('scroll', rep, { passive: true }); window.addEventListener('resize', rep);
+            window.visualViewport?.addEventListener('resize', rep); window.visualViewport?.addEventListener('scroll', rep);
+            document.addEventListener('click', (e) => {
+                const b = document.getElementById('weatherSuggestions');
+                if (b && !e.target.closest?.('#weatherSearchWrap, #weatherSuggestions')) b.classList.add('hidden');
+            });
+        })();
+
 
         // ========== BOOT ==========
         document.getElementById('footerYear').textContent = new Date().getFullYear();
@@ -14288,7 +14494,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         if (tab === 'services') renderServices();
                         else if (tab === 'emergency') renderEmergency();
                         else if (tab === 'blood') filterBloodDonors();
-                        else if (tab === 'weather' && typeof weatherRetry === 'function') weatherRetry();
+                        else if (tab === 'weather' && typeof weatherRefreshHome === 'function') weatherRefreshHome();
                         else if (tab === 'profile') updateProfileUI();
                         else if (tab === 'chat') renderChatMessages();
                         if (!navigator.onLine) {
@@ -14309,7 +14515,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         bloodDonors = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                         filterBloodDonors();
                     } else if (tab === 'weather') {
-                        if (typeof weatherRetry === 'function') weatherRetry();
+                        if (typeof weatherRefreshHome === 'function') await weatherRefreshHome();
                     } else if (tab === 'profile') {
                         if (currentUser) {
                             const snap = await getDoc(doc(db, 'users', currentUser.uid));

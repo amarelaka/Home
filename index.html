@@ -3515,6 +3515,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                     <button type="button" onclick="sidebarNav('services')" class="sidebar-item"><i data-lucide="layout-grid"></i><span>সকল সেবা সমূহ</span></button>
                     <button type="button" onclick="sidebarNav('emergency')" class="sidebar-item"><i data-lucide="phone-call"></i><span>জরুরী হেল্পলাইন</span></button>
                     <button type="button" onclick="sidebarNav('blood')" class="sidebar-item"><i data-lucide="droplet"></i><span>রক্ত</span></button>
+                    <button type="button" onclick="sidebarNav('weather')" class="sidebar-item"><i data-lucide="cloud-sun"></i><span>আবহাওয়া</span></button>
                 </div>
             </div>
 
@@ -3793,6 +3794,153 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 </div>
                 <!-- Grid outside info-card (same pattern as emergencyList) — prevents items disappearing on scroll -->
                 <div id="bloodDonorsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+            </div>
+
+            <!-- WEATHER VIEW -->
+            <div id="view-weather" class="tab-view hidden space-y-4 pb-8">
+                <div class="info-card p-4 sm:p-5 space-y-4" style="overflow:visible;">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center border border-sky-500/30 shrink-0">
+                            <i data-lucide="cloud-sun" class="w-5 h-5"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-sm sm:text-base font-bold text-slate-100">আবহাওয়া</h3>
+                            <p class="text-[11px] text-slate-400">লাইভ লোকেশন ও সার্চ করে যেকোনো জায়গার আবহাওয়া দেখুন</p>
+                        </div>
+                        <button type="button" id="weatherLocBtn" onclick="weatherUseMyLocation()" class="top-app-icon-btn shrink-0" title="আমার লোকেশন" aria-label="আমার লোকেশন">
+                            <i data-lucide="locate-fixed" class="w-5 h-5 text-emerald-400"></i>
+                        </button>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="relative z-40" id="weatherSearchWrap" style="overflow:visible;">
+                        <div class="glass-input flex items-center gap-2 px-3 py-2.5 rounded-2xl">
+                            <i data-lucide="search" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                            <input type="text" id="weatherSearchInput" autocomplete="off" placeholder="জেলা, শহর বা এলাকা লিখুন..." class="flex-1 bg-transparent outline-none text-sm text-slate-100 placeholder:text-slate-500" oninput="weatherOnSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();weatherSearchSubmit();}">
+                            <button type="button" id="weatherSearchClear" onclick="weatherClearSearch()" class="hidden w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-white">
+                                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                        <div id="weatherSuggestions" class="hidden absolute left-0 right-0 top-full mt-1.5 z-[80] max-h-60 overflow-y-auto rounded-2xl border border-emerald-800/50 bg-[#0c1f16] shadow-2xl" style="overscroll-behavior:contain;"></div>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div id="weatherLoading" class="hidden info-card p-8 text-center">
+                    <div class="flex flex-col items-center gap-3">
+                        <i data-lucide="loader-circle" class="w-8 h-8 text-emerald-400 animate-spin"></i>
+                        <p class="text-sm text-slate-300">আবহাওয়া লোড হচ্ছে...</p>
+                    </div>
+                </div>
+
+                <!-- Error -->
+                <div id="weatherError" class="hidden info-card p-5 text-center space-y-2">
+                    <i data-lucide="cloud-off" class="w-10 h-10 text-slate-500 mx-auto"></i>
+                    <p id="weatherErrorText" class="text-sm text-slate-300">আবহাওয়া পাওয়া যায়নি</p>
+                    <button type="button" onclick="weatherRetry()" class="mt-2 px-4 py-2 rounded-xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold">আবার চেষ্টা করুন</button>
+                </div>
+
+                <!-- Current weather card — live scene + glass -->
+                <div id="weatherCurrentCard" class="hidden weather-glass-card">
+                    <div id="weatherScene" class="weather-scene wx-clear" aria-hidden="true">
+                        <div class="wx-sky"></div>
+                        <div class="wx-sun"></div>
+                        <div class="wx-moon"></div>
+                        <div class="wx-clouds">
+                            <span class="wx-cloud c1"></span>
+                            <span class="wx-cloud c2"></span>
+                            <span class="wx-cloud c3"></span>
+                        </div>
+                        <div class="wx-rain" id="weatherRainLayer"></div>
+                        <div class="wx-snow" id="weatherSnowLayer"></div>
+                        <div class="wx-fog"></div>
+                        <div class="wx-lightning" id="weatherLightning"></div>
+                        <div class="wx-stars"></div>
+                    </div>
+                    <div class="weather-glass-content">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p id="weatherLocationName" class="text-base sm:text-lg font-bold text-white drop-shadow"></p>
+                                <p id="weatherLocalTime" class="text-[11px] text-white/70 mt-0.5"></p>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <p id="weatherTemp" class="text-4xl sm:text-5xl font-extrabold text-white leading-none drop-shadow-lg"></p>
+                                <p id="weatherFeelsLike" class="text-[11px] text-white/75 mt-1"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 mt-5">
+                            <img id="weatherIcon" src="" alt="" class="w-16 h-16 object-contain drop-shadow-xl">
+                            <div>
+                                <p id="weatherCondition" class="text-sm font-semibold text-white drop-shadow"></p>
+                                <p id="weatherLastUpdated" class="text-[10px] text-white/60 mt-0.5"></p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-5">
+                            <div class="wx-stat">
+                                <p class="wx-stat-label">আর্দ্রতা</p>
+                                <p id="weatherHumidity" class="wx-stat-value"></p>
+                            </div>
+                            <div class="wx-stat">
+                                <p class="wx-stat-label">বাতাস</p>
+                                <p id="weatherWind" class="wx-stat-value"></p>
+                            </div>
+                            <div class="wx-stat">
+                                <p class="wx-stat-label">বৃষ্টির সম্ভাবনা</p>
+                                <p id="weatherRainChance" class="wx-stat-value"></p>
+                            </div>
+                            <div class="wx-stat">
+                                <p class="wx-stat-label">UV সূচক</p>
+                                <p id="weatherUv" class="wx-stat-value"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tomorrow highlight (especially for user's district) -->
+                <div id="weatherTomorrowCard" class="hidden info-card p-4 sm:p-5 space-y-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                            <i data-lucide="calendar-days" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-100">আগামীকালের আবহাওয়া</h4>
+                            <p id="weatherTomorrowDate" class="text-[10px] text-slate-400"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <img id="weatherTomorrowIcon" src="" alt="" class="w-12 h-12 object-contain">
+                        <div class="flex-1 min-w-0">
+                            <p id="weatherTomorrowCond" class="text-sm font-semibold text-emerald-300"></p>
+                            <p id="weatherTomorrowTemp" class="text-xs text-slate-300 mt-0.5"></p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="rounded-xl bg-sky-950/40 border border-sky-800/40 p-3">
+                            <p class="text-[10px] text-sky-400/80 mb-1">বৃষ্টি হবে কি?</p>
+                            <p id="weatherTomorrowRain" class="text-sm font-bold text-sky-200"></p>
+                        </div>
+                        <div class="rounded-xl bg-amber-950/30 border border-amber-800/40 p-3">
+                            <p class="text-[10px] text-amber-400/80 mb-1">রোদ / আকাশ</p>
+                            <p id="weatherTomorrowSun" class="text-sm font-bold text-amber-200"></p>
+                        </div>
+                    </div>
+                    <p id="weatherTomorrowNote" class="text-[11px] text-slate-400 leading-relaxed"></p>
+                </div>
+
+                <!-- 2-day simple forecast (আজ + আগামীকাল) -->
+                <div id="weatherForecastCard" class="hidden info-card p-4 space-y-3">
+                    <h4 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+                        <i data-lucide="calendar-range" class="w-4 h-4 text-emerald-400"></i>
+                        আজ ও আগামীকাল
+                    </h4>
+                    <div id="weatherForecastList" class="space-y-2"></div>
+                </div>
+
+                <!-- My district quick tip -->
+                <div id="weatherDistrictTip" class="hidden rounded-2xl border border-emerald-800/40 bg-emerald-950/30 p-3.5 text-[12px] text-emerald-200/90 leading-relaxed">
+                    <span class="font-bold text-emerald-300">নিজ জেলা:</span>
+                    <span id="weatherDistrictTipText"></span>
+                </div>
             </div>
 
             <!-- CHAT VIEW -->
@@ -5279,6 +5427,330 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
     @keyframes aeDlSheen{0%,55%{left:-60%}100%{left:130%}}
     .ae-dl-tag{margin-left:auto;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.25)}
     @media (prefers-reduced-motion:reduce){.ap-bar,.ae-dl-btn::after{animation:none}}
+    </style>
+
+    <style id="weather-live-scene-glass">
+    /* ===== Live weather glass card + animated scene ===== */
+    .weather-glass-card {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      min-height: 280px;
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow:
+        0 24px 60px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.25);
+      isolation: isolate;
+      animation: wxCardIn .55s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes wxCardIn {
+      from { opacity: 0; transform: translateY(18px) scale(.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .weather-scene {
+      position: absolute; inset: 0; z-index: 0;
+      overflow: hidden; pointer-events: none;
+    }
+    .weather-glass-content {
+      position: relative; z-index: 2;
+      padding: 18px 16px 16px;
+      background: linear-gradient(180deg, rgba(8,20,16,.18) 0%, rgba(5,14,12,.55) 100%);
+      -webkit-backdrop-filter: blur(2px) saturate(120%);
+      backdrop-filter: blur(2px) saturate(120%);
+      min-height: 280px;
+      display: flex; flex-direction: column;
+    }
+    .wx-stat {
+      border-radius: 16px;
+      padding: 10px 8px;
+      text-align: center;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
+      -webkit-backdrop-filter: blur(12px) saturate(160%);
+      backdrop-filter: blur(12px) saturate(160%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.2);
+    }
+    .wx-stat-label { font-size: 10px; color: rgba(255,255,255,.72); font-weight: 600; margin-bottom: 2px; }
+    .wx-stat-value { font-size: 13px; font-weight: 800; color: #fff; }
+
+    /* Sky base */
+    .wx-sky {
+      position: absolute; inset: 0;
+      transition: background 1s ease;
+    }
+    .wx-clear .wx-sky { background: linear-gradient(160deg, #1d9fe8 0%, #3ecf8e 55%, #0b6e4f 100%); }
+    .wx-cloudy .wx-sky { background: linear-gradient(160deg, #5b7c99 0%, #3d5a6e 50%, #1f3340 100%); }
+    .wx-overcast .wx-sky { background: linear-gradient(160deg, #4a5568 0%, #2d3748 60%, #1a202c 100%); }
+    .wx-rain .wx-sky, .wx-heavyrain .wx-sky { background: linear-gradient(160deg, #2c3e50 0%, #1a2a3a 50%, #0d1b2a 100%); }
+    .wx-thunder .wx-sky { background: linear-gradient(160deg, #1a1a2e 0%, #16213e 45%, #0f0f1a 100%); }
+    .wx-fog .wx-sky, .wx-mist .wx-sky { background: linear-gradient(160deg, #8a9ba8 0%, #6b7c88 50%, #4a5864 100%); }
+    .wx-snow .wx-sky { background: linear-gradient(160deg, #a8c0d8 0%, #6e8eae 50%, #3d5a7a 100%); }
+    .wx-cold .wx-sky { background: linear-gradient(160deg, #7eb6d9 0%, #4a8fbe 50%, #2a5f8f 100%); }
+    .wx-night .wx-sky { background: linear-gradient(160deg, #0b1026 0%, #1a2744 50%, #0d1b2a 100%); }
+
+    /* Sun */
+    .wx-sun {
+      position: absolute; top: 18px; right: 28px;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff9c4, #ffd54f 40%, #ff9800 75%, transparent 76%);
+      box-shadow: 0 0 40px 12px rgba(255,193,7,.45), 0 0 80px 24px rgba(255,152,0,.2);
+      opacity: 0; transform: scale(.6);
+      transition: opacity .6s, transform .6s;
+    }
+    .wx-clear:not(.wx-night) .wx-sun { opacity: 1; transform: scale(1); animation: wxSunPulse 4s ease-in-out infinite; }
+    .wx-cloudy:not(.wx-night) .wx-sun { opacity: .45; transform: scale(.85); }
+    @keyframes wxSunPulse {
+      0%,100% { box-shadow: 0 0 40px 12px rgba(255,193,7,.4), 0 0 80px 24px rgba(255,152,0,.18); }
+      50% { box-shadow: 0 0 55px 18px rgba(255,193,7,.55), 0 0 100px 32px rgba(255,152,0,.28); }
+    }
+
+    /* Moon */
+    .wx-moon {
+      position: absolute; top: 20px; right: 32px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #f5f5f5, #cfd8dc 70%);
+      box-shadow: 0 0 24px 6px rgba(207,216,220,.35);
+      opacity: 0; transition: opacity .6s;
+    }
+    .wx-night .wx-moon { opacity: 1; }
+
+    /* Stars (night) */
+    .wx-stars {
+      position: absolute; inset: 0; opacity: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 12% 20%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 28% 45%, #fff, transparent),
+        radial-gradient(1px 1px at 55% 18%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 72% 38%, #fff, transparent),
+        radial-gradient(1px 1px at 88% 22%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 40% 70%, #fff, transparent),
+        radial-gradient(1px 1px at 65% 60%, #fff, transparent);
+      transition: opacity .6s;
+    }
+    .wx-night .wx-stars { opacity: .85; animation: wxTwinkle 3s ease-in-out infinite; }
+    @keyframes wxTwinkle { 0%,100%{opacity:.7} 50%{opacity:1} }
+
+    /* Clouds */
+    .wx-clouds { position: absolute; inset: 0; }
+    .wx-cloud {
+      position: absolute;
+      background: rgba(255,255,255,.55);
+      border-radius: 40px;
+      filter: blur(1px);
+      opacity: 0;
+      transition: opacity .5s;
+    }
+    .wx-cloud.c1 { width: 90px; height: 28px; top: 28%; left: -20%; animation: wxCloudDrift 22s linear infinite; }
+    .wx-cloud.c2 { width: 120px; height: 34px; top: 42%; left: -30%; animation: wxCloudDrift 28s linear infinite -6s; background: rgba(255,255,255,.4); }
+    .wx-cloud.c3 { width: 70px; height: 22px; top: 18%; left: -15%; animation: wxCloudDrift 18s linear infinite -12s; background: rgba(255,255,255,.35); }
+    .wx-cloudy .wx-cloud, .wx-overcast .wx-cloud, .wx-rain .wx-cloud, .wx-heavyrain .wx-cloud, .wx-thunder .wx-cloud { opacity: 1; }
+    .wx-overcast .wx-cloud, .wx-rain .wx-cloud, .wx-thunder .wx-cloud { background: rgba(180,190,200,.55); filter: blur(2px); }
+    @keyframes wxCloudDrift {
+      from { transform: translateX(0); }
+      to { transform: translateX(140vw); }
+    }
+
+    /* Rain drops */
+    .wx-rain {
+      position: absolute; inset: 0; overflow: hidden;
+      opacity: 0; transition: opacity .4s;
+      pointer-events: none;
+    }
+    .wx-rain.on, .wx-rain.wx-rain-on { opacity: 1; }
+    .wx-rain .drop {
+      position: absolute; top: -12%;
+      width: 1.5px; height: 14px;
+      background: linear-gradient(to bottom, transparent, rgba(180,220,255,.85));
+      border-radius: 2px;
+      animation: wxRainFall linear infinite;
+    }
+    .wx-heavyrain .wx-rain .drop {
+      height: 18px; width: 2px;
+      background: linear-gradient(to bottom, transparent, rgba(160,200,255,.95));
+    }
+    @keyframes wxRainFall {
+      0% { transform: translateY(0) translateX(0); opacity: 1; }
+      100% { transform: translateY(110vh) translateX(12px); opacity: .3; }
+    }
+
+    /* Snow */
+    .wx-snow {
+      position: absolute; inset: 0; overflow: hidden;
+      opacity: 0; transition: opacity .4s;
+    }
+    .wx-snow.on { opacity: 1; }
+    .wx-snow .flake {
+      position: absolute; top: -8%;
+      width: 5px; height: 5px; border-radius: 50%;
+      background: #fff; box-shadow: 0 0 4px #fff;
+      animation: wxSnowFall linear infinite;
+    }
+    @keyframes wxSnowFall {
+      0% { transform: translateY(0) translateX(0); opacity: 1; }
+      100% { transform: translateY(110vh) translateX(30px); opacity: .2; }
+    }
+
+    /* Fog */
+    .wx-fog {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(90deg, transparent, rgba(255,255,255,.25) 40%, transparent 70%),
+        linear-gradient(180deg, rgba(255,255,255,.15), transparent 40%, rgba(255,255,255,.2));
+      opacity: 0; transition: opacity .6s;
+      animation: wxFogDrift 8s ease-in-out infinite;
+    }
+    .wx-fog.wx-fog-on, .wx-mist .wx-fog, .wx-fog .wx-fog { opacity: 1; }
+    .weather-scene.wx-fog .wx-fog, .weather-scene.wx-mist .wx-fog { opacity: .85; }
+    @keyframes wxFogDrift {
+      0%,100% { transform: translateX(-4%); opacity: .6; }
+      50% { transform: translateX(4%); opacity: .9; }
+    }
+
+    /* Lightning */
+    .wx-lightning {
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0);
+      opacity: 0; pointer-events: none;
+    }
+    .wx-thunder .wx-lightning {
+      animation: wxFlash 4.5s ease-in-out infinite;
+    }
+    @keyframes wxFlash {
+      0%, 88%, 100% { opacity: 0; background: rgba(255,255,255,0); }
+      90% { opacity: 1; background: rgba(255,255,255,.55); }
+      92% { opacity: 0; }
+      94% { opacity: .9; background: rgba(200,220,255,.7); }
+      96% { opacity: 0; }
+    }
+
+    /* Cold frost edge */
+    .wx-cold .weather-glass-content,
+    .wx-snow .weather-glass-content {
+      box-shadow: inset 0 0 40px rgba(180,220,255,.12);
+    }
+
+    body.light-mode .weather-glass-card {
+      border-color: rgba(255,255,255,.5);
+      box-shadow: 0 20px 50px rgba(15,23,42,.15), inset 0 1px 0 rgba(255,255,255,.6);
+    }
+    body.light-mode .wx-stat {
+      background: rgba(255,255,255,.55);
+      border-color: rgba(255,255,255,.7);
+    }
+    body.light-mode .wx-stat-label { color: rgba(15,23,42,.65); }
+    body.light-mode .wx-stat-value { color: #0f172a; }
+    body.light-mode .weather-glass-content {
+      background: linear-gradient(180deg, rgba(255,255,255,.12) 0%, rgba(15,30,25,.35) 100%);
+    }
+    /* Keep white text readable on animated skies even in light mode */
+    body.light-mode #weatherLocationName,
+    body.light-mode #weatherTemp,
+    body.light-mode #weatherCondition { color: #fff !important; text-shadow: 0 1px 8px rgba(0,0,0,.35); }
+    body.light-mode #weatherLocalTime,
+    body.light-mode #weatherFeelsLike,
+    body.light-mode #weatherLastUpdated { color: rgba(255,255,255,.8) !important; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .wx-cloud, .wx-rain .drop, .wx-snow .flake, .wx-sun, .wx-lightning, .wx-fog, .wx-stars {
+        animation: none !important;
+      }
+    }
+    </style>
+
+    <style id="weather-light-mode-and-suggestions">
+    /* Weather page: light mode clarity + suggestions always on top */
+    #view-weather .info-card { overflow: visible !important; }
+    #weatherSearchWrap { overflow: visible !important; position: relative; z-index: 50; }
+    #weatherSuggestions {
+      z-index: 90 !important;
+      box-shadow: 0 12px 40px rgba(0,0,0,.45);
+    }
+    body.light-mode #weatherSuggestions {
+      background: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: 0 12px 32px rgba(15,23,42,.14) !important;
+    }
+    body.light-mode #weatherSuggestions button {
+      color: #0f172a !important;
+      border-bottom-color: #e2e8f0 !important;
+    }
+    body.light-mode #weatherSuggestions button:hover {
+      background: #f1f5f9 !important;
+    }
+    body.light-mode #weatherSuggestions .text-slate-400 { color: #64748b !important; }
+    body.light-mode #weatherSuggestions i { color: #059669 !important; }
+
+    /* Current card stats — readable in light mode */
+    body.light-mode #weatherCurrentCard .rounded-xl.bg-\[\#07140e\]\/80,
+    body.light-mode #weatherCurrentCard [class*="bg-[#07140e]"] {
+      background: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.light-mode #weatherCurrentCard .text-slate-100 { color: #0f172a !important; }
+    body.light-mode #weatherCurrentCard .text-slate-500 { color: #64748b !important; }
+    body.light-mode #weatherCurrentCard .text-white { color: #0f172a !important; }
+    body.light-mode #weatherCurrentCard .text-emerald-300 { color: #047857 !important; }
+    body.light-mode #weatherCurrentCard .text-slate-400 { color: #475569 !important; }
+
+    body.light-mode #weatherTomorrowCard .bg-sky-950\/40 {
+      background: #e0f2fe !important;
+      border-color: #7dd3fc !important;
+    }
+    body.light-mode #weatherTomorrowCard .text-sky-200,
+    body.light-mode #weatherTomorrowCard .text-sky-400\/80 { color: #0369a1 !important; }
+    body.light-mode #weatherTomorrowCard .bg-amber-950\/30 {
+      background: #fef3c7 !important;
+      border-color: #fcd34d !important;
+    }
+    body.light-mode #weatherTomorrowCard .text-amber-200,
+    body.light-mode #weatherTomorrowCard .text-amber-400\/80 { color: #b45309 !important; }
+    body.light-mode #weatherTomorrowCard .text-emerald-300 { color: #047857 !important; }
+    body.light-mode #weatherTomorrowCard .text-slate-100 { color: #0f172a !important; }
+    body.light-mode #weatherTomorrowCard .text-slate-300,
+    body.light-mode #weatherTomorrowCard .text-slate-400 { color: #475569 !important; }
+
+    body.light-mode #weatherForecastList > div {
+      background: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+    }
+    body.light-mode #weatherForecastList .text-slate-100,
+    body.light-mode #weatherForecastList .text-white { color: #0f172a !important; }
+    body.light-mode #weatherForecastList .text-slate-400 { color: #64748b !important; }
+    body.light-mode #weatherForecastList .text-sky-400 { color: #0284c7 !important; }
+
+    body.light-mode #weatherSearchInput { color: #0f172a !important; }
+    body.light-mode #weatherSearchInput::placeholder { color: #94a3b8 !important; }
+    body.light-mode #weatherLocBtn { color: #047857 !important; }
+    body.light-mode #weatherLocBtn i { color: #047857 !important; stroke: #047857 !important; }
+    body.light-mode #weatherSearchClear { color: #64748b !important; }
+    body.light-mode #view-weather h3,
+    body.light-mode #view-weather h4 { color: #0f172a !important; }
+    body.light-mode #view-weather .text-slate-400 { color: #64748b !important; }
+    body.light-mode #weatherDistrictTip {
+      background: #ecfdf5 !important;
+      border-color: #6ee7b7 !important;
+      color: #065f46 !important;
+    }
+    body.light-mode #weatherDistrictTip .text-emerald-300,
+    body.light-mode #weatherDistrictTip span.font-bold { color: #047857 !important; }
+
+    /* Force visible contrast on the 4 metric tiles */
+    #weatherCurrentCard .grid > div {
+      min-height: 58px;
+    }
+    body.light-mode #weatherCurrentCard .grid > div {
+      background: #ffffff !important;
+      border: 1.5px solid #cbd5e1 !important;
+      box-shadow: 0 2px 8px rgba(15,23,42,.06);
+    }
+    body.light-mode #weatherCurrentCard .grid > div p:first-child {
+      color: #64748b !important;
+      font-weight: 600;
+    }
+    body.light-mode #weatherCurrentCard .grid > div p:last-child {
+      color: #0f172a !important;
+      font-weight: 800;
+    }
     </style>
 
     <div id="downloadAppModal" class="hidden fixed inset-0 z-[180]" role="dialog" aria-modal="true">
@@ -8919,6 +9391,9 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             
             if (tabName === 'favorites') {
                 loadUserFavorites();
+            }
+            if (tabName === 'weather') {
+                try { weatherOnOpen(); } catch (e) { console.warn('weather open', e); }
             }
 
             const bottomNav = document.getElementById('bottomNav');
@@ -12928,6 +13403,470 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
             if (u) { mainAppDownloadLink = u; window.__appDownloadUrl = u; }
         }
 
+        // ========== WEATHER (WeatherAPI.com) ==========
+        const WEATHER_API_KEY = '26598531301d4ad2b4e170112262111';
+        const WEATHER_BASE = 'https://api.weatherapi.com/v1';
+        let weatherLastQuery = '';
+        let weatherSearchTimer = null;
+        let weatherAbort = null;
+        let weatherLoadedOnce = false;
+
+        function weatherHideAll() {
+            ['weatherLoading', 'weatherError', 'weatherCurrentCard', 'weatherTomorrowCard', 'weatherForecastCard', 'weatherDistrictTip'].forEach(id => {
+                document.getElementById(id)?.classList.add('hidden');
+            });
+            document.getElementById('weatherSuggestions')?.classList.add('hidden');
+        }
+        function weatherShowLoading() {
+            weatherHideAll();
+            document.getElementById('weatherLoading')?.classList.remove('hidden');
+        }
+        function weatherShowError(msg) {
+            weatherHideAll();
+            const el = document.getElementById('weatherError');
+            const t = document.getElementById('weatherErrorText');
+            if (t) t.textContent = msg || 'আবহাওয়া পাওয়া যায়নি। ইন্টারনেট চেক করে আবার চেষ্টা করুন।';
+            el?.classList.remove('hidden');
+        }
+
+        async function weatherFetchJson(path, params = {}) {
+            const q = new URLSearchParams({ key: WEATHER_API_KEY, lang: 'bn', ...params });
+            const url = `${WEATHER_BASE}${path}?${q.toString()}`;
+            if (weatherAbort) try { weatherAbort.abort(); } catch (e) {}
+            weatherAbort = new AbortController();
+            const res = await fetch(url, { signal: weatherAbort.signal, cache: 'no-store' });
+            if (!res.ok) {
+                const errBody = await res.text().catch(() => '');
+                throw new Error(`HTTP ${res.status}${errBody ? ': ' + errBody.slice(0, 80) : ''}`);
+            }
+            return res.json();
+        }
+
+        function weatherBnChance(pct) {
+            const n = Number(pct) || 0;
+            if (n >= 70) return `${n}% — বৃষ্টি হওয়ার সম্ভাবনা বেশি`;
+            if (n >= 40) return `${n}% — মাঝারি সম্ভাবনা`;
+            if (n >= 15) return `${n}% — কম সম্ভাবনা`;
+            return `${n}% — প্রায় বৃষ্টিহীন`;
+        }
+        function weatherBnSun(day) {
+            const code = day?.condition?.code;
+            const text = (day?.condition?.text || '').toLowerCase();
+            if (code === 1000 || text.includes('রৌদ্রোজ্জ্বল') || text.includes('সূর্য') || text.includes('sunny') || text.includes('clear')) return 'রোদ উঠবে / আকাশ পরিষ্কার';
+            if (code === 1003 || text.includes('আংশিক') || text.includes('partly')) return 'আংশিক মেঘলা, মাঝে মাঝে রোদ';
+            if (text.includes('মেঘ') || text.includes('cloud') || text.includes('overcast')) return 'মেঘলা আকাশ';
+            if (text.includes('বৃষ্টি') || text.includes('rain') || text.includes('বজ্র')) return 'মেঘলা ও বৃষ্টির সম্ভাবনা';
+            return day?.condition?.text || 'সাধারণ আবহাওয়া';
+        }
+        function weatherFormatDateBn(dateStr) {
+            try {
+                const d = new Date(dateStr + 'T12:00:00');
+                return d.toLocaleDateString('bn-BD', { weekday: 'long', day: 'numeric', month: 'long' });
+            } catch (e) { return dateStr; }
+        }
+        /** Map WeatherAPI condition → live animated scene */
+        function weatherApplyScene(cur) {
+            const scene = document.getElementById('weatherScene');
+            if (!scene || !cur) return;
+            const code = Number(cur.condition?.code) || 0;
+            const text = String(cur.condition?.text || '').toLowerCase();
+            const isDay = cur.is_day === 1;
+            const temp = Number(cur.temp_c);
+            const precip = Number(cur.precip_mm) || 0;
+
+            // Remove previous scene classes
+            scene.className = 'weather-scene';
+
+            let kind = 'wx-clear';
+            // Thunder
+            if ([1087, 1273, 1276, 1279, 1282].includes(code) || text.includes('বজ্র') || text.includes('thunder')) {
+                kind = 'wx-thunder';
+            } else if ([1114, 1117, 1210, 1213, 1216, 1219, 1222, 1225, 1237, 1255, 1258, 1261, 1264].includes(code) || text.includes('তুষার') || text.includes('snow') || text.includes('বরফ')) {
+                kind = 'wx-snow';
+            } else if ([1186, 1189, 1192, 1195, 1201, 1243, 1246].includes(code) || precip >= 4 || text.includes('ভারী বৃষ্টি') || text.includes('heavy rain')) {
+                kind = 'wx-heavyrain';
+            } else if ([1063, 1150, 1153, 1168, 1171, 1180, 1183, 1198, 1240].includes(code) || precip > 0 || text.includes('বৃষ্টি') || text.includes('rain') || text.includes('drizzle')) {
+                kind = 'wx-rain';
+            } else if ([1030, 1135, 1147].includes(code) || text.includes('কুয়াশা') || text.includes('fog') || text.includes('mist') || text.includes('হাওয়া')) {
+                kind = (text.includes('কুয়াশা') || text.includes('fog')) ? 'wx-fog' : 'wx-mist';
+            } else if ([1006, 1009].includes(code) || text.includes('মেঘ') || text.includes('overcast') || text.includes('cloud')) {
+                kind = code === 1009 || text.includes('overcast') ? 'wx-overcast' : 'wx-cloudy';
+            } else if (temp <= 12) {
+                kind = 'wx-cold';
+            } else {
+                kind = 'wx-clear';
+            }
+
+            scene.classList.add(kind);
+            if (!isDay) scene.classList.add('wx-night');
+
+            // Rain drops density
+            const rainLayer = document.getElementById('weatherRainLayer');
+            if (rainLayer) {
+                rainLayer.innerHTML = '';
+                rainLayer.classList.remove('on', 'wx-rain-on');
+                if (kind === 'wx-rain' || kind === 'wx-heavyrain' || kind === 'wx-thunder') {
+                    const count = kind === 'wx-heavyrain' || kind === 'wx-thunder' ? 48 : 28;
+                    for (let i = 0; i < count; i++) {
+                        const d = document.createElement('span');
+                        d.className = 'drop';
+                        d.style.left = (Math.random() * 100) + '%';
+                        d.style.animationDuration = (0.45 + Math.random() * 0.7) + 's';
+                        d.style.animationDelay = (Math.random() * 1.8) + 's';
+                        d.style.opacity = String(0.35 + Math.random() * 0.55);
+                        rainLayer.appendChild(d);
+                    }
+                    rainLayer.classList.add('on');
+                }
+            }
+
+            // Snow flakes
+            const snowLayer = document.getElementById('weatherSnowLayer');
+            if (snowLayer) {
+                snowLayer.innerHTML = '';
+                snowLayer.classList.remove('on');
+                if (kind === 'wx-snow') {
+                    for (let i = 0; i < 32; i++) {
+                        const f = document.createElement('span');
+                        f.className = 'flake';
+                        f.style.left = (Math.random() * 100) + '%';
+                        f.style.width = f.style.height = (3 + Math.random() * 5) + 'px';
+                        f.style.animationDuration = (2.5 + Math.random() * 4) + 's';
+                        f.style.animationDelay = (Math.random() * 3) + 's';
+                        snowLayer.appendChild(f);
+                    }
+                    snowLayer.classList.add('on');
+                }
+            }
+        }
+
+        /** 24-hour local time display — e.g. "২১ নভেম্বর, ২৩:১৪" */
+        function weatherFormatLocalTime(raw) {
+            if (!raw) return '—';
+            try {
+                // WeatherAPI: "2026-11-21 23:14" or "2026-11-21 23:14"
+                const m = String(raw).match(/(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})/);
+                if (m) {
+                    const y = +m[1], mo = +m[2], da = +m[3], hh = +m[4], mi = +m[5];
+                    const d = new Date(y, mo - 1, da, hh, mi);
+                    const datePart = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long' });
+                    const hh24 = String(hh).padStart(2, '0');
+                    const mm = String(mi).padStart(2, '0');
+                    return `${datePart}, ${hh24}:${mm}`;
+                }
+                const d = new Date(raw);
+                if (!isNaN(d.getTime())) {
+                    const datePart = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long' });
+                    const hh = String(d.getHours()).padStart(2, '0');
+                    const mi = String(d.getMinutes()).padStart(2, '0');
+                    return `${datePart}, ${hh}:${mi}`;
+                }
+            } catch (e) {}
+            return String(raw);
+        }
+
+        function weatherRender(data, queryLabel) {
+            if (!data || !data.location || !data.current) {
+                weatherShowError('ডেটা পাওয়া যায়নি');
+                return;
+            }
+            weatherHideAll();
+            const loc = data.location;
+            const cur = data.current;
+            const forecast = data.forecast?.forecastday || [];
+
+            const nameEl = document.getElementById('weatherLocationName');
+            const timeEl = document.getElementById('weatherLocalTime');
+            const tempEl = document.getElementById('weatherTemp');
+            const feelsEl = document.getElementById('weatherFeelsLike');
+            const condEl = document.getElementById('weatherCondition');
+            const iconEl = document.getElementById('weatherIcon');
+            const updatedEl = document.getElementById('weatherLastUpdated');
+            const humEl = document.getElementById('weatherHumidity');
+            const windEl = document.getElementById('weatherWind');
+            const rainEl = document.getElementById('weatherRainChance');
+            const uvEl = document.getElementById('weatherUv');
+
+            if (nameEl) {
+                // Prefer clean BD name: City, Region
+                const parts = [loc.name];
+                if (loc.region && loc.region !== loc.name) parts.push(loc.region);
+                if (loc.country) parts.push(loc.country);
+                nameEl.textContent = parts.join(' · ');
+            }
+            if (timeEl) timeEl.textContent = 'স্থানীয় সময়: ' + weatherFormatLocalTime(loc.localtime);
+            if (tempEl) tempEl.textContent = `${Math.round(cur.temp_c)}°`;
+            if (feelsEl) feelsEl.textContent = `অনুভূত ${Math.round(cur.feelslike_c)}°`;
+            if (condEl) condEl.textContent = cur.condition?.text || '—';
+            if (iconEl && cur.condition?.icon) {
+                iconEl.src = cur.condition.icon.startsWith('//') ? 'https:' + cur.condition.icon : cur.condition.icon;
+                iconEl.alt = cur.condition?.text || '';
+            }
+            if (updatedEl) updatedEl.textContent = cur.last_updated ? 'আপডেট: ' + weatherFormatLocalTime(cur.last_updated) : '';
+            if (humEl) humEl.textContent = `${cur.humidity}%`;
+            if (windEl) windEl.textContent = `${Math.round(cur.wind_kph)} কিমি/ঘণ্টা`;
+            const todayChance = forecast[0]?.day?.daily_chance_of_rain;
+            if (rainEl) rainEl.textContent = todayChance != null ? `${todayChance}%` : (cur.precip_mm > 0 ? 'হ্যাঁ' : 'কম');
+            if (uvEl) uvEl.textContent = String(cur.uv ?? '—');
+
+            document.getElementById('weatherCurrentCard')?.classList.remove('hidden');
+            try { weatherApplyScene(cur); } catch (e) { console.warn('weather scene', e); }
+
+            // Tomorrow (day index 1)
+            const tomorrow = forecast[1];
+            if (tomorrow) {
+                document.getElementById('weatherTomorrowCard')?.classList.remove('hidden');
+                const d = tomorrow.day;
+                document.getElementById('weatherTomorrowDate').textContent = weatherFormatDateBn(tomorrow.date);
+                const tIcon = document.getElementById('weatherTomorrowIcon');
+                if (tIcon && d.condition?.icon) {
+                    tIcon.src = d.condition.icon.startsWith('//') ? 'https:' + d.condition.icon : d.condition.icon;
+                }
+                document.getElementById('weatherTomorrowCond').textContent = d.condition?.text || '—';
+                document.getElementById('weatherTomorrowTemp').textContent = `সর্বোচ্চ ${Math.round(d.maxtemp_c)}° · সর্বনিম্ন ${Math.round(d.mintemp_c)}°`;
+                const chance = d.daily_chance_of_rain ?? 0;
+                document.getElementById('weatherTomorrowRain').textContent = weatherBnChance(chance);
+                document.getElementById('weatherTomorrowSun').textContent = weatherBnSun(d);
+                let note = '';
+                if (chance >= 60) note = 'আগামীকাল ছাতা সাথে রাখুন। বাইরে বের হলে সাবধানে থাকুন।';
+                else if (chance >= 30) note = 'হালকা বৃষ্টি হতে পারে। প্রয়োজনে ছাতা নিন।';
+                else note = 'আগামীকাল সাধারণত শুষ্ক থাকার সম্ভাবনা বেশি।';
+                if (d.maxtemp_c >= 35) note += ' তাপমাত্রা বেশ বেশি থাকতে পারে।';
+                document.getElementById('weatherTomorrowNote').textContent = note;
+            }
+
+            // Multi-day list
+            const list = document.getElementById('weatherForecastList');
+            if (list && forecast.length) {
+                list.innerHTML = forecast.slice(0, 2).map((fd, i) => {
+                    const day = fd.day;
+                    const label = i === 0 ? 'আজ' : 'আগামীকাল';
+                    const icon = day.condition?.icon ? (day.condition.icon.startsWith('//') ? 'https:' + day.condition.icon : day.condition.icon) : '';
+                    return `<div class="flex items-center gap-3 rounded-xl bg-[#07140e]/70 border border-emerald-900/25 px-3 py-2.5">
+                        <img src="${icon}" alt="" class="w-9 h-9 object-contain shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs font-bold text-slate-100">${label}</p>
+                            <p class="text-[10px] text-slate-400 truncate">${day.condition?.text || ''}</p>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <p class="text-xs font-bold text-white">${Math.round(day.maxtemp_c)}° / ${Math.round(day.mintemp_c)}°</p>
+                            <p class="text-[10px] text-sky-400">বৃষ্টি ${day.daily_chance_of_rain ?? 0}%</p>
+                        </div>
+                    </div>`;
+                }).join('');
+                document.getElementById('weatherForecastCard')?.classList.remove('hidden');
+            }
+
+            // District tip from profile
+            const tip = document.getElementById('weatherDistrictTip');
+            const tipText = document.getElementById('weatherDistrictTipText');
+            const myDistrict = (userProfile?.district || '').trim();
+            if (tip && tipText && myDistrict) {
+                const isMyArea = (loc.name || '').includes(myDistrict) || (loc.region || '').includes(myDistrict) || (queryLabel || '').includes(myDistrict);
+                if (isMyArea && tomorrow) {
+                    tipText.textContent = ` আপনার জেলা (${myDistrict})-এ আগামীকাল ${weatherBnChance(tomorrow.day.daily_chance_of_rain || 0).toLowerCase()}। ${weatherBnSun(tomorrow.day)}।`;
+                    tip.classList.remove('hidden');
+                } else {
+                    tip.classList.add('hidden');
+                }
+            } else if (tip) tip.classList.add('hidden');
+
+            weatherLoadedOnce = true;
+            weatherLastQuery = queryLabel || loc.name || '';
+            if (typeof refreshIcons === 'function') refreshIcons();
+        }
+
+        async function weatherLoadByQuery(q) {
+            if (!q || !String(q).trim()) return;
+            let query = String(q).trim();
+            // Avoid wrong foreign matches for BD place names (e.g. Chandpur → Abadpur issues)
+            if (!/,/.test(query) && !/bangladesh/i.test(query) && !/^\-?\d+(\.\d+)?\s*,\s*\-?\d+/.test(query)) {
+                query = query + ', Bangladesh';
+            }
+            weatherShowLoading();
+            try {
+                const data = await weatherFetchJson('/forecast.json', { q: query, days: '3', aqi: 'no' });
+                weatherRender(data, query);
+            } catch (err) {
+                if (err.name === 'AbortError') return;
+                console.warn('weather load', err);
+                // Retry without country suffix if first attempt failed
+                if (query.endsWith(', Bangladesh')) {
+                    try {
+                        const data2 = await weatherFetchJson('/forecast.json', { q: String(q).trim(), days: '3', aqi: 'no' });
+                        weatherRender(data2, String(q).trim());
+                        return;
+                    } catch (e2) {}
+                }
+                weatherShowError('আবহাওয়া লোড করা যায়নি। পরে আবার চেষ্টা করুন।');
+            }
+        }
+
+        async function weatherLoadByCoords(lat, lon) {
+            weatherShowLoading();
+            try {
+                const data = await weatherFetchJson('/forecast.json', { q: `${lat},${lon}`, days: '3', aqi: 'no' });
+                weatherRender(data, `${lat},${lon}`);
+            } catch (err) {
+                if (err.name === 'AbortError') return;
+                console.warn('weather coords', err);
+                // fallback to district
+                const d = (userProfile?.district || '').trim();
+                if (d) await weatherLoadByQuery(d + ', Bangladesh');
+                else weatherShowError('লোকেশন পাওয়া যায়নি। সার্চ করে দেখুন।');
+            }
+        }
+
+        window.weatherUseMyLocation = () => {
+            if (!navigator.geolocation) {
+                showToast('এই ডিভাইসে লোকেশন সাপোর্ট নেই', 'map-pin-off', 'text-amber-400');
+                const d = (userProfile?.district || '').trim();
+                if (d) weatherLoadByQuery(d + ', Bangladesh');
+                return;
+            }
+            weatherShowLoading();
+            navigator.geolocation.getCurrentPosition(
+                (pos) => weatherLoadByCoords(pos.coords.latitude, pos.coords.longitude),
+                (err) => {
+                    console.warn('geo', err);
+                    showToast('লোকেশন অনুমতি দিন বা জেলা সার্চ করুন', 'map-pin-off', 'text-amber-400');
+                    const d = (userProfile?.district || '').trim();
+                    if (d) weatherLoadByQuery(d + ', Bangladesh');
+                    else weatherShowError('লোকেশন পাওয়া যায়নি। সার্চ বক্সে জেলা লিখুন।');
+                },
+                { enableHighAccuracy: false, timeout: 12000, maximumAge: 300000 }
+            );
+        };
+
+        window.weatherOnOpen = () => {
+            document.getElementById('weatherSearchInput') && (document.getElementById('weatherSearchInput').value = '');
+            document.getElementById('weatherSearchClear')?.classList.add('hidden');
+            document.getElementById('weatherSuggestions')?.classList.add('hidden');
+            if (weatherLoadedOnce && weatherLastQuery) {
+                // soft refresh
+                weatherLoadByQuery(weatherLastQuery);
+                return;
+            }
+            const d = (userProfile?.district || '').trim();
+            if (d) {
+                // First show district weather (tomorrow details without extra search)
+                weatherLoadByQuery(d + ', Bangladesh');
+            } else {
+                weatherUseMyLocation();
+            }
+        };
+
+        window.weatherRetry = () => {
+            if (weatherLastQuery) weatherLoadByQuery(weatherLastQuery);
+            else weatherOnOpen();
+        };
+
+        window.weatherClearSearch = () => {
+            const inp = document.getElementById('weatherSearchInput');
+            if (inp) inp.value = '';
+            document.getElementById('weatherSearchClear')?.classList.add('hidden');
+            document.getElementById('weatherSuggestions')?.classList.add('hidden');
+        };
+
+        window.weatherOnSearchInput = (val) => {
+            const clearBtn = document.getElementById('weatherSearchClear');
+            if (clearBtn) clearBtn.classList.toggle('hidden', !String(val || '').trim());
+            clearTimeout(weatherSearchTimer);
+            const q = String(val || '').trim();
+            if (q.length < 1) {
+                document.getElementById('weatherSuggestions')?.classList.add('hidden');
+                return;
+            }
+            weatherSearchTimer = setTimeout(async () => {
+                try {
+                    // Prefer Bangladesh results first by appending country hint when short query
+                    const searchQ = q.length <= 3 ? q : q;
+                    let list = await weatherFetchJson('/search.json', { q: searchQ });
+                    if (!Array.isArray(list)) list = [];
+
+                    // Rank: Bangladesh first, then name starts with query, then contains
+                    const ql = q.toLowerCase();
+                    list = list.slice().sort((a, b) => {
+                        const aBd = (a.country || '').toLowerCase().includes('bangladesh') ? 0 : 1;
+                        const bBd = (b.country || '').toLowerCase().includes('bangladesh') ? 0 : 1;
+                        if (aBd !== bBd) return aBd - bBd;
+                        const aStart = (a.name || '').toLowerCase().startsWith(ql) ? 0 : 1;
+                        const bStart = (b.name || '').toLowerCase().startsWith(ql) ? 0 : 1;
+                        if (aStart !== bStart) return aStart - bStart;
+                        return (a.name || '').localeCompare(b.name || '');
+                    });
+
+                    const box = document.getElementById('weatherSuggestions');
+                    if (!box) return;
+                    if (!list.length) {
+                        box.innerHTML = '<div class="px-3 py-2.5 text-xs text-slate-400">কোনো স্থান পাওয়া যায়নি</div>';
+                        box.classList.remove('hidden');
+                        return;
+                    }
+                    box.innerHTML = list.slice(0, 10).map((item, idx) => {
+                        const label = [item.name, item.region, item.country].filter(Boolean).join(', ');
+                        const lat = item.lat != null ? item.lat : '';
+                        const lon = item.lon != null ? item.lon : '';
+                        // Use lat,lon for exact match (avoids Abadpur when user meant Chandpur)
+                        const safeLabel = String(label).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+                        return `<button type="button" data-w-idx="${idx}" data-w-lat="${lat}" data-w-lon="${lon}" data-w-name="${safeLabel}"
+                            class="weather-sug-btn w-full text-left px-3 py-2.5 text-xs text-slate-100 hover:bg-emerald-900/40 border-b border-emerald-900/20 last:border-0 flex items-center gap-2"
+                            onclick="weatherSelectSuggestionLatLon(this)">
+                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
+                            <span class="truncate flex-1">${label}</span>
+                            ${ (item.country || '').toLowerCase().includes('bangladesh') ? '<span class="text-[9px] font-bold text-emerald-400 shrink-0">BD</span>' : '' }
+                        </button>`;
+                    }).join('');
+                    box.classList.remove('hidden');
+                    if (typeof refreshIcons === 'function') refreshIcons();
+                } catch (e) {
+                    if (e.name !== 'AbortError') console.warn('weather search', e);
+                }
+            }, 220);
+        };
+
+        window.weatherSelectSuggestionLatLon = (btn) => {
+            if (!btn) return;
+            const lat = btn.getAttribute('data-w-lat');
+            const lon = btn.getAttribute('data-w-lon');
+            const name = (btn.getAttribute('data-w-name') || '').replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+            const inp = document.getElementById('weatherSearchInput');
+            if (inp) inp.value = name;
+            document.getElementById('weatherSuggestions')?.classList.add('hidden');
+            document.getElementById('weatherSearchClear')?.classList.remove('hidden');
+            if (lat && lon && lat !== 'null' && lon !== 'null') {
+                weatherLoadByCoords(parseFloat(lat), parseFloat(lon));
+                weatherLastQuery = `${lat},${lon}`;
+            } else if (name) {
+                weatherLoadByQuery(name);
+            }
+        };
+
+        // backward-compatible alias
+        window.weatherSelectSuggestion = (q) => {
+            const inp = document.getElementById('weatherSearchInput');
+            if (inp) inp.value = q;
+            document.getElementById('weatherSuggestions')?.classList.add('hidden');
+            document.getElementById('weatherSearchClear')?.classList.remove('hidden');
+            weatherLoadByQuery(q);
+        };
+
+        window.weatherSearchSubmit = () => {
+            const inp = document.getElementById('weatherSearchInput');
+            const q = (inp?.value || '').trim();
+            if (!q) return;
+            document.getElementById('weatherSuggestions')?.classList.add('hidden');
+            // Prefer Bangladesh when user types a local name without country
+            const looksLocal = !/,/.test(q) && !/bangladesh/i.test(q);
+            weatherLoadByQuery(looksLocal ? (q + ', Bangladesh') : q);
+        };
+
+        // Close suggestions on outside click
+        document.addEventListener('click', (e) => {
+            const box = document.getElementById('weatherSuggestions');
+            const wrap = e.target.closest?.('#weatherSearchWrap, #weatherSuggestions, #weatherSearchInput');
+            if (box && !wrap) box.classList.add('hidden');
+        });
 
         // ========== BOOT ==========
         document.getElementById('footerYear').textContent = new Date().getFullYear();
@@ -13243,6 +14182,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 services: 'house',
                 emergency: 'siren',
                 blood: 'droplet',
+                weather: 'cloud-sun',
                 profile: 'user-round',
                 chat: 'headset'
             };
@@ -13250,6 +14190,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                 services: 'Home',
                 emergency: 'জরুরী',
                 blood: 'রক্ত',
+                weather: 'আবহাওয়া',
                 profile: 'Profile',
                 chat: 'Admin Support'
             };
@@ -13347,6 +14288,7 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         if (tab === 'services') renderServices();
                         else if (tab === 'emergency') renderEmergency();
                         else if (tab === 'blood') filterBloodDonors();
+                        else if (tab === 'weather' && typeof weatherRetry === 'function') weatherRetry();
                         else if (tab === 'profile') updateProfileUI();
                         else if (tab === 'chat') renderChatMessages();
                         if (!navigator.onLine) {
@@ -13366,6 +14308,8 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
                         const snap = await getDocs(collection(db, 'bloodDonors'));
                         bloodDonors = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                         filterBloodDonors();
+                    } else if (tab === 'weather') {
+                        if (typeof weatherRetry === 'function') weatherRetry();
                     } else if (tab === 'profile') {
                         if (currentUser) {
                             const snap = await getDoc(doc(db, 'users', currentUser.uid));

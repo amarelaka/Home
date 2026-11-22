@@ -1,0 +1,3351 @@
+/* আমার এলাকা — ওয়েবসাইটের সমস্ত CSS (index.html থেকে আলাদা করা হয়েছে) */
+
+        /* ========== base ========== */
+        html, body {
+            background-color: #050a08;
+            max-width: 100vw;
+            width: 100%;
+            touch-action: pan-y;
+        }
+        html { overflow-x: hidden; }
+        body { overflow-x: clip; }
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            background: linear-gradient(180deg, #050a08 0%, #0d1f17 50%, #000000 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            min-height: 100dvh;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 8px); }
+
+        /* ========== premium launch off ========== */
+        body.premium-off .premium-feature { display: none !important; }
+        body.premium-off #sidebarPremiumBtn { display: none !important; }
+        body.premium-off #headerPlusBtn { display: none !important; }
+        body.premium-off #profileBlueBadge,
+        body.premium-off #sidebarBlueBadge { display: none !important; }
+        body.premium-off #profileVerifyBtn { display: none !important; }
+        body.premium-off #currentPlanCard { display: none !important; }
+        body.premium-off #profilePlanMiniCard { display: none !important; }
+
+        /* ========== offline banner ========== */
+        #offlineBanner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            padding: 8px 12px;
+            box-shadow: 0 2px 12px rgba(245,158,11,0.4);
+            animation: bannerSlideDown 0.3s ease-out;
+        }
+        @keyframes bannerSlideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        /* ========== light mode ========== */
+        body.light-mode { background: #f8fafc !important; color: #1e293b !important; background-attachment: fixed; }
+        body.light-mode .glass-card,
+        body.light-mode .info-card,
+        body.light-mode .bg-\[\#10281c\],
+        body.light-mode .bg-\[\#07140e\],
+        body.light-mode .bg-\[\#0d1f17\],
+        body.light-mode .bg-\[\#050a08\] {
+            background: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
+        }
+        body.light-mode .text-white,
+        body.light-mode .text-slate-100,
+        body.light-mode .text-slate-200 { color: #0f172a !important; }
+        body.light-mode .text-slate-300 { color: #334155 !important; }
+        body.light-mode .text-slate-400 { color: #64748b !important; }
+        body.light-mode .text-emerald-300 { color: #047857 !important; }
+        body.light-mode .text-emerald-400 { color: #059669 !important; }
+        body.light-mode .text-blue-400 { color: #2563eb !important; }
+        body.light-mode .glass-input { background: #f8fafc !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        body.light-mode .glass-input:focus-within { background: #ffffff !important; border-color: #10b981 !important; box-shadow: 0 0 0 4px rgba(16,185,129,0.15) !important; }
+        body.light-mode .glass-input svg { color: #047857 !important; }
+        body.light-mode input, body.light-mode select, body.light-mode textarea { color: #0f172a !important; }
+        body.light-mode ::placeholder { color: #94a3b8 !important; }
+        body.light-mode label { color: #064e3b !important; }
+        body.light-mode .bg-black\/40 { background-color: #e2e8f0 !important; border-color: #cbd5e1 !important; }
+        body.light-mode .auth-tab:not(.active) { color: #475569 !important; }
+        body.light-mode .auth-tab.active { background: linear-gradient(135deg,#059669 0%,#10b981 100%) !important; color: #ffffff !important; }
+        body.light-mode .top-app-bar,
+        body.light-mode .bottom-nav,
+        body.light-mode #sidebarDrawer,
+        body.light-mode #notifPanel {
+            background: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
+        }
+        body.light-mode .top-app-icon-btn { color: #334155 !important; }
+        body.light-mode .top-app-icon-btn:hover { background: #f1f5f9 !important; }
+        body.light-mode .premium-nav-btn { color: #d97706 !important; }
+        body.light-mode .premium-nav-btn span { color: #d97706 !important; }
+        body.light-mode .premium-nav-btn.is-premium { color: #2563eb !important; }
+        body.light-mode .premium-nav-btn.is-premium span { color: #2563eb !important; }
+        body.light-mode .sidebar-item { color: #334155 !important; }
+        body.light-mode .sidebar-item:hover { background: #f1f5f9 !important; color: #0f172a !important; }
+        body.light-mode .sidebar-item svg { color: #047857 !important; }
+        body.light-mode .sidebar-item-danger { color: #dc2626 !important; }
+        body.light-mode .sidebar-item-danger svg { color: #dc2626 !important; }
+        body.light-mode .bottom-nav-btn:not(.active) { color: #64748b !important; }
+        body.light-mode .bottom-nav-btn.active { color: #047857 !important; }
+        body.light-mode .bottom-nav-btn.active svg { color: #047857 !important; }
+        body.light-mode .tab-btn:not(.bg-gradient-to-r) { color: #334155 !important; }
+        body.light-mode .tab-btn:not(.bg-gradient-to-r):hover { background: #f1f5f9 !important; }
+        body.light-mode .brand-text-2 { color: #0f172a !important; }
+        body.light-mode .notif-item { background: #f8fafc !important; border-color: #e2e8f0 !important; }
+        body.light-mode .notif-item.unread { background: #f1f5f9 !important; border-color: #cbd5e1 !important; }
+        body.light-mode .notif-item .notif-icon { background: #d1fae5 !important; border-color: #a7f3d0 !important; color: #047857 !important; }
+        body.light-mode .package-card { background: #ffffff !important; border-color: #e2e8f0 !important; }
+        body.light-mode .package-card.selected { background: #fffbeb !important; border-color: #fbbf24 !important; }
+        body.light-mode .package-price { color: #0f172a !important; }
+        body.light-mode .pay-method-card { background: #f8fafc !important; border-color: #e2e8f0 !important; }
+        body.light-mode .pay-method-card.selected { border-color: #10b981 !important; background: #ecfdf5 !important; }
+        body.light-mode .admin-fab { border-color: #ffffff !important; }
+        body.light-mode .admin-fab-label { color: #047857 !important; }
+        body.light-mode .service-card { background: #ffffff !important; border-color: #e2e8f0 !important; }
+        body.light-mode .notice-card { background: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
+        body.light-mode .notice-card h3 { color: #0f172a !important; }
+        body.light-mode .notice-card p { color: #475569 !important; }
+        body.light-mode .notice-card .text-rose-300 { color: #be123c !important; background-color: rgba(244, 63, 94, 0.1) !important; border-color: rgba(244, 63, 94, 0.3) !important; }
+        body.light-mode .notice-card .text-amber-300 { color: #b45309 !important; background-color: rgba(245, 158, 11, 0.1) !important; border-color: rgba(245, 158, 11, 0.3) !important; }
+        body.light-mode .notice-card .text-emerald-300 { color: #047857 !important; background-color: rgba(16, 185, 129, 0.1) !important; border-color: rgba(16, 185, 129, 0.3) !important; }
+        body.light-mode .notice-card .text-slate-500 { color: #94a3b8 !important; }
+        body.light-mode #itemCountText .infinity-symbol { color: #059669; }
+        body.light-mode #itemCountText { color: #047857 !important; }
+
+        /* ========== Light Mode Modal Fixes ========== */
+        body.light-mode #promotionFormModal > div,
+
+        body.light-mode #promotionDetailModal > div {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        body.light-mode #promotionDetailModal .bg-\[\#10281c\],
+        body.light-mode #promotionDetailModal .bg-\[\#07140e\] {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+        body.light-mode #promotionDetailModal .text-white,
+        body.light-mode #promotionDetailModal .text-slate-100,
+        body.light-mode #promotionDetailModal .text-slate-200,
+        body.light-mode #promotionDetailModal .text-slate-300 { color: #0f172a !important; }
+        body.light-mode #promotionDetailModal .text-slate-400 { color: #64748b !important; }
+
+        body.light-mode #serviceDetailModal > div,
+        body.light-mode #categoryModal > div,
+        body.light-mode #noticeModal > div,
+        body.light-mode #feedbackModal > div,
+        
+        body.light-mode #downloadAppModal > div,
+        body.light-mode #otherDownloadSourcesModal > div {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        body.light-mode #downloadAppModal .bg-\[\#07140e\],
+        body.light-mode #otherDownloadSourcesModal .bg-\[\#07140e\],
+        body.light-mode #otherDownloadSourcesList .bg-\[\#07140e\] {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+        body.light-mode #downloadAppModal .text-white:not(.bg-gradient-to-r *):not(button),
+        body.light-mode #otherDownloadSourcesModal .text-white:not(.bg-gradient-to-r *) {
+            color: #0f172a !important;
+        }
+        body.light-mode #otherDownloadSourcesList .text-slate-100 { color: #0f172a !important; }
+        body.light-mode #otherDownloadSourcesList .text-slate-400 { color: #64748b !important; }
+
+        body.light-mode #settingsModal > div,
+        body.light-mode #aboutModal > div,
+        body.light-mode #termsModal > div,
+        body.light-mode #editProfileModal > div,
+        body.light-mode #userEmergencyRequestModal > div,
+        body.light-mode #userBloodRequestModal > div,
+        body.light-mode #premiumActionModal > div,
+        body.light-mode #providerModal > div,
+        
+        body.light-mode #changePasswordModal > div,
+        body.light-mode #chatInfoModal > div {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        body.light-mode #changePasswordModal .bg-\[\#07140e\],
+        body.light-mode #chatInfoModal .bg-\[\#07140e\] {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+        body.light-mode #changePasswordModal .text-slate-100,
+        body.light-mode #chatInfoModal .text-slate-100 {
+            color: #0f172a !important;
+        }
+        body.light-mode #changePasswordModal .text-slate-400,
+        body.light-mode #chatInfoModal .text-slate-400 {
+            color: #64748b !important;
+        }
+
+        body.light-mode #contactModal > div {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+
+        body.light-mode #promotionFormModal .bg-\[\#0d1f17\],
+        body.light-mode #promotionFormModal .bg-\[\#07140e\],
+        body.light-mode #serviceDetailModal .bg-\[\#10281c\],
+        body.light-mode #serviceDetailModal .bg-\[\#07140e\],
+        body.light-mode #categoryModal .bg-\[\#10281c\],
+        body.light-mode #categoryModal .bg-\[\#07140e\],
+        body.light-mode #noticeModal .bg-\[\#10281c\],
+        body.light-mode #feedbackModal .bg-\[\#10281c\],
+        body.light-mode #feedbackModal .bg-\[\#07140e\],
+        body.light-mode #settingsModal .bg-\[\#10281c\],
+        body.light-mode #settingsModal .bg-\[\#07140e\],
+        body.light-mode #aboutModal .bg-\[\#10281c\],
+        body.light-mode #termsModal .bg-\[\#10281c\],
+        body.light-mode #editProfileModal .bg-\[\#10281c\],
+        body.light-mode #editProfileModal .bg-\[\#07140e\],
+        body.light-mode #userEmergencyRequestModal .bg-\[\#10281c\],
+        body.light-mode #userEmergencyRequestModal .bg-\[\#07140e\],
+        body.light-mode #userBloodRequestModal .bg-\[\#10281c\],
+        body.light-mode #userBloodRequestModal .bg-\[\#07140e\],
+        body.light-mode #premiumActionModal .bg-\[\#10281c\],
+        body.light-mode #premiumActionModal .bg-\[\#07140e\],
+        body.light-mode #providerModal .bg-\[\#10281c\],
+        body.light-mode #providerModal .bg-\[\#07140e\],
+        body.light-mode #contactModal .bg-\[\#07140e\] {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        body.light-mode .promo-input { background: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        body.light-mode .promo-input:focus { border-color: #f59e0b !important; }
+        body.light-mode .promo-label { color: #b45309 !important; }
+        body.light-mode .promo-type-btn {
+            background: #f8fafc !important;
+            color: #475569 !important;
+            border-color: #e2e8f0 !important;
+        }
+        body.light-mode .promo-type-btn.selected {
+            background: #fffbeb !important;
+            color: #b45309 !important;
+            border-color: #fbbf24 !important;
+            box-shadow: 0 0 0 2px rgba(251,191,36,0.3) !important;
+        }
+        body.light-mode .promotion-card { background: #ffffff !important; border-color: #e2e8f0 !important; }
+        body.light-mode .promo-ad-badge { background: #fbbf24 !important; color: #0d1f17 !important; }
+        body.light-mode .promo-cta-small { background: #fef3c7 !important; border-color: #fcd34d !important; color: #b45309 !important; }
+
+        /* Modal text colors specific overrides for light mode */
+        body.light-mode #promotionFormModal .text-slate-100,
+        body.light-mode #promotionFormModal .text-slate-200,
+        body.light-mode #promotionFormModal .text-slate-300,
+        body.light-mode #serviceDetailModal .text-slate-100,
+        body.light-mode #serviceDetailModal .text-slate-200,
+        body.light-mode #serviceDetailModal .text-slate-300,
+        body.light-mode #categoryModal .text-slate-100,
+        body.light-mode #categoryModal .text-slate-200,
+        body.light-mode #categoryModal .text-slate-300,
+        body.light-mode #editProfileModal .text-slate-100,
+        body.light-mode #editProfileModal .text-slate-200,
+        body.light-mode #editProfileModal .text-slate-300,
+        body.light-mode #providerModal .text-slate-100,
+        body.light-mode #providerModal .text-slate-200,
+        body.light-mode #providerModal .text-slate-300,
+        body.light-mode #userEmergencyRequestModal .text-slate-100,
+        body.light-mode #userEmergencyRequestModal .text-slate-200,
+        body.light-mode #userEmergencyRequestModal .text-slate-300,
+        body.light-mode #userBloodRequestModal .text-slate-100,
+        body.light-mode #userBloodRequestModal .text-slate-200,
+        body.light-mode #userBloodRequestModal .text-slate-300 {
+            color: #0f172a !important;
+        }
+        
+        body.light-mode #promotionFormModal .text-slate-400,
+        body.light-mode #serviceDetailModal .text-slate-400,
+        body.light-mode #categoryModal .text-slate-400,
+        body.light-mode #editProfileModal .text-slate-400,
+        body.light-mode #providerModal .text-slate-400,
+        body.light-mode #userEmergencyRequestModal .text-slate-400,
+        body.light-mode #userBloodRequestModal .text-slate-400 {
+            color: #64748b !important;
+        }
+
+        body.light-mode #searchInputMobile { background: #ffffff !important; border-color: #cbd5e1 !important; color: #0f172a !important; }
+        body.light-mode #searchInputMobile::placeholder { color: #94a3b8 !important; }
+        body.light-mode #modalCategorySearch { background: #f8fafc !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        body.light-mode #promoImageZone, body.light-mode #provImageZone { background: #f8fafc !important; border-color: #cbd5e1 !important; }
+        
+        
+        
+        
+        
+        body.light-mode .pay-existing-banner {
+            background: #fffbeb !important;
+            border-color: #fbbf24 !important;
+            color: #92400e !important;
+        }
+        body.light-mode .pay-existing-banner .font-bold,
+        body.light-mode .pay-existing-banner p {
+            color: #b45309 !important;
+        }
+        body.light-mode .pay-existing-banner #payExistingPlanText {
+            color: #d97706 !important;
+        }
+        body.light-mode .pay-existing-banner i,
+        body.light-mode .pay-existing-banner svg {
+            color: #d97706 !important;
+            stroke: #d97706 !important;
+        }
+
+        body.light-mode .payment-back-btn {
+            background: #e2e8f0 !important;
+            color: #0f172a !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+        body.light-mode .payment-back-btn:hover {
+            background: #cbd5e1 !important;
+        }
+        body.light-mode .payment-back-btn i,
+        body.light-mode .payment-back-btn svg {
+            color: #0f172a !important;
+            stroke: #0f172a !important;
+        }
+
+        /* Blue profile ring (Messenger style) */
+        .profile-blue-ring {
+            box-shadow: 0 0 0 3px #3b82f6, 0 0 0 5px rgba(59,130,246,0.25) !important;
+        }
+        body.light-mode .profile-blue-ring {
+            box-shadow: 0 0 0 3px #2563eb, 0 0 0 5px rgba(37,99,235,0.2) !important;
+        }
+
+        /* Light mode Emergency section fixes */
+        body.light-mode .emergency-info-box {
+            background: #fef3c7 !important;
+            border-color: #fbbf24 !important;
+            color: #92400e !important;
+        }
+        body.light-mode .emergency-info-box p {
+            color: #92400e !important;
+        }
+        body.light-mode #emergencyList .text-slate-100 {
+            color: #0f172a !important;
+        }
+        body.light-mode #emergencyList .text-emerald-300 {
+            color: #047857 !important;
+        }
+        body.light-mode #emergencyList .border-emerald-900\/40 {
+            border-color: #e2e8f0 !important;
+        }
+        body.light-mode #emergencyList .bg-emerald-500\/20 {
+            background: #d1fae5 !important;
+        }
+        body.light-mode #emergencyList .text-slate-500 {
+            color: #64748b !important;
+        }
+
+        /* ========== Light Mode Social Buttons ========== */
+        body.light-mode #githubLoginBtn {
+            background-color: #24292e !important;
+            color: #ffffff !important;
+            border: 1px solid #444c56 !important;
+        }
+        body.light-mode #googleLoginBtn {
+            background-color: #ffffff !important;
+            color: #1f2937 !important;
+            border: 1px solid #d1d5db !important;
+        }
+        body.light-mode #googleLoginBtn:hover { background-color: #f9fafb !important; }
+        body.light-mode #githubLoginBtn:hover { background-color: #1b1f23 !important; }
+
+        /* ========== Light mode: keep white text on colored headers ========== */
+        body.light-mode #noticeModal .bg-gradient-to-r,
+        body.light-mode #termsModal .bg-gradient-to-r,
+        body.light-mode #aboutModal .bg-gradient-to-r,
+        body.light-mode #settingsModal .bg-gradient-to-r,
+        body.light-mode #feedbackModal .bg-gradient-to-r,
+        body.light-mode #editProfileModal .bg-gradient-to-r,
+        body.light-mode #providerModal .bg-gradient-to-r,
+        body.light-mode #categoryModal .bg-gradient-to-r,
+        body.light-mode #serviceDetailModal .bg-gradient-to-r,
+        body.light-mode #promotionFormModal .bg-gradient-to-r,
+        body.light-mode #premiumActionModal .bg-gradient-to-r,
+        body.light-mode #contactModal .bg-gradient-to-r,
+        body.light-mode #userEmergencyRequestModal .bg-gradient-to-r,
+        body.light-mode #userBloodRequestModal .bg-gradient-to-r,
+        body.light-mode #ratingModal .bg-gradient-to-r,
+        body.light-mode #noticeModal [class*="from-emerald"],
+        body.light-mode #termsModal [class*="from-emerald"],
+        body.light-mode #aboutModal [class*="from-emerald"],
+        body.light-mode #settingsModal [class*="from-emerald"],
+        body.light-mode #ratingModal [class*="from-emerald"] {
+            color: #ffffff !important;
+        }
+        body.light-mode #noticeModal .bg-gradient-to-r .text-white,
+        body.light-mode #noticeModal .bg-gradient-to-r h2,
+        body.light-mode #noticeModal .bg-gradient-to-r h3,
+        body.light-mode #noticeModal .bg-gradient-to-r p,
+        body.light-mode #noticeModal .bg-gradient-to-r span,
+        body.light-mode #termsModal .bg-gradient-to-r .text-white,
+        body.light-mode #termsModal .bg-gradient-to-r h2,
+        body.light-mode #termsModal .bg-gradient-to-r h3,
+        body.light-mode #termsModal .bg-gradient-to-r p,
+        body.light-mode #termsModal .bg-gradient-to-r span,
+        body.light-mode #aboutModal .bg-gradient-to-r .text-white,
+        body.light-mode #aboutModal .bg-gradient-to-r h2,
+        body.light-mode #aboutModal .bg-gradient-to-r h3,
+        body.light-mode #aboutModal .bg-gradient-to-r p,
+        body.light-mode #aboutModal .bg-gradient-to-r span,
+        body.light-mode #settingsModal .bg-gradient-to-r .text-white,
+        body.light-mode #settingsModal .bg-gradient-to-r h3,
+        body.light-mode #settingsModal .bg-gradient-to-r p,
+        body.light-mode #settingsModal .bg-gradient-to-r span,
+        body.light-mode #ratingModal .bg-gradient-to-r .text-white,
+        body.light-mode #ratingModal .bg-gradient-to-r h3,
+        body.light-mode #ratingModal .bg-gradient-to-r p,
+        body.light-mode #ratingModal .bg-gradient-to-r span,
+        body.light-mode #feedbackModal .bg-gradient-to-r .text-white,
+        body.light-mode #feedbackModal .bg-gradient-to-r h3,
+        body.light-mode #feedbackModal .bg-gradient-to-r p,
+        body.light-mode #feedbackModal .bg-gradient-to-r span,
+        body.light-mode #editProfileModal .bg-gradient-to-r .text-white,
+        body.light-mode #editProfileModal .bg-gradient-to-r h3,
+        body.light-mode #editProfileModal .bg-gradient-to-r p,
+        body.light-mode #editProfileModal .bg-gradient-to-r span,
+        body.light-mode #providerModal .bg-gradient-to-r .text-white,
+        body.light-mode #providerModal .bg-gradient-to-r h3,
+        body.light-mode #providerModal .bg-gradient-to-r p,
+        body.light-mode #providerModal .bg-gradient-to-r span,
+        body.light-mode #categoryModal .bg-gradient-to-r .text-white,
+        body.light-mode #categoryModal .bg-gradient-to-r h3,
+        body.light-mode #categoryModal .bg-gradient-to-r p,
+        body.light-mode #categoryModal .bg-gradient-to-r span,
+        body.light-mode #serviceDetailModal .bg-gradient-to-r .text-white,
+        body.light-mode #serviceDetailModal .bg-gradient-to-r h3,
+        body.light-mode #serviceDetailModal .bg-gradient-to-r p,
+        body.light-mode #serviceDetailModal .bg-gradient-to-r span,
+        body.light-mode #contactModal .bg-gradient-to-r .text-white,
+        body.light-mode #contactModal .bg-gradient-to-r h3,
+        body.light-mode #contactModal .bg-gradient-to-r p,
+        body.light-mode #contactModal .bg-gradient-to-r span,
+        body.light-mode #userEmergencyRequestModal .bg-gradient-to-r .text-white,
+        body.light-mode #userEmergencyRequestModal .bg-gradient-to-r h3,
+        body.light-mode #userBloodRequestModal .bg-gradient-to-r .text-white,
+        body.light-mode #userBloodRequestModal .bg-gradient-to-r h3,
+        body.light-mode #premiumActionModal .bg-gradient-to-r .text-white,
+        body.light-mode #premiumActionModal .bg-gradient-to-r h3,
+        body.light-mode #promotionFormModal .bg-gradient-to-r .text-white,
+        body.light-mode #promotionFormModal .bg-gradient-to-r h3 {
+            color: #ffffff !important;
+        }
+        /* Close buttons on green headers stay visible */
+        body.light-mode #noticeModal .bg-gradient-to-r button,
+        body.light-mode #termsModal .bg-gradient-to-r button,
+        body.light-mode #aboutModal .bg-gradient-to-r button,
+        body.light-mode #settingsModal .bg-gradient-to-r button,
+        body.light-mode #ratingModal .bg-gradient-to-r button,
+        body.light-mode #feedbackModal .bg-gradient-to-r button,
+        body.light-mode #editProfileModal .bg-gradient-to-r button,
+        body.light-mode #providerModal .bg-gradient-to-r button,
+        body.light-mode #categoryModal .bg-gradient-to-r button,
+        body.light-mode #serviceDetailModal .bg-gradient-to-r button,
+        body.light-mode #contactModal .bg-gradient-to-r button {
+            color: #ffffff !important;
+        }
+        body.light-mode #noticeModal .bg-gradient-to-r button svg,
+        body.light-mode #termsModal .bg-gradient-to-r button svg,
+        body.light-mode #aboutModal .bg-gradient-to-r button svg,
+        body.light-mode #settingsModal .bg-gradient-to-r button svg,
+        body.light-mode #ratingModal .bg-gradient-to-r button svg,
+        body.light-mode #feedbackModal .bg-gradient-to-r button svg,
+        body.light-mode #editProfileModal .bg-gradient-to-r button svg,
+        body.light-mode #providerModal .bg-gradient-to-r button svg,
+        body.light-mode #categoryModal .bg-gradient-to-r button svg,
+        body.light-mode #serviceDetailModal .bg-gradient-to-r button svg,
+        body.light-mode #contactModal .bg-gradient-to-r button svg {
+            color: #ffffff !important;
+            stroke: #ffffff !important;
+        }
+        /* Notice modal title area when dynamically built with green header */
+        body.light-mode #noticeModal .modal-sheet > div:first-child,
+        body.light-mode #noticeModal .modal-sheet > div:first-child * {
+            color: #ffffff !important;
+        }
+        body.light-mode #noticeModal .modal-sheet > div:first-child svg {
+            color: #ffffff !important;
+            stroke: #ffffff !important;
+        }
+        /* Category "More" button and live indicator contrast */
+        body.light-mode #openCategoryModalBtn,
+        body.light-mode button[onclick="openCategoryModal()"] {
+            background: #d1fae5 !important;
+            color: #065f46 !important;
+            border-color: #6ee7b7 !important;
+        }
+        body.light-mode #openCategoryModalBtn *,
+        body.light-mode button[onclick="openCategoryModal()"] * {
+            color: #065f46 !important;
+        }
+        body.light-mode #itemCountText {
+            color: #047857 !important;
+            font-weight: 700 !important;
+        }
+        /* Notif panel header readability */
+        body.light-mode #notifPanel .text-white {
+            color: #0f172a !important;
+        }
+        body.light-mode #notifPanel [class*="from-emerald"] .text-white,
+        body.light-mode #notifPanel .bg-gradient-to-r .text-white,
+        body.light-mode #notifPanel .bg-gradient-to-r h3,
+        body.light-mode #notifPanel .bg-gradient-to-r p,
+        body.light-mode #notifPanel .bg-gradient-to-r span {
+            color: #ffffff !important;
+        }
+        body.light-mode #notifPanel .bg-gradient-to-r button,
+        body.light-mode #notifPanel .bg-gradient-to-r button svg {
+            color: #ffffff !important;
+            stroke: #ffffff !important;
+        }
+        /* Terms modal header block */
+        body.light-mode #termsModal .modal-sheet > div:first-child,
+        body.light-mode #termsModal .modal-sheet > div:first-child * {
+            color: #ffffff !important;
+        }
+        body.light-mode #termsModal .modal-sheet > div:first-child svg {
+            stroke: #ffffff !important;
+        }
+
+        /* ========== auth bg ========== */
+        .auth-bg {
+            background-color: #050a08;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 0% 0%, rgba(16,185,129,0.40) 0%, transparent 55%),
+                radial-gradient(ellipse 80% 60% at 100% 100%, rgba(20,184,166,0.32) 0%, transparent 55%),
+                radial-gradient(circle at 50% 50%, rgba(6,78,59,0.18) 0%, transparent 70%),
+                linear-gradient(180deg, #0d1f17 0%, #050a08 60%, #000000 100%);
+            position: relative; overflow-x: hidden;
+        }
+        body.light-mode .auth-bg {
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(ellipse 80% 60% at 0% 0%, rgba(16,185,129,0.15) 0%, transparent 55%),
+                radial-gradient(ellipse 80% 60% at 100% 100%, rgba(20,184,166,0.15) 0%, transparent 55%),
+                linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .aurora-blob { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; will-change: transform; }
+
+        .glass-card {
+            background: linear-gradient(145deg, rgba(10, 30, 20, 0.85), rgba(5, 16, 10, 0.88));
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(16, 185, 129, 0.28);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 40px rgba(16,185,129,0.18), inset 0 1px 0 rgba(255,255,255,0.06);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .glass-card-header { background: linear-gradient(180deg, rgba(16,185,129,0.18) 0%, rgba(16,185,129,0) 100%); }
+        body.light-mode .glass-card-header { background: transparent !important; }
+        .glass-input {
+            background: rgba(8, 30, 18, 0.65);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(16, 185, 129, 0.22);
+            transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+        }
+        .glass-input:focus-within {
+            background: rgba(10, 30, 20, 0.95);
+            border-color: rgba(16, 185, 129, 0.75);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15), 0 8px 24px rgba(16,185,129,0.2);
+        }
+        .glass-input:focus-within svg { color: #6ee7b7; transform: scale(1.15); }
+        .glass-input svg { color: #10b981; transition: color 0.25s, transform 0.25s; }
+
+        .auth-tab {
+            padding: 10px 12px; border-radius: 12px; font-weight: 700; font-size: 13px;
+            color: #a1a1aa; transition: all 0.3s; cursor: pointer; border: none; background: transparent;
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .auth-tab.active { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; box-shadow: 0 8px 20px rgba(16,185,129,0.45); }
+
+        .btn-glow {
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #6ee7b7 100%);
+            box-shadow: 0 8px 24px rgba(16,185,129,0.42), 0 4px 12px rgba(52,211,153,0.3);
+            transition: all 0.25s;
+        }
+        .btn-glow:hover:not(:disabled), .btn-glow:active:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 32px rgba(16,185,129,0.55), 0 6px 16px rgba(52,211,153,0.4);
+        }
+        .btn-glow:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+        .btn-glow:disabled { opacity: 0.55; cursor: not-allowed; }
+
+        .top-app-bar {
+            position: sticky; top: 0; z-index: 60;
+            background: rgba(10, 30, 20, 0.78);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            backdrop-filter: blur(10px) saturate(180%);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.18);
+            box-shadow: 0 2px 14px rgba(0,0,0,0.35);
+        }
+        .top-app-icon-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #e2e8f0; background: transparent; border: none; cursor: pointer;
+            transition: background 0.25s, transform 0.25s; position: relative;
+        }
+        .top-app-icon-btn:hover { background: rgba(16, 185, 129, 0.15); }
+        .top-app-icon-btn:active { transform: scale(0.94); }
+        /* Header Admin Support — Messenger-style icon */
+        #headerChatBtn .messenger-header-icon { color: #0084FF; width: 22px; height: 22px; }
+        #headerChatBtn.header-chat-active { background: rgba(0, 132, 255, 0.15) !important; }
+        body.light-mode #headerChatBtn .messenger-header-icon { color: #0084FF; }
+        body.light-mode #headerChatBtn.header-chat-active { background: rgba(0, 132, 255, 0.12) !important; }
+        #bnav-notif { position: relative; }
+
+        .brand-text-1 {
+            background: linear-gradient(135deg, #6ee7b7 0%, #10b981 50%, #059669 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent; color: transparent;
+        }
+        .brand-text-2 { color: #ffffff; }
+
+        #sidebarBackdrop { background: rgba(0,0,0,0.55); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); transition: opacity 0.3s ease; }
+        #sidebarDrawer {
+            background: #0d1f17; border-right: 1px solid rgba(16, 185, 129, 0.22);
+            box-shadow: 8px 0 40px rgba(0,0,0,0.6);
+            transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 12px; width: 100%;
+            padding: 11px 14px; border-radius: 12px; color: #cbd5e1;
+            font-size: 13px; font-weight: 500; background: transparent; border: none;
+            cursor: pointer; text-align: left; transition: background 0.2s, color 0.2s, transform 0.15s;
+        }
+        .sidebar-item:hover { background: rgba(16, 185, 129, 0.12); color: #a7f3d0; }
+        .sidebar-item:active { transform: scale(0.985); }
+        .sidebar-item svg { width: 18px; height: 18px; color: #10b981; flex-shrink: 0; transition: transform 0.2s, filter 0.2s; }
+        .sidebar-item:hover svg { transform: scale(1.12); filter: drop-shadow(0 0 6px rgba(16,185,129,0.7)); }
+        .sidebar-item-danger { color: #f87171; }
+        .sidebar-item-danger:hover { background: rgba(239,68,68,0.12); color: #fca5a5; }
+        .sidebar-item-danger svg { color: #f87171; }
+
+        #notifBackdrop { background: rgba(0,0,0,0.55); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); transition: opacity 0.3s ease; }
+        /* নোটিফিকেশন = পূর্ণ পেজ (পপআপ/মোডাল নয়) */
+        #notifPanel {
+            background: #0d1f17;
+            border: none;
+            left: 0 !important; right: 0 !important;
+            width: 100% !important; max-width: 100% !important;
+            top: 0 !important;
+            bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+            height: auto !important;
+            padding-top: env(safe-area-inset-top, 0px);
+            box-shadow: none;
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+            z-index: 48 !important;
+        }
+        #notifPanel.translate-x-full { transform: translateY(110%) !important; pointer-events: none !important; }
+        #notifPanel.translate-x-0 { transform: translateY(0) !important; pointer-events: auto !important; }
+        body.notif-page-open #bottomNav.nav-hidden ~ #notifPanel,
+        body.notif-page-open.nav-is-hidden #notifPanel {
+            bottom: 0 !important;
+        }
+        /* ব্যাকড্রপ লুকানো — পূর্ণ পেজ, অন্য পেজের উপর মোডাল নয় */
+        #notifBackdrop {
+            display: none !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+        }
+        body.notif-page-open #bottomNav { z-index: 50 !important; }
+        body.notif-page-open .top-app-bar { display: none !important; }
+        body.notif-page-open #appContent main { visibility: hidden !important; pointer-events: none !important; }
+        body.notif-page-open #bnav-notif { color: #047857 !important; }
+        body.notif-page-open #bnav-notif svg { color: #10b981 !important; stroke: #10b981 !important; }
+        body.light-mode #bnav-notif { color: #64748b !important; }
+        body.light-mode #bnav-notif svg { color: #64748b !important; stroke: #64748b !important; stroke-width: 2 !important; opacity: 1 !important; }
+        body.light-mode.notif-page-open #bnav-notif,
+        body.light-mode.notif-page-open #bnav-notif svg { color: #047857 !important; stroke: #047857 !important; }
+        /* সব বটম-নেভ আইকন একই ওজন/স্টাইল */
+        #bottomNav .bottom-nav-btn svg {
+            width: 22px !important; height: 22px !important;
+            stroke-width: 2 !important;
+            opacity: 1 !important;
+        }
+        #bottomNav .bottom-nav-btn { color: #64748b; }
+        body:not(.light-mode) #bottomNav .bottom-nav-btn { color: #94a3b8; }
+        body:not(.light-mode) #bottomNav .bottom-nav-btn svg { stroke: currentColor; color: inherit; }
+        body.light-mode #bottomNav .bottom-nav-btn { color: #64748b !important; }
+        body.light-mode #bottomNav .bottom-nav-btn svg { color: #64748b !important; stroke: #64748b !important; }
+        #bottomNav .bottom-nav-btn.active { color: #10b981 !important; }
+        #bottomNav .bottom-nav-btn.active svg { color: #10b981 !important; stroke: #10b981 !important; }
+        body.light-mode #bottomNav .bottom-nav-btn.active { color: #047857 !important; }
+        body.light-mode #bottomNav .bottom-nav-btn.active svg { color: #047857 !important; stroke: #047857 !important; }
+        /* চ্যাট থ্রেডে নোটিফ পেজ কখনো দেখাবে না */
+        body.chat-thread #notifPanel,
+        body.chat-kb-open #notifPanel,
+        body.chat-active.chat-thread #notifPanel {
+            display: none !important;
+            transform: translateY(110%) !important;
+            pointer-events: none !important;
+        }
+        /* Header bell in notif page */
+        body.light-mode #notifPanel .w-10.h-10.rounded-xl {
+            background: #d1fae5 !important;
+            color: #047857 !important;
+            box-shadow: none !important;
+        }
+        body.light-mode #notifPanel .w-10.h-10.rounded-xl svg {
+            color: #047857 !important; stroke: #047857 !important; opacity: 1 !important;
+        }
+        .notif-menu-btn {
+            width: 32px; height: 32px; border-radius: 999px;
+            display: flex; align-items: center; justify-content: center;
+            color: #94a3b8; background: transparent; border: none; flex-shrink: 0;
+        }
+        .notif-menu-btn:hover { background: rgba(16,185,129,0.12); color: #e2e8f0; }
+        .notif-menu-pop {
+            position: absolute; right: 8px; top: 36px; z-index: 20;
+            min-width: 140px; padding: 6px;
+            background: #10281c; border: 1px solid rgba(16,185,129,0.35);
+            border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        }
+        body.light-mode .notif-menu-pop {
+            background: #ffffff; border-color: #e2e8f0; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .notif-menu-pop button {
+            width: 100%; text-align: left; padding: 10px 12px; border-radius: 8px;
+            font-size: 12px; font-weight: 600; color: #fca5a5; background: transparent; border: none;
+        }
+        .notif-menu-pop button:hover { background: rgba(239,68,68,0.12); }
+        body.light-mode .notif-menu-pop button { color: #dc2626; }
+        .notif-item {
+            display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px;
+            background: rgba(8, 30, 18, 0.6); border: 1px solid rgba(16, 185, 129, 0.16);
+            transition: background 0.2s, border-color 0.2s, transform 0.15s; cursor: pointer;
+        }
+        .notif-item:hover { background: rgba(10, 40, 24, 0.85); border-color: rgba(16, 185, 129, 0.35); }
+        .notif-item:active { transform: scale(0.985); }
+        .notif-item.unread { background: rgba(10, 40, 24, 0.92); border-color: rgba(16, 185, 129, 0.45); box-shadow: 0 0 0 1px rgba(16,185,129,0.15), 0 4px 14px rgba(16,185,129,0.2); }
+        .notif-item.read { opacity: 0.62; }
+        .notif-item .notif-icon {
+            width: 38px; height: 38px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7; flex-shrink: 0;
+        }
+        .notif-item .notif-icon svg { width: 18px; height: 18px; }
+
+        /* ========== AUTO-HIDE BOTTOM NAV ========== */
+        .bottom-nav {
+            background: rgba(10, 30, 20, 0.96);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            backdrop-filter: blur(24px) saturate(180%);
+            border-top: 1px solid rgba(16, 185, 129, 0.22);
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.5), 0 -1px 0 rgba(16,185,129,0.15);
+            animation: navSlideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+        @keyframes navSlideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .bottom-nav.nav-hidden {
+            transform: translateY(120%) !important;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .bottom-nav-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 3px; padding: 8px 4px; border-radius: 12px; color: #71717a;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 10px; font-weight: 600; position: relative;
+            background: transparent; border: none; cursor: pointer;
+            min-height: 52px; min-width: 44px; flex: 1; -webkit-tap-highlight-color: transparent;
+        }
+        .bottom-nav-btn svg { width: 22px; height: 22px; transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.28s, color 0.28s; }
+        .bottom-nav-btn.active { color: #6ee7b7; }
+        .bottom-nav-btn.active svg { transform: scale(1.15) translateY(-1px); filter: drop-shadow(0 0 8px rgba(16,185,129,0.7)); color: #6ee7b7; }
+        .bottom-nav-btn:active { transform: scale(0.95); }
+        .bottom-nav-btn.active::before {
+            content: ''; position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
+            width: 24px; height: 2.5px; background: linear-gradient(90deg, #059669, #10b981);
+            border-radius: 0 0 4px 4px; box-shadow: 0 0 12px rgba(16,185,129,0.8);
+            transition: all 0.3s ease;
+        }
+        .bnav-icon-wrapper {
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.28s;
+        }
+        .bottom-nav-btn.active .bnav-icon-wrapper {
+            transform: scale(1.15) translateY(-1px);
+            filter: drop-shadow(0 0 8px rgba(16,185,129,0.7));
+        }
+        body.light-mode .bottom-nav-btn.active .bnav-icon-wrapper {
+            filter: drop-shadow(0 0 8px rgba(4,120,87,0.4));
+        }
+        .admin-fab {
+            position: absolute; left: 50%; top: -30px; transform: translateX(-50%);
+            width: 64px; height: 64px; border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 55%, #047857 100%);
+            display: flex; align-items: center; justify-content: center;
+            border: 3px solid #050a08;
+            box-shadow: 0 0 0 2px rgba(16,185,129,0.35), 0 8px 24px rgba(16,185,129,0.55), 0 0 22px rgba(16,185,129,0.45);
+            cursor: pointer; z-index: 5;
+            animation: fabFloat 3.2s ease-in-out infinite;
+            transition: box-shadow 0.3s;
+        }
+        .admin-fab svg { width: 30px; height: 30px; color: #ffffff; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
+        .admin-fab.active {
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            box-shadow: 0 0 0 3px rgba(20,184,166,0.4), 0 8px 28px rgba(20,184,166,0.7), 0 0 30px rgba(16,185,129,0.7);
+        }
+        @keyframes fabFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-4px); }
+        }
+        .admin-fab-label { font-size: 10px; font-weight: 700; color: #10b981; white-space: nowrap; letter-spacing: 0.2px; }
+        .admin-fab-wrapper.active .admin-fab-label { color: #6ee7b7; }
+
+        .info-card {
+            background: linear-gradient(145deg, rgba(10, 30, 20, 0.92), rgba(5, 16, 10, 0.92));
+            border: 1px solid rgba(16, 185, 129, 0.18);
+            border-radius: 20px; transition: all 0.3s;
+        }
+        .info-card:hover { border-color: rgba(16, 185, 129, 0.35); box-shadow: 0 8px 24px rgba(16,185,129,0.15); }
+
+        /* ========== SERVICE CARD ========== */
+        .service-card {
+            background: linear-gradient(145deg, rgba(10, 30, 20, 0.92), rgba(5, 16, 10, 0.92));
+            border: 1px solid rgba(16, 185, 129, 0.18);
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex; flex-direction: column; justify-content: space-between;
+            overflow: hidden;
+            height: 100%;
+        }
+        .service-card:hover { border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 8px 26px rgba(16,185,129,0.18); transform: translateY(-2px); }
+        .service-card .fav-btn {
+            position: absolute; top: 8px; right: 8px;
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.55);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #6ee7b7;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            cursor: pointer; transition: all 0.2s; z-index: 10;
+        }
+        .service-card .fav-btn:hover { background: rgba(0,0,0,0.78); transform: scale(1.06); }
+        .service-card .fav-btn.is-favorite { color: #f43f5e; border-color: rgba(244,63,94,0.6); background: rgba(244,63,94,0.18); }
+        .service-card .fav-btn.is-favorite svg { fill: #f43f5e; }
+        .service-card .action-btn { transition: transform 0.15s, background 0.2s; }
+        .service-card .action-btn:active { transform: scale(0.9); }
+
+        .modal-fav-btn.is-favorite { color: #f43f5e !important; border-color: rgba(244,63,94,0.55) !important; background: rgba(244,63,94,0.15) !important; }
+        .modal-fav-btn.is-favorite svg { fill: #f43f5e; }
+
+        /* ===== Service Card Stagger Animation ===== */
+        @keyframes cardInStagger {
+            0% { opacity: 0; transform: translateY(28px) scale(0.94); }
+            60% { opacity: 1; transform: translateY(-3px) scale(1.015); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .service-card-in {
+            animation: cardInStagger 0.35s ease-out both;
+            height: 100%;
+        }
+        /* After first paint, kill leftover transform so search/layout stays stable */
+        .service-card-in.anim-done {
+            animation: none !important;
+            transform: none !important;
+            opacity: 1 !important;
+        }
+        @keyframes adCardIn {
+            0% { opacity: 0; transform: translateY(32px) scale(0.92) rotate(-1deg); }
+            60% { opacity: 1; transform: translateY(-4px) scale(1.02) rotate(0.5deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+        }
+        .promo-card-in {
+            animation: adCardIn 0.4s ease-out both;
+            height: 100%;
+        }
+        .promo-card-in.anim-done {
+            animation: none !important;
+            transform: none !important;
+            opacity: 1 !important;
+        }
+
+        /* ===== Infinity Counter ===== */
+        @keyframes infinityPulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; text-shadow: 0 0 6px rgba(16,185,129,0.4); }
+            50% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 14px rgba(16,185,129,0.8), 0 0 24px rgba(16,185,129,0.4); }
+        }
+        #itemCountText .infinity-symbol {
+            display: inline-block;
+            animation: infinityPulse 2.5s ease-in-out infinite;
+            font-weight: 900;
+            font-size: 1.15rem;
+            color: #6ee7b7;
+            letter-spacing: -1px;
+            line-height: 1;
+            vertical-align: middle;
+        }
+
+        /* ========== SKELETON + SENTINEL ========== */
+        .svc-skeleton {
+            background: linear-gradient(90deg, rgba(10, 30, 20, 0.9) 25%, rgba(15, 45, 30, 0.9) 50%, rgba(10, 30, 20, 0.9) 75%);
+            background-size: 200% 100%;
+            animation: shimmerBg 1.4s infinite;
+            border-radius: 20px;
+            min-height: 320px;
+        }
+        @keyframes shimmerBg { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        #servicesSentinel { display: flex; align-items: center; justify-content: center; padding: 20px; min-height: 60px; grid-column: 1 / -1; }
+        #servicesSentinel.hidden { display: none; }
+        .sentinel-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; animation: bounceDot 1.2s infinite; }
+        .sentinel-dot:nth-child(2) { animation-delay: 0.15s; }
+        .sentinel-dot:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes bounceDot { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
+
+        /* ========== IMAGE UPLOAD ========== */
+        /* Provider form: media type toggle */
+        .prov-media-opt { display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 10px; border-radius:12px; border:1px solid rgba(6,78,59,.5); background:#07140e; color:#cbd5e1; font-size:12px; font-weight:700; cursor:pointer; user-select:none; transition:all .15s ease; }
+        .prov-media-opt:hover { border-color:rgba(16,185,129,.6); }
+        .prov-media-opt.active { border-color:#10b981; background:rgba(16,185,129,.14); color:#6ee7b7; }
+        body.light-mode .prov-media-opt { background:#f1f5f4; border-color:#cbd5d1; color:#475569; }
+        body.light-mode .prov-media-opt.active { background:#d1fae5; border-color:#059669; color:#047857; }
+        .img-upload-zone {
+            border: 2px dashed rgba(16, 185, 129, 0.35);
+            border-radius: 14px; padding: 16px; text-align: center; cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .img-upload-zone:hover { border-color: rgba(16, 185, 129, 0.7); background: rgba(16, 185, 129, 0.06); }
+        .img-upload-zone.has-image { border-style: solid; padding: 0; overflow: hidden; }
+        .img-upload-zone.has-image img { width: 100%; height: 150px; object-fit: cover; border-radius: 12px; }
+
+        .emergency-card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .emergency-card-hover:active { transform: scale(0.98); }
+        .touch-target { min-height: 44px; min-width: 44px; }
+
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+        @keyframes ringPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.7); } 50% { box-shadow: 0 0 0 8px rgba(251,191,36,0); } }
+        .tab-view { animation: cardIn 0.35s ease-out; }
+
+        .premium-nav-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 1px; background: transparent; border: none; cursor: pointer;
+            color: #fbbf24; position: relative; padding: 0;
+        }
+        .premium-nav-btn svg { width: 22px; height: 22px; transition: all 0.3s; }
+        .premium-nav-btn span { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .premium-nav-btn.is-premium { color: #3b82f6; }
+        .premium-nav-btn.is-premium span { color: #3b82f6; }
+        .premium-nav-btn .check-badge {
+            position: absolute; top: -4px; right: -2px;
+            background: #3b82f6; color: white; border-radius: 50%;
+            width: 12px; height: 12px; display: flex; align-items: center; justify-content: center;
+            border: 1px solid #0d1f17;
+        }
+        .premium-nav-btn .check-badge svg { width: 8px; height: 8px; color: white; }
+
+        .package-card {
+            background: linear-gradient(145deg, rgba(10, 30, 20, 0.95), rgba(5, 16, 10, 0.95));
+            border: 1.5px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px; padding: 16px; cursor: pointer;
+            transition: all 0.2s; position: relative; overflow: hidden;
+        }
+        .package-card:hover { border-color: #10b981; transform: translateY(-2px); }
+        .package-card.selected {
+            border-color: #fbbf24;
+            background: linear-gradient(145deg, rgba(50,30,10,0.95), rgba(10, 30, 20, 0.95));
+            box-shadow: 0 0 20px rgba(251,191,36,0.2);
+        }
+        .package-card.selected::before {
+            content: ''; position: absolute; top: 0; right: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+        }
+        .package-price { font-size: 24px; font-weight: 800; color: #fff; }
+        .package-duration { font-size: 13px; color: #10b981; font-weight: 600; }
+
+        .pay-method-card {
+            background: #07140e; border: 1.5px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px; padding: 12px;
+            display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .pay-method-card.selected { border-color: #10b981; background: rgba(16, 185, 129, 0.15); }
+
+        @media (max-width: 640px) {
+            .modal-sheet {
+                border-radius: 24px 24px 0 0 !important;
+                max-height: 92dvh; margin: 0 !important;
+                align-self: flex-end; width: 100% !important; max-width: 100% !important;
+            }
+            .modal-sheet-parent { align-items: flex-end !important; padding: 0 !important; }
+        }
+
+
+        /* ===== Result modal ===== */
+        body.light-mode #resultModal > div { background:#ffffff !important; border-color:#a7f3d0 !important; }
+        body.light-mode #resultModal .result-head { background:linear-gradient(90deg,#d1fae5,#ecfdf5) !important; border-color:#a7f3d0 !important; }
+        body.light-mode #resultModal .result-head h2 { color:#064e3b !important; }
+        body.light-mode #resultModal .result-head p { color:#047857 !important; }
+        body.light-mode #resultModal .result-head button { background:#d1fae5 !important; color:#065f46 !important; }
+        body.light-mode #resultModal .result-foot { background:#ecfdf5 !important; border-color:#a7f3d0 !important; }
+        body.light-mode #resultModal #resultLoader { background:#ecfdf5 !important; color:#047857 !important; }
+
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            .glass-card { background: rgba(8, 30, 18, 0.96); }
+            .glass-input { background: rgba(10, 30, 20, 0.95); }
+            .bottom-nav { background: #0d1f17; }
+            .top-app-bar { background: #0d1f17; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+            .admin-fab { animation: none !important; }
+            .bottom-nav { animation: none !important; }
+        }
+
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+
+        #searchContainerDesktop { display: none; }
+        @media (min-width: 768px) { #searchContainerDesktop.show { display: flex; } }
+
+        /* ========== CHAT MODE ========== */
+        /* chat-active = চ্যাট ট্যাব খোলা (ইনবক্স বা থ্রেড)
+           chat-thread = কথোপকথন খোলা — তখন দুই নেভ লুকানো
+           ইনবক্সে শুধু নিচের নেভ থাকবে (স্ক্রল হাইড/শো সহ) */
+        body.chat-active .top-app-bar,
+        body.chat-active nav.hidden.md\:block,
+        body.chat-active #searchContainerMobile {
+            display: none !important;
+        }
+        /* থ্রেড ভিউতে নিচের নেভও সম্পূর্ণ অদৃশ্য */
+        body.chat-active.chat-thread #bottomNav,
+        body.chat-active.chat-thread .bottom-nav {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+            transform: translateY(120%) !important;
+        }
+        body.chat-active #appContent {
+            height: 100dvh !important;
+            overflow: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        /* ইনবক্স: নিচের নেভের জন্য জায়গা রাখা */
+        body.chat-active:not(.chat-thread) main {
+            flex: 1 !important;
+            height: 100dvh !important;
+            max-width: 100vw !important;
+            width: 100vw !important;
+            padding: 0 !important;
+            padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        /* থ্রেড: ফুল স্ক্রিন, নেভ নেই */
+        body.chat-active.chat-thread main {
+            flex: 1 !important;
+            height: 100dvh !important;
+            max-width: 100vw !important;
+            width: 100vw !important;
+            padding: 0 !important;
+            padding-bottom: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        @media (min-width: 768px) {
+            body.chat-active main { padding-bottom: 0 !important; }
+        }
+        body.chat-active #view-chat {
+            height: 100% !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+        }
+        body.chat-active #view-chat > .info-card:not(.hidden) {
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+            max-height: none !important;
+            min-height: 0 !important;
+            max-width: 100% !important;
+            border-radius: 0 !important;
+            border: none !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+            overflow: hidden !important;
+        }
+        body.chat-active #view-chat > .info-card.hidden {
+            display: none !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            pointer-events: none !important;
+        }
+        body.chat-active #view-chat > .info-card > div:first-child {
+            border-radius: 0 !important;
+            border-top: none !important;
+            flex-shrink: 0 !important;
+        }
+        body.chat-active #chatMessages { flex: 1 !important; overflow-y: auto !important; min-height: 0 !important; }
+        /* ইনপুট: নিচে + কীবোর্ড ওপেন হলে visualViewport দিয়ে উপরে উঠবে */
+        body.chat-active #chatForm {
+            flex-shrink: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 10px !important;
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+            padding-bottom: max(env(safe-area-inset-bottom), 10px) !important;
+            position: relative;
+            z-index: 60 !important;
+            background: #10281c;
+            transition: transform 0.18s ease-out, padding-bottom 0.18s ease-out;
+            /* --kb-offset JS থেকে সেট হয় (কীবোর্ড উচ্চতা) */
+            transform: translateY(calc(-1 * var(--kb-offset, 0px)));
+            pointer-events: auto !important;
+        }
+        body.chat-active #chatInput {
+            pointer-events: auto !important;
+            -webkit-user-select: text !important;
+            user-select: text !important;
+            touch-action: manipulation;
+        }
+        body.light-mode.chat-active #chatForm {
+            background: #ffffff !important;
+        }
+        body.chat-active.chat-thread #chatForm {
+            padding-bottom: max(env(safe-area-inset-bottom), 10px) !important;
+        }
+        body.chat-active #mesesuInbox:not(.hidden),
+        body.chat-active #mesesuThreadView:not(.hidden) {
+            height: 100% !important; max-height: none !important; min-height: 0 !important;
+            border-radius: 0 !important; border: none !important;
+        }
+        /* কীবোর্ড ওপেন থাকলে বডি স্ক্রল লক — নোটিফ/নেভ ফ্ল্যাশ আটকায় */
+        body.chat-kb-open {
+            overflow: hidden !important;
+        }
+        body.chat-kb-open #bottomNav,
+        body.chat-kb-open .bottom-nav {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        /* People row — online/offline dot must not be clipped */
+        #mesesuPeopleRow { overflow-x: auto; overflow-y: visible; padding-top: 6px; padding-bottom: 10px; }
+        .mesesu-person { flex-shrink: 0; width: 74px; text-align: center; cursor: pointer; padding-top: 2px; }
+        .mesesu-person-avatar {
+            width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 6px;
+            background: linear-gradient(135deg,#059669,#047857);
+            display: flex; align-items: center; justify-content: center;
+            border: 2.5px solid transparent; position: relative;
+            overflow: visible;
+            box-sizing: border-box;
+        }
+        .mesesu-person-avatar-inner {
+            width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .mesesu-person-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* Online ring = blue (not green) */
+        .mesesu-person.online .mesesu-person-avatar {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 1px rgba(59,130,246,0.35);
+        }
+        .mesesu-online-dot {
+            position: absolute; bottom: 1px; right: 1px;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: #22c55e;
+            border: 2.5px solid #10281c;
+            box-sizing: border-box;
+            z-index: 2;
+            pointer-events: none;
+        }
+        body.light-mode .mesesu-online-dot { border-color: #ffffff; }
+        .mesesu-person-name { font-size: 10px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 72px; margin: 0 auto; }
+        /* Search icon contrast light/dark */
+        #mesesuSearchInput { padding-left: 2.75rem !important; }
+        #mesesuSearchWrap .mesesu-search-icon { color: #94a3b8; }
+        body.light-mode #mesesuSearchWrap .mesesu-search-icon { color: #64748b !important; }
+        body:not(.light-mode) #mesesuSearchWrap .mesesu-search-icon { color: #94a3b8 !important; }
+        .mesesu-thread-row {
+            display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+            border-radius: 16px; cursor: pointer; transition: background .15s, box-shadow .15s, transform .12s;
+            margin: 6px 8px;
+            /* glass + soft shadow so list items separate when many chats */
+            background: rgba(16, 40, 28, 0.55);
+            border: 1px solid rgba(16, 185, 129, 0.18);
+            -webkit-backdrop-filter: blur(12px) saturate(140%);
+            backdrop-filter: blur(12px) saturate(140%);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.04) inset;
+        }
+        .mesesu-thread-row:hover, .mesesu-thread-row:active {
+            background: rgba(16,185,129,.14);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.28), 0 0 0 1px rgba(16,185,129,0.2);
+        }
+        body.light-mode .mesesu-person-name { color: #334155; }
+        body.light-mode #mesesuInbox, body.light-mode #mesesuThreadView { background: #fff !important; }
+        body.light-mode #mesesuSearchInput { background: #f1f5f9 !important; color: #0f172a !important; border-color: #e2e8f0 !important; }
+        body.light-mode .mesesu-thread-row {
+            background: rgba(255,255,255,0.85);
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 14px rgba(15,23,42,0.08), 0 1px 0 rgba(255,255,255,0.9) inset;
+        }
+        body.light-mode .mesesu-thread-row:hover { background: #f8fafc; }
+        .mesesu-admin-online-dot {
+            position: absolute; bottom: 0; right: 0;
+            width: 12px; height: 12px; border-radius: 50%;
+            border: 2px solid #10281c; box-sizing: border-box; z-index: 2;
+        }
+        .mesesu-admin-online-dot.on { background: #22c55e; }
+        .mesesu-admin-online-dot.off { background: #94a3b8; }
+        body.light-mode .mesesu-admin-online-dot { border-color: #ffffff; }
+        /* Mesesu: ইনবক্স রো-র আনরিড ব্যাজ */
+        .mesesu-unread-badge {
+            min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+            background: #f43f5e; color: #fff; font-size: 11px; font-weight: 800; line-height: 1;
+            display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        /* ===== Mesesu: থ্রি-ডট মেনু, রিকুয়েস্ট/রিজেক্টেড ভিউ, এপ্রুভ-রিজেক্ট বার — ডার্ক + লাইট মোড ফিক্সড ===== */
+        #mesesuMenuBtn:hover { background: rgba(255,255,255,.08); }
+        body.light-mode #mesesuMenuBtn { color: #334155; }
+        body.light-mode #mesesuMenuBtn i { color: #475569 !important; }
+        body.light-mode #mesesuMenuBtn:hover { background: rgba(15,23,42,.06); }
+        body.light-mode #mesesuMenuDropdown { background: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 10px 30px rgba(15,23,42,.12); }
+        body.light-mode #mesesuMenuDropdown button { color: #0f172a !important; }
+        body.light-mode #mesesuMenuDropdown button:hover { background: #f1f5f9 !important; }
+        body.light-mode #mesesuMenuDropdown .bg-emerald-900\/40 { background: #e2e8f0 !important; }
+        #mesesuRequestsView, #mesesuRejectedView { background: inherit; }
+        body.light-mode #mesesuRequestsView h3, body.light-mode #mesesuRejectedView h3 { color: #0f172a !important; }
+        body.light-mode #mesesuRequestsView .border-b, body.light-mode #mesesuRejectedView .border-b { border-color: #e2e8f0 !important; }
+        body.light-mode #mesesuRequestsList .mesesu-thread-row p.text-slate-100,
+        body.light-mode #mesesuRejectedList .mesesu-thread-row p.text-slate-100 { color: #0f172a !important; }
+        body.light-mode #mesesuRequestsList .mesesu-thread-row p.text-slate-400,
+        body.light-mode #mesesuRejectedList .mesesu-thread-row p.text-slate-400 { color: #64748b !important; }
+        body.light-mode #dmRequestActionBar { background: #ffffff !important; border-color: #e2e8f0 !important; }
+        body.light-mode #dmPermissionBanner { background: #fffbeb !important; border-color: #fde68a !important; color: #b45309 !important; }
+        body.light-mode #dmRejectedBanner { background: #fef2f2 !important; border-color: #fecaca !important; color: #b91c1c !important; }
+        .mesesu-system-watermark { opacity: .62; font-style: italic; }
+        body.light-mode .mesesu-system-watermark { color: #64748b !important; opacity: .85; }
+        /* থ্রেড হেডারের অনলাইন/অফলাইন ডট — লাইট মোডে সাদা বর্ডার */
+        body.light-mode #adminStatusDot { border-color: #ffffff !important; }
+        body.light-mode #threadAvatarWrap { box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2); }
+
+        /* ===== PROMOTION / AD CARD ===== */
+        .promotion-card { position: relative; display: flex; flex-direction: column; justify-content: space-between; border-radius: 1rem; overflow: hidden; border: 1.5px solid rgba(251,191,36,0.45); background: linear-gradient(145deg, rgba(50,35,10,0.94), rgba(15,10,5,0.96)); transition: border-color .2s, box-shadow .2s, transform .2s; height: 100%; }
+        .promotion-card:hover { border-color: rgba(251,191,36,0.85); box-shadow: 0 8px 28px rgba(251,191,36,0.28); transform: translateY(-2px); }
+        .promo-ad-badge { position: absolute; top: 8px; left: 8px; z-index: 2; background: #000; color: #fbbf24; font-size: 9px; font-weight: 800; letter-spacing: .08em; padding: 2px 7px; border-radius: 6px; border: 1px solid rgba(251,191,36,.6); }
+        .promo-sponsored-badge { position: absolute; top: 8px; right: 8px; z-index: 2; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0d1f17; font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 999px; box-shadow: 0 2px 8px rgba(245,158,11,.45); }
+        .promo-type-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; color: #fff; }
+        .promo-cta-small { width: 36px; height: 36px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.35); color: #fbbf24; transition: transform .15s, background .2s; }
+        .promo-cta-small:active { transform: scale(.9); }
+        .promo-cta-main { flex: 1; min-width: 0; height: 36px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; border-radius: 12px; font-size: 12px; font-weight: 700; color: #0d1f17; background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 4px 14px rgba(245,158,11,.3); }
+        .promo-type-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px; border-radius: 14px; border: 1.5px solid rgba(255,255,255,.1); background: #07140e; color: #cbd5e1; font-size: 11px; font-weight: 700; transition: all .15s; }
+        .promo-type-btn.selected { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 18%, #07140e); color: #fff; box-shadow: 0 0 0 2px color-mix(in srgb, var(--pc) 35%, transparent); }
+        .promo-input { width: 100%; background: #07140e; border: 1px solid rgba(251,191,36,.25); border-radius: 12px; padding: 10px 12px; font-size: 13px; color: #f1f5f9; outline: none; }
+        .promo-input:focus { border-color: #fbbf24; }
+        .promo-label { display: block; font-size: 11px; font-weight: 700; color: #fcd34d; margin: 0 0 6px 4px; }
+        
+        #noticesList { transition: opacity 0.5s ease-in-out; }
+
+        /* ========== FORCE PROFILE MODE ========== */
+        body.force-profile-mode #appContent {
+            display: none !important;
+        }
+        body.force-profile-mode #editProfileModal {
+            background: #050a08;
+            backdrop-filter: none;
+            z-index: 9999 !important;
+        }
+        body.force-profile-mode #editProfileModal > div {
+            height: 100dvh;
+            max-height: 100dvh;
+            border-radius: 0;
+            border: none;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* ========== THEME BUTTONS ========== */
+        .theme-btn { transition: all 0.2s; }
+        .theme-btn.active { background: #059669; color: white; box-shadow: 0 4px 12px rgba(5,150,105,0.3); }
+        body.light-mode .theme-btn.active { background: #10b981; color: white; }
+        .lang-btn { transition: all 0.2s; }
+        .lang-btn.active { background: linear-gradient(135deg,#059669,#10b981) !important; color: white !important; box-shadow: 0 4px 12px rgba(5,150,105,0.35); }
+        body.light-mode .lang-btn.active { background: linear-gradient(135deg,#059669,#10b981) !important; color: white !important; }
+        .rating-star { cursor: pointer; line-height: 1; user-select: none; }
+    
+        /* =========================================================
+           APPLE iOS 26 LIQUID GLASS VISUAL LAYER
+           UI-only overrides. Existing HTML structure, IDs, handlers,
+           Firebase code and feature logic are intentionally untouched.
+           ========================================================= */
+        :root {
+            --ae-glass-dark: rgba(12, 35, 25, .68);
+            --ae-glass-deep: rgba(5, 19, 13, .82);
+            --ae-glass-line: rgba(218, 255, 237, .17);
+            --ae-glass-highlight: rgba(255, 255, 255, .12);
+            --ae-accent: #6ee7b7;
+            --ae-radius-xl: 26px;
+            --ae-shadow-glass: 0 18px 48px rgba(0, 0, 0, .26),
+                               inset 0 1px 0 rgba(255,255,255,.12);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background:
+                radial-gradient(ellipse at 12% 0%, rgba(16,185,129,.13), transparent 34%),
+                radial-gradient(ellipse at 100% 24%, rgba(45,212,191,.08), transparent 32%),
+                linear-gradient(160deg, #0a1812 0%, #0c1c14 48%, #040806 100%) !important;
+            background-attachment: fixed;
+        }
+
+        /* Frosted app bars */
+        .top-app-bar {
+            background: rgba(9, 28, 19, .62) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(190%);
+            backdrop-filter: blur(30px) saturate(190%);
+            border-bottom: 1px solid var(--ae-glass-line) !important;
+            box-shadow: 0 8px 28px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.07) !important;
+        }
+        .top-app-icon-btn {
+            border: 1px solid rgba(255,255,255,.12) !important;
+            background: rgba(255,255,255,.075) !important;
+            -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(18px);
+            border-radius: 15px !important;
+            transition: background .22s ease, transform .22s ease, border-color .22s ease !important;
+        }
+        .top-app-icon-btn:active { transform: scale(.94); }
+        .top-app-icon-btn:hover { background: rgba(255,255,255,.14) !important; }
+
+        /* Cards: translucent layered surfaces, softer edges */
+        .glass-card, .info-card, .service-card {
+            background: linear-gradient(145deg, rgba(21,53,39,.72), rgba(7,25,17,.78)) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(165%);
+            backdrop-filter: blur(24px) saturate(165%);
+            border: 1px solid rgba(220,255,235,.13) !important;
+            border-radius: var(--ae-radius-xl) !important;
+            box-shadow: var(--ae-shadow-glass) !important;
+        }
+        .glass-card:hover, .info-card:hover, .service-card:hover {
+            border-color: rgba(167,243,208,.27) !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.16) !important;
+        }
+        .glass-card-header {
+            background: linear-gradient(180deg, rgba(255,255,255,.075), transparent) !important;
+            border-bottom-color: rgba(255,255,255,.09) !important;
+        }
+
+        /* Inputs */
+        .glass-input {
+            background: rgba(255,255,255,.055) !important;
+            border: 1px solid rgba(220,255,235,.16) !important;
+            border-radius: 17px !important;
+            -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(18px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.055) !important;
+        }
+        .glass-input:focus-within {
+            background: rgba(255,255,255,.085) !important;
+            border-color: rgba(110,231,183,.58) !important;
+            box-shadow: 0 0 0 3px rgba(16,185,129,.13), inset 0 1px 0 rgba(255,255,255,.08) !important;
+        }
+        input, select, textarea { accent-color: #10b981; }
+
+        /* Navigation surfaces */
+        .bottom-nav {
+            background: rgba(8, 26, 18, .70) !important;
+            -webkit-backdrop-filter: blur(34px) saturate(190%);
+            backdrop-filter: blur(34px) saturate(190%);
+            border-top: 1px solid rgba(230,255,240,.18) !important;
+            box-shadow: 0 -12px 36px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.08) !important;
+            padding-top: 5px;
+        }
+        .bottom-nav-btn {
+            border-radius: 18px !important;
+            transition: background .2s ease, color .2s ease, transform .2s ease !important;
+        }
+        .bottom-nav-btn.active {
+            color: #a7f3d0 !important;
+            background: rgba(52,211,153,.12) !important;
+        }
+        .bottom-nav-btn.active svg {
+            filter: none !important;
+            transform: translateY(-1px) scale(1.06) !important;
+        }
+        .tab-btn {
+            border-radius: 16px !important;
+            border: 1px solid rgba(255,255,255,.075) !important;
+        }
+
+        /* Sidebar, notification drawer and dialogs */
+        #sidebarDrawer, #notifPanel {
+            background: rgba(7, 25, 17, .84) !important;
+            -webkit-backdrop-filter: blur(34px) saturate(175%);
+            backdrop-filter: blur(34px) saturate(175%);
+            border-color: rgba(225,255,238,.15) !important;
+            box-shadow: 20px 0 60px rgba(0,0,0,.32), inset -1px 0 0 rgba(255,255,255,.06) !important;
+        }
+        .sidebar-item {
+            border-radius: 16px !important;
+            transition: background .2s ease, transform .2s ease !important;
+        }
+        .sidebar-item:active { transform: scale(.985); }
+        .modal-sheet, [role="dialog"] > div {
+            border-color: rgba(225,255,238,.18) !important;
+            box-shadow: 0 24px 70px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.12) !important;
+        }
+        .modal-sheet-parent {
+            -webkit-backdrop-filter: blur(18px) saturate(130%);
+            backdrop-filter: blur(18px) saturate(130%);
+        }
+
+        /* Softer controls and feedback */
+        button, a, .service-card, .info-card {
+            -webkit-tap-highlight-color: transparent;
+        }
+        button:focus-visible, a:focus-visible, input:focus-visible,
+        select:focus-visible, textarea:focus-visible {
+            outline: 2px solid rgba(110,231,183,.85);
+            outline-offset: 3px;
+        }
+        #toast {
+            background: rgba(8,29,19,.84) !important;
+            -webkit-backdrop-filter: blur(26px) saturate(170%);
+            backdrop-filter: blur(26px) saturate(170%);
+            border: 1px solid rgba(220,255,235,.17) !important;
+            border-radius: 20px !important;
+        }
+
+        /* Light appearance remains supported */
+        body.light-mode {
+            background:
+                radial-gradient(ellipse at 10% 0%, rgba(16,185,129,.10), transparent 35%),
+                linear-gradient(160deg, #ecfdf5, #d1fae5 55%, #f8fafc) !important;
+        }
+        body.light-mode .top-app-bar,
+        body.light-mode .bottom-nav,
+        body.light-mode #sidebarDrawer,
+        body.light-mode #notifPanel {
+            background: rgba(255,255,255,.72) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            backdrop-filter: blur(30px) saturate(180%);
+            border-color: rgba(15,23,42,.09) !important;
+            box-shadow: 0 8px 30px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.9) !important;
+        }
+        body.light-mode .glass-card,
+        body.light-mode .info-card,
+        body.light-mode .service-card {
+            background: rgba(255,255,255,.72) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            backdrop-filter: blur(24px) saturate(160%);
+            border-color: rgba(15,23,42,.09) !important;
+            box-shadow: 0 12px 34px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.95) !important;
+        }
+        body.light-mode .glass-input {
+            background: rgba(255,255,255,.72) !important;
+            border-color: rgba(15,23,42,.12) !important;
+        }
+        body.light-mode .bottom-nav-btn.active {
+            background: rgba(16,185,129,.10) !important;
+            color: #047857 !important;
+        }
+        body.light-mode #toast {
+            background: rgba(255,255,255,.88) !important;
+            color: #0f172a !important;
+            border-color: rgba(15,23,42,.1) !important;
+        }
+
+        /* Compact phones and accessibility */
+        @media (max-width: 640px) {
+            .top-app-bar { padding-top: env(safe-area-inset-top, 0px); }
+            .bottom-nav { padding-bottom: max(env(safe-area-inset-bottom), 7px) !important; }
+            .glass-card, .info-card, .service-card { border-radius: 22px !important; }
+        }
+        @media (prefers-reduced-transparency: reduce) {
+            .top-app-bar, .bottom-nav, #sidebarDrawer, #notifPanel,
+            .glass-card, .info-card, .service-card, .glass-input {
+                -webkit-backdrop-filter: none !important;
+                backdrop-filter: none !important;
+            }
+        }
+
+    
+/* =====================================================================
+   AMAR ELAKA — iOS 26 INSPIRED LIQUID GLASS DESIGN SYSTEM
+   Visual layer only. Existing HTML structure, IDs, events and JS are kept.
+   ===================================================================== */
+:root {
+  --ae-accent: #059669;
+  --ae-accent-2: #34d399;
+  --ae-accent-deep: #047857;
+  --ae-ink: #17252b;
+  --ae-muted: #71818a;
+  --ae-glass-light: rgba(255,255,255,.62);
+  --ae-glass-line: rgba(255,255,255,.76);
+  --ae-glass-shadow: 0 18px 48px rgba(33,79,67,.10), inset 0 1px 0 rgba(255,255,255,.88);
+  --ae-glass-blur: 26px;
+  --ae-radius: 26px;
+}
+
+html { color-scheme: light; }
+html, body { min-height:100%; }
+body.light-mode {
+  color:var(--ae-ink) !important;
+  background:
+    radial-gradient(ellipse at 8% 5%, rgba(86,213,177,.20), transparent 34%),
+    radial-gradient(ellipse at 94% 28%, rgba(164,225,210,.28), transparent 36%),
+    linear-gradient(145deg,#ecfdf5 0%,#d1fae5 48%,#ecfdf5 100%) !important;
+  background-attachment:fixed !important;
+}
+body.light-mode #appContent { background:transparent !important; }
+
+/* Shared glass material: layered translucency, edge highlight and depth */
+body.light-mode .top-app-bar,
+body.light-mode .bottom-nav,
+body.light-mode #sidebarDrawer,
+body.light-mode #notifPanel,
+body.light-mode .glass-card,
+body.light-mode .info-card,
+body.light-mode .service-card,
+body.light-mode .notice-card,
+body.light-mode .modal-sheet,
+body.light-mode #currentPlanCard {
+  background:linear-gradient(145deg,rgba(255,255,255,.78),rgba(245,252,249,.48)) !important;
+  -webkit-backdrop-filter:blur(var(--ae-glass-blur)) saturate(185%) !important;
+  backdrop-filter:blur(var(--ae-glass-blur)) saturate(185%) !important;
+  border:1px solid var(--ae-glass-line) !important;
+  box-shadow:var(--ae-glass-shadow), 0 8px 24px rgba(40,91,78,.055) !important;
+}
+body.light-mode .top-app-bar {
+  position:sticky; top:0; z-index:60;
+  background:rgba(250,255,253,.70) !important;
+  border-left:0 !important; border-right:0 !important; border-top:0 !important;
+  box-shadow:0 8px 28px rgba(27,76,65,.075), inset 0 1px 0 #fff !important;
+}
+body.light-mode .top-app-icon-btn {
+  color:#34464e !important;
+  background:rgba(255,255,255,.52) !important;
+  border:1px solid rgba(255,255,255,.9) !important;
+  border-radius:18px !important;
+  box-shadow:0 5px 15px rgba(35,79,70,.07),inset 0 1px 0 #fff !important;
+  -webkit-backdrop-filter:blur(18px) saturate(170%);
+  backdrop-filter:blur(18px) saturate(170%);
+}
+body.light-mode .top-app-icon-btn:active { transform:scale(.94); }
+
+/* Home cards, service tiles, alerts and search */
+body.light-mode .service-card,
+body.light-mode .notice-card,
+body.light-mode .info-card,
+body.light-mode .glass-card {
+  border-radius:var(--ae-radius) !important;
+  overflow:hidden;
+  transition:transform .24s ease, box-shadow .24s ease, border-color .24s ease !important;
+}
+body.light-mode .service-card:active,
+body.light-mode .notice-card:active { transform:scale(.988); }
+body.light-mode .service-card:hover,
+body.light-mode .notice-card:hover,
+body.light-mode .info-card:hover {
+  border-color:rgba(31,177,139,.42) !important;
+  box-shadow:0 20px 42px rgba(33,105,86,.13),inset 0 1px 0 #fff !important;
+}
+body.light-mode .glass-input,
+body.light-mode input:not([type=checkbox]):not([type=radio]):not([type=file]),
+body.light-mode select,
+body.light-mode textarea,
+body.light-mode #searchInputMobile,
+body.light-mode #modalCategorySearch {
+  color:#263940 !important;
+  background:rgba(255,255,255,.58) !important;
+  border:1px solid rgba(255,255,255,.94) !important;
+  border-radius:19px !important;
+  box-shadow:inset 0 1px 2px rgba(42,83,73,.045),0 5px 18px rgba(41,90,78,.045) !important;
+  -webkit-backdrop-filter:blur(18px) saturate(165%);
+  backdrop-filter:blur(18px) saturate(165%);
+}
+body.light-mode input::placeholder, body.light-mode textarea::placeholder { color:#91a1a5 !important; }
+body.light-mode .glass-input:focus-within,
+body.light-mode input:focus, body.light-mode select:focus, body.light-mode textarea:focus {
+  border-color:rgba(8,166,126,.55) !important;
+  box-shadow:0 0 0 4px rgba(8,166,126,.10),inset 0 1px 0 #fff !important;
+  outline:none !important;
+}
+
+/* Profile page: translucent profile panel and floating information rows */
+body.light-mode #view-profile > .info-card {
+  background:linear-gradient(150deg,rgba(255,255,255,.77),rgba(248,253,251,.52)) !important;
+  border-radius:32px !important;
+  padding:clamp(20px,5vw,30px) !important;
+  box-shadow:0 22px 55px rgba(34,88,73,.09),inset 0 1px 0 #fff !important;
+}
+body.light-mode #view-profile > .info-card > div:first-child {
+  border-color:rgba(73,135,117,.24) !important;
+}
+body.light-mode #view-profile #profileName,
+body.light-mode #view-profile #profileNameText { color:#172a30 !important; }
+body.light-mode #view-profile #profileLocation { color:#788991 !important; }
+body.light-mode #view-profile .py-5.space-y-2\.5 > div,
+body.light-mode #view-profile .py-5.space-y-2\.5 > div.flex {
+  background:rgba(255,255,255,.62) !important;
+  border:1px solid rgba(255,255,255,.92) !important;
+  border-radius:21px !important;
+  padding:15px 17px !important;
+  box-shadow:0 7px 20px rgba(37,83,73,.055),inset 0 1px 0 #fff !important;
+}
+body.light-mode #view-profile #profilePhone,
+body.light-mode #view-profile #profileEmail,
+body.light-mode #view-profile #profileLocation,
+body.light-mode #view-profile .py-5 span { color:#26363e; }
+body.light-mode #profilePlanMiniCard {
+  background:linear-gradient(120deg,rgba(248,210,137,.38),rgba(255,245,220,.55)) !important;
+  border:1px solid rgba(194,143,72,.35) !important;
+  border-radius:23px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 9px 24px rgba(143,106,54,.08) !important;
+}
+body.light-mode #profilePlanMiniCard #profilePlanName { color:#29343a !important; }
+body.light-mode #profilePlanMiniCard p { color:#8b795e !important; }
+body.light-mode #profileVerifyStatus { background:rgba(224,239,255,.75) !important; color:#2866ad !important; border-color:rgba(83,145,213,.25) !important; }
+
+/* Bottom dock — translucent floating iOS-inspired navigation */
+body.light-mode .bottom-nav {
+  background:rgba(248,255,252,.68) !important;
+  border:1px solid rgba(255,255,255,.82) !important;
+  border-bottom:0 !important;
+  border-radius:27px 27px 0 0 !important;
+  box-shadow:0 -12px 36px rgba(34,82,72,.10),inset 0 1px 0 rgba(255,255,255,.95) !important;
+  -webkit-backdrop-filter:blur(32px) saturate(195%) !important;
+  backdrop-filter:blur(32px) saturate(195%) !important;
+}
+body.light-mode .bottom-nav-btn {
+  color:#73838b !important;
+  border-radius:21px !important;
+  transition:background .22s ease,color .22s ease,transform .22s ease !important;
+}
+body.light-mode .bottom-nav-btn.active {
+  color:#047857 !important;
+  background:linear-gradient(145deg,rgba(24,185,143,.14),rgba(255,255,255,.43)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 5px 16px rgba(31,133,105,.07) !important;
+}
+body.light-mode .bottom-nav-btn.active::before {
+  content:""; display:block; position:absolute; top:3px; left:50%; transform:translateX(-50%);
+  width:30px; height:4px; border-radius:8px; background:linear-gradient(90deg,#0aa77d,#36c9a1);
+}
+body.light-mode .bottom-nav-btn.active svg { color:#047857 !important; }
+body.light-mode .bnav-icon-wrapper { border-radius:50% !important; }
+
+/* Center support control: luminous glass medallion, retains original click action */
+.admin-fab {
+  width:72px !important; height:72px !important;
+  background:linear-gradient(145deg,#16bd91 0%,#079875 58%,#065f46 100%) !important;
+  border:4px solid rgba(250,255,253,.96) !important;
+  box-shadow:0 0 0 1px rgba(18,174,132,.30),0 10px 28px rgba(6,143,108,.34),0 0 34px rgba(28,201,154,.28),inset 0 2px 5px rgba(255,255,255,.35) !important;
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  backdrop-filter:blur(16px) saturate(160%);
+}
+.admin-fab:active { transform:translateX(-50%) scale(.94) !important; }
+body.light-mode .admin-fab-label { color:#047857 !important; text-shadow:0 1px 8px rgba(255,255,255,.9); }
+
+/* Segmented filters, action buttons and interactive controls */
+body.light-mode .tab-btn,
+body.light-mode .auth-tab,
+body.light-mode .theme-btn,
+body.light-mode .action-btn,
+body.light-mode .pay-method-card,
+body.light-mode .package-card {
+  border-radius:18px !important;
+  border-color:rgba(255,255,255,.88) !important;
+  box-shadow:0 5px 15px rgba(37,85,73,.055),inset 0 1px 0 rgba(255,255,255,.85) !important;
+}
+body.light-mode .tab-btn:not(.bg-gradient-to-r):not(.active),
+body.light-mode .auth-tab:not(.active) { background:rgba(255,255,255,.54) !important; }
+body.light-mode button, body.light-mode a { -webkit-tap-highlight-color:transparent; }
+body.light-mode button:focus-visible, body.light-mode a:focus-visible {
+  outline:2px solid rgba(8,166,126,.7) !important; outline-offset:3px;
+}
+
+/* Drawers, overlays and dialogs */
+body.light-mode #sidebarDrawer,
+body.light-mode #notifPanel {
+  background:rgba(246,253,250,.82) !important;
+  border-color:rgba(255,255,255,.9) !important;
+  box-shadow:0 20px 65px rgba(24,65,56,.18),inset 0 1px 0 #fff !important;
+}
+body.light-mode .sidebar-item {
+  border-radius:17px !important;
+  background:rgba(255,255,255,.48) !important;
+  border-color:rgba(255,255,255,.82) !important;
+}
+/* notif-item solid override is in the dedicated light-mode notif block later */
+
+body.light-mode .modal-sheet {
+  background:linear-gradient(145deg,rgba(250,255,253,.96),rgba(239,249,245,.93)) !important;
+  color:#20343a !important;
+  border-radius:28px !important;
+  border:1px solid rgba(255,255,255,.95) !important;
+  box-shadow:0 28px 80px rgba(14,47,40,.22),inset 0 1px 0 #fff !important;
+}
+body.light-mode .modal-sheet-parent { background:rgba(12,31,27,.34) !important; }
+body.light-mode #toast {
+  background:rgba(247,255,251,.88) !important; color:#022c22 !important;
+  border:1px solid rgba(255,255,255,.95) !important; border-radius:18px !important;
+  box-shadow:0 12px 35px rgba(25,78,65,.16),inset 0 1px 0 #fff !important;
+  -webkit-backdrop-filter:blur(24px) saturate(180%); backdrop-filter:blur(24px) saturate(180%);
+}
+
+/* Keep the dark appearance coherent when the user switches themes */
+body:not(.light-mode) {
+  background:radial-gradient(ellipse at 10% 0%,rgba(14,161,119,.16),transparent 35%),linear-gradient(150deg,#0a1812,#0d1f17 55%,#07140e) !important;
+}
+body:not(.light-mode) .top-app-bar,
+body:not(.light-mode) .bottom-nav,
+body:not(.light-mode) .glass-card,
+body:not(.light-mode) .info-card,
+body:not(.light-mode) .service-card,
+body:not(.light-mode) .notice-card,
+body:not(.light-mode) #sidebarDrawer,
+body:not(.light-mode) #notifPanel {
+  background:linear-gradient(145deg,rgba(19,55,43,.72),rgba(7,27,20,.78)) !important;
+  -webkit-backdrop-filter:blur(26px) saturate(175%) !important;
+  backdrop-filter:blur(26px) saturate(175%) !important;
+  border-color:rgba(207,255,233,.15) !important;
+  box-shadow:0 18px 45px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+/* Mobile safe areas, smoothness and accessibility fallbacks */
+@media (max-width:640px) {
+  body.light-mode .bottom-nav { padding-bottom:max(env(safe-area-inset-bottom),8px) !important; }
+  body.light-mode .info-card, body.light-mode .glass-card { border-radius:25px !important; }
+  body.light-mode .service-card { border-radius:23px !important; }
+  .admin-fab { width:72px !important; height:72px !important; }
+}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))) {
+  body.light-mode .top-app-bar, body.light-mode .bottom-nav,
+  body.light-mode .glass-card, body.light-mode .info-card,
+  body.light-mode .service-card, body.light-mode .notice-card,
+  body.light-mode #sidebarDrawer, body.light-mode #notifPanel {
+    background:rgba(245,252,249,.96) !important;
+  }
+}
+@media (prefers-reduced-transparency:reduce) {
+  .top-app-bar,.bottom-nav,.glass-card,.info-card,.service-card,.notice-card,
+  #sidebarDrawer,#notifPanel,.modal-sheet { -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; }
+}
+
+
+
+/* =====================================================================
+   AMAR ELAKA — REFINED APPLE-INSPIRED LIQUID GLASS UI
+   Final visual override only: no HTML IDs, event handlers, app logic,
+   authentication, Firebase calls, or feature markup are changed.
+   ===================================================================== */
+:root {
+  --ae-ios-green: #047857;
+  --ae-ios-green-bright: #34d399;
+  --ae-ios-radius: 25px;
+  --ae-ios-glass-blur: 30px;
+  --ae-ios-safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { -webkit-text-size-adjust: 100%; }
+body { text-rendering: optimizeLegibility; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 2px solid rgba(28, 190, 145, .72);
+  outline-offset: 3px;
+}
+
+/* Global surfaces — calm highlights, less neon, more depth */
+.glass-card, .info-card, .service-card, .notice-card,
+.package-card, .pay-method-card, .promotion-card {
+  border-radius: var(--ae-ios-radius) !important;
+  overflow: hidden;
+  transition: background .25s ease, border-color .25s ease,
+              box-shadow .25s ease, transform .25s ease !important;
+}
+.glass-card, .info-card, .service-card {
+  box-shadow: 0 14px 38px rgba(0,0,0,.16),
+              inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+.glass-input, input, select, textarea {
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease !important;
+}
+.top-app-bar {
+  -webkit-backdrop-filter: blur(var(--ae-ios-glass-blur)) saturate(185%) !important;
+  backdrop-filter: blur(var(--ae-ios-glass-blur)) saturate(185%) !important;
+  box-shadow: 0 8px 26px rgba(0,0,0,.09), inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+.top-app-icon-btn {
+  width: 42px !important; height: 42px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+.sidebar-item, .notif-item { border-radius: 17px !important; }
+.modal-sheet { border-radius: 28px !important; }
+.btn-glow { box-shadow: 0 7px 18px rgba(8,155,117,.24) !important; }
+.btn-glow:hover:not(:disabled) { box-shadow: 0 10px 24px rgba(8,155,117,.30) !important; }
+
+/* iOS-inspired floating bottom tab dock — original tab actions preserved */
+#bottomNav.bottom-nav {
+  position: fixed !important;
+  left: 12px !important;
+  right: 12px !important;
+  bottom: max(10px, var(--ae-ios-safe-bottom)) !important;
+  width: auto !important;
+  z-index: 80 !important;
+  padding: 7px 8px calc(7px + var(--ae-ios-safe-bottom)) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  border-radius: 29px !important;
+  overflow: visible !important;
+  -webkit-backdrop-filter: blur(34px) saturate(190%) !important;
+  backdrop-filter: blur(34px) saturate(190%) !important;
+  box-shadow: 0 12px 38px rgba(0,0,0,.22),
+              inset 0 1px 0 rgba(255,255,255,.22) !important;
+  transform-origin: center bottom;
+}
+#bottomNav.bottom-nav > div {
+  min-height: 62px;
+  align-items: center !important;
+  justify-content: space-around !important;
+  gap: 4px !important;
+  padding: 0 !important;
+}
+#bottomNav .bottom-nav-btn {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 57px !important;
+  flex: 1 1 0 !important;
+  gap: 4px !important;
+  padding: 7px 3px 5px !important;
+  border-radius: 19px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: -.1px;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: rgba(224,237,232,.72) !important;
+}
+#bottomNav .bottom-nav-btn svg {
+  width: 21px !important; height: 21px !important;
+  stroke-width: 1.85 !important;
+  filter: none !important;
+}
+#bottomNav .bottom-nav-btn.active {
+  color: #55dfb4 !important;
+  background: rgba(35,190,145,.14) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+#bottomNav .bottom-nav-btn.active svg {
+  color: #55dfb4 !important;
+  transform: translateY(-1px) scale(1.04) !important;
+  filter: none !important;
+}
+#bottomNav .bottom-nav-btn.active::before {
+  top: 3px !important;
+  width: 19px !important;
+  height: 3px !important;
+  border-radius: 0 0 5px 5px !important;
+  background: #55dfb4 !important;
+  box-shadow: none !important;
+}
+#bottomNav .bottom-nav-btn:active { transform: scale(.94) !important; }
+#bottomNav .bottom-nav-btn span { line-height: 1.15 !important; }
+#bottomNav .bnav-icon-wrapper {
+  width: 22px !important; height: 22px !important;
+  border-radius: 50% !important;
+}
+
+/* Middle support action keeps its existing switchTab('chat') handler */
+#bottomNav > div > .relative.flex.flex-col.items-center.justify-end {
+  width: 20% !important;
+  min-width: 62px;
+  align-self: stretch;
+  justify-content: flex-end !important;
+}
+#bottomNav .admin-fab {
+  position: relative !important;
+  inset: auto !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  width: 51px !important; height: 51px !important;
+  margin: -5px auto 0 !important;
+  border: 2px solid rgba(255,255,255,.72) !important;
+  border-radius: 19px !important;
+  background: linear-gradient(145deg,#34d399,#059669) !important;
+  box-shadow: 0 7px 18px rgba(3,145,108,.30),
+              inset 0 1px 0 rgba(255,255,255,.34) !important;
+  animation: none !important;
+}
+#bottomNav .admin-fab svg {
+  width: 23px !important; height: 23px !important;
+  filter: none !important;
+}
+#bottomNav .admin-fab:active { transform: scale(.93) !important; }
+#bottomNav .admin-fab-label {
+  margin-top: 4px !important;
+  color: rgba(224,237,232,.76) !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  text-shadow: none !important;
+}
+#bottomNav #adminUnreadBadge { border-color: rgba(10,34,27,.9) !important; }
+
+/* Light appearance */
+body.light-mode {
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(95,213,181,.18),transparent 35%),
+    radial-gradient(ellipse at 100% 35%,rgba(177,225,212,.24),transparent 38%),
+    linear-gradient(155deg,#ecfdf5 0%,#d1fae5 52%,#ecfdf5 100%) !important;
+  color: #1d3035 !important;
+}
+body.light-mode .top-app-bar {
+  background: rgba(248,255,252,.72) !important;
+  border-color: rgba(255,255,255,.82) !important;
+}
+body.light-mode .top-app-icon-btn {
+  color: #40545a !important;
+  background: rgba(255,255,255,.56) !important;
+  border-color: rgba(255,255,255,.92) !important;
+  box-shadow: 0 5px 16px rgba(39,83,72,.07), inset 0 1px 0 #fff !important;
+}
+body.light-mode .glass-card, body.light-mode .info-card,
+body.light-mode .service-card, body.light-mode .notice-card,
+body.light-mode .package-card, body.light-mode .pay-method-card {
+  background: linear-gradient(145deg,rgba(255,255,255,.82),rgba(246,252,249,.64)) !important;
+  border-color: rgba(255,255,255,.94) !important;
+  box-shadow: 0 12px 32px rgba(36,84,72,.075),
+              inset 0 1px 0 rgba(255,255,255,.98) !important;
+}
+body.light-mode .glass-input,
+body.light-mode input:not([type=checkbox]):not([type=radio]):not([type=file]),
+body.light-mode select, body.light-mode textarea {
+  background: rgba(255,255,255,.68) !important;
+  border-color: rgba(105,145,133,.22) !important;
+  color: #263b40 !important;
+}
+body.light-mode #sidebarDrawer, body.light-mode #notifPanel {
+  background: rgba(246,253,250,.88) !important;
+  border-color: rgba(255,255,255,.94) !important;
+}
+body.light-mode .sidebar-item {
+  background: rgba(255,255,255,.55) !important;
+  border-color: rgba(255,255,255,.9) !important;
+}
+/* notif-item kept solid opaque for readability — see dedicated block */
+
+body.light-mode #bottomNav.bottom-nav {
+  background: rgba(248,255,252,.76) !important;
+  border-color: rgba(255,255,255,.96) !important;
+  box-shadow: 0 12px 38px rgba(36,84,72,.13),
+              inset 0 1px 0 rgba(255,255,255,.98) !important;
+}
+body.light-mode #bottomNav .bottom-nav-btn { color: #77878a !important; }
+body.light-mode #bottomNav .bottom-nav-btn.active {
+  color: #047857 !important;
+  background: rgba(15,169,128,.11) !important;
+}
+body.light-mode #bottomNav .bottom-nav-btn.active svg { color: #047857 !important; }
+body.light-mode #bottomNav .admin-fab {
+  border-color: rgba(255,255,255,.96) !important;
+  box-shadow: 0 7px 18px rgba(8,139,105,.23),
+              inset 0 1px 0 rgba(255,255,255,.40) !important;
+}
+body.light-mode #bottomNav .admin-fab-label { color: #607b75 !important; }
+
+/* Dark appearance */
+body:not(.light-mode) #bottomNav.bottom-nav {
+  background: rgba(11,32,25,.78) !important;
+  border-color: rgba(220,255,239,.15) !important;
+}
+body:not(.light-mode) .glass-card,
+body:not(.light-mode) .info-card,
+body:not(.light-mode) .service-card,
+body:not(.light-mode) .notice-card {
+  border-color: rgba(220,255,239,.14) !important;
+}
+
+/* Desktop layout remains untouched; mobile safe-area and small screens */
+@media (max-width: 380px) {
+  #bottomNav.bottom-nav { left: 7px !important; right: 7px !important; }
+  #bottomNav .bottom-nav-btn { font-size: 9px !important; }
+  #bottomNav .admin-fab { width: 47px !important; height: 47px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #bottomNav.bottom-nav, #bottomNav * {
+    animation: none !important;
+    transition-duration: .01ms !important;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  #bottomNav.bottom-nav, .top-app-bar, .glass-card, .info-card,
+  .service-card, #sidebarDrawer, #notifPanel {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+
+
+/* ================================================================
+   AMAR ELAKA — LIGHT MODE ACCESSIBILITY PATCH v1
+   Purpose: repair text/background contrast without changing any
+   existing HTML structure, JavaScript, Firebase logic or features.
+   Dark Mode is intentionally untouched.
+   ================================================================ */
+
+body.light-mode {
+  --ae-light-primary: #0f172a;
+  --ae-light-secondary: #475569;
+  --ae-light-muted: #64748b;
+  --ae-light-border: #cbd5e1;
+  --ae-green: #047857;
+  --ae-green-deep: #064e3b;
+  --ae-green-dark: #022c22;
+}
+
+/* A. Dynamic category chips (including the generated “সকল সেবা” chip).
+   Active chips are identified by the gradient classes generated by JS. */
+body.light-mode #categoryChips button.bg-gradient-to-r {
+  background: #047857 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid #047857 !important;
+  box-shadow: 0 4px 12px rgba(4,120,87,.20) !important;
+}
+body.light-mode #categoryChips button.bg-gradient-to-r,
+body.light-mode #categoryChips button.bg-gradient-to-r * {
+  color: #ffffff !important;
+}
+body.light-mode #categoryChips button:not(.bg-gradient-to-r) {
+  background: #ffffff !important;
+  color: #334155 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+body.light-mode #categoryChips button:not(.bg-gradient-to-r) * {
+  color: #334155 !important;
+}
+
+/* B. Other selected/segmented controls. Do not recolor every gradient
+   button globally: payment, promotional and destructive actions differ. */
+body.light-mode .tab-btn.active,
+body.light-mode .auth-tab.active,
+body.light-mode .theme-btn.active {
+  background: #047857 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border-color: #047857 !important;
+}
+body.light-mode .tab-btn.active *,
+body.light-mode .auth-tab.active *,
+body.light-mode .theme-btn.active * {
+  color: #ffffff !important;
+}
+body.light-mode .tab-btn:not(.active):not(.bg-gradient-to-r),
+body.light-mode .auth-tab:not(.active),
+body.light-mode .theme-btn:not(.active) {
+  color: #334155 !important;
+}
+
+/* C. Search and form controls: readable entered text, placeholder and icon. */
+body.light-mode #searchInput,
+body.light-mode #searchInputMobile,
+body.light-mode #modalCategorySearch,
+body.light-mode input,
+body.light-mode textarea,
+body.light-mode select {
+  color: #0f172a !important;
+  caret-color: #047857 !important;
+}
+body.light-mode input::placeholder,
+body.light-mode textarea::placeholder,
+body.light-mode #searchInput::placeholder,
+body.light-mode #searchInputMobile::placeholder,
+body.light-mode #modalCategorySearch::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+body.light-mode #searchContainerMobile svg,
+body.light-mode #modalCategorySearch + svg,
+body.light-mode .glass-input svg {
+  color: #475569 !important;
+}
+body.light-mode input:focus,
+body.light-mode textarea:focus,
+body.light-mode select:focus {
+  border-color: #047857 !important;
+  box-shadow: 0 0 0 3px rgba(4,120,87,.16) !important;
+}
+
+/* D. Secondary information inside white/light cards. */
+body.light-mode .service-card .text-slate-400,
+body.light-mode .service-card .text-slate-500,
+body.light-mode .info-card .text-slate-400,
+body.light-mode .info-card .text-slate-500,
+body.light-mode .glass-card .text-slate-400,
+body.light-mode .glass-card .text-slate-500,
+body.light-mode .notice-card .text-slate-400,
+body.light-mode .notice-card .text-slate-500 {
+  color: #475569 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card,
+body.light-mode .info-card,
+body.light-mode .glass-card,
+body.light-mode .notice-card {
+  color: #0f172a;
+}
+
+/* E. Category modal dark gradient header: keep its white text white.
+   The earlier broad .text-white rule otherwise turns it dark. */
+body.light-mode #categoryModal .modal-sheet > div:first-child {
+  background: linear-gradient(110deg, #047857, #047857, #064e3b) !important;
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,.16) !important;
+}
+body.light-mode #categoryModal .modal-sheet > div:first-child h3,
+body.light-mode #categoryModal .modal-sheet > div:first-child button,
+body.light-mode #categoryModal .modal-sheet > div:first-child i {
+  color: #ffffff !important;
+}
+body.light-mode #categoryModal .modal-sheet > div:first-child p {
+  color: #d1fae5 !important;
+}
+
+/* F. About modal heading and the “আমাদের অঙ্গীকার” dark panel.
+   Scope these rules to the actual modal so other gradients are unchanged. */
+body.light-mode #aboutModal .modal-sheet > div:first-child {
+  background: linear-gradient(110deg, #022c22, #064e3b) !important;
+  color: #ffffff !important;
+}
+body.light-mode #aboutModal .modal-sheet > div:first-child h2,
+body.light-mode #aboutModal .modal-sheet > div:first-child p,
+body.light-mode #aboutModal .modal-sheet > div:first-child button,
+body.light-mode #aboutModal .modal-sheet > div:first-child i {
+  color: #ffffff !important;
+}
+body.light-mode #aboutModal [class*="from-emerald-900/40"] {
+  background: linear-gradient(135deg, #022c22, #022c22) !important;
+  border-color: #047857 !important;
+}
+body.light-mode #aboutModal [class*="from-emerald-900/40"] h4,
+body.light-mode #aboutModal [class*="from-emerald-900/40"] p {
+  color: #ffffff !important;
+}
+body.light-mode #aboutModal [class*="from-emerald-900/40"] i {
+  color: #a7f3d0 !important;
+}
+
+/* G. Live/service-count status row: maintain green-on-light contrast. */
+body.light-mode #servicesGrid {
+  color: #0f172a !important;
+}
+body.light-mode #servicesGrid + #servicesSentinel {
+  color: #475569 !important;
+}
+body.light-mode .text-emerald-400 {
+  color: #047857 !important;
+}
+body.light-mode .text-emerald-500 {
+  color: #059669 !important;
+}
+
+/* H. Modal category search is intentionally light in Light Mode. */
+body.light-mode #categoryModal #modalCategorySearch {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+body.light-mode #categoryModal #modalCategorySearch::placeholder {
+  color: #64748b !important;
+}
+
+/* I. Keyboard focus remains visible against both light and dark surfaces. */
+body.light-mode button:focus-visible,
+body.light-mode a:focus-visible {
+  outline: 2px solid #047857 !important;
+  outline-offset: 3px !important;
+}
+
+/* End Amar Elaka Light Mode Contrast Patch */
+
+
+        /* ========== AMAR ELAKA: SECTION-AWARE PULL TO REFRESH ========== */
+        html, body { overscroll-behavior-y: none; }
+        #amarElakaPullRefresh {
+            --ptr-accent: #34d399;
+            position: fixed;
+            z-index: 9999;
+            top: 8px;
+            left: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, -72px) scale(.82);
+            transition: opacity .18s ease, transform .22s cubic-bezier(.2,.8,.2,1), top .08s linear;
+            background: rgba(28, 17, 49, .94);
+            border: 1px solid rgba(110,231,183,.24);
+            box-shadow: 0 8px 24px rgba(0,0,0,.24), 0 0 22px rgba(16,185,129,.22);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+        #amarElakaPullRefresh.ptr-visible {
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
+        }
+        #amarElakaPullRefresh.ptr-refreshing {
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
+        }
+        #amarElakaPullRefresh .ptr-ring {
+            position: absolute;
+            inset: 3px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent 0 18%, var(--ptr-accent) 38%, #059669 68%, #a7f3d0 88%, transparent 100%);
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+            opacity: .25;
+            transform: rotate(0deg);
+        }
+        #amarElakaPullRefresh.ptr-refreshing .ptr-ring {
+            opacity: 1;
+            animation: amarElakaPtrSpin .78s linear infinite;
+        }
+        #amarElakaPullRefresh .ptr-icon {
+            width: 19px;
+            height: 19px;
+            color: #d1fae5;
+            stroke-width: 2.15;
+            filter: drop-shadow(0 0 5px rgba(52,211,153,.45));
+        }
+        #amarElakaPullRefresh.ptr-blood {
+            --ptr-accent: #fb7185;
+            background: rgba(55, 18, 36, .95);
+            border-color: rgba(251,113,133,.28);
+            box-shadow: 0 8px 24px rgba(0,0,0,.24), 0 0 22px rgba(244,63,94,.2);
+        }
+        #amarElakaPullRefresh.ptr-blood .ptr-icon {
+            color: #fecdd3;
+            filter: drop-shadow(0 0 5px rgba(251,113,133,.5));
+        }
+        #amarElakaPullRefresh.ptr-armed .ptr-ring { opacity: .95; }
+        @keyframes amarElakaPtrSpin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            #amarElakaPullRefresh, #amarElakaPullRefresh * { transition: none !important; animation-duration: 1.8s !important; }
+        }
+
+
+/* ============================================================
+   AMAR ELAKA — TARGETED LIGHT MODE CONTRAST REPAIR
+   Only affects Light Mode. Existing functions, data and actions
+   are preserved. Dark Mode remains unchanged.
+   ============================================================ */
+
+/* CATEGORY PICKER: explicit active/inactive states */
+body.light-mode #modalCategoriesList > button.is-active {
+  background: #047857 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid #047857 !important;
+  box-shadow: 0 5px 14px rgba(4,120,87,.22) !important;
+}
+body.light-mode #modalCategoriesList > button.is-active > span,
+body.light-mode #modalCategoriesList > button.is-active i {
+  color: #ffffff !important;
+}
+body.light-mode #modalCategoriesList > button.is-active > div {
+  background: #064e3b !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+}
+body.light-mode #modalCategoriesList > button.is-inactive {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 2px 8px rgba(15,23,42,.055) !important;
+}
+body.light-mode #modalCategoriesList > button.is-inactive > span {
+  color: #1e293b !important;
+  opacity: 1 !important;
+}
+body.light-mode #modalCategoriesList > button.is-inactive > div {
+  background: #d1fae5 !important;
+  color: #047857 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+body.light-mode #modalCategoriesList > button.is-inactive i {
+  color: #047857 !important;
+}
+body.light-mode #modalCategoriesList > button:focus-visible {
+  outline: 3px solid #059669 !important;
+  outline-offset: 2px !important;
+}
+
+/* ABOUT: repair the first dark gradient/hero panel specifically */
+body.light-mode #aboutModal .modal-sheet .p-5.bg-gradient-to-br {
+  background: linear-gradient(140deg, #022c22 0%, #064e3b 55%, #022c22 100%) !important;
+  border: 1px solid #047857 !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 28px rgba(6,78,59,.18) !important;
+}
+body.light-mode #aboutModal .modal-sheet .p-5.bg-gradient-to-br h3,
+body.light-mode #aboutModal .modal-sheet .p-5.bg-gradient-to-br p {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: 0 1px 1px rgba(0,0,0,.16) !important;
+}
+body.light-mode #aboutModal .modal-sheet .p-5.bg-gradient-to-br .absolute {
+  opacity: .18 !important;
+}
+
+/* ABOUT: all light cards remain readable; green section titles */
+body.light-mode #aboutModal .modal-sheet .p-4.bg-\[\#07140e\] {
+  background: #ffffff !important;
+  border: 1px solid #a7f3d0 !important;
+  color: #334155 !important;
+}
+body.light-mode #aboutModal .modal-sheet .p-4.bg-\[\#07140e\] h4 {
+  color: #047857 !important;
+}
+body.light-mode #aboutModal .modal-sheet .p-4.bg-\[\#07140e\] p {
+  color: #334155 !important;
+  opacity: 1 !important;
+}
+body.light-mode #aboutModal .modal-sheet .p-4.bg-\[\#07140e\] h4 i {
+  color: #047857 !important;
+}
+/* The commitment panel is intentionally dark: all text/icons stay bright. */
+body.light-mode #aboutModal .modal-sheet .bg-gradient-to-r.from-emerald-900\/40 {
+  background: linear-gradient(135deg, #022c22, #022c22) !important;
+  border: 1px solid #047857 !important;
+}
+body.light-mode #aboutModal .modal-sheet .bg-gradient-to-r.from-emerald-900\/40 h4,
+body.light-mode #aboutModal .modal-sheet .bg-gradient-to-r.from-emerald-900\/40 p {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+body.light-mode #aboutModal .modal-sheet .bg-gradient-to-r.from-emerald-900\/40 i {
+  color: #a7f3d0 !important;
+}
+
+/* SERVICE CARDS: readable provider, location and description */
+body.light-mode .service-card h4 { color: #0f172a !important; }
+body.light-mode .service-card p.text-emerald-300 { color: #047857 !important; opacity: 1 !important; }
+body.light-mode .service-card p.text-slate-400,
+body.light-mode .service-card p.text-slate-300 { color: #475569 !important; opacity: 1 !important; }
+
+/* SERVICE CARD SOCIAL/WEB ICON BUTTONS: distinct accessible surfaces */
+body.light-mode .service-card .action-btn[title="ওয়েবসাইট"] {
+  background: #d1fae5 !important;
+  border: 1px solid #6ee7b7 !important;
+  color: #064e3b !important;
+  box-shadow: 0 2px 8px rgba(6,95,70,.10) !important;
+}
+body.light-mode .service-card .action-btn[title="WhatsApp"] {
+  background: #d1fae5 !important;
+  border: 1px solid #6ee7b7 !important;
+  color: #047857 !important;
+  box-shadow: 0 2px 8px rgba(21,128,61,.10) !important;
+}
+body.light-mode .service-card .action-btn[title="Facebook"] {
+  background: #dbeafe !important;
+  border: 1px solid #93c5fd !important;
+  color: #1456b8 !important;
+  box-shadow: 0 2px 8px rgba(20,86,184,.10) !important;
+}
+body.light-mode .service-card .action-btn[title="ওয়েবসাইট"] svg,
+body.light-mode .service-card .action-btn[title="WhatsApp"] svg,
+body.light-mode .service-card .action-btn[title="Facebook"] svg {
+  color: currentColor !important;
+  fill: currentColor !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .action-btn[title="ওয়েবসাইট"]:hover,
+body.light-mode .service-card .action-btn[title="WhatsApp"]:hover,
+body.light-mode .service-card .action-btn[title="Facebook"]:hover {
+  filter: brightness(.96) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Do not let global muted-text utilities fade these targeted components. */
+body.light-mode #categoryModal #modalCategoriesList button,
+body.light-mode #aboutModal .modal-sheet .p-5.bg-gradient-to-br *,
+body.light-mode .service-card .action-btn {
+  opacity: 1 !important;
+}
+
+/* =========================================================
+   AMAR ELAKA — GREEN + DARK GREEN/BLACK THEME
+   Visual-only overrides. Existing app logic and integrations
+   remain untouched.
+   ========================================================= */
+:root {
+  --ae-primary:#059669;
+  --ae-primary-dark:#065f46;
+  --ae-primary-deep:#022c22;
+  --ae-primary-soft:#d1fae5;
+  --ae-primary-pale:#ecfdf5;
+  --ae-accent:#34d399;
+  --ae-dark:#07140e;
+  --ae-dark-surface:#0d1f17;
+}
+body { accent-color:var(--ae-primary); }
+body:not(.light-mode) {
+  background-color:#040806 !important;
+  color:#ecfdf5;
+}
+body:not(.light-mode) .glass,
+body:not(.light-mode) .glass-card,
+body:not(.light-mode) .service-card {
+  border-color:rgba(52,211,153,.22);
+}
+body.light-mode {
+  --ae-text-primary:#1e1b2e;
+  --ae-text-secondary:#51476b;
+  --ae-text-muted:#6b6280;
+  --ae-brand:#047857;
+  --ae-brand-dark:#065f46;
+  background:#ecfdf5 !important;
+  color:#1e1b2e !important;
+}
+/* Header/navigation and prominent brand surfaces */
+body #appHeader, body .app-header, body #mainHeader,
+body .bottom-nav, body #bottomNav {
+  border-color:rgba(52,211,153,.24);
+}
+body.light-mode #appHeader, body.light-mode .app-header,
+body.light-mode #mainHeader {
+  background:rgba(245,243,255,.92) !important;
+}
+body:not(.light-mode) #appHeader, body:not(.light-mode) .app-header,
+body:not(.light-mode) #mainHeader {
+  background:rgba(17,10,31,.94) !important;
+}
+/* Utility color classes used by both static and JS-rendered UI */
+[class~="text-emerald-300"], [class~="text-emerald-400"] { color:#34d399; }
+body.light-mode [class~="text-emerald-300"],
+body.light-mode [class~="text-emerald-400"] { color:#047857 !important; }
+body.light-mode [class~="text-emerald-500"],
+body.light-mode [class~="text-emerald-600"] { color:#065f46 !important; }
+body.light-mode [class~="text-emerald-300"],
+body.light-mode [class~="text-emerald-400"] { color:#047857 !important; }
+/* Category chooser: explicit selected and unselected states */
+#categoryModal #modalCategoriesList > button.is-active {
+  background:linear-gradient(135deg,#047857,#065f46) !important;
+  color:#fff !important;
+  border:1px solid #34d399 !important;
+  box-shadow:0 8px 22px rgba(6,95,70,.24) !important;
+}
+#categoryModal #modalCategoriesList > button.is-active *,
+#categoryModal #modalCategoriesList > button.is-active i,
+#categoryModal #modalCategoriesList > button.is-active svg {
+  color:#fff !important; stroke:#fff !important;
+}
+#categoryModal #modalCategoriesList > button.is-active > div {
+  background:rgba(255,255,255,.18) !important;
+  color:#fff !important;
+}
+#categoryModal #modalCategoriesList > button.is-inactive {
+  background:#fff !important;
+  color:#31264a !important;
+  border:1px solid #d8c9f5 !important;
+}
+#categoryModal #modalCategoriesList > button.is-inactive span { color:#31264a !important; }
+#categoryModal #modalCategoriesList > button.is-inactive > div {
+  background:#d1fae5 !important; color:#065f46 !important;
+}
+body:not(.light-mode) #categoryModal #modalCategoriesList > button.is-inactive {
+  background:#0d1f17 !important; color:#ecfdf5 !important;
+  border-color:#49316d !important;
+}
+body:not(.light-mode) #categoryModal #modalCategoriesList > button.is-inactive span { color:#ecfdf5 !important; }
+/* About hero: white text on dark green gradient */
+#aboutModal .modal-sheet .p-5.bg-gradient-to-br,
+#aboutModal .modal-sheet .p-5.bg-gradient-to-br:first-of-type {
+  background:linear-gradient(140deg,#022c22 0%,#064e3b 55%,#0d1f17 100%) !important;
+  color:#fff !important; border:1px solid rgba(110,231,183,.38) !important;
+}
+#aboutModal .modal-sheet .p-5.bg-gradient-to-br * { color:#fff !important; opacity:1 !important; }
+#aboutModal .modal-sheet .p-5.bg-gradient-to-br svg { stroke:#a7f3d0 !important; }
+body.light-mode #aboutModal .modal-sheet .p-5.bg-gradient-to-br p { color:#ecfdf5 !important; }
+/* Notice detail header and visible close affordance */
+#noticeModal .modal-sheet > div:first-child,
+#noticeModal .modal-sheet .border-b {
+  background:linear-gradient(110deg,#022c22,#065f46) !important;
+  border-color:rgba(221,214,254,.35) !important;
+}
+#noticeModal button[onclick="closeNoticeModal()"] {
+  width:44px !important; height:44px !important; min-width:44px !important;
+  border-radius:14px !important; background:#059669 !important;
+  color:#fff !important; border:1px solid #6ee7b7 !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  box-shadow:0 3px 12px rgba(0,0,0,.18) !important;
+}
+#noticeModal button[onclick="closeNoticeModal()"] svg,
+#noticeModal button[onclick="closeNoticeModal()"] i {
+  color:#fff !important; stroke:#fff !important; opacity:1 !important;
+}
+/* CRITICAL: Light mode must keep green header + white text (override global .text-white) */
+body.light-mode #noticeModal .modal-sheet > div:first-child,
+body.light-mode #noticeModal .modal-sheet > div.border-b,
+body.light-mode #noticeModal .modal-sheet > div:first-child.bg-\[\#10281c\],
+body.light-mode #noticeModal .modal-sheet > div:first-child.bg-\[#10281c\] {
+  background: linear-gradient(110deg, #022c22, #065f46) !important;
+  border-color: rgba(221,214,254,.35) !important;
+  color: #ffffff !important;
+}
+body.light-mode #noticeModal #noticeModalTitle,
+body.light-mode #noticeModal .modal-sheet > div:first-child h2,
+body.light-mode #noticeModal .modal-sheet > div:first-child .text-white,
+body.light-mode #noticeModal .modal-sheet > div:first-child * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+body.light-mode #noticeModal button[onclick="closeNoticeModal()"] {
+  background: #059669 !important;
+  color: #ffffff !important;
+}
+body.light-mode #noticeModal button[onclick="closeNoticeModal()"] svg,
+body.light-mode #noticeModal button[onclick="closeNoticeModal()"] i {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+/* Notice body text on white sheet */
+body.light-mode #noticeModalContent,
+body.light-mode #noticeModalContent p {
+  color: #1e293b !important;
+}
+body.light-mode #noticeModalContent .text-slate-200,
+body.light-mode #noticeModalContent .text-slate-300 {
+  color: #334155 !important;
+}
+body.light-mode #noticeModalContent .text-slate-500 {
+  color: #64748b !important;
+}
+/* Terms modal header: keep dark green + white text in light mode */
+body.light-mode #termsModal .modal-sheet > div:first-child {
+  background: linear-gradient(110deg, #1a0b2e, #064e3b) !important;
+  border-color: rgba(221,214,254,.3) !important;
+  color: #ffffff !important;
+}
+body.light-mode #termsModal .modal-sheet > div:first-child h2,
+body.light-mode #termsModal .modal-sheet > div:first-child p,
+body.light-mode #termsModal .modal-sheet > div:first-child span,
+body.light-mode #termsModal .modal-sheet > div:first-child .text-white,
+body.light-mode #termsModal .modal-sheet > div:first-child .text-emerald-300,
+body.light-mode #termsModal .modal-sheet > div:first-child * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+body.light-mode #termsModal .modal-sheet > div:first-child .text-emerald-300 {
+  color: #e9d5ff !important;
+}
+body.light-mode #termsModal .modal-sheet > div:first-child svg {
+  color: #a7f3d0 !important;
+  stroke: #a7f3d0 !important;
+}
+body.light-mode #termsModal .modal-sheet > div:first-child button {
+  background: rgba(255,255,255,0.15) !important;
+  color: #ffffff !important;
+}
+body.light-mode #termsModal .modal-sheet > div:first-child button svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+/* Service provider action icons: globe is an outline icon, not a filled dot.
+   Preserve official WhatsApp and Facebook brand colors. */
+body .service-card .action-btn[title="ওয়েবসাইট"] {
+  background:#d1fae5 !important; border:1px solid #6ee7b7 !important;
+  color:#065f46 !important;
+}
+body .service-card .action-btn[title="ওয়েবসাইট"] svg,
+body.light-mode .service-card .action-btn[title="ওয়েবসাইট"] svg {
+  fill:none !important; stroke:currentColor !important;
+  stroke-width:2 !important; opacity:1 !important;
+}
+body .service-card .action-btn[title="ওয়েবসাইট"] svg path,
+body .service-card .action-btn[title="ওয়েবসাইট"] svg circle,
+body .service-card .action-btn[title="ওয়েবসাইট"] svg line {
+  fill:none !important; stroke:currentColor !important;
+}
+body .service-card .action-btn[title="WhatsApp"] {
+  background:#dcfce7 !important; border:1px solid #86efac !important;
+  color:#15803d !important;
+}
+body .service-card .action-btn[title="Facebook"] {
+  background:#dbeafe !important; border:1px solid #93c5fd !important;
+  color:#1877f2 !important;
+}
+/* Official-looking Lucide phone icon and accessible call control */
+/* Chat action button: Gemini (empty) ↔ Messenger-style Send (has text) — সবুজ গোলাকার */
+#chatSendBtn, #sendMessageBtn, .chat-send-btn, .chat-action-btn {
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px;
+  border-radius: 50%; border: none; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .18s ease, box-shadow .18s ease, transform .12s ease;
+}
+#chatSendBtn.chat-gemini-mode {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(226, 232, 240, 0.9) !important;
+  border-radius: 50%;
+}
+#chatSendBtn.chat-send-mode {
+  /* Messenger-style: solid green circular send button */
+  background: #059669 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.45) !important;
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px;
+  padding: 0;
+  border-radius: 50%;
+}
+#chatSendBtn.chat-send-mode:active {
+  transform: scale(0.92);
+  background: #047857 !important;
+}
+#chatSendBtn .chat-btn-gemini { display: flex; align-items: center; justify-content: center; }
+#chatSendBtn .chat-btn-send.hidden { display: none !important; }
+#chatSendBtn .chat-btn-gemini.hidden { display: none !important; }
+#chatSendBtn .chat-btn-send {
+  display: flex; align-items: center; justify-content: center;
+}
+#chatSendBtn .chat-btn-send .send-label { display: none !important; } /* টেক্সট লুকানো — শুধু আইকন */
+#chatSendBtn .gemini-logo { display: block; }
+body.light-mode #chatSendBtn.chat-gemini-mode {
+  background: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.1), 0 0 0 1px #e2e8f0 !important;
+}
+body.chat-active #chatSendBtn.chat-gemini-mode {
+  background: #ffffff !important;
+}
+/* Messenger-like paper plane icon size */
+#chatSendBtn.chat-send-mode i[data-lucide="send"],
+#chatSendBtn.chat-send-mode svg.lucide-send {
+  width: 20px !important; height: 20px !important;
+  stroke-width: 2.25;
+}
+.chat-message.outgoing, .message-bubble.outgoing,
+body .chat-bubble-user {
+  background:linear-gradient(135deg,#047857,#064e3b) !important;
+  color:#fff !important;
+}
+/* Focus visibility and readable form controls */
+body.light-mode input, body.light-mode textarea, body.light-mode select {
+  color:#1e1b2e !important;
+}
+body.light-mode input::placeholder, body.light-mode textarea::placeholder {
+  color:#6b6280 !important; opacity:1 !important;
+}
+body.light-mode :focus-visible {
+  outline:3px solid #059669 !important; outline-offset:3px !important;
+}
+/* Green theme for primary buttons, badges and active navigation */
+body [class~="bg-emerald-600"], body [class~="bg-emerald-700"],
+body [class~="bg-emerald-600"], body [class~="bg-emerald-700"] {
+  color:#fff;
+}
+body.light-mode .bottom-nav .active,
+body.light-mode .bottom-nav-btn.active,
+body.light-mode .tab-btn.active {
+  color:#065f46 !important;
+}
+body:not(.light-mode) .bottom-nav .active,
+body:not(.light-mode) .bottom-nav-btn.active,
+body:not(.light-mode) .tab-btn.active {
+  color:#6ee7b7 !important;
+}
+
+/* Share controls and phone actions: accessible in both themes */
+.call-action, a[href^="tel:"] {
+  background: #16a34a !important; color: #ffffff !important;
+  border-color: rgba(134,239,172,.55) !important;
+  box-shadow: 0 6px 18px rgba(22,163,74,.24) !important;
+}
+.call-action:hover, a[href^="tel:"]:hover { background:#15803d !important; }
+body.light-mode .call-action { color:#ffffff !important; }
+#svcModalShare, #shareEmergencyBtnDesktop, #shareBloodBtnDesktop,
+#shareEmergencyBtnMobile, #shareBloodBtnMobile { cursor:pointer; }
+body.light-mode #svcModalShare,
+body.light-mode #shareEmergencyBtnDesktop, body.light-mode #shareBloodBtnDesktop,
+body.light-mode #shareEmergencyBtnMobile, body.light-mode #shareBloodBtnMobile {
+  background:#d1fae5 !important; color:#065f46 !important; border-color:#34d399 !important;
+}
+body.light-mode .action-btn[title*="শেয়ার"] { background:#d1fae5 !important; color:#065f46 !important; border-color:#34d399 !important; }
+
+/* Share actions: consistent visible focus and touch feedback in both themes. */
+#svcModalShare, #shareEmergencyBtnDesktop, #shareBloodBtnDesktop,
+#shareEmergencyBtnMobile, #shareBloodBtnMobile,
+.service-card .action-btn[title*="শেয়ার"] {
+  min-width: 36px; min-height: 36px;
+  transition: transform .16s ease, background-color .16s ease, box-shadow .16s ease;
+}
+#svcModalShare:active, #shareEmergencyBtnDesktop:active, #shareBloodBtnDesktop:active,
+#shareEmergencyBtnMobile:active, #shareBloodBtnMobile:active,
+.service-card .action-btn[title*="শেয়ার"]:active { transform: scale(.94); }
+#svcModalShare:focus-visible, #shareEmergencyBtnDesktop:focus-visible,
+#shareBloodBtnDesktop:focus-visible, #shareEmergencyBtnMobile:focus-visible,
+#shareBloodBtnMobile:focus-visible, .service-card .action-btn[title*="শেয়ার"]:focus-visible {
+  outline: 2px solid #34d399; outline-offset: 3px;
+}
+body.light-mode .service-card .action-btn[title*="শেয়ার"] {
+  background:#d1fae5 !important; color:#065f46 !important; border-color:#34d399 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — Service card + service detail modal contrast
+   Titles, text and action icons must stay clearly readable.
+   ========================================================= */
+
+/* --- Service list cards --- */
+body.light-mode .service-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+body.light-mode .service-card h3,
+body.light-mode .service-card h4,
+body.light-mode .service-card .font-bold.text-slate-100,
+body.light-mode .service-card .text-slate-100,
+body.light-mode .service-card .text-white {
+  color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 800 !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+body.light-mode .service-card p,
+body.light-mode .service-card .text-slate-300,
+body.light-mode .service-card .text-slate-400,
+body.light-mode .service-card .text-slate-500 {
+  color: #475569 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .text-emerald-300,
+body.light-mode .service-card .text-emerald-400 {
+  color: #047857 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .text-rose-400,
+body.light-mode .service-card [data-lucide="map-pin"] {
+  color: #e11d48 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card svg {
+  opacity: 1 !important;
+}
+
+/* List card action icons — solid, high-contrast chips */
+body.light-mode .service-card .action-btn {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #6ee7b7 !important;
+  color: #065f46 !important;
+  opacity: 1 !important;
+  box-shadow: 0 2px 6px rgba(6,95,70, 0.12) !important;
+}
+body.light-mode .service-card .action-btn svg {
+  color: #065f46 !important;
+  stroke: #065f46 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .action-btn[title="ওয়েবসাইট"],
+body.light-mode .service-card .action-btn[title*="Website"],
+body.light-mode .service-card .action-btn[title*="website"] {
+  background: #d1fae5 !important;
+  border-color: #34d399 !important;
+  color: #064e3b !important;
+}
+body.light-mode .service-card .action-btn[title*="শেয়ার"],
+body.light-mode .service-card .action-btn[title*="Share"],
+body.light-mode .service-card .action-btn[title*="share"] {
+  background: #f3e8ff !important;
+  border-color: #6ee7b7 !important;
+  color: #047857 !important;
+}
+body.light-mode .service-card .action-btn[title="WhatsApp"] {
+  background: #ecfdf5 !important;
+  border-color: #6ee7b7 !important;
+  color: #047857 !important;
+}
+body.light-mode .service-card .action-btn[title="WhatsApp"] svg {
+  color: #047857 !important;
+  stroke: #047857 !important;
+}
+body.light-mode .service-card .action-btn[title="Facebook"] {
+  background: #eff6ff !important;
+  border-color: #93c5fd !important;
+  color: #1d4ed8 !important;
+}
+body.light-mode .service-card .action-btn[title="Facebook"] svg {
+  color: #1d4ed8 !important;
+  fill: #1d4ed8 !important;
+}
+body.light-mode .service-card .fav-btn {
+  background: rgba(255,255,255,0.95) !important;
+  border: 1.5px solid #fda4af !important;
+  color: #e11d48 !important;
+}
+body.light-mode .service-card .fav-btn svg {
+  color: #e11d48 !important;
+  stroke: #e11d48 !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .call-action {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  border: none !important;
+  opacity: 1 !important;
+}
+body.light-mode .service-card .call-action svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* --- Service detail modal --- */
+body.light-mode #serviceDetailModal > div {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+body.light-mode #serviceDetailModal #svcModalTitle,
+body.light-mode #serviceDetailModal h3#svcModalTitle {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+}
+/* Close (X) button: always high-contrast in light mode */
+body.light-mode #serviceDetailModal button[onclick="closeServiceDetailModal()"],
+body.light-mode #serviceDetailModal button[aria-label="বন্ধ"] {
+  background: rgba(15, 23, 42, 0.78) !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+}
+body.light-mode #serviceDetailModal button[onclick="closeServiceDetailModal()"] svg,
+body.light-mode #serviceDetailModal button[aria-label="বন্ধ"] svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+  opacity: 1 !important;
+}
+body.light-mode #promotionDetailModal button[onclick="closePromotionDetailModal()"],
+body.light-mode #promotionDetailModal button[aria-label="বন্ধ"] {
+  background: rgba(15, 23, 42, 0.78) !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+}
+body.light-mode #promotionDetailModal button[aria-label="বন্ধ"] svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+body.light-mode #serviceDetailModal #svcModalProvider,
+body.light-mode #serviceDetailModal #svcModalLocation,
+body.light-mode #serviceDetailModal #svcModalDescription {
+  color: #1e293b !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal .text-white:not(button):not(a.call-action):not(.bg-gradient-to-r *) {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+body.light-mode #serviceDetailModal .text-slate-100,
+body.light-mode #serviceDetailModal .text-slate-200,
+body.light-mode #serviceDetailModal .text-slate-300 {
+  color: #1e293b !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal .text-slate-400 {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal .text-emerald-300 {
+  color: #047857 !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal .bg-\[\#07140e\],
+body.light-mode #serviceDetailModal .bg-\[\#10281c\] {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+body.light-mode #serviceDetailModal svg {
+  opacity: 1 !important;
+}
+
+/* Modal bottom action bar — clear, solid buttons */
+body.light-mode #serviceDetailModal #svcModalWebsite,
+body.light-mode #serviceDetailModal #svcModalWhatsapp,
+body.light-mode #serviceDetailModal #svcModalFacebook,
+body.light-mode #serviceDetailModal #svcModalShare,
+body.light-mode #serviceDetailModal #svcModalFavBottom {
+  opacity: 1 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+}
+body.light-mode #serviceDetailModal #svcModalWebsite {
+  background: #d1fae5 !important;
+  border: 1.5px solid #34d399 !important;
+  color: #064e3b !important;
+}
+body.light-mode #serviceDetailModal #svcModalWebsite svg {
+  color: #064e3b !important;
+  stroke: #064e3b !important;
+}
+body.light-mode #serviceDetailModal #svcModalWhatsapp {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #6ee7b7 !important;
+  color: #047857 !important;
+}
+body.light-mode #serviceDetailModal #svcModalWhatsapp svg {
+  color: #047857 !important;
+  fill: #047857 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFacebook {
+  background: #eff6ff !important;
+  border: 1.5px solid #93c5fd !important;
+  color: #1d4ed8 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFacebook svg {
+  color: #1d4ed8 !important;
+  fill: #1d4ed8 !important;
+}
+body.light-mode #serviceDetailModal #svcModalShare {
+  background: #f3e8ff !important;
+  border: 1.5px solid #6ee7b7 !important;
+  color: #047857 !important;
+}
+body.light-mode #serviceDetailModal #svcModalShare svg {
+  color: #047857 !important;
+  stroke: #047857 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFavBottom {
+  background: #fff1f2 !important;
+  border: 1.5px solid #fda4af !important;
+  color: #e11d48 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFavBottom svg {
+  color: #e11d48 !important;
+  stroke: #e11d48 !important;
+}
+body.light-mode #serviceDetailModal #svcModalFavBottom.is-favorite,
+body.light-mode #serviceDetailModal #svcModalFavBottom.is-favorite svg {
+  color: #e11d48 !important;
+  fill: #e11d48 !important;
+}
+body.light-mode #serviceDetailModal #svcModalCall {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+body.light-mode #serviceDetailModal #svcModalCall svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Promotion detail modal same clarity in light mode */
+body.light-mode #promotionDetailModal #promoModalTitle {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  font-weight: 800 !important;
+  opacity: 1 !important;
+}
+body.light-mode #promotionDetailModal #promoModalAdvertiser,
+body.light-mode #promotionDetailModal #promoModalLocation,
+body.light-mode #promotionDetailModal #promoModalDescription {
+  color: #1e293b !important;
+  opacity: 1 !important;
+}
+body.light-mode #promotionDetailModal .text-white:not(button) {
+  color: #0f172a !important;
+}
+
+/* ========== LIGHT MODE: Notification panel readability (fix) ========== */
+body.light-mode #notifPanel {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08) !important;
+}
+body.light-mode #notifPanel .bg-gradient-to-br,
+body.light-mode #notifPanel > div:first-child {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%) !important;
+  border-color: #a7f3d0 !important;
+}
+body.light-mode #notifPanel h3,
+body.light-mode #notifPanel .text-white {
+  color: #064e3b !important;
+  -webkit-text-fill-color: #064e3b !important;
+}
+body.light-mode #notifSummary {
+  color: #047857 !important;
+  opacity: 1 !important;
+}
+body.light-mode #notifPanel button[aria-label="বন্ধ"],
+body.light-mode #notifPanel button[onclick="closeNotifPanel()"] {
+  background: rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+body.light-mode #notifPanel button[aria-label="বন্ধ"] svg,
+body.light-mode #notifPanel button[onclick="closeNotifPanel()"] svg {
+  color: #0f172a !important;
+  stroke: #0f172a !important;
+}
+/* Solid opaque cards — no glass/translucent wash */
+body.light-mode .notif-item {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  opacity: 1 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+body.light-mode .notif-item.unread {
+  background: #ecfdf5 !important;
+  border-color: #6ee7b7 !important;
+  box-shadow: 0 0 0 1px rgba(16,185,129,0.15), 0 2px 8px rgba(16,185,129,0.12) !important;
+}
+body.light-mode .notif-item.read {
+  opacity: 1 !important;
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+body.light-mode .notif-item h4,
+body.light-mode .notif-item .text-slate-100,
+body.light-mode .notif-item [data-user-content] {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 700 !important;
+}
+body.light-mode .notif-item p,
+body.light-mode .notif-item .text-slate-400 {
+  color: #334155 !important;
+  opacity: 1 !important;
+}
+body.light-mode .notif-item .text-slate-500,
+body.light-mode .notif-item span.text-\[10px\] {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+body.light-mode .notif-item .notif-icon {
+  background: #d1fae5 !important;
+  border-color: #a7f3d0 !important;
+  color: #047857 !important;
+}
+body.light-mode .notif-item .notif-icon svg {
+  color: #047857 !important;
+  stroke: #047857 !important;
+}
+/* Footer of notif panel */
+body.light-mode #notifPanel > div:last-child {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+body.light-mode #notifPanel > div:last-child p,
+body.light-mode #notifPanel > div:last-child .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* ========== LIGHT MODE: Service detail title extra strength ========== */
+body.light-mode #serviceDetailModal #svcModalTitle,
+body.light-mode #serviceDetailModal h3#svcModalTitle {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  background: transparent !important;
+}
+body.light-mode #serviceDetailModal .p-5 h3,
+body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+
+        /* ========== জেলা / উপজেলা ড্রপডাউন ========== */
+        .loc-btn {
+            display: flex; align-items: center; justify-content: space-between; gap: 6px;
+            text-align: left; cursor: pointer; min-width: 0; width: 100%;
+            background: transparent; border: none; outline: none; font-family: inherit;
+        }
+        .loc-btn:not(.loc-bare) { }
+        .loc-btn .loc-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .loc-btn .loc-label.loc-placeholder { color: #64748b; }
+        .loc-btn .loc-chev { flex-shrink: 0; width: 16px; height: 16px; color: #10b981; transition: transform .2s ease; }
+        .loc-btn[aria-expanded="true"] .loc-chev { transform: rotate(180deg); }
+        .loc-btn.loc-disabled { opacity: .55; }
+        .loc-btn.loc-disabled .loc-label { color: #64748b; }
+        .loc-btn.loc-shake { animation: locShake .35s ease; }
+        @keyframes locShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+        /* বাটন যখন সরাসরি বক্সের ভেতরে (edit/provider/promo) */
+        .loc-btn.loc-boxed { border: 1px solid rgba(16,185,129,.3); border-radius: 12px; padding: 10px 12px; font-size: 13px; background: #07140e; color: #f1f5f9; }
+        .loc-btn.loc-boxed:focus-visible, .loc-btn.loc-boxed[aria-expanded="true"] { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.18); }
+        .loc-btn.loc-promo { border: 1px solid rgba(251,191,36,.25); border-radius: 12px; padding: 10px 12px; font-size: 13px; background: #07140e; color: #f1f5f9; }
+        .loc-btn.loc-promo[aria-expanded="true"] { border-color: #f59e0b; }
+
+        #locDropdown {
+            position: fixed; z-index: 10050; display: none; flex-direction: column;
+            background: linear-gradient(180deg, #10281c 0%, #0c1c14 100%);
+            border: 1px solid rgba(16,185,129,.45); border-radius: 16px; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,.6), 0 0 0 1px rgba(16,185,129,.12);
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+        #locDropdown.open { display: flex; animation: locPop .16s ease-out; }
+        #locDropdown.loc-up { transform-origin: bottom center; }
+        @keyframes locPop { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: none; } }
+        #locDropdown .loc-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px 6px; font-size: 11px; font-weight: 700; color: #34d399; letter-spacing: .03em; }
+        #locDropdown .loc-head span:last-child { color: #64748b; font-weight: 600; }
+        #locDropdown .loc-search-wrap { display: flex; align-items: center; gap: 8px; margin: 4px 10px 8px; padding: 0 10px; border-radius: 12px; background: rgba(0,0,0,.35); border: 1px solid rgba(16,185,129,.25); }
+        #locDropdown .loc-search-wrap:focus-within { border-color: #10b981; }
+        #locDropdown .loc-search-wrap svg { width: 15px; height: 15px; color: #10b981; flex-shrink: 0; }
+        #locDropdown .loc-search { flex: 1; min-width: 0; background: transparent; border: none; outline: none; color: #f1f5f9; font-size: 14px; padding: 10px 0; font-family: inherit; }
+        #locDropdown .loc-search::placeholder { color: #64748b; }
+        #locDropdown .loc-list { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 0 6px 8px; flex: 1; }
+        #locDropdown .loc-list::-webkit-scrollbar { width: 5px; }
+        #locDropdown .loc-list::-webkit-scrollbar-thumb { background: rgba(16,185,129,.45); border-radius: 10px; }
+        #locDropdown .loc-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 10px; font-size: 14px; color: #e2e8f0; cursor: pointer; transition: background .12s; }
+        #locDropdown .loc-item:hover, #locDropdown .loc-item.active { background: rgba(16,185,129,.18); }
+        #locDropdown .loc-item.selected { background: rgba(16,185,129,.3); color: #fff; font-weight: 700; }
+        #locDropdown .loc-item svg { width: 16px; height: 16px; color: #6ee7b7; flex-shrink: 0; }
+        #locDropdown .loc-item.loc-clear { color: #fda4af; font-size: 13px; }
+        #locDropdown .loc-empty { padding: 22px 12px; text-align: center; font-size: 13px; color: #64748b; }
+
+        body.light-mode .loc-btn.loc-boxed, body.light-mode .loc-btn.loc-promo { background: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        body.light-mode .loc-btn .loc-label.loc-placeholder { color: #94a3b8 !important; }
+        body.light-mode .loc-btn .loc-chev { color: #047857; }
+        body.light-mode #locDropdown { background: #ffffff; border-color: #a7f3d0; box-shadow: 0 16px 40px rgba(15,23,42,.18); }
+        body.light-mode #locDropdown .loc-head { color: #047857; }
+        body.light-mode #locDropdown .loc-search-wrap { background: #f8fafc; border-color: #cbd5e1; }
+        body.light-mode #locDropdown .loc-search { color: #0f172a; }
+        body.light-mode #locDropdown .loc-item { color: #1e293b; }
+        body.light-mode #locDropdown .loc-item:hover, body.light-mode #locDropdown .loc-item.active { background: #ecfdf5; }
+        body.light-mode #locDropdown .loc-item.selected { background: #d1fae5; color: #064e3b; }
+        body.light-mode #locDropdown .loc-item svg { color: #059669; }
+
+.ae-vthumb{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#000;cursor:pointer}
+.ae-vthumb>img,.ae-vthumb>video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.ae-vthumb .ae-vshade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,.12));pointer-events:none}
+.ae-vplay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.ae-vplay>span{width:54px;height:54px;border-radius:9999px;background:rgba(16,185,129,.94);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(0,0,0,.5);transition:transform .15s}
+.ae-vthumb:hover .ae-vplay>span{transform:scale(1.08)}
+.ae-vplay svg{margin-left:3px}
+#svcModalVideo .ae-vthumb,#promoModalVideo .ae-vthumb{height:100%;aspect-ratio:auto}
+#aeVideoModal{z-index:10001;background:rgba(0,0,0,.94);padding:12px}
+.ae-vm-box{position:relative;width:min(96vw,calc((100vh - 110px) * 16 / 9));width:min(96vw,calc((100dvh - 110px) * 16 / 9));aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.ae-vm-box iframe,.ae-vm-box video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;object-fit:contain}
+.ae-vm-close{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;width:42px;height:42px;border-radius:9999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
+.ae-vm-close:hover{background:rgba(244,63,94,.85)}
+
+    #downloadAppModal{--ap-bg:#06120c;--ap-card:#0d241a;--ap-line:rgba(110,231,183,.16);--ap-text:#ecfdf5;--ap-sub:#8fb5a2;--ap-track:rgba(255,255,255,.1);--ap-g:#10b981}
+    body.light-mode #downloadAppModal{--ap-bg:#f2f5f4;--ap-card:#ffffff;--ap-line:#e2e8f0;--ap-text:#0f172a;--ap-sub:#64748b;--ap-track:#e2e8f0}
+    #downloadAppModal{background:var(--ap-bg)!important;color:var(--ap-text);overflow-y:auto;overscroll-behavior:none;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+    html:has(#downloadAppModal:not(.hidden)),body:has(#downloadAppModal:not(.hidden)){overscroll-behavior:none!important;overflow:hidden!important}
+    #downloadAppModal.hidden{display:none!important}
+    #downloadAppModal .ap-wrap{max-width:720px;margin:0 auto;padding-bottom:140px}
+    .ap-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;background:color-mix(in srgb,var(--ap-bg) 82%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--ap-line)}
+    .ap-top b{font-size:17px}
+    .ap-ib{width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--ap-card);color:var(--ap-text);border:1px solid var(--ap-line);cursor:pointer}
+    .ap-ib i,.ap-ib svg{width:20px;height:20px}
+    .ap-hero{position:relative;margin:14px 14px 0;border-radius:28px;overflow:hidden;padding:24px 18px;color:#fff;background:radial-gradient(130% 120% at 20% 0%,#34d399 0%,#059669 38%,#064e3b 100%);box-shadow:0 18px 40px rgba(5,150,105,.28)}
+    .ap-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 90% 10%,rgba(255,255,255,.25),transparent 70%);pointer-events:none}
+    .ap-hrow{position:relative;z-index:1;display:flex;gap:16px;align-items:center}
+    .ap-icon{width:104px;height:104px;border-radius:25%;flex:none;object-fit:cover;background:#fff;box-shadow:0 10px 28px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.3)}
+    .ap-hrow h1{font-size:25px;font-weight:800;line-height:1.15}
+    .ap-hrow p{margin-top:4px;font-size:13.5px;opacity:.92}
+    .ap-badge{display:inline-flex;gap:5px;align-items:center;margin-top:8px;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.2);font-size:11.5px;font-weight:600}
+    .ap-acts{position:relative;z-index:1;display:flex;gap:10px;margin-top:18px}
+    .ap-get{flex:1;height:50px;border:0;border-radius:99px;background:#fff;color:#047857;font:800 16px inherit;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.22);transition:transform .15s}
+    .ap-get:active{transform:scale(.97)}
+    .ap-get[disabled]{opacity:.8;cursor:default}
+    .ap-get svg,.ap-get i{width:20px;height:20px}
+    .ap-share{width:50px;height:50px;border-radius:50%;border:0;background:rgba(255,255,255,.22);color:#fff;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px)}
+    .ap-stats{display:flex;overflow-x:auto;margin:16px 14px 0;padding:14px 0;border-radius:20px;background:var(--ap-card);border:1px solid var(--ap-line);scrollbar-width:none}
+    .ap-stats::-webkit-scrollbar{display:none}
+    .ap-st{flex:1 0 96px;text-align:center;padding:0 8px;border-right:1px solid var(--ap-line)}
+    .ap-st:last-child{border:0}
+    .ap-st small{display:block;font-size:10.5px;letter-spacing:.05em;color:var(--ap-sub);text-transform:uppercase}
+    .ap-st b{display:block;font-size:19px;margin:5px 0 1px;font-variant-numeric:tabular-nums}
+    .ap-st span{font-size:11px;color:var(--ap-sub)}
+    .ap-card{margin:14px 14px 0;padding:16px;border-radius:20px;background:var(--ap-card);border:1px solid var(--ap-line)}
+    .ap-card h2{font-size:16px;font-weight:800;margin-bottom:10px}
+    .ap-live{display:none}
+    .ap-live.show{display:block;animation:apIn .35s ease}
+    @keyframes apIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    .ap-pct{font-size:40px;font-weight:800;color:var(--ap-g);font-variant-numeric:tabular-nums;line-height:1}
+    .ap-ptop{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+    .ap-ptop small{font-size:12.5px;color:var(--ap-sub)}
+    .ap-track{height:12px;border-radius:99px;background:var(--ap-track);overflow:hidden}
+    .ap-bar{height:100%;width:0;border-radius:99px;transition:width .15s linear;background:linear-gradient(90deg,#059669,#34d399,#059669);background-size:200% 100%;animation:apShine 1.3s linear infinite}
+    @keyframes apShine{to{background-position:-200% 0}}
+    .ap-live.done .ap-bar,.ap-live.fail .ap-bar{animation:none}
+    .ap-live.fail .ap-bar{background:#dc2626}
+    .ap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}
+    .ap-cell{padding:10px 12px;border-radius:14px;background:var(--ap-bg);border:1px solid var(--ap-line)}
+    .ap-cell small{display:block;font-size:11px;color:var(--ap-sub)}
+    .ap-cell b{font-size:15.5px;font-variant-numeric:tabular-nums}
+    .ap-msg{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;font-size:14px;line-height:1.6}
+    .ap-live.done .ap-msg.ok{display:block;background:rgba(16,185,129,.14);color:#10b981}
+    .ap-live.fail .ap-msg.er{display:block;background:rgba(220,38,38,.12);color:#ef4444}
+    .ap-msg a{color:inherit;font-weight:700;text-decoration:underline}
+    .ap-li{display:flex;gap:12px;align-items:flex-start;padding:9px 0}
+    .ap-li+.ap-li{border-top:1px solid var(--ap-line)}
+    .ap-li i,.ap-li svg.ic{width:34px;height:34px;padding:7px;border-radius:11px;flex:none;background:rgba(16,185,129,.15);color:var(--ap-g)}
+    .ap-li b{display:block;font-size:14.5px}
+    .ap-li span{font-size:13px;color:var(--ap-sub);line-height:1.5}
+    .ap-num{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--ap-g);color:#fff}
+    /* নিচের ফিক্সড প্রগ্রেস বার */
+    #apDock{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto;height:56px;border-radius:99px;overflow:hidden;background:#e5e7eb;box-shadow:0 12px 32px rgba(0,0,0,.28);z-index:195;cursor:pointer;transform:translateY(150%);opacity:0;transition:transform .35s,opacity .35s}
+    body:not(.light-mode) #apDock{background:#12301f}
+    #apDock.show{transform:none;opacity:1}
+    #apDock.err .ap-df{background:#dc2626}
+    .ap-df{position:absolute;inset:0 auto 0 0;width:0;background:#06c167;border-radius:99px;transition:width .15s linear}
+    .ap-t1,.ap-t2{position:absolute;inset:0;display:grid;place-items:center;font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;color:#06c167}
+    .ap-t2{color:#fff;clip-path:inset(0 100% 0 0);transition:clip-path .15s linear}
+    /* সাইডবারের প্রিমিয়াম ডাউনলোড বাটন */
+    #sidebarDrawer .ae-dl-btn,.sidebar-item.ae-dl-btn{position:relative;overflow:hidden;background:linear-gradient(135deg,#059669,#10b981 55%,#34d399)!important;color:#fff!important;font-weight:800!important;border:0!important;box-shadow:0 8px 20px rgba(16,185,129,.38),inset 0 1px 0 rgba(255,255,255,.35)!important}
+    .ae-dl-btn svg,.ae-dl-btn i{color:#fff!important;stroke:#fff!important}
+    .ae-dl-btn::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:aeDlSheen 3.2s ease-in-out infinite}
+    @keyframes aeDlSheen{0%,55%{left:-60%}100%{left:130%}}
+    .ae-dl-tag{margin-left:auto;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.25)}
+    @media (prefers-reduced-motion:reduce){.ap-bar,.ae-dl-btn::after{animation:none}}
+
+    /* ===== Weather v2: realistic canvas scene + glass content ===== */
+    .weather-glass-card {
+      position: relative; border-radius: 28px; overflow: hidden; min-height: 310px;
+      border: 1px solid rgba(255,255,255,.28); background: #0b1838; isolation: isolate;
+      box-shadow: 0 22px 50px rgba(8,20,40,.28), inset 0 1px 0 rgba(255,255,255,.3);
+      animation: wxCardIn .55s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes wxCardIn { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
+    .wx-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+    .weather-glass-content {
+      position: relative; z-index: 2; padding: 18px 16px 16px; min-height: 310px;
+      display: flex; flex-direction: column;
+      background: linear-gradient(180deg, rgba(0,0,0,.34) 0%, rgba(0,0,0,.06) 40%, rgba(0,0,0,.10) 58%, rgba(0,0,0,.40) 100%);
+    }
+    /* সবসময় সাদা লেখা (লাইট/ডার্ক মোড নির্বিশেষে) — আকাশের উপর স্পষ্ট দেখা যাবে */
+    body #weatherCurrentCard .wx-name { color:#fff !important; font-weight:800; font-size:17px; line-height:1.25; text-shadow:0 2px 10px rgba(0,0,0,.55); }
+    body #weatherCurrentCard .wx-time { color:rgba(255,255,255,.92) !important; font-size:11.5px; margin-top:3px; text-shadow:0 1px 6px rgba(0,0,0,.6); }
+    body #weatherCurrentCard .wx-temp { color:#fff !important; font-weight:800; font-size:50px; line-height:1; text-shadow:0 3px 16px rgba(0,0,0,.5); }
+    body #weatherCurrentCard .wx-feels { color:rgba(255,255,255,.92) !important; font-size:12px; margin-top:4px; text-shadow:0 1px 6px rgba(0,0,0,.6); }
+    body #weatherCurrentCard .wx-cond { color:#fff !important; font-weight:700; font-size:16px; text-shadow:0 2px 10px rgba(0,0,0,.55); }
+    body #weatherCurrentCard .wx-upd { color:rgba(255,255,255,.85) !important; font-size:10.5px; margin-top:2px; text-shadow:0 1px 6px rgba(0,0,0,.6); }
+    .wx-badge { display:inline-block; margin-bottom:6px; padding:2px 9px; border-radius:99px; font-size:10px; font-weight:700; color:#fff !important;
+      background: rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.35); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    #weatherCurrentCard .wx-stat {
+      border-radius: 16px; padding: 10px 8px; text-align: center; min-height: 58px;
+      background: rgba(255,255,255,.17); border: 1px solid rgba(255,255,255,.32);
+      -webkit-backdrop-filter: blur(14px) saturate(150%); backdrop-filter: blur(14px) saturate(150%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 4px 14px rgba(0,0,0,.12);
+    }
+    body #weatherCurrentCard .wx-stat-label { font-size: 10.5px; color: rgba(255,255,255,.9) !important; font-weight: 600; margin-bottom: 2px; text-shadow:0 1px 4px rgba(0,0,0,.5); }
+    body #weatherCurrentCard .wx-stat-value { font-size: 14px; font-weight: 800; color: #fff !important; text-shadow:0 1px 6px rgba(0,0,0,.5); }
+
+    /* SVG আইকন */
+    .wx-icon-lg { width: 78px; height: 78px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.35)); }
+    .wx-icon-md { width: 56px; height: 56px; }
+    .wx-icon-sm { width: 38px; height: 38px; }
+    .wxi { width: 100%; height: 100%; overflow: visible; }
+    .wxi-rays { animation: wxiSpin 18s linear infinite; transform-box: fill-box; transform-origin: center; }
+    .wxi-cloud { animation: wxiFloat 6s ease-in-out infinite; }
+    .wxi-drop { animation: wxiDrop 1.1s linear infinite; }
+    .wxi-drop.d1 { animation-delay: .25s; } .wxi-drop.d2 { animation-delay: .55s; } .wxi-drop.d3 { animation-delay: .8s; }
+    .wxi-flake { animation: wxiDrop 2.2s linear infinite; } .wxi-flake.f1 { animation-delay: .7s; } .wxi-flake.f2 { animation-delay: 1.4s; }
+    .wxi-bolt { animation: wxiFlick 2.4s infinite; transform-box: fill-box; }
+    .wxi-fog { animation: wxiFogSlide 3.5s ease-in-out infinite; } .wxi-fog.fg1 { animation-delay: .6s; } .wxi-fog.fg2 { animation-delay: 1.2s; }
+    .wxi-tw { animation: wxiTw 2.4s ease-in-out infinite; } .wxi-tw.t2 { animation-delay: 1s; }
+    @keyframes wxiSpin { to { transform: rotate(360deg); } }
+    @keyframes wxiFloat { 0%,100% { transform: translateX(-1.5px); } 50% { transform: translateX(1.5px); } }
+    @keyframes wxiDrop { 0% { transform: translateY(-5px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(10px); opacity: 0; } }
+    @keyframes wxiFlick { 0%,52%,60%,100% { opacity: 1; } 54%,58% { opacity: .15; } }
+    @keyframes wxiFogSlide { 0%,100% { transform: translateX(-3px); opacity: .6; } 50% { transform: translateX(4px); opacity: 1; } }
+    @keyframes wxiTw { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+
+    /* মজার কথা কার্ড */
+    #weatherFunCard.wx-fun-card {
+      position: relative; border-radius: 22px; padding: 14px 16px; cursor: pointer; overflow: hidden;
+      background: linear-gradient(135deg, rgba(16,185,129,.16), rgba(245,158,11,.14));
+      border: 1px solid rgba(110,231,183,.28);
+    }
+    .wx-fun-row { display: flex; align-items: center; gap: 12px; transition: opacity .22s, transform .22s; }
+    .wx-fun-row.out { opacity: 0; transform: translateY(6px); }
+    .wx-fun-emoji { font-size: 34px; line-height: 1; flex: 0 0 auto; filter: drop-shadow(0 3px 6px rgba(0,0,0,.2)); }
+    .wx-fun-tag { display: inline-block; font-size: 10px; font-weight: 800; padding: 1px 8px; border-radius: 99px; background: rgba(16,185,129,.22); color: #6ee7b7; margin-bottom: 4px; }
+    .wx-fun-text { font-size: 13.5px; font-weight: 600; line-height: 1.55; color: #e2e8f0; }
+    .wx-fun-dots { display: flex; gap: 5px; margin-top: 9px; }
+    .wx-fun-dots i { width: 6px; height: 6px; border-radius: 99px; background: rgba(148,163,184,.45); transition: all .25s; }
+    .wx-fun-dots i.on { width: 18px; background: #34d399; }
+    body.light-mode #weatherFunCard.wx-fun-card { background: linear-gradient(135deg,#ecfdf5,#fffbeb); border-color: #a7f3d0; }
+    body.light-mode #weatherFunCard .wx-fun-text { color: #1e293b; }
+    body.light-mode #weatherFunCard .wx-fun-tag { background: #d1fae5; color: #047857; }
+    body.light-mode #weatherFunCard .wx-fun-dots i { background: #cbd5e1; }
+    body.light-mode #weatherFunCard .wx-fun-dots i.on { background: #059669; }
+
+    @media (prefers-reduced-motion: reduce) { .wxi-rays,.wxi-cloud,.wxi-drop,.wxi-flake,.wxi-bolt,.wxi-fog,.wxi-tw { animation: none !important; } }
+
+    /* Weather page: light mode clarity + suggestions always on top (body-তে fixed, কোনো কার্ডের নিচে চাপা পড়ে না) */
+    #view-weather .info-card { overflow: visible !important; }
+    #weatherSearchWrap { overflow: visible !important; position: relative; z-index: 50; scroll-margin-top: 84px; }
+    #weatherSuggestions {
+      position: fixed; z-index: 150 !important; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+      background: #0c1f16; border: 1px solid rgba(6,95,70,.6); border-radius: 18px; box-shadow: 0 16px 44px rgba(0,0,0,.5);
+    }
+    body.light-mode #weatherSuggestions { background: #ffffff !important; border: 1px solid #cbd5e1 !important; box-shadow: 0 14px 36px rgba(15,23,42,.18) !important; }
+    body.light-mode #weatherSuggestions button { color: #0f172a !important; border-bottom-color: #e2e8f0 !important; }
+    body.light-mode #weatherSuggestions button:hover { background: #f1f5f9 !important; }
+    body.light-mode #weatherSuggestions .text-slate-400 { color: #64748b !important; }
+    body.light-mode #weatherSuggestions i { color: #059669 !important; }
+
+    body.light-mode #weatherTomorrowCard .bg-sky-950\/40 { background: #e0f2fe !important; border-color: #7dd3fc !important; }
+    body.light-mode #weatherTomorrowCard .text-sky-200, body.light-mode #weatherTomorrowCard .text-sky-400\/80 { color: #0369a1 !important; }
+    body.light-mode #weatherTomorrowCard .bg-amber-950\/30 { background: #fef3c7 !important; border-color: #fcd34d !important; }
+    body.light-mode #weatherTomorrowCard .text-amber-200, body.light-mode #weatherTomorrowCard .text-amber-400\/80 { color: #b45309 !important; }
+    body.light-mode #weatherTomorrowCard .text-emerald-300 { color: #047857 !important; }
+    body.light-mode #weatherTomorrowCard .text-slate-100 { color: #0f172a !important; }
+    body.light-mode #weatherTomorrowCard .text-slate-300, body.light-mode #weatherTomorrowCard .text-slate-400 { color: #475569 !important; }
+    body.light-mode #weatherForecastList > div { background: #f8fafc !important; border-color: #e2e8f0 !important; }
+    body.light-mode #weatherForecastList .text-slate-100, body.light-mode #weatherForecastList .text-white { color: #0f172a !important; }
+    body.light-mode #weatherForecastList .text-slate-400 { color: #64748b !important; }
+    body.light-mode #weatherForecastList .text-sky-400 { color: #0284c7 !important; }
+    body.light-mode #weatherSearchInput { color: #0f172a !important; }
+    body.light-mode #weatherSearchInput::placeholder { color: #94a3b8 !important; }
+    body.light-mode #weatherLocBtn { color: #047857 !important; }
+    body.light-mode #weatherLocBtn i { color: #047857 !important; stroke: #047857 !important; }
+    body.light-mode #weatherSearchClear { color: #64748b !important; }
+    body.light-mode #view-weather h3, body.light-mode #view-weather h4 { color: #0f172a !important; }
+    body.light-mode #view-weather .text-slate-400 { color: #64748b !important; }
+    body.light-mode #weatherDistrictTip { background: #ecfdf5 !important; border-color: #6ee7b7 !important; color: #065f46 !important; }
+    body.light-mode #weatherDistrictTip .text-emerald-300, body.light-mode #weatherDistrictTip span.font-bold { color: #047857 !important; }
+

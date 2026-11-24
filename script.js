@@ -388,13 +388,13 @@
                 db = getFirestore(app);
                 auth = getAuth(app);
                 firebaseReady = true;
-                console.log('✅ Firebase connected');
+                console.log('Firebase connected');
 
                 enableIndexedDbPersistence(db).catch((err) => {
                     if (err.code === 'failed-precondition') {
-                        console.warn('⚠️ একাধিক tab — offline cache কাজ করবে না');
+                        console.warn('একাধিক tab — offline cache কাজ করবে না');
                     } else if (err.code === 'unimplemented') {
-                        console.warn('⚠️ এই browser offline সাপোর্ট দেয় না');
+                        console.warn('এই browser offline সাপোর্ট দেয় না');
                     } else {
                         console.warn('Offline setup:', err);
                     }
@@ -829,7 +829,7 @@
         let activeServiceId = null;
         let selectedProviderImage = null;
 
-        // ✅ HELPER FUNCTION
+        // HELPER FUNCTION
         function isProfileComplete(profile) {
             if (!profile) return false;
             const hasPhone = profile.phone && /^01[3-9]\d{8}$/.test(profile.phone);
@@ -1337,6 +1337,7 @@
         // Firebase/user-submitted values (names, addresses, donor details, service
         // descriptions, notices, chat messages, etc.) are excluded below.
         const STATIC_UI_EN = {
+            'আগামী ৩ দিন': 'Next 3 days', 'পরশু': 'Day after tomorrow',
             'আমার এলাকা - সকল সেবা এখন হাতের মুঠোয়': 'Amar Elaka - All Services at Your Fingertips',
             'আমার এলাকা': 'Amar Elaka',
             'ইউজার সেবা পোর্টাল': 'User Service Portal',
@@ -1380,7 +1381,7 @@
             'আবেদন জমা দিন': 'Submit Application', 'অ্যাডমিন অনুমোদনের পর হোমপেজে প্রকাশিত হবে': 'Will be published on the homepage after admin approval',
             'এডমিন পোস্ট': 'Admin Post', 'সেবাদানকারী': 'Service Provider', 'কল করুন': 'Call',
             'সেবা শেয়ার করুন': 'Share Service', 'সেবাটি শেয়ার করুন': 'Share this service',
-            '⭐ স্পন্সরড': '⭐ Sponsored', 'বিজ্ঞাপনদাতা': 'Advertiser', 'বিজ্ঞাপন': 'Advertisement',
+            'স্পন্সরড': 'Sponsored', 'বিজ্ঞাপনদাতা': 'Advertiser', 'বিজ্ঞাপন': 'Advertisement',
             'বিজ্ঞাপন চালান': 'Promote Your Ad', 'আপনার পোস্ট প্রমোট করুন': 'Promote Your Post',
             'প্রমোশন পোস্ট': 'Promotional Post', 'বিজ্ঞাপন জমা দিন': 'Submit Advertisement',
             'ধাপ ১/৪ — প্রমোশনের ধরন': 'Step 1/4 — Promotion Type', 'আপনি কী প্রমোট করতে চান?': 'What would you like to promote?',
@@ -1389,7 +1390,7 @@
             'বিস্তারিত বর্ণনা * (১০-৬০০)': 'Detailed Description * (10–600)',
             'কার্ডে যা দেখাবে': 'Shown on the card', 'বিস্তারিত লিখুন': 'Enter details',
             'জেলা': 'District', 'উপজেলা': 'Upazila', 'কমপক্ষে ১টি বাটন বেছে নিন': 'Choose at least one button',
-            '👁️ লাইভ প্রিভিউ': '👁️ Live Preview', 'পিছনে': 'Back', 'পরের ধাপ': 'Next Step',
+            'লাইভ প্রিভিউ': 'Live Preview', 'পিছনে': 'Back', 'পরের ধাপ': 'Next Step',
             'প্রিমিয়াম অ্যাকশন': 'Premium Actions', 'আপনার পছন্দমতো অপশন বেছে নিন': 'Choose your preferred option',
             'কেন আপনি বিজ্ঞাপন চালাবেন ?': 'Why should you promote an advertisement?',
             'বার্তা': 'Message', 'আপনার বার্তা লিখুন...': 'Write your message...',
@@ -1487,8 +1488,8 @@
             'আমার এলাকার সেবা': 'Amar Elaka Services', 'এইমাত্র': 'Just now', 'সব নোটিফিকেশন পড়া হিসেবে চিহ্নিত হয়েছে': 'All notifications marked as read',
             'সব নোটিফিকেশন আগেই পড়া হয়েছে': 'All notifications were already read', 'ব্যবহারকারী': 'User',
             'আপনার অ্যাকাউন্ট তৈরি হয়েছে। এখন সব সেবা ব্যবহার করতে পারবেন।': 'Your account has been created. You can now use all services.',
-            'সফলভাবে লগইন করেছেন।': 'You have logged in successfully.', '✅ ইন্টারনেট ফিরেছে — sync হচ্ছে': '✅ Internet restored — syncing',
-            '📡 অফলাইন — ক্যাশ থেকে দেখছেন': '📡 Offline — showing cached data', '📡 অফলাইন মোড — সংযোগ ফিরলে সব আপডেট হবে': '📡 Offline mode — updates will sync when connection returns',
+            'সফলভাবে লগইন করেছেন।': 'You have logged in successfully.', 'ইন্টারনেট ফিরেছে — sync হচ্ছে': 'Internet restored — syncing',
+            'অফলাইন — ক্যাশ থেকে দেখছেন': 'Offline — showing cached data', 'অফলাইন মোড — সংযোগ ফিরলে সব আপডেট হবে': 'Offline mode — updates will sync when connection returns',
             'ছবির সাইজ ৫MB এর কম হতে হবে': 'Image size must be less than 5MB', 'ছবি আপলোড ব্যর্থ': 'Image upload failed',
             'প্রথমে লগইন করুন': 'Please log in first', 'কোনো একটিভ সাবস্ক্রিপশন নেই': 'No active subscription',
             'আপনি কি সাবস্ক্রিপশন বাতিলের অনুরোধ পাঠাতে চান?': 'Do you want to submit a subscription cancellation request?',
@@ -1517,10 +1518,10 @@
             'চ্যানেল/গ্রুপ লিংক': 'Channel/Group Link', 'মেম্বার সংখ্যা': 'Member Count', 'দোকানের ঠিকানা': 'Shop Address',
             'খোলার সময়': 'Opening Hours', 'ব্যবসার ধরন': 'Business Type', 'মূল্য (৳)': 'Price (৳)', 'ডিসকাউন্ট': 'Discount',
             'পণ্যের ধরন': 'Product Type', 'মডেল': 'Model', 'সাল': 'Year', 'অবস্থা (নতুন/ব্যবহৃত)': 'Condition (New/Used)',
-            'সার্ভিসের ধরন': 'Service Type', 'সার্ভিসের সময়': 'Service Hours', '📞 কল করুন': '📞 Call', '🌐 ওয়েবসাইট': '🌐 Website',
+            'সার্ভিসের ধরন': 'Service Type', 'সার্ভিসের সময়': 'Service Hours', 'কল করুন': 'Call', 'ওয়েবসাইট': 'Website',
             'ওয়েবসাইটে যান': 'Visit Website', 'WhatsApp-এ মেসেজ': 'Message on WhatsApp', 'Facebook-এ যান': 'Visit Facebook',
             'YouTube-এ দেখুন': 'Watch on YouTube', 'TikTok-এ দেখুন': 'Watch on TikTok', 'Instagram-এ যান': 'Visit Instagram',
-            'Telegram-এ যোগ দিন': 'Join on Telegram', '🔗 কাস্টম বাটন': '🔗 Custom Button', 'দেখুন': 'View',
+            'Telegram-এ যোগ দিন': 'Join on Telegram', 'কাস্টম বাটন': 'Custom Button', 'দেখুন': 'View',
             'প্রমোশনের ধরন': 'Promotion Type', 'সাধারণ তথ্য': 'General Information', 'অতিরিক্ত তথ্য': 'Additional Information',
             'বাটন ও প্রিভিউ': 'Buttons and Preview', 'নতুন ক্যাটাগরি যোগ হয়েছে': 'New category added', 'নতুন ক্যাটাগরি': 'New Category',
             'নতুন জরুরি নম্বর': 'New Emergency Number', 'নতুন নোটিশ প্রকাশিত': 'New Notice Published', 'নতুন ঘোষণা': 'New Announcement',
@@ -1533,8 +1534,8 @@
             'রিপোর্ট অপশন শীঘ্রই আসছে': 'Report option coming soon', 'নির্বাচন মুছে ফেলুন': 'Clear Selection',
             'কিছু পাওয়া যায়নি': 'No results found', 'জেলা নির্বাচন করুন': 'Select District', 'জেলার উপজেলা': 'District Upazilas',
             'জেলা খুঁজুন...': 'Search districts...', 'উপজেলা খুঁজুন...': 'Search upazilas...', 'আগে জেলা নির্বাচন করুন': 'Select a district first',
-            '⚠️ একাধিক tab — offline cache কাজ করবে না': '⚠️ Multiple tabs — offline cache will not work',
-            '⚠️ এই browser offline সাপোর্ট দেয় না': '⚠️ This browser does not support offline mode',
+            'একাধিক tab — offline cache কাজ করবে না': 'Multiple tabs — offline cache will not work',
+            'এই browser offline সাপোর্ট দেয় না': 'This browser does not support offline mode',
             '৩ মিনিটের অতিথি সময় শেষ। চালিয়ে যেতে লগইন করুন।': 'The 3-minute guest session has ended. Log in to continue.',
             'এখন কোনো প্যাকেজ উপলব্ধ নেই।': 'No packages are currently available.', 'লাইট মোড চালু হয়েছে': 'Light mode enabled',
             'ডার্ক মোড চালু হয়েছে': 'Dark mode enabled', 'সিস্টেম থিম চালু হয়েছে': 'System theme enabled',
@@ -1552,7 +1553,7 @@
             'অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে রক্তদাতা তালিকায় যোগ করবেন।': 'Request submitted! The admin will verify and add you to the blood donor list.',
             'আপনি আজ ইতিমধ্যে ২টি অনুরোধ পাঠিয়েছেন। আগামীকাল আবার চেষ্টা করুন।': 'You have already submitted 2 requests today. Please try again tomorrow.',
             'অফলাইন — net এলে যাবে': 'Offline — will send when connected', 'পাঠানো হচ্ছে...': 'Sending...',
-            'অ্যাডমিন': 'Admin', 'ইউজার': 'User', '📡 অফলাইন — net ফিরলে auto যাবে': '📡 Offline — will send automatically when online',
+            'অ্যাডমিন': 'Admin', 'ইউজার': 'User', 'অফলাইন — net ফিরলে auto যাবে': 'Offline — will send automatically when online',
             'অ্যাডমিন অফলাইনে আছেন, শীঘ্রই উত্তর দেবেন।': 'The admin is offline and will reply soon.',
             'ভয়েস কল': 'Voice Call', 'অ্যাডমিন আপনার কলটি গ্রহণ করতে পারেননি। পরে আবার চেষ্টা করুন।': 'The admin could not answer your call. Please try again later.',
             'কলের সময় শেষ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।': 'The call timed out. Please try again.',
@@ -1616,8 +1617,8 @@
             'এ আপনার Firebase প্রজেক্টের API key বসান।': 'add your Firebase project API key here.',
             'প্রিমিয়াম': 'Premium', 'রক্ত': 'Blood', 'আবহাওয়া': 'Weather', 'রেজাল্ট বের করুন': 'Check Results',
             'এডমিন চ্যাট': 'Admin Chat', 'অভিযোগ ও পরামর্শ': 'Complaints & Suggestions',
-            'প্রতিষ্ঠাতা:Akror karmaker': 'Founder: Akror Karmaker', '📧 ইমেইল:': '📧 Email:', '🌐 ফেসবুক:': '🌐 Facebook:',
-            'অনুরোধ পাঠান': 'Send Request', '📷 ছবি *': '📷 Image *', 'আপনার আগের রেটিং: 0/5': 'Your previous rating: 0/5',
+            'প্রতিষ্ঠাতা:Akror karmaker': 'Founder: Akror Karmaker', 'ইমেইল:': 'Email:', 'ফেসবুক:': 'Facebook:',
+            'অনুরোধ পাঠান': 'Send Request', 'ছবি *': 'Image *', 'আপনার আগের রেটিং: 0/5': 'Your previous rating: 0/5',
             '“আমার এলাকা”র মাধ্যমে আমরা এমন একটি সহযোগিতামূলক পরিবেশ গড়ে তুলতে চাই, যেখানে মানুষ প্রয়োজনীয় তথ্য খুঁজে পেতে পারবেন, নিজেদের উপকারী তথ্য অন্যদের সঙ্গে ভাগ করে নিতে পারবেন এবং বিভিন্ন সেবার সঙ্গে সহজে পরিচিত হতে পারবেন। আমাদের পরিকল্পনার মধ্যে রয়েছে রক্তদাতা খুঁজতে সহায়তা, জরুরি যোগাযোগের তথ্য, স্থানীয় সেবা ও সেবাদাতাদের পরিচিতি, বিভিন্ন প্রয়োজনীয় তথ্য এবং সামাজিক ও ব্যবসায়িক প্রচারের সুযোগ তৈরি করা। এসব সেবা মানুষের প্রকৃত চাহিদা, যথাযথ অনুমতি এবং বাস্তবসম্মত পরিকল্পনার ভিত্তিতে ধাপে ধাপে উন্নত করার প্রত্যাশা রয়েছে।': 'Through Amar Elaka, we want to create a collaborative environment where people can find essential information, share useful information with others, and discover different services. Our plans include helping people find blood donors, providing emergency contact information, introducing local services and providers, sharing other useful information, and creating opportunities for community and business promotion. We aim to improve these services gradually based on people’s real needs, proper permissions, and practical planning.',
             'আমরা মনে করি, সমাজের উন্নয়নে প্রত্যেক মানুষের ছোট ছোট উদ্যোগও গুরুত্বপূর্ণ ভূমিকা রাখতে পারে। মানুষের পাশে দাঁড়ানো, প্রয়োজনের সময় সহযোগিতার হাত বাড়িয়ে দেওয়া এবং প্রযুক্তিকে ইতিবাচক কাজে ব্যবহার করাই আমাদের চিন্তার মূল ভিত্তি। আমরা চাই, “আমার এলাকা” শুধু তথ্য খোঁজার একটি মাধ্যম না হয়ে মানুষের পারস্পরিক সহযোগিতা ও জনকল্যাণের একটি কার্যকর প্ল্যাটফর্ম হিসেবে গড়ে উঠুক।': 'We believe that small initiatives by individuals can play an important role in social progress. Supporting people, offering help when needed, and using technology for positive purposes are the foundations of our vision. We want Amar Elaka to become more than an information-search tool: a practical platform for mutual support and public welfare.',
             '“আমার এলাকা” উদ্যোগের পরিকল্পনা, ধারণা সাজানো, লেখালেখি এবং ডিজিটাল উন্নয়নের বিভিন্ন কাজে ': 'For planning the Amar Elaka initiative, organizing ideas, writing content, and various aspects of digital development, assistance is being provided by ',
@@ -1857,7 +1858,7 @@
             stars.forEach(btn => {
                 const n = parseInt(btn.getAttribute('data-star'), 10);
                 const filled = n <= value;
-                btn.textContent = filled ? '★' : '☆';
+                btn.innerHTML = filled ? '<svg class="ic ic-fill" aria-hidden="true"><use href="#i-star"/></svg>' : '<svg class="ic" aria-hidden="true"><use href="#i-star"/></svg>';
                 btn.classList.toggle('text-amber-400', filled);
                 btn.classList.toggle('text-slate-500', !filled);
             });
@@ -1911,7 +1912,7 @@
             const disp = document.getElementById('existingStarsDisplay');
             if (disp) {
                 disp.innerHTML = [1,2,3,4,5].map(n =>
-                    `<span class="text-2xl ${n <= stars ? 'text-amber-400' : 'text-slate-600'}">${n <= stars ? '★' : '☆'}</span>`
+                    `<span class="text-2xl ${n <= stars ? 'text-amber-400' : 'text-slate-600'}">${n <= stars ? '<svg class="ic ic-fill" aria-hidden="true"><use href="#i-star"/></svg>' : '<svg class="ic" aria-hidden="true"><use href="#i-star"/></svg>'}</span>`
                 ).join('');
             }
             const txt = document.getElementById('existingRatingText');
@@ -2592,7 +2593,7 @@
         }
         window.addEventListener('online', () => {
             updateOnlineUI();
-            showToast('✅ ইন্টারনেট ফিরেছে — sync হচ্ছে', 'wifi', 'text-emerald-400');
+            showToast('ইন্টারনেট ফিরেছে — sync হচ্ছে', 'wifi', 'text-emerald-400');
             setTimeout(() => {
                 if (currentTab === 'chat') markMessagesAsRead();
                 updateUnreadBadge();
@@ -2600,7 +2601,7 @@
         });
         window.addEventListener('offline', () => {
             updateOnlineUI();
-            showToast('📡 অফলাইন — ক্যাশ থেকে দেখছেন', 'wifi-off', 'text-amber-400');
+            showToast('অফলাইন — ক্যাশ থেকে দেখছেন', 'wifi-off', 'text-amber-400');
         });
 
         // ========== PUSH ==========
@@ -2756,7 +2757,7 @@
             if (!btn && !status) return;
             const perm = (typeof Notification !== 'undefined' && Notification.permission) ? Notification.permission : 'default';
             if (status) {
-                if (perm === 'granted') status.textContent = 'চালু ✓';
+                if (perm === 'granted') status.textContent = 'চালু';
                 else if (perm === 'denied') status.textContent = 'ব্লক করা হয়েছে';
                 else status.textContent = 'বন্ধ';
             }
@@ -4139,7 +4140,7 @@
                     serviceDataCache = new Map();
                     resetAdFeedState();
 
-                    // ① দ্রুত প্রথম পেইন্ট — সীমিত ব্যাচ + ক্লায়েন্ট-সাইড র‍্যান্ডম অর্ডার
+                    // ① দ্রুত প্রথম পেইন্ট — সীমিত ব্যাচ + ক্লায়েন্ট-সাইড র্যান্ডম অর্ডার
                     const firstBatch = shuffleArray(await fetchFirstServicesFast(SERVICES_BATCH_SIZE));
                     firstBatch.forEach(svc => {
                         if (!servicesSeenIds.has(svc.id)) {
@@ -4290,15 +4291,15 @@
             other:     []
         };
         const PROMO_CTA_OPTIONS = {
-            call:      { label: '📞 কল করুন',  icon: 'phone',          kind: 'phone', ph: '01XXXXXXXXX', btn: 'কল করুন' },
-            website:   { label: '🌐 ওয়েবসাইট', icon: 'globe',          kind: 'url',   ph: 'https://...', btn: 'ওয়েবসাইটে যান' },
-            whatsapp:  { label: '💬 WhatsApp',  icon: 'message-circle', kind: 'phone', ph: '01XXXXXXXXX', btn: 'WhatsApp-এ মেসেজ' },
-            facebook:  { label: '📘 Facebook',  icon: 'thumbs-up',      kind: 'url',   ph: 'https://facebook.com/...', btn: 'Facebook-এ যান' },
-            youtube:   { label: '📺 YouTube',   icon: 'circle-play',    kind: 'url',   ph: 'https://youtube.com/...', btn: 'YouTube-এ দেখুন' },
-            tiktok:    { label: '🎵 TikTok',    icon: 'music',          kind: 'url',   ph: 'https://tiktok.com/...', btn: 'TikTok-এ দেখুন' },
-            instagram: { label: '📷 Instagram', icon: 'camera',         kind: 'url',   ph: 'https://instagram.com/...', btn: 'Instagram-এ যান' },
-            telegram:  { label: '✈️ Telegram',  icon: 'send',           kind: 'url',   ph: 'https://t.me/...', btn: 'Telegram-এ যোগ দিন' },
-            custom:    { label: '🔗 কাস্টম বাটন', icon: 'link',         kind: 'custom', btn: 'দেখুন' }
+            call:      { label: 'কল করুন', ic: 'phone',  icon: 'phone',          kind: 'phone', ph: '01XXXXXXXXX', btn: 'কল করুন' },
+            website:   { label: 'ওয়েবসাইট', ic: 'globe', icon: 'globe',          kind: 'url',   ph: 'https://...', btn: 'ওয়েবসাইটে যান' },
+            whatsapp:  { label: 'WhatsApp', ic: 'message',  icon: 'message-circle', kind: 'phone', ph: '01XXXXXXXXX', btn: 'WhatsApp-এ মেসেজ' },
+            facebook:  { label: 'Facebook', ic: 'thumbs-up',  icon: 'thumbs-up',      kind: 'url',   ph: 'https://facebook.com/...', btn: 'Facebook-এ যান' },
+            youtube:   { label: 'YouTube', ic: 'play',   icon: 'circle-play',    kind: 'url',   ph: 'https://youtube.com/...', btn: 'YouTube-এ দেখুন' },
+            tiktok:    { label: 'TikTok', ic: 'music',    icon: 'music',          kind: 'url',   ph: 'https://tiktok.com/...', btn: 'TikTok-এ দেখুন' },
+            instagram: { label: 'Instagram', ic: 'camera', icon: 'camera',         kind: 'url',   ph: 'https://instagram.com/...', btn: 'Instagram-এ যান' },
+            telegram:  { label: 'Telegram', ic: 'send',  icon: 'send',           kind: 'url',   ph: 'https://t.me/...', btn: 'Telegram-এ যোগ দিন' },
+            custom:    { label: 'কাস্টম বাটন', ic: 'link', icon: 'link',         kind: 'custom', btn: 'দেখুন' }
         };
         const PROMO_STEP_LABELS = ['প্রমোশনের ধরন', 'সাধারণ তথ্য', 'অতিরিক্ত তথ্য', 'বাটন ও প্রিভিউ'];
         let promoStep = 1, promoType = null, promoImageFile = null, promoImageObjUrl = '', promoCtaChecked = new Set(), promoSubmitting = false;
@@ -4332,7 +4333,7 @@
             if (isForcedProfileMode) return;
             const box = document.getElementById('promoCtaList'); if (!box) return;
             box.innerHTML = Object.entries(PROMO_CTA_OPTIONS).map(([k, o]) => `<div class="rounded-xl border border-amber-900/40 bg-[#07140e] p-2.5">
-                <label class="flex items-center gap-2.5 cursor-pointer text-sm font-semibold text-slate-200"><input type="checkbox" class="accent-amber-500 w-4 h-4" id="pcta_chk_${k}" onchange="togglePromoCta('${k}', this.checked)"> ${o.label}</label>
+                <label class="flex items-center gap-2.5 cursor-pointer text-sm font-semibold text-slate-200"><input type="checkbox" class="accent-amber-500 w-4 h-4" id="pcta_chk_${k}" onchange="togglePromoCta('${k}', this.checked)"> ${o.ic ? '<svg class="ic" aria-hidden="true"><use href="#i-' + o.ic + '"/></svg> ' : ''}${o.label}</label>
                 <div id="pcta_wrap_${k}" class="hidden mt-2 space-y-2">${o.kind === 'custom'
                     ? `<input id="pcta_custom_label" class="promo-input" maxlength="20" placeholder="বাটনের লেখা (যেমন: অফার দেখুন)"><input id="pcta_custom_url" class="promo-input" placeholder="https://...">`
                     : `<input id="pcta_val_${k}" class="promo-input" ${o.kind === 'phone' ? 'inputmode="tel"' : ''} placeholder="${esc(o.ph)}">`}</div></div>`).join('');
@@ -4663,11 +4664,11 @@
             function smalls_(keys) { return keys.map(k => link(promoCtaHref(k, k === 'custom' ? cta.custom : cta[k]), 'promo-cta-small', `<i data-lucide="${PROMO_CTA_OPTIONS[k].icon}" class="w-4 h-4"></i>`, k === 'custom' ? cta.custom.label : PROMO_CTA_OPTIONS[k].btn)).join(''); }
             return `<div class="promotion-card cursor-pointer" data-promo-id="${esc(promo.id || '')}" onclick="openPromotionDetail('${esc(promo.id || '')}')">
                 <div>
-                    ${promoHasVideo ? aeVideoThumbHTML(promoVideoUrl, promo.title, '<span class="promo-ad-badge">AD</span><span class="promo-sponsored-badge">⭐ স্পন্সরড</span>') : `<div class="h-40 bg-[#0f0a03] overflow-hidden relative">
+                    ${promoHasVideo ? aeVideoThumbHTML(promoVideoUrl, promo.title, '<span class="promo-ad-badge">AD</span><span class="promo-sponsored-badge"><svg class="ic ic-fill" aria-hidden="true"><use href="#i-star"/></svg> স্পন্সরড</span>') : `<div class="h-40 bg-[#0f0a03] overflow-hidden relative">
                         ${img ? `<img src="${esc(img)}" alt="${esc(promo.title || '')}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-900/40 to-orange-900/20"><i data-lucide="megaphone" class="w-10 h-10 text-amber-400/60"></i></div>`}
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0d1f17]/85 via-transparent to-transparent pointer-events-none"></div>
                         <span class="promo-ad-badge">AD</span>
-                        <span class="promo-sponsored-badge">⭐ স্পন্সরড</span>
+                        <span class="promo-sponsored-badge"><svg class="ic ic-fill" aria-hidden="true"><use href="#i-star"/></svg> স্পন্সরড</span>
                     </div>`}
                     <div class="p-4">
                         <span class="promo-type-tag mb-1.5" style="background:${t.color}"><i data-lucide="${t.icon}" class="w-3 h-3"></i> ${esc(t.label)}</span>
@@ -5778,7 +5779,7 @@
                 if (!token || token === (userProfile && userProfile.fcmToken)) return;
                 const myName = (userProfile && userProfile.fullName) || (currentUser.displayName) || 'ইউজার';
                 let body;
-                if (kind === 'request') body = 'আপনাকে মেসেজের অনুরোধ পাঠিয়েছেন 👋🏻';
+                if (kind === 'request') body = 'আপনাকে মেসেজের অনুরোধ পাঠিয়েছেন';
                 else {
                     const t = String(text || '').trim();
                     body = t.length > 100 ? t.slice(0, 100).trimEnd() + '...' : t;
@@ -5899,7 +5900,7 @@
                 });
             });
         }
-        /** ইনবক্সের র‍্যাজ ডেটাকে ৩ ভাগে ভাগ করে: approved (মূল লিস্ট), requests (আমার কাছে আসা pending), rejected (আমি রিজেক্ট করেছি, ৫ দিনের মধ্যে) */
+        /** ইনবক্সের র্যাজ ডেটাকে ৩ ভাগে ভাগ করে: approved (মূল লিস্ট), requests (আমার কাছে আসা pending), rejected (আমি রিজেক্ট করেছি, ৫ দিনের মধ্যে) */
         function mesesuPartitionInbox() {
             const myUid = currentUser?.uid;
             const approved = [], requests = [], rejected = [];
@@ -6861,7 +6862,7 @@
                 setRateLimit('chat');
 
                 if (!isOnline) {
-                    showToast('📡 অফলাইন — net ফিরলে auto যাবে', 'wifi-off', 'text-amber-400');
+                    showToast('অফলাইন — net ফিরলে auto যাবে', 'wifi-off', 'text-amber-400');
                 } else if (!isAdminOnline) {
                     const key = `autoReply_${currentUser.uid}`;
                     const last = parseInt(lsGet(key, '0'), 10);
@@ -7531,7 +7532,7 @@
             $('apGet').disabled = false; $('apGetT').textContent = aeL('আবার চেষ্টা করুন', 'Try again');
             $('apLive').className = 'ap-card ap-live show fail';
             $('apState').textContent = aeL('ব্যর্থ', 'Failed');
-            $('apEr').innerHTML = '❌ <b>' + aeL('ডাউনলোড ব্যর্থ হয়েছে', 'Download failed') + '</b><br>' + msg +
+            $('apEr').innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-x-circle"/></svg> <b>' + aeL('ডাউনলোড ব্যর্থ হয়েছে', 'Download failed') + '</b><br>' + msg +
                 '<br><a href="' + aeApkUrl() + '" download>' + aeL('সরাসরি ডাউনলোড লিংক (প্রগ্রেস ছাড়া)', 'Direct download link (no progress)') + '</a>';
         }
         window.aeStartApkDownload = async () => {
@@ -7567,8 +7568,8 @@
                 setTimeout(() => URL.revokeObjectURL(url), 60000);
                 aeApkBusy = false; $('apGet').disabled = false; $('apGetT').textContent = aeL('আবার ডাউনলোড', 'Download again');
                 $('apLive').className = 'ap-card ap-live show done';
-                $('apState').textContent = aeL('সম্পন্ন ✓', 'Completed ✓');
-                $('apOk').innerHTML = '🎉 <b>' + aeL('ডাউনলোড সম্পন্ন!', 'Download complete!') + '</b><br>' +
+                $('apState').textContent = aeL('সম্পন্ন', 'Completed');
+                $('apOk').innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg> <b>' + aeL('ডাউনলোড সম্পন্ন!', 'Download complete!') + '</b><br>' +
                     aeL('ফাইলটি খুলে Install করুন। প্রয়োজনে “Install unknown apps” অনুমতি দিন।', 'Open the file and tap Install. Allow “Install unknown apps” if asked.');
                 setTimeout(() => aeDock(false), 3500);
             } catch (e) {
@@ -7775,6 +7776,19 @@
             }
             return wxKind(code, '', precip >= 0.1 ? precip : 0, temp);
         }
+        /* দিনের পূর্বাভাসের আইকন: "বৃষ্টির সম্ভাবনা" কম (৫০% এর নিচে) হলে বৃষ্টির ছবি নয়; ছোট মাপের বৃষ্টি/লেখা দেখে ছবি ঠিক হয় না */
+        function wxKindDay(day) {
+            day = day || {};
+            const code = Number(day.condition?.code) || 0;
+            const chance = Number(day.daily_chance_of_rain) || 0, tp = Number(day.totalprecip_mm) || 0;
+            if ([1063, 1066, 1069, 1072, 1087].includes(code) && chance < 50) return { kind: 'cloudy', cover: .65, dark: .08, rain: 0, snow: 0, fog: 0 };
+            return wxKind(code, '', (chance >= 50 || tp >= 2) ? tp : 0, day.avgtemp_c);
+        }
+        function wxDayText(day) {
+            const code = Number(day?.condition?.code) || 0, chance = Number(day?.daily_chance_of_rain) || 0;
+            if ([1063, 1066, 1069, 1072, 1087].includes(code) && chance < 50) return 'আশেপাশে বৃষ্টির সম্ভাবনা';
+            return day?.condition?.text || '—';
+        }
         function wxBnAgo(epoch) {
             if (!epoch) return '';
             const m = Math.max(0, Math.floor((Date.now() / 1000 - Number(epoch)) / 60));
@@ -7876,39 +7890,39 @@
             if (tm) {
                 const ch = tm.chance || 0;
                 if (ch >= 60) add([
-                    ['☔', `কালকে ছাতা নিয়ে বের হন — বৃষ্টির সম্ভাবনা ${ch}%!`],
-                    ['🥘', 'বৃষ্টির দিনে খিচুড়ি আর ইলিশ ভাজা — আজই বাজার সেরে রাখুন'],
-                    ['👟', 'কালকে নতুন জুতা তুলে রাখুন, কাদাপানিতে মন খারাপ হবে 😄'],
-                    ['👕', 'কালকের জন্য কাপড় রোদে শুকাতে দেবেন না, বৃষ্টি সব ভিজিয়ে দিতে পারে'],
-                    ['🎒', 'ব্যাগে রেইনকোট বা পলিথিন রাখুন, বই-খাতা ভিজলে মুশকিল!'],
-                    ['🚌', 'বৃষ্টিতে রাস্তায় জ্যাম হতে পারে, একটু আগে রওনা দিন']], 4, 'আগামীকাল');
+                    ['umbrella', `কালকে ছাতা নিয়ে বের হন — বৃষ্টির সম্ভাবনা ${ch}%!`],
+                    ['bowl', 'বৃষ্টির দিনে খিচুড়ি আর ইলিশ ভাজা — আজই বাজার সেরে রাখুন'],
+                    ['shoe', 'কালকে নতুন জুতা তুলে রাখুন, কাদাপানিতে মন খারাপ হবে'],
+                    ['shirt', 'কালকের জন্য কাপড় রোদে শুকাতে দেবেন না, বৃষ্টি সব ভিজিয়ে দিতে পারে'],
+                    ['backpack', 'ব্যাগে রেইনকোট বা পলিথিন রাখুন, বই-খাতা ভিজলে মুশকিল!'],
+                    ['bus', 'বৃষ্টিতে রাস্তায় জ্যাম হতে পারে, একটু আগে রওনা দিন']], 4, 'আগামীকাল');
                 else if (ch >= 30) add([
-                    ['🌦️', 'কালকে বৃষ্টি আসতে পারে — ছাতাটা ব্যাগে রাখলে ক্ষতি নেই'],
-                    ['☁️', 'আকাশের মেজাজের ভরসা নেই, বের হওয়ার আগে একবার আকাশটা দেখে নিন'],
-                    ['🧥', 'কালকে হালকা জ্যাকেট বা ওড়না সঙ্গে রাখুন']], 2, 'আগামীকাল');
+                    ['cloud-sun', 'কালকে বৃষ্টি আসতে পারে — ছাতাটা ব্যাগে রাখলে ক্ষতি নেই'],
+                    ['cloud', 'আকাশের মেজাজের ভরসা নেই, বের হওয়ার আগে একবার আকাশটা দেখে নিন'],
+                    ['shirt', 'কালকে হালকা জ্যাকেট বা ওড়না সঙ্গে রাখুন']], 2, 'আগামীকাল');
                 else add([
-                    ['😎', 'কালকে বৃষ্টির ভয় নেই — ছাতা বাসায় রেখে নির্ভয়ে ঘুরুন'],
-                    ['👕', 'কালকে কাপড় ধোয়ার সেরা দিন, রোদে ঝটপট শুকিয়ে যাবে']], 2, 'আগামীকাল');
+                    ['smile', 'কালকে বৃষ্টির ভয় নেই — ছাতা বাসায় রেখে নির্ভয়ে ঘুরুন'],
+                    ['shirt', 'কালকে কাপড় ধোয়ার সেরা দিন, রোদে ঝটপট শুকিয়ে যাবে']], 2, 'আগামীকাল');
                 if (tm.max >= 33) add([
-                    ['🥤', 'কালকে গরম বেশি — সাথে পানির বোতল রাখুন'],
-                    ['🧢', 'রোদে বের হলে টুপি বা ছাতা মাথায় দিন'],
-                    ['🍉', 'ডাবের পানি বা লেবুর শরবতে শরীর ঠান্ডা রাখুন']], 2, 'আগামীকাল');
+                    ['cup', 'কালকে গরম বেশি — সাথে পানির বোতল রাখুন'],
+                    ['sun', 'রোদে বের হলে টুপি বা ছাতা মাথায় দিন'],
+                    ['droplet', 'ডাবের পানি বা লেবুর শরবতে শরীর ঠান্ডা রাখুন']], 2, 'আগামীকাল');
                 if (tm.min <= 16) add([
-                    ['🧣', 'কালকে সকালে বেশ ঠান্ডা — হালকা সোয়েটার গায়ে দিন'],
-                    ['🥮', 'শীতের দিনে ভাপা পিঠা আর খেজুরের রসের কথা মনে পড়ছে না?']], 1, 'আগামীকাল');
+                    ['shirt', 'কালকে সকালে বেশ ঠান্ডা — হালকা সোয়েটার গায়ে দিন'],
+                    ['bowl', 'শীতের দিনে ভাপা পিঠা আর খেজুরের রসের কথা মনে পড়ছে না?']], 1, 'আগামীকাল');
             }
             const c = o.cur;
-            if (c.thunder) add([['⚡', 'বজ্রপাতের সময় খোলা মাঠে বা গাছের নিচে দাঁড়াবেন না'], ['🏠', 'ঝড়-বৃষ্টিতে নিরাপদ আশ্রয়ে থাকুন, দরকার ছাড়া বের হবেন না'], ['🔌', 'ঝড়ের সময় ফোন চার্জে দিয়ে কথা বলা এড়িয়ে চলুন']], 2, 'এখন');
-            if (c.fog) add([['🚗', 'কুয়াশায় রাস্তা ঝাপসা — গাড়ি চালালে হেডলাইট জ্বালান'], ['😷', 'কুয়াশায় ধুলাবালি বেশি, বাইরে গেলে মাস্ক পরুন']], 2, 'এখন');
-            if (c.rain > 0 && !c.thunder) add([['🌧️', 'এখন বৃষ্টি হচ্ছে — জানালার পাশে বসে চায়ের কাপে চুমুক দেওয়ার সময়'], ['🎶', 'বৃষ্টির শব্দে পুরনো গান শুনলে মন ভালো হয়ে যায়']], 1, 'এখন');
-            if (c.temp <= 17) add([['☕', 'এমন ঠান্ডায় গরম চায়ের কাপই আসল সঙ্গী'], ['🛏️', 'কম্বলের নিচে আজ ঘুম বেশি মিষ্টি লাগবে']], 1, 'এখন');
-            if (c.temp >= 34) add([['🔥', 'বাইরে বেশ গরম — দুপুরে অকারণে রোদে ঘুরবেন না']], 1, 'এখন');
-            if (c.uv >= 8) add([['🧴', 'ইউভি অনেক বেশি — সানস্ক্রিন বা ছাতা ব্যবহার করুন']], 1, 'এখন');
-            if (c.humidity >= 85) add([['💦', 'আর্দ্রতা বেশি, গা চিটচিট করবে — ফ্যান ছেড়ে বসুন']], 1, 'এখন');
-            if (c.wind >= 25) add([['🪁', 'বাতাস জোরালো — ঘুড়ি ওড়ানোর পারফেক্ট দিন! তবে ছাতা সামলে 😄']], 1, 'এখন');
-            if (c.night) add([['🌙', 'রাত হয়েছে — মোবাইল রেখে আজ তাড়াতাড়ি ঘুমিয়ে পড়ুন 😴'], ['⭐', 'আকাশ পরিষ্কার থাকলে একটু তারা গুনে দেখুন']], 1, 'এখন');
-            else if (c.kind === 'clear' || c.kind === 'partly') add([['☀️', 'চমৎকার আবহাওয়া — বন্ধুদের সাথে চা-আড্ডার জন্য পারফেক্ট'], ['🚶', 'আজ একটু হেঁটে আসুন, শরীরও ভালো থাকবে মনও']], 1, 'এখন');
-            const fill = [['💧', 'দিনে অন্তত ৮ গ্লাস পানি খেতে ভুলবেন না'], ['📲', 'বের হওয়ার আগে একবার আবহাওয়া দেখে নিন — ঠিক যেমন এখন দেখছেন 😉'], ['🌿', 'আবহাওয়া যেমনই হোক, হাসিমুখে দিন শুরু করুন'], ['🧼', 'বাইরে থেকে ফিরে হাত ধুতে ভুলবেন না']];
+            if (c.thunder) add([['bolt', 'বজ্রপাতের সময় খোলা মাঠে বা গাছের নিচে দাঁড়াবেন না'], ['home', 'ঝড়-বৃষ্টিতে নিরাপদ আশ্রয়ে থাকুন, দরকার ছাড়া বের হবেন না'], ['plug', 'ঝড়ের সময় ফোন চার্জে দিয়ে কথা বলা এড়িয়ে চলুন']], 2, 'এখন');
+            if (c.fog) add([['car', 'কুয়াশায় রাস্তা ঝাপসা — গাড়ি চালালে হেডলাইট জ্বালান'], ['mask', 'কুয়াশায় ধুলাবালি বেশি, বাইরে গেলে মাস্ক পরুন']], 2, 'এখন');
+            if (c.rain > 0 && !c.thunder) add([['cloud-rain', 'এখন বৃষ্টি হচ্ছে — জানালার পাশে বসে চায়ের কাপে চুমুক দেওয়ার সময়'], ['music', 'বৃষ্টির শব্দে পুরনো গান শুনলে মন ভালো হয়ে যায়']], 1, 'এখন');
+            if (c.temp <= 17) add([['coffee', 'এমন ঠান্ডায় গরম চায়ের কাপই আসল সঙ্গী'], ['bed', 'কম্বলের নিচে আজ ঘুম বেশি মিষ্টি লাগবে']], 1, 'এখন');
+            if (c.temp >= 34) add([['flame', 'বাইরে বেশ গরম — দুপুরে অকারণে রোদে ঘুরবেন না']], 1, 'এখন');
+            if (c.uv >= 8) add([['bottle', 'ইউভি অনেক বেশি — সানস্ক্রিন বা ছাতা ব্যবহার করুন']], 1, 'এখন');
+            if (c.humidity >= 85) add([['droplets', 'আর্দ্রতা বেশি, গা চিটচিট করবে — ফ্যান ছেড়ে বসুন']], 1, 'এখন');
+            if (c.wind >= 25) add([['wind', 'বাতাস জোরালো — ঘুড়ি ওড়ানোর পারফেক্ট দিন! তবে ছাতা সামলে']], 1, 'এখন');
+            if (c.night) add([['moon', 'রাত হয়েছে — মোবাইল রেখে আজ তাড়াতাড়ি ঘুমিয়ে পড়ুন'], ['star', 'আকাশ পরিষ্কার থাকলে একটু তারা গুনে দেখুন']], 1, 'এখন');
+            else if (c.kind === 'clear' || c.kind === 'partly') add([['sun', 'চমৎকার আবহাওয়া — বন্ধুদের সাথে চা-আড্ডার জন্য পারফেক্ট'], ['walk', 'আজ একটু হেঁটে আসুন, শরীরও ভালো থাকবে মনও']], 1, 'এখন');
+            const fill = [['droplet', 'দিনে অন্তত ৮ গ্লাস পানি খেতে ভুলবেন না'], ['mobile', 'বের হওয়ার আগে একবার আবহাওয়া দেখে নিন — ঠিক যেমন এখন দেখছেন'], ['leaf', 'আবহাওয়া যেমনই হোক, হাসিমুখে দিন শুরু করুন'], ['sparkles', 'বাইরে থেকে ফিরে হাত ধুতে ভুলবেন না']];
             add(fill, Math.max(0, 6 - L.length), 'টিপস');
             const seen = new Set();
             return L.filter(x => !seen.has(x.t) && seen.add(x.t)).slice(0, 8);
@@ -7921,7 +7935,7 @@
             const box = card.querySelector('.wx-fun-body');
             box.classList.add('out');
             setTimeout(() => {
-                card.querySelector('.wx-fun-emoji').textContent = it.e;
+                card.querySelector('.wx-fun-emoji').innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-' + it.e + '"/></svg>';
                 card.querySelector('.wx-fun-tag').textContent = it.tag;
                 card.querySelector('.wx-fun-text').textContent = it.t;
                 card.querySelector('.wx-fun-dots').innerHTML = wxFunList.map((_, k) => `<i class="${k === wxFunIdx ? 'on' : ''}"></i>`).join('');
@@ -7944,7 +7958,7 @@
             if (!list.length) { card.classList.add('hidden'); return; }
             card.classList.remove('hidden');
             const it = list[0];
-            card.querySelector('.wx-fun-emoji').textContent = it.e;
+            card.querySelector('.wx-fun-emoji').innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-' + it.e + '"/></svg>';
             card.querySelector('.wx-fun-tag').textContent = it.tag;
             card.querySelector('.wx-fun-text').textContent = it.t;
             card.querySelector('.wx-fun-dots').innerHTML = list.map((_, k) => `<i class="${k === 0 ? 'on' : ''}"></i>`).join('');
@@ -8287,7 +8301,7 @@
             return `${n}% — প্রায় বৃষ্টিহীন`;
         }
         function weatherBnSun(day) {
-            const k = wxKind(day?.condition?.code, day?.condition?.text, day?.totalprecip_mm, day?.avgtemp_c).kind;
+            const k = wxKindDay(day).kind;
             return ({ clear: 'রোদ উঠবে / আকাশ পরিষ্কার', partly: 'আংশিক মেঘলা, মাঝে মাঝে রোদ', cloudy: 'মেঘলা আকাশ', overcast: 'ঘন মেঘে ঢাকা আকাশ', rain: 'মেঘলা ও বৃষ্টির সম্ভাবনা', heavyrain: 'মেঘলা ও ভারী বৃষ্টি', thunder: 'বজ্রসহ ঝড়-বৃষ্টি', snow: 'তুষারপাত', fog: 'ঘন কুয়াশা', mist: 'কুয়াশাচ্ছন্ন আকাশ' })[k] || (day?.condition?.text || 'সাধারণ আবহাওয়া');
         }
         function weatherFormatDateBn(dateStr) {
@@ -8318,7 +8332,7 @@
             const isBD = /bangladesh/i.test(loc.country || '');
             const name = meta.label || [loc.name, loc.region].filter(Boolean).join(', ');
             set('weatherLocationName', `${name} · ${isBD ? 'বাংলাদেশ' : (loc.country || '')}`);
-            set('weatherSourceBadge', meta.kind === 'upazila' ? '📍 আপনার উপজেলা' : meta.kind === 'home' ? '📍 আপনার জেলা (সদর)' : meta.kind === 'gps' ? '🎯 লাইভ লোকেশন' : '🔎 সার্চ করা স্থান');
+            { const sb = document.getElementById('weatherSourceBadge'); if (sb) sb.innerHTML = meta.kind === 'upazila' ? '<svg class="ic" aria-hidden="true"><use href="#i-map-pin"/></svg> আপনার উপজেলা' : meta.kind === 'home' ? '<svg class="ic" aria-hidden="true"><use href="#i-map-pin"/></svg> আপনার জেলা (সদর)' : meta.kind === 'gps' ? '<svg class="ic" aria-hidden="true"><use href="#i-crosshair"/></svg> লাইভ লোকেশন' : '<svg class="ic" aria-hidden="true"><use href="#i-search"/></svg> সার্চ করা স্থান'; }
             wxTickClock();
             clearInterval(wxClockTimer); wxClockTimer = setInterval(wxTickClock, 20000);
             set('weatherTemp', `${Math.round(cur.temp_c)}°`);
@@ -8358,8 +8372,8 @@
                 tomInfo = { chance, max: d.maxtemp_c, min: d.mintemp_c };
                 document.getElementById('weatherTomorrowCard')?.classList.remove('hidden');
                 set('weatherTomorrowDate', weatherFormatDateBn(tomorrow.date));
-                document.getElementById('weatherTomorrowIcon').innerHTML = wxIcon(wxKind(d.condition?.code, d.condition?.text, d.totalprecip_mm, d.avgtemp_c).kind, true);
-                set('weatherTomorrowCond', d.condition?.text || '—');
+                document.getElementById('weatherTomorrowIcon').innerHTML = wxIcon(wxKindDay(d).kind, true);
+                set('weatherTomorrowCond', wxDayText(d));
                 set('weatherTomorrowTemp', `সর্বোচ্চ ${Math.round(d.maxtemp_c)}° · সর্বনিম্ন ${Math.round(d.mintemp_c)}°`);
                 set('weatherTomorrowRain', weatherBnChance(chance));
                 set('weatherTomorrowSun', weatherBnSun(d));
@@ -8374,11 +8388,11 @@
             // আজ ও আগামীকাল
             const list = document.getElementById('weatherForecastList');
             if (list && forecast.length) {
-                list.innerHTML = forecast.slice(0, 2).map((fd, i) => {
-                    const day = fd.day, kk = wxKind(day.condition?.code, day.condition?.text, day.totalprecip_mm, day.avgtemp_c).kind;
+                list.innerHTML = forecast.slice(0, 3).map((fd, i) => {
+                    const day = fd.day, kk = wxKindDay(day).kind;
                     return `<div class="flex items-center gap-3 rounded-xl bg-[#07140e]/70 border border-emerald-900/25 px-3 py-2.5">
                         <div class="wx-icon-sm shrink-0">${wxIcon(kk, true)}</div>
-                        <div class="flex-1 min-w-0"><p class="text-xs font-bold text-slate-100">${i === 0 ? 'আজ' : 'আগামীকাল'}</p><p class="text-[10px] text-slate-400 truncate">${day.condition?.text || ''}</p></div>
+                        <div class="flex-1 min-w-0"><p class="text-xs font-bold text-slate-100">${['আজ', 'আগামীকাল', 'পরশু'][i] || ''}</p><p class="text-[10px] text-slate-400 truncate">${wxDayText(day)}</p></div>
                         <div class="text-right shrink-0"><p class="text-xs font-bold text-white">${Math.round(day.maxtemp_c)}° / ${Math.round(day.mintemp_c)}°</p><p class="text-[10px] text-sky-400">বৃষ্টি ${day.daily_chance_of_rain ?? 0}%</p></div>
                     </div>`;
                 }).join('');
@@ -8470,7 +8484,7 @@
                 if (navigator.permissions?.query) {
                     const st = await navigator.permissions.query({ name: 'geolocation' });
                     if (st.state === 'denied') {
-                        weatherShowError('লোকেশন অনুমতি বন্ধ আছে। ব্রাউজারের ঠিকানা-বারের 🔒 আইকনে চাপ দিন → সাইট সেটিংস → লোকেশন → "অনুমতি দিন" করে আবার চেষ্টা করুন।');
+                        weatherShowError('লোকেশন অনুমতি বন্ধ আছে। ব্রাউজারের ঠিকানা-বারের তালা আইকনে চাপ দিন → সাইট সেটিংস → লোকেশন → "অনুমতি দিন" করে আবার চেষ্টা করুন।');
                         return;
                     }
                 }
@@ -8633,7 +8647,7 @@
             }
         } catch (e) {}
         refreshIcons();
-        updateOnlineUI(); // ✅ Initial offline banner state
+        updateOnlineUI(); // Initial offline banner state
         // Show default packages immediately; Firestore will override when ready
         try { renderSubscriptionPackages(); updatePaymentNumberDisplay(); } catch (e) {}
         if (firebaseReady) attachAppSettingsListener(); // Premium launch + packages + payment numbers
@@ -8749,7 +8763,7 @@
                         syncThemeFromProfile(userProfile);
                         attachRealtimeListeners();
 
-                        // ✅ NEW FORCE PROFILE CHECK
+                        // NEW FORCE PROFILE CHECK
                         if (!isProfileComplete(userProfile)) {
                             isForcedProfileMode = true;
                             document.body.classList.add('force-profile-mode');

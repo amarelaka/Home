@@ -3358,3 +3358,52 @@ body.light-mode #serviceDetailModal .space-y-4 > div:first-child h3 {
 .ic.ic-fill { fill: currentColor; }
 .ic-flag { width: 1.5em; height: 1em; display: inline-block; vertical-align: -0.12em; border-radius: 2px; flex: 0 0 auto; box-shadow: 0 0 0 1px rgba(0,0,0,.14); }
 .wx-fun-emoji .ic { width: 36px; height: 36px; stroke-width: 1.7; color: #10b981; filter: drop-shadow(0 3px 6px rgba(0,0,0,.18)); }
+
+/* ===== লাইট মোড: সেবা/প্রোমোশন বিস্তারিত মডাল — টাইটেল ও সেবাদানকারী বক্স পরিষ্কার দেখানো ===== */
+/* ছবির নিচের গাঢ় সবুজ গ্রেডিয়েন্টের বদলে সাদায় মিলিয়ে যাওয়া নরম গ্রেডিয়েন্ট */
+body.light-mode #serviceDetailModal .relative > .bg-gradient-to-t,
+body.light-mode #promotionDetailModal .relative > .bg-gradient-to-t {
+  background: linear-gradient(to top, #ffffff 0%, rgba(255,255,255,.7) 12%, rgba(255,255,255,0) 38%) !important;
+}
+/* লেখার অংশ ছবির উপর উঠে না এসে নিচে সাদা জায়গায় শুরু হবে */
+body.light-mode #serviceDetailModal .p-5.overflow-y-auto,
+body.light-mode #promotionDetailModal .p-5.overflow-y-auto {
+  margin-top: 0 !important;
+  padding-top: 18px !important;
+  background: #ffffff !important;
+}
+/* টাইটেল সবসময় গাঢ় ও স্পষ্ট */
+body.light-mode #serviceDetailModal #svcModalTitle,
+body.light-mode #promotionDetailModal #promoModalTitle {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+/* সেবাদানকারী বক্স: আইকনের গোল অংশ ফ্যাকাশে ধূসর না হয়ে হালকা সবুজ, লেখা গাঢ় */
+body.light-mode #serviceDetailModal .bg-emerald-900\/50 {
+  background: #d1fae5 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+body.light-mode #serviceDetailModal .bg-emerald-900\/50 svg {
+  color: #047857 !important;
+  stroke: #047857 !important;
+}
+body.light-mode #promotionDetailModal .bg-amber-900\/40 {
+  background: #fef3c7 !important;
+  border: 1px solid #fde68a !important;
+}
+body.light-mode #promotionDetailModal .bg-amber-900\/40 svg {
+  color: #b45309 !important;
+  stroke: #b45309 !important;
+}
+body.light-mode #serviceDetailModal .bg-\[\#07140e\],
+body.light-mode #promotionDetailModal .bg-\[\#07140e\] {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+body.light-mode #serviceDetailModal #svcModalProvider,
+body.light-mode #promotionDetailModal .bg-\[\#07140e\] p.font-bold {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+}

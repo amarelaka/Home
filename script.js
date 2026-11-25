@@ -3177,10 +3177,31 @@
                 btn.disabled = false; btn.innerHTML = '<i data-lucide="user-plus" class="w-4 h-4"></i> <span>রেজিস্ট্রেশন করুন</span>'; refreshIcons();
             }
         };
-        window.logoutUser = async () => {
-            // Immediate logout: show login right away (no multi-second delay)
-            const msg = (typeof t === 'function' && currentLang === 'en') ? 'Do you really want to log out?' : 'আপনি কি সত্যিই লগআউট করতে চান?';
-            if (!confirm(msg)) return;
+        // ===== Custom Logout Confirmation Modal =====
+        window.closeLogoutConfirm = () => {
+            const ov = document.getElementById('logoutConfirmOverlay');
+            if (!ov || !ov.classList.contains('is-open')) return;
+            ov.classList.remove('is-visible');
+            ov.setAttribute('aria-hidden', 'true');
+            setTimeout(() => { if (!ov.classList.contains('is-visible')) ov.classList.remove('is-open'); }, 180);
+        };
+        window.logoutUser = () => {
+            const ov = document.getElementById('logoutConfirmOverlay');
+            if (!ov) { window.performLogout(); return; }
+            ov.classList.add('is-open');
+            ov.setAttribute('aria-hidden', 'false');
+            requestAnimationFrame(() => ov.classList.add('is-visible'));
+            try { document.getElementById('logoutConfirmCancel')?.focus(); } catch (e) {}
+        };
+        (() => {
+            const ov = document.getElementById('logoutConfirmOverlay');
+            if (!ov) return;
+            document.getElementById('logoutConfirmCancel')?.addEventListener('click', () => window.closeLogoutConfirm());
+            document.getElementById('logoutConfirmOk')?.addEventListener('click', () => { window.closeLogoutConfirm(); window.performLogout(); });
+            ov.addEventListener('click', (e) => { if (e.target === ov) window.closeLogoutConfirm(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.closeLogoutConfirm(); });
+        })();
+        window.performLogout = async () => {
             try {
                 try { await endUserActivitySession(); } catch (e) {}
                 stopUserHeartbeat(); stopActivityTracking();

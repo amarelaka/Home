@@ -6,152 +6,637 @@
   <meta name="description" content="Privacy Policy for the Amar Elaka website and mobile application.">
   <meta name="robots" content="index, follow">
   <title>Privacy Policy | Amar Elaka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: light;
-      --primary: #16852b;
-      --text: #202522;
-      --muted: #647067;
-      --surface: #ffffff;
-      --background: #f4f7f4;
-      --border: #e2e9e2;
+      --violet-50: #f5f3ff;
+      --violet-100: #ede9fe;
+      --violet-200: #ddd6fe;
+      --violet-300: #c4b5fd;
+      --violet-400: #a78bfa;
+      --violet-500: #8b5cf6;
+      --violet-600: #7c3aed;
+      --violet-700: #6d28d9;
+      --violet-800: #5b21b6;
+      --violet-900: #4c1d95;
+
+      --text-primary: #1c1c1e;
+      --text-secondary: #3a3a3c;
+      --text-muted: #6e6e73;
+
+      --glass-bg: rgba(255, 255, 255, 0.55);
+      --glass-bg-strong: rgba(255, 255, 255, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.45);
+      --glass-shadow: 0 8px 32px rgba(76, 29, 149, 0.12);
+      --glass-shadow-lg: 0 20px 60px rgba(76, 29, 149, 0.18);
+
+      --radius: 20px;
+      --radius-sm: 14px;
     }
-    * { box-sizing: border-box; }
-    body {
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 32px 16px;
-      background: var(--background);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.7;
+      padding: 0;
     }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-primary);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: #0f0a1a;
+    }
+
+    /* Animated gradient background */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(139, 92, 246, 0.45) 0%, transparent 50%),
+        radial-gradient(ellipse 70% 50% at 80% 20%, rgba(167, 139, 250, 0.35) 0%, transparent 45%),
+        radial-gradient(ellipse 60% 40% at 50% 80%, rgba(109, 40, 217, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 30% at 10% 70%, rgba(76, 29, 149, 0.3) 0%, transparent 40%),
+        linear-gradient(160deg, #1a0b2e 0%, #0f0a1a 40%, #1e0b3a 100%);
+    }
+
+    .bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 70% 60%, rgba(196, 181, 253, 0.08) 0%, transparent 30%),
+        radial-gradient(circle at 30% 40%, rgba(139, 92, 246, 0.1) 0%, transparent 25%);
+      animation: floatGlow 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatGlow {
+      0% { opacity: 0.7; transform: scale(1) translate(0, 0); }
+      100% { opacity: 1; transform: scale(1.05) translate(-2%, 2%); }
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      opacity: 0.035;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      padding: 48px 20px 72px;
+    }
+
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 780px;
       margin: 0 auto;
-      padding: 36px clamp(20px, 5vw, 56px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 8px 28px rgba(20, 50, 25, 0.06);
     }
-    header {
-      padding-bottom: 22px;
-      margin-bottom: 28px;
-      border-bottom: 2px solid var(--border);
+
+    /* Glass card */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--glass-shadow);
     }
-    .brand {
-      color: var(--primary);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+
+    .glass-strong {
+      background: var(--glass-bg-strong);
+      backdrop-filter: blur(40px) saturate(200%);
+      -webkit-backdrop-filter: blur(40px) saturate(200%);
     }
-    h1 { margin: 8px 0; font-size: clamp(28px, 5vw, 38px); line-height: 1.2; }
-    .updated { color: var(--muted); font-size: 14px; }
-    h2 {
-      margin: 30px 0 10px;
-      color: #176d29;
-      font-size: 20px;
-      line-height: 1.35;
+
+    /* Header */
+    .header {
+      padding: 36px 36px 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
     }
-    p { margin: 10px 0; }
-    ul { padding-left: 24px; }
-    li { margin: 6px 0; }
-    a { color: #116c2b; overflow-wrap: anywhere; }
-    .note {
-      padding: 14px 16px;
-      background: #f1f8f1;
-      border-left: 4px solid var(--primary);
-      border-radius: 8px;
+
+    .header::after {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -20%;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.25) 0%, transparent 70%);
+      pointer-events: none;
     }
-    footer {
-      margin-top: 36px;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, var(--violet-400), var(--violet-600));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 4px 16px rgba(124, 58, 237, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    .brand-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+    }
+
+    .brand-text {
       font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--violet-600);
     }
-    @media (max-width: 520px) {
-      body { padding: 14px 10px; }
-      .container { padding: 25px 19px; border-radius: 12px; }
-      h2 { font-size: 18px; }
+
+    h1 {
+      font-size: clamp(30px, 5.5vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: 100px;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      color: var(--violet-700);
+      font-size: 13px;
+      font-weight: 500;
+      backdrop-filter: blur(8px);
+    }
+
+    .badge svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.85;
+    }
+
+    /* Content card */
+    .content {
+      padding: 36px 36px 40px;
+    }
+
+    .intro {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+
+    /* Note */
+    .note {
+      display: flex;
+      gap: 16px;
+      padding: 18px 20px;
+      margin-bottom: 40px;
+      border-radius: var(--radius-sm);
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(167, 139, 250, 0.25);
+      backdrop-filter: blur(12px);
+    }
+
+    .note-icon {
+      flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, var(--violet-500), var(--violet-700));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+    }
+
+    .note-icon svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+
+    .note-content strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--violet-800);
+      margin-bottom: 4px;
+    }
+
+    .note-content p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.12);
+    }
+
+    .section:last-of-type {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .section-number {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      background: linear-gradient(145deg, rgba(167, 139, 250, 0.25), rgba(139, 92, 246, 0.15));
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      color: var(--violet-700);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+      padding-top: 5px;
+      letter-spacing: -0.015em;
+    }
+
+    .section p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      line-height: 1.7;
+    }
+
+    .section p:last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 11px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    li:last-child {
+      margin-bottom: 0;
+    }
+
+    li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 9px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--violet-400), var(--violet-600));
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.4);
+    }
+
+    li strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    a {
+      color: var(--violet-600);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    a:hover {
+      color: var(--violet-800);
+      border-bottom-color: var(--violet-400);
+    }
+
+    /* Contact box */
+    .contact-box {
+      margin-top: 12px;
+      padding: 22px 24px;
+      border-radius: var(--radius-sm);
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(167, 139, 250, 0.28);
+      backdrop-filter: blur(12px);
+    }
+
+    .contact-box p {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .contact-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .contact-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      min-width: 96px;
+      display: inline-block;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 28px;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .footer p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.45);
+      line-height: 1.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .page {
+        padding: 28px 14px 48px;
+      }
+
+      .header {
+        padding: 28px 22px 24px;
+        border-radius: 18px;
+      }
+
+      .content {
+        padding: 28px 22px 32px;
+        border-radius: 18px;
+      }
+
+      .note {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .section-header {
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      h2 {
+        font-size: 17px;
+      }
+
+      .contact-box {
+        padding: 18px;
+      }
+
+      .contact-label {
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      .brand-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+      }
+    }
+
+    @media (hover: hover) {
+      .glass {
+        transition: box-shadow 0.35s ease, border-color 0.35s ease;
+      }
+      .glass:hover {
+        box-shadow: var(--glass-shadow-lg);
+        border-color: rgba(255, 255, 255, 0.55);
+      }
     }
   </style>
 </head>
 <body>
-  <main class="container">
-    <header>
-      <div class="brand">Amar Elaka</div>
-      <h1>Privacy Policy</h1>
-      <div class="updated">Last Updated: November 25, 2026</div>
-    </header>
+  <div class="bg"></div>
+  <div class="noise"></div>
 
-    <p>Welcome to Amar Elaka (“we,” “our,” or “us”). Amar Elaka provides a website and mobile application intended to help people access local information and community services. We respect your privacy and explain below what information may be handled when you use our services and how it may be used.</p>
+  <div class="page">
+    <div class="container">
 
-    <div class="note">
-      <strong>Please note:</strong> The information described in this policy depends on the features you use and the information you choose to provide. Please do not submit passwords, financial details, or other sensitive information unless a feature specifically requires it and you understand why.
+      <!-- Header -->
+      <header class="header glass glass-strong">
+        <div class="brand-row">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+          </div>
+          <span class="brand-text">Amar Elaka</span>
+        </div>
+        <h1>Privacy Policy</h1>
+        <div class="badge">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
+          </svg>
+          Last Updated: November 25, 2026
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="content glass glass-strong">
+        <p class="intro">
+          Welcome to Amar Elaka (“we,” “our,” or “us”). Amar Elaka provides a website and mobile application intended to help people access local information and community services. We respect your privacy and explain below what information may be handled when you use our services and how it may be used.
+        </p>
+
+        <div class="note">
+          <div class="note-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+          </div>
+          <div class="note-content">
+            <strong>Please note</strong>
+            <p>The information described in this policy depends on the features you use and the information you choose to provide. Please do not submit passwords, financial details, or other sensitive information unless a feature specifically requires it and you understand why.</p>
+          </div>
+        </div>
+
+        <!-- Section 1 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">1</div>
+            <h2>Information We May Collect</h2>
+          </div>
+          <p>Depending on the features you use, we may collect or receive:</p>
+          <ul>
+            <li><strong>Account information:</strong> such as your name, email address, and information associated with your account.</li>
+            <li><strong>Information you provide:</strong> details, messages, reviews, requests, or other information you choose to submit through the website or application.</li>
+            <li><strong>Community-service information:</strong> information you voluntarily provide for features such as blood-donor listings or emergency-contact information.</li>
+            <li><strong>Location information:</strong> only where a feature requires it and, where applicable, after you grant permission through your device.</li>
+            <li><strong>Technical information:</strong> limited device, browser, diagnostic, and usage information that may be processed to operate, maintain, and secure the services.</li>
+          </ul>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">2</div>
+            <h2>How We Use Information</h2>
+          </div>
+          <p>We may use information for the following purposes:</p>
+          <ul>
+            <li>To create and manage user accounts.</li>
+            <li>To provide local information and community features.</li>
+            <li>To operate features related to blood donors and emergency contacts.</li>
+            <li>To respond to questions, feedback, and support requests.</li>
+            <li>To maintain, troubleshoot, and improve the website and application.</li>
+            <li>To help protect users, prevent misuse, and maintain service security.</li>
+            <li>To meet applicable legal obligations.</li>
+          </ul>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">3</div>
+            <h2>Information Visibility and Sharing</h2>
+          </div>
+          <p>We do not sell or rent your personal information. Information may be shared in these limited circumstances:</p>
+          <ul>
+            <li><strong>With other users:</strong> information you submit to a community feature may be visible to other users when that feature is designed to display it. Please review the information you submit before publishing it.</li>
+            <li><strong>With service providers:</strong> trusted providers may process information on our behalf to support hosting, authentication, databases, security, or other technical services.</li>
+            <li><strong>For legal or safety reasons:</strong> information may be disclosed where required by law or where reasonably necessary to protect rights, safety, or the security of the services.</li>
+          </ul>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">4</div>
+            <h2>Third-Party Services</h2>
+          </div>
+          <p>Some parts of Amar Elaka may use third-party services, which may include Google Firebase for services such as authentication, database, hosting, or related application functions. The use of these services may involve processing information under the providers’ own privacy terms and policies.</p>
+          <p>Third-party websites or services linked from Amar Elaka are governed by their own privacy policies. We encourage you to review those policies before providing information to them.</p>
+        </section>
+
+        <!-- Section 5 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">5</div>
+            <h2>Location and Device Permissions</h2>
+          </div>
+          <p>Some features may request access to device permissions, such as location. You can manage or withdraw permissions through your device settings. If you deny a permission, the related feature may not work as intended.</p>
+        </section>
+
+        <!-- Section 6 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">6</div>
+            <h2>Data Security</h2>
+          </div>
+          <p>We use reasonable technical and organizational measures intended to protect information against unauthorized access, loss, misuse, alteration, or disclosure. However, no website, application, or electronic transmission can be guaranteed to be completely secure.</p>
+        </section>
+
+        <!-- Section 7 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">7</div>
+            <h2>Data Retention and Deletion Requests</h2>
+          </div>
+          <p>We retain information for as long as reasonably necessary to provide the services, meet legitimate operational needs, resolve disputes, and comply with applicable legal requirements.</p>
+          <p>You may contact us to request access to, correction of, or deletion of personal information you have provided. We may need to verify your request before acting on it. Some information may need to be retained where required by law or for legitimate security purposes.</p>
+        </section>
+
+        <!-- Section 8 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">8</div>
+            <h2>Children's Privacy</h2>
+          </div>
+          <p>Amar Elaka is not intended to knowingly collect personal information from children in circumstances where parental or guardian consent is required. If you believe a child has provided personal information inappropriately, please contact us so that we can review the request.</p>
+        </section>
+
+        <!-- Section 9 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">9</div>
+            <h2>Changes to This Privacy Policy</h2>
+          </div>
+          <p>We may update this Privacy Policy when our services, practices, or legal requirements change. The revised version will be published on this page with an updated “Last Updated” date. Please review this page periodically.</p>
+        </section>
+
+        <!-- Section 10 -->
+        <section class="section">
+          <div class="section-header">
+            <div class="section-number">10</div>
+            <h2>Contact Us</h2>
+          </div>
+          <p>If you have questions, privacy concerns, or a request about your personal information, please contact us through our official website:</p>
+          <div class="contact-box">
+            <p><span class="contact-label">Application:</span> Amar Elaka</p>
+            <p><span class="contact-label">Website:</span> <a href="https://www.amarelaka.shop/" target="_blank" rel="noopener">https://www.amarelaka.shop</a></p>
+            <p><span class="contact-label">Contact:</span> <a href="https://www.amarelaka.shop/" target="_blank" rel="noopener">Visit our website to contact us</a></p>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>This Privacy Policy applies to the Amar Elaka website and mobile application, to the extent the relevant services and features are available.</p>
+      </footer>
+
     </div>
-
-    <h2>1. Information We May Collect</h2>
-    <p>Depending on the features you use, we may collect or receive:</p>
-    <ul>
-      <li><strong>Account information:</strong> such as your name, email address, and information associated with your account.</li>
-      <li><strong>Information you provide:</strong> details, messages, reviews, requests, or other information you choose to submit through the website or application.</li>
-      <li><strong>Community-service information:</strong> information you voluntarily provide for features such as blood-donor listings or emergency-contact information.</li>
-      <li><strong>Location information:</strong> only where a feature requires it and, where applicable, after you grant permission through your device.</li>
-      <li><strong>Technical information:</strong> limited device, browser, diagnostic, and usage information that may be processed to operate, maintain, and secure the services.</li>
-    </ul>
-
-    <h2>2. How We Use Information</h2>
-    <p>We may use information for the following purposes:</p>
-    <ul>
-      <li>To create and manage user accounts.</li>
-      <li>To provide local information and community features.</li>
-      <li>To operate features related to blood donors and emergency contacts.</li>
-      <li>To respond to questions, feedback, and support requests.</li>
-      <li>To maintain, troubleshoot, and improve the website and application.</li>
-      <li>To help protect users, prevent misuse, and maintain service security.</li>
-      <li>To meet applicable legal obligations.</li>
-    </ul>
-
-    <h2>3. Information Visibility and Sharing</h2>
-    <p>We do not sell or rent your personal information. Information may be shared in these limited circumstances:</p>
-    <ul>
-      <li><strong>With other users:</strong> information you submit to a community feature may be visible to other users when that feature is designed to display it. Please review the information you submit before publishing it.</li>
-      <li><strong>With service providers:</strong> trusted providers may process information on our behalf to support hosting, authentication, databases, security, or other technical services.</li>
-      <li><strong>For legal or safety reasons:</strong> information may be disclosed where required by law or where reasonably necessary to protect rights, safety, or the security of the services.</li>
-    </ul>
-
-    <h2>4. Third-Party Services</h2>
-    <p>Some parts of Amar Elaka may use third-party services, which may include Google Firebase for services such as authentication, database, hosting, or related application functions. The use of these services may involve processing information under the providers’ own privacy terms and policies.</p>
-    <p>Third-party websites or services linked from Amar Elaka are governed by their own privacy policies. We encourage you to review those policies before providing information to them.</p>
-
-    <h2>5. Location and Device Permissions</h2>
-    <p>Some features may request access to device permissions, such as location. You can manage or withdraw permissions through your device settings. If you deny a permission, the related feature may not work as intended.</p>
-
-    <h2>6. Data Security</h2>
-    <p>We use reasonable technical and organizational measures intended to protect information against unauthorized access, loss, misuse, alteration, or disclosure. However, no website, application, or electronic transmission can be guaranteed to be completely secure.</p>
-
-    <h2>7. Data Retention and Deletion Requests</h2>
-    <p>We retain information for as long as reasonably necessary to provide the services, meet legitimate operational needs, resolve disputes, and comply with applicable legal requirements.</p>
-    <p>You may contact us to request access to, correction of, or deletion of personal information you have provided. We may need to verify your request before acting on it. Some information may need to be retained where required by law or for legitimate security purposes.</p>
-
-    <h2>8. Children's Privacy</h2>
-    <p>Amar Elaka is not intended to knowingly collect personal information from children in circumstances where parental or guardian consent is required. If you believe a child has provided personal information inappropriately, please contact us so that we can review the request.</p>
-
-    <h2>9. Changes to This Privacy Policy</h2>
-    <p>We may update this Privacy Policy when our services, practices, or legal requirements change. The revised version will be published on this page with an updated “Last Updated” date. Please review this page periodically.</p>
-
-    <h2>10. Contact Us</h2>
-    <p>If you have questions, privacy concerns, or a request about your personal information, please contact us through our official website:</p>
-    <p><strong>Application:</strong> Amar Elaka<br>
-       <strong>Website:</strong> <a href="https://www.amarelaka.shop/">https://www.amarelaka.shop</a><br>
-       <strong>Contact:</strong> <a href="https://www.amarelaka.shop/">Visit our website to contact us</a></p>
-
-    <footer>
-      This Privacy Policy applies to the Amar Elaka website and mobile application, to the extent the relevant services and features are available.
-    </footer>
-  </main>
+  </div>
 </body>
 </html>

@@ -270,7 +270,7 @@
                 btn.id = inputId + 'Btn';
                 btn.className = 'loc-btn ' + cls.replace(/placeholder:[^\s]+/g, '');
                 if (orig.classList.contains('promo-input')) btn.classList.add('loc-promo');
-                else if (/bg-\[#07140e\]/.test(cls)) btn.classList.add('loc-boxed');
+                else if (/bg-\[#0b0714\]/.test(cls)) btn.classList.add('loc-boxed');
                 btn.setAttribute('aria-haspopup', 'listbox');
                 btn.setAttribute('aria-expanded', 'false');
                 btn.innerHTML = '<span class="loc-label loc-placeholder"></span>' + CHEV;
@@ -361,7 +361,7 @@
 /* ---------- মূল অ্যাপ লজিক (Firebase Auth, Firestore, UI) ---------- */
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, updatePassword, EmailAuthProvider, reauthenticateWithCredential, linkWithCredential, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocFromServer, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, getDocFromServer, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch, where, getDocs, limit, startAfter, startAt, increment, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
 
         // ========== ANTI-ZOOM ==========
@@ -385,20 +385,16 @@
         try {
             if (firebaseConfig.apiKey && firebaseConfig.apiKey !== 'YOUR_API_KEY') {
                 app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
+                try {
+                    // Offline cache (replaces deprecated enableIndexedDbPersistence)
+                    db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+                } catch (cacheErr) {
+                    console.warn('Offline setup:', cacheErr);
+                    db = getFirestore(app);
+                }
                 auth = getAuth(app);
                 firebaseReady = true;
                 console.log('Firebase connected');
-
-                enableIndexedDbPersistence(db).catch((err) => {
-                    if (err.code === 'failed-precondition') {
-                        console.warn('একাধিক tab — offline cache কাজ করবে না');
-                    } else if (err.code === 'unimplemented') {
-                        console.warn('এই browser offline সাপোর্ট দেয় না');
-                    } else {
-                        console.warn('Offline setup:', err);
-                    }
-                });
             } else {
                 document.getElementById('firebaseWarning').classList.remove('hidden');
             }
@@ -691,7 +687,7 @@
             // Cancel subscription button area
             let cancelHtml = '';
             if (isUserPremium) {
-                cancelHtml = `<div class="col-span-full mt-4 pt-4 border-t border-emerald-900/30 text-center">
+                cancelHtml = `<div class="col-span-full mt-4 pt-4 border-t border-violet-900/30 text-center">
                     <button type="button" onclick="requestSubscriptionCancel()" class="text-sm font-bold text-rose-400 hover:text-rose-300 underline underline-offset-2 transition">
                         আপনার সাবস্ক্রিপশন বাতিল করুন
                     </button>
@@ -751,7 +747,7 @@
                     <div class="package-duration">${esc(name)}</div>
                     <div class="package-price">৳${price}</div>
                     <p class="text-[10px] text-slate-400 mt-1">${days} দিন</p>
-                    <button type="button" class="mt-3 w-full bg-emerald-900/50 text-emerald-300 text-xs font-bold py-2 rounded-lg border border-emerald-700/50">Get Subscription</button>
+                    <button type="button" class="mt-3 w-full bg-violet-900/50 text-violet-300 text-xs font-bold py-2 rounded-lg border border-violet-700/50">Get Subscription</button>
                 </div>`;
             }).join('') + cancelHtml;
             if (window.lucide) try { refreshIcons(); } catch (e) {}
@@ -950,7 +946,7 @@
         document.addEventListener('keydown', _aeUnlockAudio, true);
 
         let toastTimer = null;
-        window.showToast = (msg, iconName = 'circle-check', colorClass = 'text-emerald-400') => {
+        window.showToast = (msg, iconName = 'circle-check', colorClass = 'text-violet-400') => {
             const toast = document.getElementById('toast');
             if (!toast) return;
             if (toastTimer) clearTimeout(toastTimer);
@@ -989,7 +985,7 @@
             localStorage.setItem('amar-elaka-theme', theme);
             applyTheme();
             saveThemeToAccount(theme);
-            showToast(theme === 'light' ? 'লাইট মোড চালু হয়েছে' : (theme === 'dark' ? 'ডার্ক মোড চালু হয়েছে' : 'সিস্টেম থিম চালু হয়েছে'), 'palette', 'text-emerald-400');
+            showToast(theme === 'light' ? 'লাইট মোড চালু হয়েছে' : (theme === 'dark' ? 'ডার্ক মোড চালু হয়েছে' : 'সিস্টেম থিম চালু হয়েছে'), 'palette', 'text-violet-400');
         };
 
         function applyTheme() {
@@ -1329,7 +1325,7 @@
                 if (!btn) return;
                 if (l === currentLang) {
                     btn.className = 'lang-btn flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg text-xs font-bold active';
-                    btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
+                    btn.style.background = 'linear-gradient(135deg,#7c3aed,#8b5cf6)';
                     btn.style.color = '#fff';
                 } else {
                     btn.className = 'lang-btn flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
@@ -1848,7 +1844,7 @@
             currentLang = lang;
             try { localStorage.setItem('amar-elaka-lang', lang); } catch (e) {}
             applyLanguage();
-            showToast(lang === 'bn' ? t('toast.langBn') : t('toast.langEn'), 'languages', 'text-emerald-400');
+            showToast(lang === 'bn' ? t('toast.langBn') : t('toast.langEn'), 'languages', 'text-violet-400');
         };
         // apply saved language early
         applyLanguage();
@@ -2059,13 +2055,13 @@
                     text: 'সকল সেবা এখন হাতের মুঠোয়। স্থানীয় পরিষেবা, জরুরি হেল্পলাইন এবং রক্তদাতা খুঁজুন একই প্ল্যাটফর্মে।',
                     url: window.location.origin
                 }).then(() => {
-                    showToast('শেয়ার সফল হয়েছে', 'check-circle', 'text-emerald-400');
+                    showToast('শেয়ার সফল হয়েছে', 'check-circle', 'text-violet-400');
                 }).catch((err) => {
                     console.log('Share failed:', err);
                 });
             } else {
                 navigator.clipboard.writeText(window.location.origin).then(() => {
-                    showToast('লিংক কপি হয়েছে, বন্ধুদের সাথে শেয়ার করুন!', 'copy', 'text-emerald-400');
+                    showToast('লিংক কপি হয়েছে, বন্ধুদের সাথে শেয়ার করুন!', 'copy', 'text-violet-400');
                 }).catch(() => {
                     showToast('শেয়ার করা যায়নি, লিংকটি ম্যানুয়ালি কপি করুন।', 'alert-circle', 'text-rose-400');
                 });
@@ -2085,7 +2081,7 @@
                     const ok = document.execCommand('copy'); field.remove();
                     if (!ok) throw new Error('Clipboard copy failed');
                 }
-                showToast('শেয়ার লিংক কপি হয়েছে', 'copy', 'text-emerald-400');
+                showToast('শেয়ার লিংক কপি হয়েছে', 'copy', 'text-violet-400');
                 return true;
             } catch (err) {
                 console.warn('Copy share URL failed:', err);
@@ -2110,7 +2106,7 @@
             if (navigator.share) {
                 try {
                     await navigator.share({ title, text, url: url.toString() });
-                    showToast('শেয়ার সফল হয়েছে', 'check-circle', 'text-emerald-400');
+                    showToast('শেয়ার সফল হয়েছে', 'check-circle', 'text-violet-400');
                 } catch (err) {
                     if (err?.name !== 'AbortError') await copyShareUrl(url.toString());
                 }
@@ -2125,7 +2121,7 @@
             const title = service?.title || 'আমার এলাকার সেবা';
             const payload = { title, text: `${title} — আমার এলাকা`, url: url.toString() };
             if (navigator.share) {
-                try { await navigator.share(payload); showToast('সেবা শেয়ার সফল হয়েছে', 'check-circle', 'text-emerald-400'); }
+                try { await navigator.share(payload); showToast('সেবা শেয়ার সফল হয়েছে', 'check-circle', 'text-violet-400'); }
                 catch (err) { if (err?.name !== 'AbortError') await copyShareUrl(url.toString()); }
             } else await copyShareUrl(url.toString());
         };
@@ -2315,7 +2311,7 @@
             if (summary) summary.textContent = unread > 0 ? `${unread}টি নতুন` : 'সব পড়া হয়েছে';
             if (!items.length) {
                 list.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-center px-4">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-600/30 to-emerald-600/20 border border-emerald-500/40 flex items-center justify-center mb-3"><i data-lucide="bell-off" class="w-8 h-8 text-emerald-400"></i></div>
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-violet-600/30 to-violet-600/20 border border-violet-500/40 flex items-center justify-center mb-3"><i data-lucide="bell-off" class="w-8 h-8 text-violet-400"></i></div>
                     <h4 class="text-sm font-bold text-slate-200 mb-1">কোনো নোটিফিকেশন নেই</h4>
                     <p class="text-xs text-slate-400 max-w-xs">নতুন আপডেট বা ঘোষণা এলে এখানে দেখা যাবে।</p>
                 </div>`;
@@ -2331,7 +2327,7 @@
                     <div class="min-w-0 flex-1">
                         <div class="flex items-start justify-between gap-2">
                             <h4 data-user-content="true" class="text-xs font-bold text-slate-100 leading-snug">${esc(n.title)}</h4>
-                            ${!n.read ? '<span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 mt-1.5"></span>' : ''}
+                            ${!n.read ? '<span class="w-2 h-2 rounded-full bg-violet-500 shrink-0 mt-1.5"></span>' : ''}
                         </div>
                         ${n.body ? `<p data-user-content="true" class="mt-0.5 text-[11px] text-slate-400 leading-relaxed line-clamp-2">${esc(n.body)}</p>` : ''}
                         <span class="text-[10px] text-slate-500 mt-1 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${esc(formatNotifTime(n.time))}</span>
@@ -2358,8 +2354,8 @@
             const list = getNotifStore();
             let changed = false;
             list.forEach(n => { if (!n.read) { n.read = true; changed = true; } });
-            if (changed) { saveNotifStore(list); renderNotifications(); updateNotifBadge(); showToast('সব নোটিফিকেশন পড়া হিসেবে চিহ্নিত হয়েছে', 'check-check', 'text-emerald-400'); }
-            else showToast('সব নোটিফিকেশন আগেই পড়া হয়েছে', 'info', 'text-emerald-400');
+            if (changed) { saveNotifStore(list); renderNotifications(); updateNotifBadge(); showToast('সব নোটিফিকেশন পড়া হিসেবে চিহ্নিত হয়েছে', 'check-check', 'text-violet-400'); }
+            else showToast('সব নোটিফিকেশন আগেই পড়া হয়েছে', 'info', 'text-violet-400');
         };
         function trackCollectionUpdates(collectionName, items, callback) {
             const key = `amar-track-${collectionName}-${currentUid()}`;
@@ -2600,7 +2596,7 @@
         }
         window.addEventListener('online', () => {
             updateOnlineUI();
-            showToast('ইন্টারনেট ফিরেছে — sync হচ্ছে', 'wifi', 'text-emerald-400');
+            showToast('ইন্টারনেট ফিরেছে — sync হচ্ছে', 'wifi', 'text-violet-400');
             setTimeout(() => {
                 if (currentTab === 'chat') markMessagesAsRead();
                 updateUnreadBadge();
@@ -2668,7 +2664,7 @@
                             image,
                             clickAction
                         });
-                        showToast(`${title}: ${body}`, 'bell', 'text-emerald-400');
+                        showToast(`${title}: ${body}`, 'bell', 'text-violet-400');
                     });
                 } catch (msgErr) {
                     console.log('onMessage setup:', msgErr);
@@ -2720,12 +2716,12 @@
                     });
                     if (token) {
                         await setDoc(doc(db, 'users', currentUser.uid), { fcmToken: token }, { merge: true });
-                        try { showToast('নোটিফিকেশন সফলভাবে চালু হয়েছে!', 'bell', 'text-emerald-400'); } catch (e) {}
+                        try { showToast('নোটিফিকেশন সফলভাবে চালু হয়েছে!', 'bell', 'text-violet-400'); } catch (e) {}
                     } else {
                         try { showToast('FCM টোকেন পাওয়া যায়নি', 'circle-x', 'text-amber-400'); } catch (e) {}
                     }
                 } else {
-                    try { showToast('নোটিফিকেশন অনুমতি দেওয়া হয়েছে', 'bell', 'text-emerald-400'); } catch (e) {}
+                    try { showToast('নোটিফিকেশন অনুমতি দেওয়া হয়েছে', 'bell', 'text-violet-400'); } catch (e) {}
                 }
                 try {
                     onMessage(messaging, (payload) => {
@@ -2745,7 +2741,7 @@
                             image,
                             clickAction
                         });
-                        showToast(`${title}: ${body}`, 'bell', 'text-emerald-400');
+                        showToast(`${title}: ${body}`, 'bell', 'text-violet-400');
                     });
                 } catch (msgErr) {
                     console.log('onMessage setup:', msgErr);
@@ -2881,7 +2877,7 @@
                     cancelRequestedAt: serverTimestamp()
                 }, { merge: true });
                 if (userProfile) userProfile.cancelRequestStatus = 'pending';
-                showToast('বাতিলের অনুরোধ পাঠানো হয়েছে। অ্যাডমিন অনুমোদনের অপেক্ষা করুন।', 'check-circle', 'text-emerald-400');
+                showToast('বাতিলের অনুরোধ পাঠানো হয়েছে। অ্যাডমিন অনুমোদনের অপেক্ষা করুন।', 'check-circle', 'text-violet-400');
             } catch (err) {
                 console.error(err);
                 showToast('অনুরোধ পাঠানো যায়নি: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
@@ -2924,7 +2920,7 @@
         window.copyPaymentNumber = () => {
             if (isForcedProfileMode) return;
             const num = getPaymentNumberForMethod(selectedPaymentMethod);
-            navigator.clipboard.writeText(num).then(() => showToast('Number copied!', 'copy', 'text-emerald-400')).catch(() => showToast('Copy failed', 'alert-circle', 'text-rose-400'));
+            navigator.clipboard.writeText(num).then(() => showToast('Number copied!', 'copy', 'text-violet-400')).catch(() => showToast('Copy failed', 'alert-circle', 'text-rose-400'));
         };
         window.submitSubscriptionRequest = async (e) => {
             e.preventDefault();
@@ -2954,7 +2950,7 @@
                 userProfile.pendingPremiumPlan = selectedPackage.name;
                 updateCurrentPlanDisplay();
                 setRateLimit('subscription');
-                showToast('Request sent! Wait for admin approval.', 'check-circle', 'text-emerald-400');
+                showToast('Request sent! Wait for admin approval.', 'check-circle', 'text-violet-400');
                 switchTab('profile');
                 document.getElementById('subTrxId').value = '';
             } catch (err) {
@@ -2986,13 +2982,13 @@
                     const dl = Math.ceil((et - now) / 86400000);
                     planName = userProfile.premiumPlan || 'Premium';
                     subtext = `Expires ${new Date(et).toLocaleDateString('en-GB')} — ${dl} day${dl !== 1 ? 's' : ''} left`;
-                    badgeHTML = '<span class="px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Active</span>';
+                    badgeHTML = '<span class="px-3 py-1.5 rounded-full bg-violet-500/15 border border-violet-500/40 text-violet-300 text-xs font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Active</span>';
                     const td = userProfile.premiumTotalDays || PLAN_DAYS_MAP[planName] || 30;
                     const du = Math.max(0, td - dl);
                     const pct = Math.max(0, Math.min(100, (dl / td) * 100));
                     progressHTML = `<div class="flex items-center justify-between text-[10px] text-slate-400 mb-1"><span>Progress</span><span>${du}/${td} days used</span></div>
-                        <div class="w-full bg-emerald-950/80 rounded-full h-2 overflow-hidden border border-emerald-900/60"><div class="h-full bg-gradient-to-r from-amber-400 via-orange-400 to-orange-500 transition-all" style="width:${pct}%"></div></div>
-                        <p class="text-[10px] text-emerald-300 mt-2 flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> Purchase any package below to extend.</p>`;
+                        <div class="w-full bg-violet-950/80 rounded-full h-2 overflow-hidden border border-violet-900/60"><div class="h-full bg-gradient-to-r from-amber-400 via-orange-400 to-orange-500 transition-all" style="width:${pct}%"></div></div>
+                        <p class="text-[10px] text-violet-300 mt-2 flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> Purchase any package below to extend.</p>`;
                     profAction = 'Extend'; profSub = `${dl} day${dl !== 1 ? 's' : ''} remaining`;
                 } else if (isPending) {
                     status = 'pending';
@@ -3088,7 +3084,7 @@
             if (btn) btn.disabled = true;
             try {
                 await sendPasswordResetEmail(auth, email);
-                showToast('যদি এই ইমেইলে পাসওয়ার্ড লগইন চালু থাকে, তাহলে পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে। ইনবক্স ও স্প্যাম ফোল্ডার দেখুন।', 'mail-check', 'text-emerald-400');
+                showToast('যদি এই ইমেইলে পাসওয়ার্ড লগইন চালু থাকে, তাহলে পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে। ইনবক্স ও স্প্যাম ফোল্ডার দেখুন।', 'mail-check', 'text-violet-400');
             } catch (err) {
                 console.warn('Password reset request:', err?.code || err?.message);
                 if (err.code === 'auth/invalid-email') showToast('সঠিক ইমেইল ঠিকানা লিখুন', 'circle-x', 'text-rose-400');
@@ -3108,7 +3104,7 @@
                 // Popup keeps the user on this site; do not switch to signInWithRedirect here.
                 const result = await signInWithPopup(auth, provider);
                 await checkAndCreateUser(result.user);
-                showToast('গুগল লগইন সফল!', 'check-circle', 'text-emerald-400');
+                showToast('গুগল লগইন সফল!', 'check-circle', 'text-violet-400');
             } catch (err) {
                 if (err.code === 'auth/popup-closed-by-user') showToast('লগইন বাতিল', 'x-circle', 'text-amber-400');
                 else if (err.code === 'auth/popup-blocked') showToast('পপআপ ব্লক! অনুমতি দিন।', 'alert-circle', 'text-rose-400');
@@ -3127,7 +3123,7 @@
                 const provider = new GithubAuthProvider();
                 const result = await signInWithPopup(auth, provider);
                 await checkAndCreateUser(result.user);
-                showToast('গিটহাব লগইন সফল!', 'check-circle', 'text-emerald-400');
+                showToast('গিটহাব লগইন সফল!', 'check-circle', 'text-violet-400');
             } catch (err) {
                 if (err.code === 'auth/popup-closed-by-user') showToast('লগইন বাতিল', 'x-circle', 'text-amber-400');
                 else if (err.code === 'auth/popup-blocked') showToast('পপআপ ব্লক! অনুমতি দিন।', 'alert-circle', 'text-rose-400');
@@ -3170,7 +3166,7 @@
                 userProfile = profile;
                 updateProfileUI();
                 document.getElementById('registerForm').reset();
-                showToast('রেজিস্ট্রেশন সফল!', 'check-circle', 'text-emerald-400');
+                showToast('রেজিস্ট্রেশন সফল!', 'check-circle', 'text-violet-400');
             } catch (err) {
                 let m = err.message;
                 if (err.code === 'auth/email-already-in-use') m = 'ইমেইল ইতিমধ্যে নিবন্ধিত';
@@ -3210,7 +3206,7 @@
                 showGuestApp();
                 try { window.scrollTo(0, 0); } catch (e) {}
                 const toastMsg = (typeof t === 'function' && currentLang === 'en') ? 'Logged out' : 'লগআউট হয়েছে';
-                showToast(toastMsg, 'circle-check', 'text-emerald-400');
+                showToast(toastMsg, 'circle-check', 'text-violet-400');
                 // Fire analytics + Firebase signOut in background (do not block UI)
                 const uid = auth?.currentUser?.uid;
                 if (uid) {
@@ -3457,7 +3453,7 @@
                     if (passwordSetupSection) passwordSetupSection.classList.add('hidden');
                     document.getElementById('googleNewPassword').value = '';
                     document.getElementById('googleConfirmPassword').value = '';
-                    showToast('এই অ্যাকাউন্টে ইমেইল ও পাসওয়ার্ড লগইনও চালু হয়েছে।', 'check-circle', 'text-emerald-400');
+                    showToast('এই অ্যাকাউন্টে ইমেইল ও পাসওয়ার্ড লগইনও চালু হয়েছে।', 'check-circle', 'text-violet-400');
                 }
                 userProfile = { ...userProfile, ...payload };
                 if (startLock) userProfile.profileEditedAt = { seconds: Math.floor(serverNow() / 1000) };
@@ -3475,12 +3471,12 @@
                         
                         closeEditProfileModal();
                         switchTab('services');
-                        showToast('অভিনন্দন! আপনার প্রোফাইল সম্পূর্ণ হয়েছে।', 'sparkles', 'text-emerald-400');
+                        showToast('অভিনন্দন! আপনার প্রোফাইল সম্পূর্ণ হয়েছে।', 'sparkles', 'text-violet-400');
                     } else {
                         showToast('মোবাইল, জেলা ও উপজেলা সঠিকভাবে পূরণ করুন!', 'circle-x', 'text-rose-400');
                     }
                 } else {
-                    showToast(startLock ? 'প্রোফাইল আপডেট হয়েছে! পরবর্তী ৩ দিন নাম, মোবাইল ও ঠিকানা পরিবর্তন করা যাবে না।' : 'প্রোফাইল আপডেট হয়েছে!', 'circle-check', 'text-emerald-400');
+                    showToast(startLock ? 'প্রোফাইল আপডেট হয়েছে! পরবর্তী ৩ দিন নাম, মোবাইল ও ঠিকানা পরিবর্তন করা যাবে না।' : 'প্রোফাইল আপডেট হয়েছে!', 'circle-check', 'text-violet-400');
                     closeEditProfileModal();
                 }
                 
@@ -3531,12 +3527,12 @@
             }
 
             document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => { el.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-emerald-950/60 transition flex items-center gap-2 border border-transparent'; });
+            document.querySelectorAll('.tab-btn').forEach(el => { el.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-violet-950/60 transition flex items-center gap-2 border border-transparent'; });
             document.querySelectorAll('.bottom-nav-btn').forEach(el => el.classList.remove('active'));
             const view = document.getElementById(`view-${tabName}`);
             if (view) view.classList.remove('hidden');
             const tab = document.getElementById(`tab-${tabName}`);
-            if (tab) tab.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-600 text-white shadow-lg shadow-emerald-600/40';
+            if (tab) tab.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-gradient-to-r from-violet-600 to-violet-600 text-white shadow-lg shadow-violet-600/40';
             const bnav = document.getElementById(`bnav-${tabName}`);
             if (bnav) bnav.classList.add('active');
             // Header messenger/chat icon highlight
@@ -3718,9 +3714,9 @@
                 const iconName = cat.isUpazila ? 'map-pin' : faToLucide(cat.icon);
                 const isActive = cat.isUpazila ? myUpazilaFilterOn : (activeCategory === cat.id);
                 const activeCls = cat.isUpazila
-                    ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white border-teal-400 shadow-lg shadow-emerald-600/40'
-                    : 'bg-gradient-to-r from-emerald-600 to-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/40';
-                const idleCls = 'bg-[#10281c] text-slate-300 border-emerald-900/50 hover:border-emerald-600/60';
+                    ? 'bg-gradient-to-r from-violet-600 to-violet-600 text-white border-violet-400 shadow-lg shadow-violet-600/40'
+                    : 'bg-gradient-to-r from-violet-600 to-violet-600 text-white border-violet-500 shadow-lg shadow-violet-600/40';
+                const idleCls = 'bg-[#181127] text-slate-300 border-violet-900/50 hover:border-violet-600/60';
                 return `<button type="button" onclick="filterCategory('${esc(cat.id)}')" class="px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border flex items-center gap-1 ${isActive ? activeCls : idleCls}" aria-pressed="${isActive ? 'true' : 'false'}">
                     <i data-lucide="${esc(iconName)}" class="w-3.5 h-3.5"></i><span>${esc(cat.name)}</span>
                 </button>`;
@@ -3748,7 +3744,7 @@
             const raw = String(item.priority || item.importance || 'সাধারণ').toLowerCase();
             if (['urgent', 'জরুরি'].includes(raw)) return { label: 'জরুরি', style: 'bg-rose-500/15 text-rose-300 border-rose-500/40', icon: 'triangle-alert', card: 'border-rose-500/40' };
             if (['important', 'গুরুত্বপূর্ণ'].includes(raw)) return { label: 'গুরুত্বপূর্ণ', style: 'bg-amber-500/15 text-amber-300 border-amber-500/40', icon: 'circle-alert', card: 'border-amber-500/35' };
-            return { label: 'সাধারণ', style: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40', icon: 'megaphone', card: 'border-emerald-500/30' };
+            return { label: 'সাধারণ', style: 'bg-violet-500/15 text-violet-300 border-violet-500/40', icon: 'megaphone', card: 'border-violet-500/30' };
         }
         function buildNoticeCardHTML(item) {
             const p = noticePriority(item);
@@ -3756,7 +3752,7 @@
             const body = esc(item.description || item.details || item.message || 'বিস্তারিত দেওয়া হয়নি।');
             const date = noticeDate(item.publishAt || item.startsAt || item.createdAt);
             const dl = date ? date.toLocaleString('bn-BD', { dateStyle: 'medium', timeStyle: 'short' }) : '';
-            return `<article onclick="openNoticeModal('${esc(item.id)}')" class="notice-card rounded-xl border ${p.card} bg-gradient-to-br from-[#10281c] to-[#07140e] p-3 shadow-md shadow-black/20 cursor-pointer hover:border-emerald-500 transition-colors w-full">
+            return `<article onclick="openNoticeModal('${esc(item.id)}')" class="notice-card rounded-xl border ${p.card} bg-gradient-to-br from-[#181127] to-[#0b0714] p-3 shadow-md shadow-black/20 cursor-pointer hover:border-violet-500 transition-colors w-full">
                 <div class="flex items-center gap-3">
                     <span class="w-8 h-8 rounded-lg ${p.style} border flex items-center justify-center shrink-0"><i data-lucide="${p.icon}" class="w-3.5 h-3.5"></i></span>
                     <div class="min-w-0 flex-1">
@@ -3837,7 +3833,7 @@
             const safe = /^https:\/\//i.test(img) ? img : '';
             content.innerHTML = `
                 <div class="mb-3"><span class="inline-flex text-[11px] px-3 py-1 rounded-full border ${p.style}">${p.label}</span></div>
-                ${safe ? `<img src="${esc(safe)}" alt="নোটিশ" loading="lazy" class="w-full max-h-64 object-cover rounded-2xl mb-3 border border-emerald-900/50">` : ''}
+                ${safe ? `<img src="${esc(safe)}" alt="নোটিশ" loading="lazy" class="w-full max-h-64 object-cover rounded-2xl mb-3 border border-violet-900/50">` : ''}
                 <p class="whitespace-pre-wrap leading-relaxed text-slate-200 text-sm">${esc(item.description || item.details || item.message || 'বিস্তারিত দেওয়া হয়নি।')}</p>
                 ${date ? `<p class="mt-3 text-[11px] text-slate-500 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i>প্রকাশ: ${esc(date.toLocaleString('bn-BD'))}</p>` : ''}
                 ${expiry ? `<p class="mt-1 text-[11px] text-slate-500 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>মেয়াদ: ${esc(expiry.toLocaleString('bn-BD'))}</p>` : ''}`;
@@ -3861,11 +3857,11 @@
             if (content.classList.contains('hidden')) {
                 content.classList.remove('hidden');
                 if(icon) icon.style.transform = 'rotate(180deg)';
-                btn.classList.add('bg-emerald-900/10');
+                btn.classList.add('bg-violet-900/10');
             } else {
                 content.classList.add('hidden');
                 if(icon) icon.style.transform = 'rotate(0deg)';
-                btn.classList.remove('bg-emerald-900/10');
+                btn.classList.remove('bg-violet-900/10');
             }
         };
 
@@ -3907,7 +3903,7 @@
             const countEl = document.getElementById('favCountText');
             if (!grid) return;
             if (!favoritesLoaded) {
-                grid.innerHTML = `<div class="col-span-full text-center py-10"><i data-lucide="loader-circle" class="w-8 h-8 animate-spin mx-auto text-emerald-500"></i></div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-10"><i data-lucide="loader-circle" class="w-8 h-8 animate-spin mx-auto text-violet-500"></i></div>`;
                 if (countEl) countEl.textContent = 'লোড হচ্ছে...';
                 refreshIcons();
                 return;
@@ -3925,7 +3921,7 @@
             });
             if (countEl) countEl.textContent = `${filtered.length} টি সংরক্ষিত সেবা`;
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#10281c] rounded-2xl border border-dashed border-rose-900/50 p-6 space-y-2">
+                grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#181127] rounded-2xl border border-dashed border-rose-900/50 p-6 space-y-2">
                     <div class="w-16 h-16 bg-rose-950/60 text-rose-400 rounded-full flex items-center justify-center mx-auto border border-rose-800/60"><i data-lucide="heart-off" class="w-7 h-7"></i></div>
                     <h3 class="text-sm font-bold text-slate-200">কোনো সংরক্ষিত সেবা নেই</h3>
                     <p class="text-xs text-slate-400 max-w-sm mx-auto">আপনি এখনো কোনো সেবা "আমার পছন্দ" তালিকায় যুক্ত করেননি। সেবার উপরে থাকা হার্ট আইকনে ক্লিক করে সেভ করুন।</p>
@@ -4261,7 +4257,7 @@
                 if (!servicesFirstLoadDone) {
                     const grid = document.getElementById('servicesGrid');
                     if (grid) {
-                        grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#10281c] rounded-2xl border border-dashed border-rose-800/50 p-6">
+                        grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#181127] rounded-2xl border border-dashed border-rose-800/50 p-6">
                             <i data-lucide="wifi-off" class="w-10 h-10 text-rose-400 mx-auto mb-2"></i>
                             <p class="text-sm font-bold text-slate-200">সেবা লোড ব্যর্থ</p>
                             <p class="text-xs text-slate-400 mt-1">ইন্টারনেট বা Firestore rules চেক করুন।</p>
@@ -4285,9 +4281,9 @@
             instagram: { label: 'Instagram', icon: 'camera',       color: '#d946ef' },
             telegram:  { label: 'Telegram',  icon: 'send',         color: '#0ea5e9' },
             shop:      { label: 'দোকান',     icon: 'store',        color: '#f97316' },
-            product:   { label: 'পণ্য',      icon: 'shopping-bag', color: '#22c55e' },
+            product:   { label: 'পণ্য',      icon: 'shopping-bag', color: '#8b5cf6' },
             car:       { label: 'গাড়ি',     icon: 'car',          color: '#6366f1' },
-            service:   { label: 'সার্ভিস',    icon: 'wrench',       color: '#14b8a6' },
+            service:   { label: 'সার্ভিস',    icon: 'wrench',       color: '#8b5cf6' },
             other:     { label: 'অন্যান্য',   icon: 'sparkles',     color: '#94a3b8' }
         };
         const PROMO_EXTRA_FIELDS = {
@@ -4344,7 +4340,7 @@
         function renderPromoCtaList() {
             if (isForcedProfileMode) return;
             const box = document.getElementById('promoCtaList'); if (!box) return;
-            box.innerHTML = Object.entries(PROMO_CTA_OPTIONS).map(([k, o]) => `<div class="rounded-xl border border-amber-900/40 bg-[#07140e] p-2.5">
+            box.innerHTML = Object.entries(PROMO_CTA_OPTIONS).map(([k, o]) => `<div class="rounded-xl border border-amber-900/40 bg-[#0b0714] p-2.5">
                 <label class="flex items-center gap-2.5 cursor-pointer text-sm font-semibold text-slate-200"><input type="checkbox" class="accent-amber-500 w-4 h-4" id="pcta_chk_${k}" onchange="togglePromoCta('${k}', this.checked)"> ${o.ic ? '<svg class="ic" aria-hidden="true"><use href="#i-' + o.ic + '"/></svg> ' : ''}${o.label}</label>
                 <div id="pcta_wrap_${k}" class="hidden mt-2 space-y-2">${o.kind === 'custom'
                     ? `<input id="pcta_custom_label" class="promo-input" maxlength="20" placeholder="বাটনের লেখা (যেমন: অফার দেখুন)"><input id="pcta_custom_url" class="promo-input" placeholder="https://...">`
@@ -4575,7 +4571,7 @@
                     status: 'pending', createdAt: serverTimestamp(), reviewedAt: null, expiresAt: null, rejectionReason: null
                 });
                 setRateLimit('promotion');
-                showToast('বিজ্ঞাপন জমা হয়েছে! অ্যাডমিন অনুমোদনের অপেক্ষায়।', 'circle-check', 'text-emerald-400');
+                showToast('বিজ্ঞাপন জমা হয়েছে! অ্যাডমিন অনুমোদনের অপেক্ষায়।', 'circle-check', 'text-violet-400');
                 closePromotionFormModal();
             } catch (err) {
                 showToast('জমা ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
@@ -4678,7 +4674,7 @@
                 <div>
                     ${promoHasVideo ? aeVideoThumbHTML(promoVideoUrl, promo.title, '<span class="promo-ad-badge">AD</span><span class="promo-sponsored-badge"><svg class="ic ic-fill" aria-hidden="true"><use href="#i-star"/></svg> স্পন্সরড</span>') : `<div class="h-40 bg-[#0f0a03] overflow-hidden relative">
                         ${img ? `<img src="${esc(img)}" alt="${esc(promo.title || '')}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-900/40 to-orange-900/20"><i data-lucide="megaphone" class="w-10 h-10 text-amber-400/60"></i></div>`}
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0d1f17]/85 via-transparent to-transparent pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#130d1f]/85 via-transparent to-transparent pointer-events-none"></div>
                         <span class="promo-ad-badge">AD</span>
                         <span class="promo-sponsored-badge"><svg class="ic ic-fill" aria-hidden="true"><use href="#i-star"/></svg> স্পন্সরড</span>
                     </div>`}
@@ -4786,21 +4782,21 @@
             const isFav = userFavorites.has(item.id);
             return `<div class="service-card" onclick="openServiceDetail('${id}')" data-service-id="${id}">
                 <div>
-                    ${svcHasVideo ? aeVideoThumbHTML(svcVideoUrl, item.title || '') : `<div class="h-40 bg-[#07140e] overflow-hidden relative">
+                    ${svcHasVideo ? aeVideoThumbHTML(svcVideoUrl, item.title || '') : `<div class="h-40 bg-[#0b0714] overflow-hidden relative">
                         ${safeImage
                             ? `<img src="${esc(safeImage)}" alt="${title}" loading="lazy" decoding="async" class="w-full h-full object-cover">`
-                            : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-900/50 to-emerald-900/30"><i data-lucide="briefcase" class="w-10 h-10 text-emerald-400/60"></i></div>`
+                            : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-violet-900/50 to-violet-900/30"><i data-lucide="briefcase" class="w-10 h-10 text-violet-400/60"></i></div>`
                         }
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#10281c]/85 via-transparent to-transparent pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#181127]/85 via-transparent to-transparent pointer-events-none"></div>
                         <!-- Favorite action is intentionally kept only in the detail modal footer to avoid duplicate heart controls. -->
                     </div>`}
                     <div class="p-4">
                         <div class="flex items-center flex-wrap gap-2 mb-1.5">
                             <h4 data-user-content="true" class="font-bold text-slate-100 text-sm sm:text-base leading-snug flex-1 min-w-0">${title}</h4>
                             
-                            ${isAdminPost ? `<span class="bg-emerald-600/90 text-white px-2 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow-sm border border-emerald-500/50 shrink-0">এডমিন <i data-lucide="shield-check" class="w-2.5 h-2.5 text-white"></i></span>` : ''}
+                            ${isAdminPost ? `<span class="bg-violet-600/90 text-white px-2 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow-sm border border-violet-500/50 shrink-0">এডমিন <i data-lucide="shield-check" class="w-2.5 h-2.5 text-white"></i></span>` : ''}
                         </div>
-                        <p class="text-[11px] text-emerald-300 font-bold mb-1.5 flex items-center gap-1 truncate">
+                        <p class="text-[11px] text-violet-300 font-bold mb-1.5 flex items-center gap-1 truncate">
                             <i data-lucide="user" class="w-3 h-3 shrink-0"></i> সেবাদাতা: <span data-user-content="true">${providerName}</span>
                         </p>
                         <p class="text-[11px] text-slate-400 mb-2 flex items-center gap-1 truncate">
@@ -4810,11 +4806,11 @@
                     </div>
                 </div>
                 <div class="p-3 pt-0 flex items-center gap-1.5">
-                    ${website ? `<button type="button" data-url="${esc(website)}" onclick="event.stopPropagation(); openExternalUrl(this)" class="action-btn w-9 h-9 shrink-0 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 rounded-xl flex items-center justify-center" title="ওয়েবসাইট"><i data-lucide="globe" class="w-4 h-4"></i></button>` : ''}
+                    ${website ? `<button type="button" data-url="${esc(website)}" onclick="event.stopPropagation(); openExternalUrl(this)" class="action-btn w-9 h-9 shrink-0 bg-violet-950/60 hover:bg-violet-900/60 border border-violet-500/40 text-violet-300 rounded-xl flex items-center justify-center" title="ওয়েবসাইট"><i data-lucide="globe" class="w-4 h-4"></i></button>` : ''}
                     ${whatsapp ? `<button type="button" data-url="https://wa.me/${whatsapp}" onclick="event.stopPropagation(); openExternalUrl(this)" class="action-btn w-9 h-9 shrink-0 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 text-[#25D366] rounded-xl flex items-center justify-center" title="WhatsApp"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></button>` : ''}
                     ${facebook ? `<button type="button" data-url="${esc(facebook)}" onclick="event.stopPropagation(); openExternalUrl(this)" class="action-btn w-9 h-9 shrink-0 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 border border-[#1877F2]/30 text-[#1877F2] rounded-xl flex items-center justify-center" title="Facebook"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></button>` : ''}
-                    <button type="button" onclick="event.stopPropagation(); shareService('${id}')" class="action-btn w-9 h-9 shrink-0 bg-emerald-600/15 hover:bg-emerald-600/25 border border-emerald-400/40 text-emerald-200 rounded-xl flex items-center justify-center" title="সেবা শেয়ার করুন" aria-label="সেবা শেয়ার করুন"><i data-lucide="share-2" class="w-4 h-4"></i></button>
-                    <a href="${currentUser ? `tel:${esc(phoneRaw)}` : '#guest-login'}" data-service-name="Service: ${title}" onclick="event.stopPropagation(); if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action flex-1 h-9 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-green-600/30">
+                    <button type="button" onclick="event.stopPropagation(); shareService('${id}')" class="action-btn w-9 h-9 shrink-0 bg-violet-600/15 hover:bg-violet-600/25 border border-violet-400/40 text-violet-200 rounded-xl flex items-center justify-center" title="সেবা শেয়ার করুন" aria-label="সেবা শেয়ার করুন"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+                    <a href="${currentUser ? `tel:${esc(phoneRaw)}` : '#guest-login'}" data-service-name="Service: ${title}" onclick="event.stopPropagation(); if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action flex-1 h-9 bg-violet-600 hover:bg-violet-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-violet-600/30">
                         <i data-lucide="phone" class="w-3.5 h-3.5"></i> কল করুন
                     </a>
                 </div>
@@ -4839,11 +4835,11 @@
                     count.textContent = `${filtered.length} টি মিলেছে`;
                 } else if (myUpazilaFilterOn) {
                     const upaName = (userProfile && userProfile.upazila) ? String(userProfile.upazila).trim() : 'আপনার এলাকা';
-                    count.innerHTML = `<span class="text-emerald-300 font-semibold">${filtered.length} টি সেবা · ${esc(upaName)}</span>`;
+                    count.innerHTML = `<span class="text-violet-300 font-semibold">${filtered.length} টি সেবা · ${esc(upaName)}</span>`;
                 } else {
                     count.innerHTML = `<span class="inline-flex items-center gap-1.5">
                         <span class="infinity-symbol">∞</span>
-                        <span class="text-emerald-300 font-semibold">টি সেবা চলছে</span>
+                        <span class="text-violet-300 font-semibold">টি সেবা চলছে</span>
                     </span>`;
                 }
             }
@@ -4857,11 +4853,11 @@
             // Empty state when upazila location filter is on and nothing matches
             if (!isSearchMode && myUpazilaFilterOn && servicesFirstLoadDone && filtered.length === 0) {
                 const upaName = (userProfile && userProfile.upazila) ? String(userProfile.upazila).trim() : 'আপনার উপজেলা';
-                grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#10281c] rounded-2xl border border-dashed border-emerald-900/50 p-6 space-y-2">
-                    <div class="w-16 h-16 bg-emerald-950/60 text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-800/60"><i data-lucide="map-pin" class="w-7 h-7"></i></div>
+                grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#181127] rounded-2xl border border-dashed border-violet-900/50 p-6 space-y-2">
+                    <div class="w-16 h-16 bg-violet-950/60 text-violet-400 rounded-full flex items-center justify-center mx-auto border border-violet-800/60"><i data-lucide="map-pin" class="w-7 h-7"></i></div>
                     <h3 class="text-sm font-bold text-slate-200">${esc(upaName)}-এ এই ক্যাটাগরিতে কোনো সেবা নেই</h3>
                     <p class="text-xs text-slate-400 max-w-sm mx-auto">লোকেশন ফিল্টার বন্ধ করুন অথবা অন্য ক্যাটাগরি বেছে নিন।</p>
-                    <button type="button" onclick="filterCategory('${MY_UPAZILA_CAT}')" class="mt-2 px-4 py-2 rounded-full text-xs font-bold bg-emerald-600 text-white">লোকেশন ফিল্টার বন্ধ করুন</button>
+                    <button type="button" onclick="filterCategory('${MY_UPAZILA_CAT}')" class="mt-2 px-4 py-2 rounded-full text-xs font-bold bg-violet-600 text-white">লোকেশন ফিল্টার বন্ধ করুন</button>
                 </div>`;
                 refreshIcons();
                 return;
@@ -4869,8 +4865,8 @@
 
             if (isSearchMode) {
                 if (filtered.length === 0) {
-                    grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#10281c] rounded-2xl border border-dashed border-emerald-900/50 p-6 space-y-2">
-                        <div class="w-16 h-16 bg-emerald-950/60 text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-800/60"><i data-lucide="search-x" class="w-7 h-7"></i></div>
+                    grid.innerHTML = `<div class="col-span-full text-center py-10 bg-[#181127] rounded-2xl border border-dashed border-violet-900/50 p-6 space-y-2">
+                        <div class="w-16 h-16 bg-violet-950/60 text-violet-400 rounded-full flex items-center justify-center mx-auto border border-violet-800/60"><i data-lucide="search-x" class="w-7 h-7"></i></div>
                         <h3 class="text-sm font-bold text-slate-200">কোনো সেবা মেলেনি</h3>
                         <p class="text-xs text-slate-400 max-w-sm mx-auto">অন্য শব্দ দিয়ে খুঁজুন বা সার্চ মুছে ফেলুন।</p>
                     </div>`;
@@ -5028,7 +5024,7 @@
             extraDefs.forEach(f => {
                 const val = extraData[f.k];
                 if (val == null || String(val).trim() === '') return;
-                extraHtml += `<div class="flex items-start gap-2 bg-[#07140e] p-2.5 rounded-xl border border-amber-900/30 text-sm"><span class="text-[10px] font-bold text-amber-300/90 shrink-0 min-w-[7rem]">${esc(f.l)}</span><span class="text-slate-200 break-all">${esc(String(val))}</span></div>`;
+                extraHtml += `<div class="flex items-start gap-2 bg-[#0b0714] p-2.5 rounded-xl border border-amber-900/30 text-sm"><span class="text-[10px] font-bold text-amber-300/90 shrink-0 min-w-[7rem]">${esc(f.l)}</span><span class="text-slate-200 break-all">${esc(String(val))}</span></div>`;
             });
             if (extraHtml) { extraBox.innerHTML = extraHtml; extraBox.classList.remove('hidden'); }
             else { extraBox.innerHTML = ''; extraBox.classList.add('hidden'); }
@@ -5084,7 +5080,7 @@
                 (i.category || '').toLowerCase().includes(search)
             ) : emergencyList;
             if (filtered.length === 0) {
-                list.innerHTML = `<div class="col-span-full text-center py-10 bg-[#10281c] rounded-2xl border border-dashed border-emerald-900/50 p-6 space-y-2">
+                list.innerHTML = `<div class="col-span-full text-center py-10 bg-[#181127] rounded-2xl border border-dashed border-violet-900/50 p-6 space-y-2">
                     <div class="w-16 h-16 bg-rose-950/60 text-rose-400 rounded-full flex items-center justify-center mx-auto border border-rose-800/60"><i data-lucide="phone-off" class="w-7 h-7"></i></div>
                     <h3 class="text-sm font-bold text-slate-200">কোনো হটলাইন নেই</h3>
                     <p class="text-xs text-slate-400">অ্যাডমিন নম্বর যোগ করলে এখানে দেখা যাবে।</p>
@@ -5096,15 +5092,15 @@
             let html = '', idx = 1;
             for (const [catName, items] of Object.entries(grouped)) {
                 html += `<div class="col-span-full mt-2 first:mt-0">
-                    <div class="flex items-center gap-2 mb-2 pb-2 border-b border-emerald-900/40">
-                        <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-300 font-bold text-xs flex items-center justify-center border border-emerald-500/30">${idx++}</span>
+                    <div class="flex items-center gap-2 mb-2 pb-2 border-b border-violet-900/40">
+                        <span class="w-6 h-6 rounded-lg bg-violet-500/20 text-violet-300 font-bold text-xs flex items-center justify-center border border-violet-500/30">${idx++}</span>
                         <h3 class="font-bold text-slate-100 text-sm">${esc(catName)}</h3>
                         <span class="text-[10px] text-slate-500">(${items.length}টি)</span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">`;
                 items.forEach(item => {
                     const c = /^bg-[a-z]+-\d{2,3}$/.test(String(item.color || '')) ? item.color : 'bg-rose-600';
-                    html += `<div class="bg-[#10281c] p-3.5 rounded-2xl border border-emerald-900/40 emergency-card-hover hover:border-emerald-600/50 flex items-center justify-between gap-2.5">
+                    html += `<div class="bg-[#181127] p-3.5 rounded-2xl border border-violet-900/40 emergency-card-hover hover:border-violet-600/50 flex items-center justify-between gap-2.5">
                         <div class="flex items-center gap-2.5 min-w-0">
                             <div class="w-11 h-11 ${c} text-white rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-black/30"><i data-lucide="phone" class="w-5 h-5"></i></div>
                             <div class="min-w-0">
@@ -5112,7 +5108,7 @@
                                 <p class="text-[10px] text-slate-400 line-clamp-2">${esc(item.desc || '')}</p>
                             </div>
                         </div>
-                        <a href="${currentUser ? `tel:${esc(String(item.number || '').replace(/[^0-9+]/g, ''))}` : '#guest-login'}" data-service-name="Emergency: ${esc(item.title || '')}" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action w-11 h-11 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center shrink-0 border-2 border-green-300/40 touch-target shadow-lg shadow-green-600/30"><i data-lucide="phone" class="w-4 h-4"></i></a>
+                        <a href="${currentUser ? `tel:${esc(String(item.number || '').replace(/[^0-9+]/g, ''))}` : '#guest-login'}" data-service-name="Emergency: ${esc(item.title || '')}" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action w-11 h-11 bg-violet-600 hover:bg-violet-700 text-white rounded-full flex items-center justify-center shrink-0 border-2 border-violet-300/40 touch-target shadow-lg shadow-violet-600/30"><i data-lucide="phone" class="w-4 h-4"></i></a>
                     </div>`;
                 });
                 html += `</div></div>`;
@@ -5230,7 +5226,7 @@
                     submitterPhone: userPhone, submitterName: userProfile?.fullName || '',
                     submitterUid: currentUser.uid, status: 'pending', createdAt: serverTimestamp()
                 }, normNumber);
-                showToast('অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে যোগ করবেন।', 'check-circle', 'text-emerald-400');
+                showToast('অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে যোগ করবেন।', 'check-circle', 'text-violet-400');
                 closeUserEmergencyRequestModal();
             } catch (err) {
                 showToast(err && err.code === 'duplicate-number' ? dupMessage('emergency') : 'পাঠাতে ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
@@ -5323,7 +5319,7 @@
                     submitterPhone: userProfile?.phone || '', submitterEmail: userProfile?.email || '',
                     status: 'pending', createdAt: serverTimestamp()
                 }, normNumber);
-                showToast('অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে রক্তদাতা তালিকায় যোগ করবেন।', 'check-circle', 'text-emerald-400');
+                showToast('অনুরোধ পাঠানো হয়েছে! অ্যাডমিন যাচাই করে রক্তদাতা তালিকায় যোগ করবেন।', 'check-circle', 'text-violet-400');
                 closeUserBloodRequestModal();
             } catch (err) {
                 showToast(err && err.code === 'duplicate-number' ? dupMessage('blood') : 'পাঠাতে ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
@@ -5357,9 +5353,9 @@
             const on = bloodDistrictFilterOn && !!currentUser && !!district;
             btn.setAttribute('aria-pressed', on ? 'true' : 'false');
             if (on) {
-                btn.className = 'group relative inline-flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-full bg-emerald-600/25 border border-emerald-400/60 shadow-md shadow-emerald-600/20 transition-all duration-300 touch-target active:scale-95';
-                knob.className = 'relative flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/40 transition-all duration-300 ring-2 ring-emerald-300/50';
-                label.className = 'text-[10px] font-bold text-emerald-300 max-w-[5.5rem] truncate leading-tight';
+                btn.className = 'group relative inline-flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-full bg-violet-600/25 border border-violet-400/60 shadow-md shadow-violet-600/20 transition-all duration-300 touch-target active:scale-95';
+                knob.className = 'relative flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-violet-400 to-violet-600 text-white shadow-lg shadow-violet-500/40 transition-all duration-300 ring-2 ring-violet-300/50';
+                label.className = 'text-[10px] font-bold text-violet-300 max-w-[5.5rem] truncate leading-tight';
             } else {
                 btn.className = 'group relative inline-flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-full bg-slate-700/70 border border-slate-500/50 shadow-inner transition-all duration-300 touch-target active:scale-95';
                 knob.className = 'relative flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-slate-400 to-slate-600 text-white shadow-md transition-all duration-300';
@@ -5427,12 +5423,12 @@
             grid.innerHTML = filtered.map(d => {
                 const locLine = [d.upazila, d.district].filter(Boolean).join(', ') || d.location || '';
                 const extra = d.address ? ` · ${d.address}` : '';
-                return `<div class="bg-[#07140e] p-3.5 rounded-2xl border border-emerald-900/40 flex items-center justify-between gap-2">
+                return `<div class="bg-[#0b0714] p-3.5 rounded-2xl border border-violet-900/40 flex items-center justify-between gap-2">
                 <div class="flex items-center gap-2.5 min-w-0">
                     <div class="w-10 h-10 bg-gradient-to-br from-rose-600 to-red-600 text-white font-black text-sm rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-rose-600/30">${esc(d.group || '?')}</div>
                     <div class="min-w-0"><h4 data-user-content="true" class="font-bold text-slate-200 text-xs truncate">${esc(d.name || '')}</h4><p data-user-content="true" class="text-[10px] text-slate-400 truncate">${esc(locLine + extra)}</p></div>
                 </div>
-                <a href="${currentUser ? `tel:${esc(String(d.phone || '').replace(/[^0-9+]/g, ''))}` : '#guest-login'}" data-service-name="Blood Donor: ${esc(d.name || '')} (${esc(d.group || '')})" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold px-3 py-2 rounded-xl touch-target flex items-center gap-1 shadow-lg shadow-green-600/30"><i data-lucide="phone" class="w-3 h-3"></i> কল</a>
+                <a href="${currentUser ? `tel:${esc(String(d.phone || '').replace(/[^0-9+]/g, ''))}` : '#guest-login'}" data-service-name="Blood Donor: ${esc(d.name || '')} (${esc(d.group || '')})" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action bg-violet-600 hover:bg-violet-700 text-white text-[11px] font-bold px-3 py-2 rounded-xl touch-target flex items-center gap-1 shadow-lg shadow-violet-600/30"><i data-lucide="phone" class="w-3 h-3"></i> কল</a>
             </div>`;
             }).join('');
             refreshIcons();
@@ -5446,7 +5442,7 @@
             const prevTop = box.scrollTop;
             if (chatMessages.length === 0) {
                 box.innerHTML = `<div class="flex flex-col items-center justify-center py-10 text-center px-4">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-600/30 to-emerald-600/20 border border-emerald-500/40 flex items-center justify-center mb-3"><i data-lucide="messages-square" class="w-8 h-8 text-emerald-400"></i></div>
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-violet-600/30 to-violet-600/20 border border-violet-500/40 flex items-center justify-center mb-3"><i data-lucide="messages-square" class="w-8 h-8 text-violet-400"></i></div>
                     <h4 class="text-sm font-bold text-slate-200 mb-1">স্বাগতম!</h4>
                     <p class="text-xs text-slate-400 max-w-xs mb-4">এখনো কোনো মেসেজ নেই।</p>
                 </div>`;
@@ -5462,12 +5458,12 @@
                     const pending = msg.pending === true;
                     const wasOffline = msg.offlineSent === true;
                     return `<div class="flex gap-2 max-w-[85%] ml-auto justify-end">
-                        <div class="bg-gradient-to-br from-emerald-600 to-emerald-600 text-white px-3 py-1.5 rounded-2xl rounded-tr-none shadow-lg shadow-emerald-600/30 ${pending ? 'opacity-70' : ''}">
+                        <div class="bg-gradient-to-br from-violet-600 to-violet-600 text-white px-3 py-1.5 rounded-2xl rounded-tr-none shadow-lg shadow-violet-600/30 ${pending ? 'opacity-70' : ''}">
                             <p data-user-content="true" class="text-sm leading-snug">${esc(msg.text)}</p>
                             <div class="flex items-center justify-end gap-1 mt-0.5">
                                 ${pending
                                     ? `<span class="text-[9px] text-amber-200 flex items-center gap-0.5"><i data-lucide="clock" class="w-2.5 h-2.5"></i>${wasOffline ? 'অফলাইন — net এলে যাবে' : 'পাঠানো হচ্ছে...'}</span>`
-                                    : `<span class="text-[9px] text-emerald-200 flex items-center gap-0.5">${mesesuTickHtml(msg)}${esc(msg.time || '')}</span>`
+                                    : `<span class="text-[9px] text-violet-200 flex items-center gap-0.5">${mesesuTickHtml(msg)}${esc(msg.time || '')}</span>`
                                 }
                             </div>
                         </div>
@@ -5476,13 +5472,13 @@
                 let sideAvatar;
                 if (msg.isDm === true) {
                     const ph = (typeof mesesuPeer !== 'undefined' && mesesuPeer && mesesuPeer.photoURL) ? mesesuPeer.photoURL : '';
-                    sideAvatar = `<div class="w-7 h-7 rounded-full overflow-hidden bg-emerald-800/80 text-emerald-200 flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30">${ph ? `<img src="${esc(ph)}" alt="" class="w-full h-full object-cover" loading="lazy">` : `<i data-lucide="user" class="w-3.5 h-3.5"></i>`}</div>`;
+                    sideAvatar = `<div class="w-7 h-7 rounded-full overflow-hidden bg-violet-800/80 text-violet-200 flex items-center justify-center shrink-0 shadow-md shadow-violet-600/30">${ph ? `<img src="${esc(ph)}" alt="" class="w-full h-full object-cover" loading="lazy">` : `<i data-lucide="user" class="w-3.5 h-3.5"></i>`}</div>`;
                 } else {
-                    sideAvatar = `<div class="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30"><i data-lucide="headset" class="w-3.5 h-3.5"></i></div>`;
+                    sideAvatar = `<div class="w-7 h-7 rounded-full bg-gradient-to-br from-violet-600 to-violet-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-violet-600/30"><i data-lucide="headset" class="w-3.5 h-3.5"></i></div>`;
                 }
                 return `<div class="flex gap-2 max-w-[85%]">
                     ${sideAvatar}
-                    <div class="bg-[#10281c] text-slate-100 px-3 py-1.5 rounded-2xl rounded-tl-none border border-emerald-900/60">
+                    <div class="bg-[#181127] text-slate-100 px-3 py-1.5 rounded-2xl rounded-tl-none border border-violet-900/60">
                         <p data-user-content="true" class="text-sm leading-snug">${esc(msg.text)}</p>
                         <span data-user-content="true" class="text-[9px] text-slate-500 mt-0.5 block">${esc(msg.time || '')}</span>
                     </div>
@@ -5573,7 +5569,7 @@
         }
         function mesesuAvatarHtml(photoURL, sizeClass) {
             if (photoURL) return `<img src="${esc(photoURL)}" alt="" class="${sizeClass} rounded-full object-cover">`;
-            return `<div class="${sizeClass} rounded-full bg-emerald-800/80 flex items-center justify-center"><i data-lucide="user" class="w-1/2 h-1/2 text-emerald-200"></i></div>`;
+            return `<div class="${sizeClass} rounded-full bg-violet-800/80 flex items-center justify-center"><i data-lucide="user" class="w-1/2 h-1/2 text-violet-200"></i></div>`;
         }
         // ================= Mesesu v2 হেল্পার =================
         /** ইনবক্স লিস্ট আর চ্যাট হেডার — দুই জায়গায় একই ব্লু টিক লজিক */
@@ -5682,13 +5678,13 @@
             if (dot) {
                 dot.classList.remove('hidden');
                 dot.className = online
-                    ? 'w-3 h-3 bg-emerald-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse'
-                    : 'w-3 h-3 bg-slate-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
+                    ? 'w-3 h-3 bg-violet-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse'
+                    : 'w-3 h-3 bg-slate-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
             }
             const label = document.getElementById('adminStatusLabel');
             if (label) {
                 label.textContent = online ? 'অনলাইন' : mesesuActiveAgoText(u);
-                label.className = online ? 'text-[10px] text-emerald-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
+                label.className = online ? 'text-[10px] text-violet-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
             }
         }
         function mesesuStopPeerWatch() {
@@ -6035,8 +6031,8 @@
                 const tick = t.peerBlue ? '<i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-blue-400 shrink-0"></i>' : '';
                 const preview = mesesuPreviewText(t.lastMessage || '', 6);
                 return `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(t.peerId || t.id)}')">
-                    <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-emerald-900/50 flex items-center justify-center">
-                        ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-emerald-300"></i>`}
+                    <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-violet-900/50 flex items-center justify-center">
+                        ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-violet-300"></i>`}
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-bold text-slate-100 truncate flex items-center gap-1">${esc(t.peerName || 'ইউজার')} ${tick}</p>
@@ -6096,7 +6092,7 @@
             const adminUnread = mesesuAdminUnreadCount();
             // Pinned Admin Support — verified badge by name; online/offline on avatar corner
             let html = `<div class="mesesu-thread-row" onclick="mesesuOpenAdmin()">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center shrink-0 relative overflow-visible">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-violet-600 to-violet-700 flex items-center justify-center shrink-0 relative overflow-visible">
                     <i data-lucide="headset" class="w-6 h-6 text-white"></i>
                     <span class="mesesu-admin-online-dot ${adminOnline ? 'on' : 'off'}" title="${adminOnline ? 'অনলাইন' : 'অফলাইন'}"></span>
                 </div>
@@ -6126,8 +6122,8 @@
                 const unread = t._pendingSent ? 0 : (Number(t.unreadCount) || 0);
                 html += `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(pid)}')">
                     <div class="relative w-12 h-12 shrink-0">
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-emerald-900/50 flex items-center justify-center">
-                            ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-emerald-300"></i>`}
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-violet-900/50 flex items-center justify-center">
+                            ${t.peerPhoto ? `<img src="${esc(t.peerPhoto)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-6 h-6 text-violet-300"></i>`}
                         </div>
                         <span class="mesesu-admin-online-dot ${isOn ? 'on' : 'off'}" title="${isOn ? 'অনলাইন' : 'অফলাইন'}"></span>
                     </div>
@@ -6176,15 +6172,15 @@
             if (statusDot) {
                 statusDot.classList.remove('hidden');
                 if (isAdminOnline) {
-                    statusDot.className = 'w-3 h-3 bg-emerald-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
+                    statusDot.className = 'w-3 h-3 bg-violet-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
                 } else {
-                    statusDot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
+                    statusDot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
                 }
             }
             const statusLabel = document.getElementById('adminStatusLabel');
             if (statusLabel) {
                 statusLabel.textContent = isAdminOnline ? 'অনলাইন' : 'অফলাইন';
-                statusLabel.className = isAdminOnline ? 'text-[10px] text-emerald-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
+                statusLabel.className = isAdminOnline ? 'text-[10px] text-violet-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
             }
             const img = document.getElementById('threadAvatarImg');
             const ic = document.getElementById('threadAvatarIcon');
@@ -6273,15 +6269,15 @@
             if (statusDot) {
                 statusDot.classList.remove('hidden');
                 if (peerOnline) {
-                    statusDot.className = 'w-3 h-3 bg-emerald-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
+                    statusDot.className = 'w-3 h-3 bg-violet-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
                 } else {
-                    statusDot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
+                    statusDot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
                 }
             }
             const statusLabel = document.getElementById('adminStatusLabel');
             if (statusLabel) {
                 statusLabel.textContent = peerOnline ? 'অনলাইন' : 'অফলাইন';
-                statusLabel.className = peerOnline ? 'text-[10px] text-emerald-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
+                statusLabel.className = peerOnline ? 'text-[10px] text-violet-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
             }
             const img = document.getElementById('threadAvatarImg');
             const ic = document.getElementById('threadAvatarIcon');
@@ -6512,7 +6508,7 @@
                     await setDoc(doc(db, 'users', peerId, 'inbox', currentUser.uid), { permissionStatus: 'approved' }, { merge: true });
                 } catch (e) {}
                 mesesuApplyPermissionUi();
-                return showToast('অপর পক্ষ আগেই অনুমতি চেয়েছে — এখন মেসেজ করতে পারবেন', 'check', 'text-emerald-400');
+                return showToast('অপর পক্ষ আগেই অনুমতি চেয়েছে — এখন মেসেজ করতে পারবেন', 'check', 'text-violet-400');
             }
             if (mesesuDmPermission === 'pending' && mesesuPermissionRequester === currentUser.uid) {
                 return showToast('উত্তর না আসা পর্যন্ত মেসেজ পাঠানো যাবে না', 'lock', 'text-amber-400');
@@ -6593,7 +6589,7 @@
                 mesesuDmPermission = 'approved';
                 mesesuPermissionRejectedBy = null;
                 mesesuApplyPermissionUi();
-                showToast('অনুমোদন করা হয়েছে, এখন থেকে মেসেজ করতে পারবেন', 'check', 'text-emerald-400');
+                showToast('অনুমোদন করা হয়েছে, এখন থেকে মেসেজ করতে পারবেন', 'check', 'text-violet-400');
             } catch (e) {
                 console.warn('approve request', e);
                 showToast('এপ্রুভ ব্যর্থ হয়েছে', 'triangle-alert', 'text-rose-400');
@@ -6694,8 +6690,8 @@
                         return;
                     }
                     res.innerHTML = hits.map(u => `<div class="mesesu-thread-row" onclick="mesesuOpenUser('${esc(u.id)}')">
-                        <div class="w-11 h-11 rounded-full overflow-hidden shrink-0 bg-emerald-900/50 flex items-center justify-center">
-                            ${u.photoURL ? `<img src="${esc(u.photoURL)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-5 h-5 text-emerald-300"></i>`}
+                        <div class="w-11 h-11 rounded-full overflow-hidden shrink-0 bg-violet-900/50 flex items-center justify-center">
+                            ${u.photoURL ? `<img src="${esc(u.photoURL)}" class="w-full h-full object-cover" alt="">` : `<i data-lucide="user" class="w-5 h-5 text-violet-300"></i>`}
                         </div>
                         <div class="min-w-0 flex-1">
                             <p class="text-sm font-bold text-slate-100 truncate flex items-center gap-1">${esc(u.fullName || 'ইউজার')}${mesesuHasBlue(u) ? ' <i data-lucide="badge-check" class="w-3.5 h-3.5 fill-blue-500 text-blue-400"></i>' : ''}</p>
@@ -6959,12 +6955,12 @@
             if (typeof mesesuMode !== 'undefined' && mesesuMode === 'dm') return;
             if (isOnline) {
                 dot.classList.remove('hidden');
-                dot.className = 'w-3 h-3 bg-emerald-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
+                dot.className = 'w-3 h-3 bg-violet-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
                 label.textContent = 'অনলাইন';
-                label.className = 'text-[10px] text-emerald-500 font-medium';
+                label.className = 'text-[10px] text-violet-500 font-medium';
             } else {
                 dot.classList.remove('hidden');
-                dot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#10281c] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
+                dot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
                 if (lastSeen) {
                     const mins = Math.floor((Date.now() - lastSeen.getTime()) / 60000);
                     if (mins < 1) label.textContent = 'এইমাত্র সক্রিয় ছিলেন';
@@ -7152,7 +7148,7 @@
                     status: 'pending', createdAt: serverTimestamp()
                 });
                 setRateLimit('provider');
-                showToast('আবেদন জমা হয়েছে! অ্যাডমিন অনুমোদনের অপেক্ষায়।', 'circle-check', 'text-emerald-400');
+                showToast('আবেদন জমা হয়েছে! অ্যাডমিন অনুমোদনের অপেক্ষায়।', 'circle-check', 'text-violet-400');
                 closeProviderModal();
             } catch (err) {
                 showToast('জমা ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
@@ -7206,7 +7202,7 @@
                     email: userProfile?.email || '', phone: userProfile?.phone || '', status: 'pending', createdAt: serverTimestamp()
                 });
                 setRateLimit('feedback');
-                showToast('পাঠানো হয়েছে! ধন্যবাদ।', 'check-circle', 'text-emerald-400');
+                showToast('পাঠানো হয়েছে! ধন্যবাদ।', 'check-circle', 'text-violet-400');
                 closeFeedbackModal();
             } catch (err) { showToast('ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400'); }
             finally { btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> পাঠান'; refreshIcons(); }
@@ -7239,7 +7235,7 @@
         window.downloadResultPdf = () => {
             // Cross-site page: browser cannot read its content, so open it and guide the user to Save as PDF
             window.open(RESULT_URL, '_blank', 'noopener');
-            showToast('রেজাল্ট দেখার পর ব্রাউজার মেনু থেকে Print → Save as PDF চাপুন', 'file-down', 'text-emerald-400');
+            showToast('রেজাল্ট দেখার পর ব্রাউজার মেনু থেকে Print → Save as PDF চাপুন', 'file-down', 'text-violet-400');
         };
         document.getElementById('resultModal')?.addEventListener('click', (e) => { if (e.target.id === 'resultModal') closeResultModal(); });
 
@@ -7314,8 +7310,8 @@
             if (!list.length) { c.innerHTML = '<div class="col-span-full text-center py-8 text-slate-400 text-xs">কোনো ক্যাটাগরি নেই।</div>'; refreshIcons(); return; }
             c.innerHTML = list.map(cat => {
                 const icon = faToLucide(cat.icon);
-                return `<button onclick="selectCategoryFromModal('${esc(cat.id)}')" class="p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${activeCategory === cat.id ? 'is-active bg-emerald-950/80 border-emerald-500 text-emerald-300 font-bold shadow-lg shadow-emerald-600/20' : 'is-inactive bg-[#07140e] border-emerald-900/40 text-slate-200 hover:border-emerald-600/60 font-medium'}">
-                    <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${activeCategory === cat.id ? 'bg-gradient-to-br from-emerald-600 to-emerald-600 text-white' : 'bg-emerald-950/60 text-emerald-400'}"><i data-lucide="${esc(icon)}" class="w-3.5 h-3.5"></i></div>
+                return `<button onclick="selectCategoryFromModal('${esc(cat.id)}')" class="p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${activeCategory === cat.id ? 'is-active bg-violet-950/80 border-violet-500 text-violet-300 font-bold shadow-lg shadow-violet-600/20' : 'is-inactive bg-[#0b0714] border-violet-900/40 text-slate-200 hover:border-violet-600/60 font-medium'}">
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${activeCategory === cat.id ? 'bg-gradient-to-br from-violet-600 to-violet-600 text-white' : 'bg-violet-950/60 text-violet-400'}"><i data-lucide="${esc(icon)}" class="w-3.5 h-3.5"></i></div>
                     <span class="text-xs truncate">${esc(cat.name)}</span>
                 </button>`;
             }).join('');
@@ -7426,7 +7422,7 @@
                 await reauthenticateWithCredential(currentUser, cred);
                 await updatePassword(currentUser, newPass);
                 closeChangePasswordModal();
-                showToast('পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!', 'circle-check', 'text-emerald-400');
+                showToast('পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!', 'circle-check', 'text-violet-400');
             } catch (err) {
                 console.error(err);
                 let msg = 'পাসওয়ার্ড পরিবর্তন ব্যর্থ';
@@ -8402,7 +8398,7 @@
             if (list && forecast.length) {
                 list.innerHTML = forecast.slice(0, 3).map((fd, i) => {
                     const day = fd.day, kk = wxKindDay(day).kind;
-                    return `<div class="flex items-center gap-3 rounded-xl bg-[#07140e]/70 border border-emerald-900/25 px-3 py-2.5">
+                    return `<div class="flex items-center gap-3 rounded-xl bg-[#0b0714]/70 border border-violet-900/25 px-3 py-2.5">
                         <div class="wx-icon-sm shrink-0">${wxIcon(kk, true)}</div>
                         <div class="flex-1 min-w-0"><p class="text-xs font-bold text-slate-100">${['আজ', 'আগামীকাল', 'পরশু'][i] || ''}</p><p class="text-[10px] text-slate-400 truncate">${wxDayText(day)}</p></div>
                         <div class="text-right shrink-0"><p class="text-xs font-bold text-white">${Math.round(day.maxtemp_c)}° / ${Math.round(day.mintemp_c)}°</p><p class="text-[10px] text-sky-400">বৃষ্টি ${day.daily_chance_of_rain ?? 0}%</p></div>
@@ -8569,10 +8565,10 @@
             const box = document.getElementById('weatherSuggestions'); if (!box) return;
             wxSugItems = items;
             if (!items.length) box.innerHTML = '<div class="px-3 py-3 text-xs text-slate-400">কোনো স্থান পাওয়া যায়নি</div>';
-            else box.innerHTML = items.map((it, i) => `<button type="button" class="weather-sug-btn w-full text-left px-3 py-2.5 text-xs text-slate-100 hover:bg-emerald-900/40 border-b border-emerald-900/20 last:border-0 flex items-center gap-2" onclick="weatherPickSuggestion(${i})">
-                <i data-lucide="${it.local ? 'map-pinned' : 'map-pin'}" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
+            else box.innerHTML = items.map((it, i) => `<button type="button" class="weather-sug-btn w-full text-left px-3 py-2.5 text-xs text-slate-100 hover:bg-violet-900/40 border-b border-violet-900/20 last:border-0 flex items-center gap-2" onclick="weatherPickSuggestion(${i})">
+                <i data-lucide="${it.local ? 'map-pinned' : 'map-pin'}" class="w-3.5 h-3.5 text-violet-400 shrink-0"></i>
                 <span class="truncate flex-1">${it.title.replace(/</g, '&lt;')}${it.sub ? ` <span class="text-slate-400">· ${it.sub}</span>` : ''}</span>
-                ${it.bd ? '<span class="text-[9px] font-bold text-emerald-400 shrink-0">BD</span>' : ''}</button>`).join('');
+                ${it.bd ? '<span class="text-[9px] font-bold text-violet-400 shrink-0">BD</span>' : ''}</button>`).join('');
             wxPlaceSuggestions();
             box.classList.remove('hidden');
             if (typeof refreshIcons === 'function') refreshIcons();
@@ -9424,7 +9420,7 @@ function newsRender(items) {
             <div class="min-w-0 flex-1">
                 <h4 class="text-sm font-bold text-slate-100 leading-snug line-clamp-3">${esc(n.title)}</h4>
                 ${n.summary ? `<p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${esc(n.summary)}</p>` : ''}
-                <p class="text-[10px] text-emerald-400 mt-1.5 font-semibold">${esc(n.source)} · <span class="text-slate-500 font-normal">${esc(newsTimeAgo(n.time))}</span></p>
+                <p class="text-[10px] text-violet-400 mt-1.5 font-semibold">${esc(n.source)} · <span class="text-slate-500 font-normal">${esc(newsTimeAgo(n.time))}</span></p>
             </div>
         </a>`;
     }).join('');
@@ -9573,16 +9569,16 @@ function launchSceneSVG() {
         <svg viewBox="0 0 600 150" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="lcSky" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="var(--lc-sky-1,#042f2e)"/>
-                    <stop offset="100%" stop-color="var(--lc-sky-2,#0f766e)"/>
+                    <stop offset="0%" stop-color="var(--lc-sky-1,#18052e)"/>
+                    <stop offset="100%" stop-color="var(--lc-sky-2,#6d28d9)"/>
                 </linearGradient>
                 <linearGradient id="lcWaveBack" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="var(--lc-wave-back,#0d9488)" stop-opacity=".45"/>
-                    <stop offset="100%" stop-color="var(--lc-wave-back,#0d9488)" stop-opacity=".2"/>
+                    <stop offset="0%" stop-color="var(--lc-wave-back,#7c3aed)" stop-opacity=".45"/>
+                    <stop offset="100%" stop-color="var(--lc-wave-back,#7c3aed)" stop-opacity=".2"/>
                 </linearGradient>
                 <linearGradient id="lcWaveFront" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="var(--lc-wave-front,#10b981)" stop-opacity=".9"/>
-                    <stop offset="100%" stop-color="var(--lc-wave-front,#059669)" stop-opacity=".95"/>
+                    <stop offset="0%" stop-color="var(--lc-wave-front,#8b5cf6)" stop-opacity=".9"/>
+                    <stop offset="100%" stop-color="var(--lc-wave-front,#7c3aed)" stop-opacity=".95"/>
                 </linearGradient>
             </defs>
             <rect x="0" y="0" width="600" height="150" fill="url(#lcSky)"/>
@@ -10008,22 +10004,22 @@ function trainSceneSVG() {
         <svg viewBox="0 0 600 150" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="tcSky" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="var(--lc-sky-1,#042f2e)"/>
-                    <stop offset="100%" stop-color="var(--lc-sky-2,#0f766e)"/>
+                    <stop offset="0%" stop-color="var(--lc-sky-1,#18052e)"/>
+                    <stop offset="100%" stop-color="var(--lc-sky-2,#6d28d9)"/>
                 </linearGradient>
             </defs>
             <rect x="0" y="0" width="600" height="150" fill="url(#tcSky)"/>
             <circle cx="520" cy="34" r="15" fill="var(--lc-sun,#fde68a)" opacity=".85"/>
             <g class="lc-cloud lc-cloud-a"><ellipse cx="110" cy="32" rx="26" ry="9" fill="#e2e8f0" opacity=".25"/><ellipse cx="132" cy="28" rx="18" ry="7" fill="#e2e8f0" opacity=".25"/></g>
             <g class="lc-cloud lc-cloud-b"><ellipse cx="330" cy="22" rx="20" ry="7" fill="#e2e8f0" opacity=".18"/><ellipse cx="348" cy="19" rx="14" ry="6" fill="#e2e8f0" opacity=".18"/></g>
-            <path d="M0,100 C60,60 120,60 180,92 C240,120 300,56 380,70 C450,82 520,56 600,92 L600,150 L0,150 Z" fill="var(--tc-hill,#065f46)" opacity=".75"/>
-            <rect x="0" y="116" width="600" height="34" fill="var(--tc-ground,#0b3d2e)"/>
+            <path d="M0,100 C60,60 120,60 180,92 C240,120 300,56 380,70 C450,82 520,56 600,92 L600,150 L0,150 Z" fill="var(--tc-hill,#5b21b6)" opacity=".75"/>
+            <rect x="0" y="116" width="600" height="34" fill="var(--tc-ground,#1e0c3c)"/>
             <line class="tc-sleepers" x1="0" y1="121" x2="600" y2="121" stroke="#94a3b8" stroke-width="6" stroke-dasharray="4 20" opacity=".7"/>
             <line x1="0" y1="117" x2="600" y2="117" stroke="#cbd5e1" stroke-width="2"/>
             <g class="tc-train">
-                ${coach(130, '#059669')}${coach(190, '#10b981')}${coach(250, '#059669')}
-                <g><rect x="312" y="78" width="62" height="32" rx="5" fill="#0f766e"/>
-                    <path d="M374,86 L392,98 L392,110 L374,110 Z" fill="#115e59"/>
+                ${coach(130, '#7c3aed')}${coach(190, '#8b5cf6')}${coach(250, '#7c3aed')}
+                <g><rect x="312" y="78" width="62" height="32" rx="5" fill="#6d28d9"/>
+                    <path d="M374,86 L392,98 L392,110 L374,110 Z" fill="#6524b1"/>
                     <rect x="320" y="66" width="10" height="14" rx="2" fill="#334155"/>
                     <rect x="338" y="84" width="22" height="12" rx="2" fill="#bae6fd"/>
                     <circle cx="390" cy="104" r="3" fill="#fde047"/>
@@ -10047,7 +10043,7 @@ function trainBuildShell() {
         ${trainSceneSVG()}
         <div class="info-card p-4 space-y-3">
             <div class="flex items-center gap-2.5">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 shrink-0"><i data-lucide="train-front" class="w-5 h-5"></i></div>
+                <div class="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center border border-violet-500/30 shrink-0"><i data-lucide="train-front" class="w-5 h-5"></i></div>
                 <div class="min-w-0 flex-1">
                     <h3 class="text-sm sm:text-base font-bold text-slate-100">${esc(trainL('ট্রেনের সময়সূচী', 'Train Schedule'))}</h3>
                     <p class="text-[11px] text-slate-400">${esc(trainL(catObj[1], catObj[2]))} · ${esc(trainL(`হালনাগাদ: ${TRAIN_UPDATED}`, 'Updated: ' + TRAIN_UPDATED))}</p>
@@ -10255,10 +10251,10 @@ const LM_OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpas
 const LM_BD_CENTER = [23.685, 90.356];
 const LM_CATS = [
     { id: 'hospital', icon: 'hospital', bn: 'হাসপাতাল', en: 'Hospitals', color: '#e11d48', f: [[['amenity', 'hospital']], [['amenity', 'clinic']]] },
-    { id: 'pharmacy', icon: 'pill', bn: 'ফার্মেসি', en: 'Pharmacies', color: '#059669', f: [[['amenity', 'pharmacy']]] },
+    { id: 'pharmacy', icon: 'pill', bn: 'ফার্মেসি', en: 'Pharmacies', color: '#7c3aed', f: [[['amenity', 'pharmacy']]] },
     { id: 'restaurant', icon: 'utensils', bn: 'রেস্টুরেন্ট', en: 'Restaurants', color: '#ea580c', f: [[['amenity', 'restaurant']], [['amenity', 'fast_food']], [['amenity', 'cafe']]] },
     { id: 'bank', icon: 'landmark', bn: 'ব্যাংক / ATM', en: 'Banks & ATMs', color: '#2563eb', f: [[['amenity', 'bank']], [['amenity', 'atm']]] },
-    { id: 'mosque', icon: 'moon-star', bn: 'মসজিদ', en: 'Mosques', color: '#0d9488', f: [[['amenity', 'place_of_worship'], ['religion', 'muslim']]] },
+    { id: 'mosque', icon: 'moon-star', bn: 'মসজিদ', en: 'Mosques', color: '#7c3aed', f: [[['amenity', 'place_of_worship'], ['religion', 'muslim']]] },
     { id: 'school', icon: 'graduation-cap', bn: 'স্কুল-কলেজ', en: 'Schools', color: '#7c3aed', f: [[['amenity', 'school']], [['amenity', 'college']], [['amenity', 'university']]] },
     { id: 'fuel', icon: 'fuel', bn: 'ফিলিং স্টেশন', en: 'Fuel', color: '#ca8a04', f: [[['amenity', 'fuel']]] }
 ];
@@ -10792,7 +10788,7 @@ window.lmToggleLayer = () => {
     lmMap.removeLayer(lmLayers[lmLayerKey]);
     lmLayerKey = lmLayerKey === 'osm' ? 'topo' : 'osm';
     lmLayers[lmLayerKey].addTo(lmMap);
-    showToast(lmTx(lmLayerKey === 'osm' ? 'layer_osm' : 'layer_topo'), 'layers', 'text-emerald-400');
+    showToast(lmTx(lmLayerKey === 'osm' ? 'layer_osm' : 'layer_topo'), 'layers', 'text-violet-400');
 };
 window.lmLocate = () => {
     if (!lmMap) return;
@@ -10818,7 +10814,7 @@ window.lmDirections = () => {
 window.lmCopyCoords = () => {
     if (!lmLast) return;
     const txt = `${lmLast.lat.toFixed(6)}, ${lmLast.lng.toFixed(6)}`;
-    const done = () => showToast(lmTx('copied'), 'copy', 'text-emerald-400');
+    const done = () => showToast(lmTx('copied'), 'copy', 'text-violet-400');
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(() => {});
     else done();
 };
@@ -10854,3 +10850,55 @@ async function mapOnOpen() {
     lmStartTracking();
 }
 function mapOnClose() { lmStopWatch(); }
+
+
+// ========== GLASS SIDEBAR: selected (active) item sync ==========
+// Highlights the sidebar option that matches the current section, and
+// keeps it selected after the drawer is closed / reopened.
+(function () {
+    const SIDEBAR_ID = 'sidebarDrawer';
+    function setSidebarActive(name) {
+        const drawer = document.getElementById(SIDEBAR_ID);
+        if (!drawer) return;
+        drawer.querySelectorAll('.sidebar-item[data-nav]').forEach(btn => {
+            const on = !!name && btn.getAttribute('data-nav') === name;
+            btn.classList.toggle('is-active', on);
+            if (on) btn.setAttribute('aria-current', 'page'); else btn.removeAttribute('aria-current');
+        });
+    }
+    function syncSidebarActive() {
+        try { setSidebarActive(currentTab); } catch (e) {}
+    }
+
+    // Update whenever the section changes (sidebar, bottom nav, back button, etc.)
+    const prevSwitchTab = window.switchTab;
+    if (typeof prevSwitchTab === 'function') {
+        window.switchTab = function (...args) {
+            const result = prevSwitchTab.apply(this, args);
+            syncSidebarActive();
+            return result;
+        };
+    }
+
+    // Make sure the right item is highlighted every time the drawer opens
+    const prevOpenSidebar = window.openSidebar;
+    if (typeof prevOpenSidebar === 'function') {
+        window.openSidebar = function (...args) {
+            syncSidebarActive();
+            return prevOpenSidebar.apply(this, args);
+        };
+    }
+
+    // Instant feedback on tap for section items (modal items like provider/feedback/about/contact keep the current section selected)
+    document.getElementById(SIDEBAR_ID)?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.sidebar-item[data-nav]');
+        if (!btn) return;
+        const nav = btn.getAttribute('data-nav');
+        if (typeof currentUser !== 'undefined' && !currentUser && !['news', 'launch', 'train'].includes(nav)) return;
+        if (['provider', 'feedback', 'about', 'contact', 'terms', 'result'].includes(nav)) return;
+        if (nav === 'subscription' && typeof isPremiumSystemLive === 'function' && !isPremiumSystemLive()) return;
+        setSidebarActive(nav);
+    });
+
+    syncSidebarActive();
+})();

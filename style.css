@@ -3407,3 +3407,8 @@ body.light-mode #promotionDetailModal .bg-\[\#07140e\] p.font-bold {
   color: #0f172a !important;
   -webkit-text-fill-color: #0f172a !important;
 }
+
+/* ========== NEWS ========== */
+.news-cat-btn { padding: 8px 16px; border-radius: 12px; font-size: 12px; font-weight: 600; color: #cbd5e1; border: 1px solid rgba(16,185,129,.25); background: rgba(5,16,10,.6); }
+.news-cat-btn.active { background: #059669; color: #fff; border-color: transparent; }
+body.light-mode .news-cat-btn:not(.active) { color: #475569; background: #fff; }

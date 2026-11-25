@@ -1098,6 +1098,9 @@
                 'nav.support': 'Admin Support',
                 'nav.favorites': 'পছন্দ',
                 'nav.notif': 'নোটিফিকেশন',
+                'nav.news': 'খবর', 'news.bd': 'বাংলাদেশ', 'news.world': 'বিশ্ব',
+                'news.empty': 'এখন কোনো খবর পাওয়া যায়নি', 'news.loading': 'খবর লোড হচ্ছে...',
+                'news.error': 'খবর আনা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।', 'news.retry': 'আবার চেষ্টা করুন',
                 'sidebar.settings': 'সেটিংস',
                 'sidebar.about': 'আমাদের সম্বন্ধে',
                 'sidebar.terms': 'শর্তাবলী ও নীতিমালা',
@@ -1222,6 +1225,9 @@
                 'nav.support': 'Admin Support',
                 'nav.favorites': 'Favorites',
                 'nav.notif': 'Notifications',
+                'nav.news': 'News', 'news.bd': 'Bangladesh', 'news.world': 'World',
+                'news.empty': 'No news available right now', 'news.loading': 'Loading news...',
+                'news.error': 'Could not load news. Check your connection and try again.', 'news.retry': 'Try again',
                 'sidebar.settings': 'Settings',
                 'sidebar.about': 'About Us',
                 'sidebar.terms': 'Terms & Policy',
@@ -1776,7 +1782,8 @@
                 'bnav-services': 'nav.home',
                 'bnav-emergency': 'nav.emergency',
                 'bnav-blood': 'nav.blood',
-                'bnav-profile': 'nav.profile'
+                'bnav-profile': 'nav.profile',
+                'bnav-news': 'nav.news'
             };
             Object.entries(navMap).forEach(([id, key]) => {
                 const btn = document.getElementById(id);
@@ -3503,7 +3510,7 @@
                 showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
                 return;
             }
-            if (!currentUser && !['services', 'emergency', 'blood'].includes(tabName)) {
+            if (!currentUser && !['services', 'emergency', 'blood', 'news'].includes(tabName)) {
                 showAuthScreen(); switchAuthTab('login'); return;
             }
             currentTab = tabName;
@@ -3576,6 +3583,7 @@
             if (tabName === 'favorites') {
                 loadUserFavorites();
             }
+            if (tabName === 'news' && typeof newsOnOpen === 'function') { try { newsOnOpen(); } catch (e) {} }
             if (tabName === 'weather') {
                 try { weatherOnOpen(); } catch (e) { console.warn('weather open', e); }
             }
@@ -8639,7 +8647,7 @@
             if (savedTab && document.getElementById('view-' + savedTab)) {
                 // delay slightly so DOM & auth are ready; guests can only use public tabs
                 setTimeout(() => {
-                    const publicTabs = ['services', 'emergency', 'blood'];
+                    const publicTabs = ['services', 'emergency', 'blood', 'news'];
                     if (currentUser || publicTabs.includes(savedTab)) {
                         switchTab(savedTab);
                     }
@@ -9376,3 +9384,86 @@
 
 // module স্কোপে থাকায় onclick="scrollToPackages()" কাজ করার জন্য window এ এক্সপোজ করা আবশ্যক
 window.scrollToPackages = scrollToPackages;
+
+// ========== NEWS (খবর) ==========
+const NEWS_API = 'https://script.google.com/macros/s/AKfycbzlhp2lCR99K__qkaRX2BwzWFlWLwD6QOrGt910i6rXR0o6b41lur1ay1APaRKfZKCy/exec';
+let newsCat = 'bd';
+let newsReqId = 0;
+const newsCache = {};
+
+function newsTimeAgo(ms) {
+    if (!ms) return '';
+    const en = currentLang === 'en';
+    const bn = n => String(n).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+    const m = Math.floor(Math.max(0, Date.now() - ms) / 60000);
+    if (m < 1) return en ? 'Just now' : 'এইমাত্র';
+    if (m < 60) return en ? `${m} min ago` : `${bn(m)} মিনিট আগে`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return en ? `${h} hr ago` : `${bn(h)} ঘণ্টা আগে`;
+    const d = Math.floor(h / 24);
+    return en ? `${d} day ago` : `${bn(d)} দিন আগে`;
+}
+function newsSafeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+
+function newsRender(items) {
+    const box = document.getElementById('newsList');
+    if (!box) return;
+    if (!items || !items.length) {
+        box.innerHTML = `<div class="info-card p-6 text-center text-xs text-slate-400">${esc(t('news.empty'))}</div>`;
+        return;
+    }
+    box.innerHTML = items.map(n => {
+        const link = newsSafeUrl(n.link), img = newsSafeUrl(n.img);
+        return `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer" class="info-card flex gap-3 p-3">
+            ${img ? `<img src="${esc(img)}" loading="lazy" referrerpolicy="no-referrer" alt="" class="w-24 h-24 rounded-xl object-cover shrink-0" onerror="this.remove()">` : ''}
+            <div class="min-w-0 flex-1">
+                <h4 class="text-sm font-bold text-slate-100 leading-snug line-clamp-3">${esc(n.title)}</h4>
+                ${n.summary ? `<p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${esc(n.summary)}</p>` : ''}
+                <p class="text-[10px] text-emerald-400 mt-1.5 font-semibold">${esc(n.source)} · <span class="text-slate-500 font-normal">${esc(newsTimeAgo(n.time))}</span></p>
+            </div>
+        </a>`;
+    }).join('');
+}
+
+function newsShowUpdated(at) {
+    const el = document.getElementById('newsUpdated');
+    if (!el || !at) return;
+    el.textContent = (currentLang === 'en' ? 'Updated ' : 'আপডেট: ') + newsTimeAgo(at);
+}
+
+async function newsLoad(force) {
+    const box = document.getElementById('newsList');
+    if (!box) return;
+    const cat = newsCat;
+    const myReq = ++newsReqId;
+    let cached = newsCache[cat];
+    if (!cached) {
+        try { cached = JSON.parse(localStorage.getItem('ae-news-' + cat) || 'null'); } catch (e) {}
+        if (cached) newsCache[cat] = cached;
+    }
+    if (cached) { newsRender(cached.items); newsShowUpdated(cached.at); }
+    if (cached && !force && Date.now() - cached.at < 10 * 60 * 1000) return;
+    if (!cached) box.innerHTML = `<div class="info-card p-6 text-center text-xs text-slate-400">${esc(t('news.loading'))}</div>`;
+    try {
+        const res = await fetch(`${NEWS_API}?cat=${cat}`);
+        const data = await res.json();
+        const fresh = { items: Array.isArray(data.items) ? data.items : [], at: Date.now() };
+        newsCache[cat] = fresh;
+        try { localStorage.setItem('ae-news-' + cat, JSON.stringify(fresh)); } catch (e) {}
+        if (myReq === newsReqId && cat === newsCat) { newsRender(fresh.items); newsShowUpdated(fresh.at); }
+    } catch (e) {
+        if (myReq === newsReqId && !cached) {
+            box.innerHTML = `<div class="info-card p-6 text-center space-y-3"><p class="text-xs text-slate-400">${esc(t('news.error'))}</p><button type="button" onclick="newsLoad(true)" class="news-cat-btn active">${esc(t('news.retry'))}</button></div>`;
+        }
+    }
+}
+
+window.newsLoad = newsLoad;
+window.newsSetCat = (cat) => {
+    newsCat = cat === 'world' ? 'world' : 'bd';
+    document.getElementById('news-cat-bd')?.classList.toggle('active', newsCat === 'bd');
+    document.getElementById('news-cat-world')?.classList.toggle('active', newsCat === 'world');
+    newsLoad(false);
+};
+function newsOnOpen() { newsLoad(false); }
+

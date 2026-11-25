@@ -388,6 +388,7 @@
                     <button type="button" onclick="sidebarNav('emergency')" class="sidebar-item"><i data-lucide="phone-call"></i><span>জরুরী হেল্পলাইন</span></button>
                     <button type="button" onclick="sidebarNav('blood')" class="sidebar-item"><i data-lucide="droplet"></i><span>রক্ত</span></button>
                     <button type="button" onclick="sidebarNav('weather')" class="sidebar-item"><i data-lucide="cloud-sun"></i><span>আবহাওয়া</span></button>
+                    <button type="button" onclick="sidebarNav('news')" class="sidebar-item"><i data-lucide="newspaper"></i><span data-i18n="nav.news">খবর</span></button>
                 </div>
             </div>
 
@@ -500,6 +501,9 @@
                 </button>
                 <button id="tab-blood" onclick="switchTab('blood')" class="tab-btn px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-emerald-950/60 transition flex items-center gap-2 border border-transparent">
                     <i data-lucide="droplet" class="w-4 h-4 text-rose-400"></i> রক্তদাতা সন্ধান
+                </button>
+                <button id="tab-news" onclick="switchTab('news')" class="tab-btn px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-emerald-950/60 transition flex items-center gap-2 border border-transparent">
+                    <i data-lucide="newspaper" class="w-4 h-4 text-sky-400"></i> <span data-i18n="nav.news">খবর</span>
                 </button>
                 <button onclick="openProviderModal()" class="px-4 py-2 rounded-xl text-xs font-medium text-emerald-300 bg-emerald-950/40 border border-emerald-900/60 hover:bg-emerald-900/40 transition flex items-center gap-2">
                     <i data-lucide="briefcase" class="w-4 h-4 text-emerald-400"></i> সেবাদাতা আবেদন
@@ -1062,6 +1066,29 @@
                 </div>
             </div>
 
+            <!-- NEWS VIEW -->
+            <div id="view-news" class="tab-view hidden space-y-4 pb-8">
+                <div class="info-card p-4 space-y-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center border border-sky-500/30 shrink-0">
+                            <i data-lucide="newspaper" class="w-5 h-5"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-sm sm:text-base font-bold text-slate-100" data-i18n="nav.news">খবর</h3>
+                            <p class="text-[11px] text-slate-400" id="newsUpdated">—</p>
+                        </div>
+                        <button type="button" onclick="newsLoad(true)" class="top-app-icon-btn shrink-0" aria-label="Refresh">
+                            <i data-lucide="refresh-cw" class="w-5 h-5 text-emerald-400"></i>
+                        </button>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="news-cat-bd" type="button" onclick="newsSetCat('bd')" class="news-cat-btn active" data-i18n="news.bd">বাংলাদেশ</button>
+                        <button id="news-cat-world" type="button" onclick="newsSetCat('world')" class="news-cat-btn" data-i18n="news.world">বিশ্ব</button>
+                    </div>
+                </div>
+                <div id="newsList" class="space-y-3"></div>
+            </div>
+
             <!-- PROFILE VIEW -->
             <div id="view-profile" class="tab-view hidden space-y-4">
                 <div class="info-card p-5 sm:p-6 max-w-xl mx-auto">
@@ -1239,13 +1266,7 @@
                     <span data-i18n="nav.notif">নোটিফিকেশন</span>
                     <span id="notifBadge" class="hidden absolute top-0 right-1/2 translate-x-3 min-w-[16px] h-[16px] bg-rose-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center px-0.5 ring-2 ring-[#0d1f17]">0</span>
                 </button>
-                <button id="bnav-profile" onclick="switchTab('profile')" class="bottom-nav-btn">
-                    <div class="w-[22px] h-[22px] rounded-full overflow-hidden flex items-center justify-center relative bnav-icon-wrapper border border-transparent">
-                        <img id="bnavProfilePic" src="" class="w-full h-full object-cover hidden absolute inset-0">
-                        <i data-lucide="user" id="bnavProfileIcon" class="w-[22px] h-[22px]"></i>
-                    </div>
-                    <span>প্রোফাইল</span>
-                </button>
+                <button id="bnav-news" onclick="switchTab('news')" class="bottom-nav-btn"><i data-lucide="newspaper" class="w-[22px] h-[22px]"></i><span data-i18n="nav.news">খবর</span></button>
             </div>
         </nav>
     </div>

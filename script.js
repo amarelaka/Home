@@ -1098,7 +1098,7 @@
                 'nav.support': 'Admin Support',
                 'nav.favorites': 'পছন্দ',
                 'nav.notif': 'নোটিফিকেশন',
-                'nav.news': 'খবর', 'nav.launch': 'লঞ্চের সময়সূচী', 'news.bd': 'বাংলাদেশ', 'news.world': 'বিশ্ব',
+                'nav.news': 'খবর', 'nav.launch': 'লঞ্চের সময়সূচী', 'nav.map': 'লাইভ ম্যাপ', 'news.bd': 'বাংলাদেশ', 'news.world': 'বিশ্ব',
                 'news.empty': 'এখন কোনো খবর পাওয়া যায়নি', 'news.loading': 'খবর লোড হচ্ছে...',
                 'news.error': 'খবর আনা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।', 'news.retry': 'আবার চেষ্টা করুন',
                 'sidebar.settings': 'সেটিংস',
@@ -1225,7 +1225,7 @@
                 'nav.support': 'Admin Support',
                 'nav.favorites': 'Favorites',
                 'nav.notif': 'Notifications',
-                'nav.news': 'News', 'nav.launch': 'Launch Schedule', 'news.bd': 'Bangladesh', 'news.world': 'World',
+                'nav.news': 'News', 'nav.launch': 'Launch Schedule', 'nav.map': 'Live Map', 'news.bd': 'Bangladesh', 'news.world': 'World',
                 'news.empty': 'No news available right now', 'news.loading': 'Loading news...',
                 'news.error': 'Could not load news. Check your connection and try again.', 'news.retry': 'Try again',
                 'sidebar.settings': 'Settings',
@@ -3514,7 +3514,7 @@
                 showAuthScreen(); switchAuthTab('login'); return;
             }
             currentTab = tabName;
-            try { localStorage.setItem('amar-elaka-tab', tabName); } catch (e) {}
+            if (tabName !== 'map') { try { localStorage.setItem('amar-elaka-tab', tabName); } catch (e) {} }
             if (tabName !== 'chat' && typeof mesesuStopPeerWatchers === 'function') { try { mesesuStopPeerWatchers(); } catch (e) {} }
             // রক্তদাতা সেকশন ছেড়ে গেলে জেলা-ফিল্টার টগল অটো অফ
             if (tabName !== 'blood' && typeof resetBloodDistrictFilter === 'function') {
@@ -3585,6 +3585,8 @@
             }
             if (tabName === 'news' && typeof newsOnOpen === 'function') { try { newsOnOpen(); } catch (e) {} }
             if (tabName === 'launch' && typeof launchOnOpen === 'function') { try { launchOnOpen(); } catch (e) {} }
+            if (tabName === 'map' && typeof mapOnOpen === 'function') { try { mapOnOpen(); } catch (e) { console.warn('map open', e); } }
+            if (tabName !== 'map' && typeof mapOnClose === 'function') { try { mapOnClose(); } catch (e) {} }
             if (tabName === 'weather') {
                 try { weatherOnOpen(); } catch (e) { console.warn('weather open', e); }
             }
@@ -9111,6 +9113,7 @@
                 if (ptrRefreshing || event.touches.length !== 1) return;
                 if (document.body.classList.contains('overflow-hidden')) return;
                 const target = event.target;
+                if (target.closest('#view-map')) return; // ম্যাপ টানলে পুল-টু-রিফ্রেশ চালু হবে না
                 if (target.closest('input, textarea, select, button, a, [contenteditable="true"]')) return;
                 const scrollTarget = findEligibleScrollTarget(target);
                 if (!scrollTarget) return;
@@ -9636,3 +9639,614 @@ setInterval(() => {
     if (v && !v.classList.contains('hidden')) launchRenderDynamic();
 }, 30000);
 
+/* ============================================================
+   লাইভ ম্যাপ (Live Map) — সেবাসমূহ > লাইভ ম্যাপ
+   OpenStreetMap + Leaflet.js — সম্পূর্ণ ফ্রি, কোনো পেইড API বা key লাগে না।
+   খোঁজা: Nominatim · কাছের জায়গা: Overpass · দিকনির্দেশ: openstreetmap.org
+   Leaflet শুধু প্রথমবার ম্যাপ খুললে লোড হয়, তাই বাকি ওয়েবসাইট ধীর হয় না।
+   ============================================================ */
+const LM_JS_SRC = ['https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js', 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js'];
+const LM_CSS_SRC = ['https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css', 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'];
+const LM_OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
+const LM_BD_CENTER = [23.685, 90.356];
+const LM_CATS = [
+    { id: 'hospital', icon: 'hospital', bn: 'হাসপাতাল', en: 'Hospitals', color: '#e11d48', f: [[['amenity', 'hospital']], [['amenity', 'clinic']]] },
+    { id: 'pharmacy', icon: 'pill', bn: 'ফার্মেসি', en: 'Pharmacies', color: '#059669', f: [[['amenity', 'pharmacy']]] },
+    { id: 'restaurant', icon: 'utensils', bn: 'রেস্টুরেন্ট', en: 'Restaurants', color: '#ea580c', f: [[['amenity', 'restaurant']], [['amenity', 'fast_food']], [['amenity', 'cafe']]] },
+    { id: 'bank', icon: 'landmark', bn: 'ব্যাংক / ATM', en: 'Banks & ATMs', color: '#2563eb', f: [[['amenity', 'bank']], [['amenity', 'atm']]] },
+    { id: 'mosque', icon: 'moon-star', bn: 'মসজিদ', en: 'Mosques', color: '#0d9488', f: [[['amenity', 'place_of_worship'], ['religion', 'muslim']]] },
+    { id: 'school', icon: 'graduation-cap', bn: 'স্কুল-কলেজ', en: 'Schools', color: '#7c3aed', f: [[['amenity', 'school']], [['amenity', 'college']], [['amenity', 'university']]] },
+    { id: 'fuel', icon: 'fuel', bn: 'ফিলিং স্টেশন', en: 'Fuel', color: '#ca8a04', f: [[['amenity', 'fuel']]] }
+];
+const LM_TX = {
+    loading: ['ম্যাপ লোড হচ্ছে…', 'Loading map…'],
+    search: ['এখানে খুঁজুন', 'Search here'],
+    back: ['ফিরে যান', 'Back'],
+    clear: ['মুছুন', 'Clear'],
+    searchBtn: ['খুঁজুন', 'Search'],
+    layer: ['ম্যাপের ধরন বদলান', 'Change map type'],
+    zin: ['জুম ইন', 'Zoom in'],
+    zout: ['জুম আউট', 'Zoom out'],
+    locate: ['আমার অবস্থান', 'My location'],
+    dir: ['দিকনির্দেশ', 'Directions'],
+    st_search: ['আপনার অবস্থান খোঁজা হচ্ছে… অনুমতি চাইলে “Allow” দিন', 'Finding your location… tap “Allow” if asked'],
+    st_live: ['লাইভ লোকেশন চালু', 'Live location is on'],
+    st_weak: ['জিপিএস সিগন্যাল দুর্বল — খোলা জায়গায় যান', 'Weak GPS signal — move to an open area'],
+    st_off: ['লোকেশন বন্ধ আছে', 'Location is off'],
+    acc: ['নির্ভুলতা', 'Accuracy'],
+    spd: ['গতি', 'Speed'],
+    pos: ['স্থানাঙ্ক (কপি)', 'Coordinates (copy)'],
+    unitM: ['মি', 'm'],
+    unitKm: ['কিমি', 'km'],
+    unitKmh: ['কিমি/ঘ', 'km/h'],
+    copied: ['স্থানাঙ্ক কপি হয়েছে', 'Coordinates copied'],
+    searching: ['খোঁজা হচ্ছে…', 'Searching…'],
+    res_none: ['কিছু পাওয়া যায়নি। অন্য নামে খুঁজুন।', 'Nothing found. Try another name.'],
+    res_err: ['খোঁজা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।', 'Search failed. Check your connection and try again.'],
+    poi_none: ['এই এলাকায় কিছু পাওয়া যায়নি। ম্যাপ সরিয়ে বা জুম করে আবার দেখুন।', 'Nothing found here. Move or zoom the map and try again.'],
+    poi_err: ['তথ্য আনা যায়নি। একটু পরে আবার চেষ্টা করুন।', 'Could not load places. Try again shortly.'],
+    pick_first: ['আগে ম্যাপে একটি জায়গা বেছে নিন', 'Pick a place on the map first'],
+    layer_osm: ['সাধারণ ম্যাপ', 'Standard map'],
+    layer_topo: ['ভূসংস্থান ম্যাপ', 'Terrain map'],
+    unnamed: ['নামহীন জায়গা', 'Unnamed place'],
+    found: ['টি পাওয়া গেছে', 'found'],
+    retry: ['আবার চেষ্টা করুন', 'Try again'],
+    mapOnly: ['শুধু ম্যাপ দেখুন', 'Just view the map']
+};
+const LM_GUIDE = {
+    denied: {
+        t: ['লোকেশনের অনুমতি দেওয়া নেই', 'Location permission is blocked'],
+        p: ['লাইভ ম্যাপে আপনার অবস্থান দেখাতে ব্রাউজারে লোকেশনের অনুমতি দিতে হবে।', 'To show your position on the live map, allow location access in your browser.'],
+        steps: [
+            ['Android (Chrome): ঠিকানা বারের বামের আইকনে চাপুন → অনুমতি → লোকেশন → “অনুমতি দিন”।', 'Android (Chrome): tap the icon left of the address bar → Permissions → Location → Allow.'],
+            ['iPhone (Safari): সেটিংস → প্রাইভেসি ও সিকিউরিটি → লোকেশন সার্ভিস → Safari Websites → “অ্যাপ ব্যবহারের সময়”।', 'iPhone (Safari): Settings → Privacy & Security → Location Services → Safari Websites → While Using.'],
+            ['অ্যাপ (APK) ব্যবহার করলে: ফোনের সেটিংস → অ্যাপ → আমার এলাকা → অনুমতি → লোকেশন।', 'In the app (APK): phone Settings → Apps → Amar Elaka → Permissions → Location.'],
+            ['ফোনের লোকেশন (GPS) চালু আছে কিনা দেখে নিন, তারপর নিচের বোতামে চাপুন।', 'Make sure phone Location (GPS) is on, then tap the button below.']
+        ]
+    },
+    unavailable: {
+        t: ['জিপিএস সিগন্যাল পাওয়া যাচ্ছে না', 'No GPS signal'],
+        p: ['আপনার অবস্থান নির্ধারণ করা যায়নি।', 'Your position could not be determined.'],
+        steps: [
+            ['ফোনের লোকেশন (GPS) চালু করুন এবং “উচ্চ নির্ভুলতা” মোড বেছে নিন।', 'Turn on phone Location (GPS) and choose the high-accuracy mode.'],
+            ['খোলা আকাশের নিচে বা জানালার কাছে যান।', 'Go outdoors or near a window.'],
+            ['ফ্লাইট মোড বন্ধ আছে কিনা দেখুন।', 'Check that airplane mode is off.']
+        ]
+    },
+    insecure: {
+        t: ['নিরাপদ সংযোগ (HTTPS) দরকার', 'Secure connection (HTTPS) required'],
+        p: ['ব্রাউজার শুধু https:// লিংকে লোকেশন দেয়। ওয়েবসাইটটি https://www.amarelaka.shop ঠিকানায় খুলুন।', 'Browsers share location only on https:// pages. Open the site at https://www.amarelaka.shop.'],
+        steps: []
+    },
+    unsupported: {
+        t: ['এই ব্রাউজারে লোকেশন সাপোর্ট নেই', 'Location is not supported in this browser'],
+        p: ['Chrome বা Safari-র নতুন সংস্করণে ওয়েবসাইটটি খুলুন।', 'Open the website in a recent version of Chrome or Safari.'],
+        steps: []
+    },
+    loadfail: {
+        t: ['ম্যাপ লোড হয়নি', 'Map failed to load'],
+        p: ['ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।', 'Check your internet connection and try again.'],
+        steps: []
+    }
+};
+
+let lmMap = null, lmLayers = {}, lmLayerKey = 'osm';
+let lmMeMarker = null, lmAccCircle = null, lmWatchId = null;
+let lmFollow = true, lmHasFix = false, lmLast = null, lmPrev = null, lmStatus = 'searching';
+let lmPoiLayer = null, lmPinMarker = null, lmSelected = null, lmCat = null;
+let lmResultItems = [], lmSearchCtl = null, lmPoiCtl = null, lmSearching = false;
+let lmLibPromise = null, lmPermBound = false, lmGuideKind = null, lmGlobalBound = false, lmResizeTimer = null;
+
+const lmL = (bnText, enText) => (currentLang === 'en' ? enText : bnText);
+const lmNum = (n) => { const s = String(n); return currentLang === 'en' ? s : s.replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]); };
+const lmTx = (k) => { const v = LM_TX[k]; return v ? lmL(v[0], v[1]) : k; };
+function lmDist(a, b) {
+    const R = 6371000, rad = Math.PI / 180;
+    const dLat = (b[0] - a[0]) * rad, dLng = (b[1] - a[1]) * rad;
+    const x = Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLng / 2) ** 2;
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(x)));
+}
+function lmFmtDist(m) {
+    return m < 1000 ? `${lmNum(Math.round(m))} ${lmTx('unitM')}` : `${lmNum((m / 1000).toFixed(1))} ${lmTx('unitKm')}`;
+}
+
+// ---------- Leaflet লাইব্রেরি (প্রথমবার খুললে লোড) ----------
+function lmLoadCss(i = 0) {
+    return new Promise(resolve => {
+        if (document.querySelector('link[data-lm-css]')) return resolve();
+        const l = document.createElement('link');
+        l.rel = 'stylesheet'; l.href = LM_CSS_SRC[i]; l.setAttribute('data-lm-css', '1');
+        l.onload = () => resolve();
+        l.onerror = () => { l.remove(); if (i + 1 < LM_CSS_SRC.length) lmLoadCss(i + 1).then(resolve); else resolve(); };
+        document.head.appendChild(l);
+    });
+}
+function lmLoadScript(src) {
+    return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src; s.async = true;
+        s.onload = () => resolve();
+        s.onerror = () => { s.remove(); reject(new Error('leaflet load failed')); };
+        document.head.appendChild(s);
+    });
+}
+function lmEnsureLeaflet() {
+    if (window.L && window.L.map) return Promise.resolve();
+    if (lmLibPromise) return lmLibPromise;
+    const js = (async () => {
+        for (const src of LM_JS_SRC) {
+            try { await lmLoadScript(src); if (window.L && window.L.map) return; } catch (e) {}
+        }
+        throw new Error('leaflet unavailable');
+    })();
+    lmLibPromise = Promise.all([lmLoadCss(), js]).then(() => {}).catch(err => { lmLibPromise = null; throw err; });
+    return lmLibPromise;
+}
+
+// ---------- ইন্টারফেস ----------
+function lmBuildShell() {
+    const root = document.getElementById('lmRoot');
+    if (!root || root.getAttribute('data-built')) return;
+    root.setAttribute('data-built', '1');
+    root.innerHTML = `
+    <div class="lm-stage" id="lmStage">
+        <div class="lm-mapwrap">
+            <div id="lmMap" class="lm-map"></div>
+            <div id="lmLoading" class="lm-loading"><div class="lm-spinner"></div><p data-lm="loading"></p></div>
+
+            <div class="lm-top">
+                <form class="lm-search" id="lmSearchForm" autocomplete="off">
+                    <button type="button" class="lm-ib" onclick="switchTab('services')" data-lm-aria="back"><i data-lucide="arrow-left"></i></button>
+                    <input id="lmSearchInput" type="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false" data-lm-ph="search">
+                    <button type="button" id="lmSearchClear" class="lm-ib hidden" onclick="lmClearSearch()" data-lm-aria="clear"><i data-lucide="x"></i></button>
+                    <button type="submit" class="lm-ib lm-ib-go" data-lm-aria="searchBtn"><i data-lucide="search"></i></button>
+                </form>
+                <div id="lmResults" class="lm-results hidden"></div>
+                <div id="lmChips" class="lm-chips hide-scrollbar"></div>
+            </div>
+
+            <div class="lm-side">
+                <button type="button" class="lm-round" onclick="lmToggleLayer()" data-lm-aria="layer"><i data-lucide="layers"></i></button>
+                <div class="lm-zoom">
+                    <button type="button" onclick="lmZoom(1)" data-lm-aria="zin"><i data-lucide="plus"></i></button>
+                    <button type="button" onclick="lmZoom(-1)" data-lm-aria="zout"><i data-lucide="minus"></i></button>
+                </div>
+            </div>
+
+            <div class="lm-fabs">
+                <button type="button" id="lmLocateBtn" class="lm-fab" onclick="lmLocate()" data-lm-aria="locate"><i data-lucide="locate-fixed"></i></button>
+                <button type="button" class="lm-fab lm-fab-primary" onclick="lmDirections()" data-lm-aria="dir"><i data-lucide="corner-up-right"></i></button>
+            </div>
+
+            <div id="lmGuide" class="lm-guide hidden"></div>
+        </div>
+        <div class="lm-sheet" id="lmSheet">
+            <div class="lm-grab"></div>
+            <div id="lmSheetBody"></div>
+        </div>
+    </div>`;
+    const form = document.getElementById('lmSearchForm');
+    form.addEventListener('submit', (e) => { e.preventDefault(); lmSearchSubmit(); });
+    const input = document.getElementById('lmSearchInput');
+    input.addEventListener('input', () => document.getElementById('lmSearchClear').classList.toggle('hidden', !input.value));
+    refreshIcons();
+}
+function lmApplyTexts() {
+    document.querySelectorAll('#lmRoot [data-lm]').forEach(el => { el.textContent = lmTx(el.getAttribute('data-lm')); });
+    document.querySelectorAll('#lmRoot [data-lm-ph]').forEach(el => { el.setAttribute('placeholder', lmTx(el.getAttribute('data-lm-ph'))); });
+    document.querySelectorAll('#lmRoot [data-lm-aria]').forEach(el => {
+        const v = lmTx(el.getAttribute('data-lm-aria'));
+        el.setAttribute('aria-label', v); el.setAttribute('title', v);
+    });
+}
+function lmRenderChips() {
+    const box = document.getElementById('lmChips');
+    if (!box) return;
+    box.innerHTML = LM_CATS.map(c =>
+        `<button type="button" class="lm-chip ${lmCat === c.id ? 'active' : ''}" onclick="lmPickCat('${c.id}')"><i data-lucide="${c.icon}"></i><span>${esc(lmL(c.bn, c.en))}</span></button>`
+    ).join('');
+    refreshIcons();
+}
+function lmRenderSheet() {
+    const box = document.getElementById('lmSheetBody');
+    if (!box) return;
+    let html = '';
+    if (lmSelected) {
+        const s = lmSelected;
+        html += `<div class="lm-place">
+            <div class="lm-place-ic" style="--c:${esc(s.color || '#ea4335')}"><i data-lucide="map-pin"></i></div>
+            <div class="lm-place-tx"><b>${esc(s.name)}</b><small>${esc(s.sub || '')}</small></div>
+            <button type="button" class="lm-ib" onclick="lmClearSelected()" aria-label="${esc(lmTx('clear'))}"><i data-lucide="x"></i></button>
+        </div>
+        <div class="lm-actions"><button type="button" class="lm-btn lm-btn-primary" onclick="lmDirections()"><i data-lucide="corner-up-right"></i><span>${esc(lmTx('dir'))}</span></button></div>`;
+    }
+    const cls = lmStatus === 'live' ? 'live' : (lmStatus === 'off' ? 'off' : 'wait');
+    const label = lmTx('st_' + (lmStatus === 'live' ? 'live' : lmStatus === 'weak' ? 'weak' : lmStatus === 'off' ? 'off' : 'search'));
+    html += `<div class="lm-status"><span class="lm-dot ${cls}"></span><b>${esc(label)}</b></div>`;
+    if (lmLast) {
+        html += `<div class="lm-stats">
+            <div><small>${esc(lmTx('acc'))}</small><b id="lmStatAcc">—</b></div>
+            <div><small>${esc(lmTx('spd'))}</small><b id="lmStatSpd">—</b></div>
+            <button type="button" onclick="lmCopyCoords()"><small>${esc(lmTx('pos'))}</small><b id="lmStatPos">—</b></button>
+        </div>`;
+    }
+    box.innerHTML = html;
+    refreshIcons();
+    lmUpdateStats();
+}
+function lmUpdateStats() {
+    if (!lmLast) return;
+    const acc = document.getElementById('lmStatAcc'), spd = document.getElementById('lmStatSpd'), pos = document.getElementById('lmStatPos');
+    if (acc) acc.textContent = `±${lmNum(Math.round(lmLast.acc || 0))} ${lmTx('unitM')}`;
+    if (spd) spd.textContent = `${lmNum(Math.round((lmLast.speed || 0) * 3.6))} ${lmTx('unitKmh')}`;
+    if (pos) pos.textContent = `${lmLast.lat.toFixed(5)}, ${lmLast.lng.toFixed(5)}`;
+}
+function lmSetStatus(s) {
+    if (lmStatus === s) return;
+    lmStatus = s;
+    lmRenderSheet();
+}
+function lmUpdateLocateBtn() {
+    const b = document.getElementById('lmLocateBtn');
+    if (b) b.classList.toggle('is-follow', !!(lmFollow && lmHasFix));
+}
+
+// ---------- ম্যাপ ----------
+async function lmInitMap() {
+    if (lmMap) return true;
+    const load = document.getElementById('lmLoading');
+    if (load) load.classList.remove('hidden');
+    try { await lmEnsureLeaflet(); }
+    catch (e) { if (load) load.classList.add('hidden'); lmShowGuide('loadfail'); return false; }
+    if (lmMap) return true;
+    const el = document.getElementById('lmMap');
+    if (!el) return false;
+    lmMap = L.map(el, { zoomControl: false, attributionControl: false, minZoom: 3, maxZoom: 19, wheelPxPerZoomLevel: 80 });
+    lmLayers.osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, keepBuffer: 4,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>'
+    });
+    lmLayers.topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        maxZoom: 17, subdomains: 'abc', keepBuffer: 4,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>, <a href="https://opentopomap.org" target="_blank" rel="noopener noreferrer">OpenTopoMap</a>'
+    });
+    lmLayers[lmLayerKey].addTo(lmMap);
+    L.control.attribution({ position: 'bottomright', prefix: false }).addTo(lmMap);
+    L.control.scale({ position: 'bottomleft', imperial: false, maxWidth: 110 }).addTo(lmMap);
+    lmPoiLayer = L.layerGroup().addTo(lmMap);
+    lmMap.setView(LM_BD_CENTER, 7);
+    lmMap.on('dragstart', () => { if (lmFollow) { lmFollow = false; lmUpdateLocateBtn(); } });
+    lmMap.on('click', () => { lmHideResults(); const i = document.getElementById('lmSearchInput'); if (i) i.blur(); });
+    const hide = () => { const l = document.getElementById('lmLoading'); if (l) l.classList.add('hidden'); };
+    lmLayers[lmLayerKey].once('load', hide);
+    setTimeout(hide, 3500);
+    if (lmLast) { lmUpdateMarker({ latitude: lmLast.lat, longitude: lmLast.lng, accuracy: lmLast.acc }); }
+    return true;
+}
+function lmUpdateMarker(c) {
+    if (!lmMap) return;
+    const ll = [c.latitude, c.longitude];
+    if (!lmMeMarker) {
+        lmMeMarker = L.marker(ll, {
+            icon: L.divIcon({ className: 'lm-me-wrap', html: '<div class="lm-me"><span class="lm-me-pulse"></span><span class="lm-me-arrow"></span><span class="lm-me-dot"></span></div>', iconSize: [22, 22], iconAnchor: [11, 11] }),
+            interactive: false, keyboard: false, zIndexOffset: 1000
+        }).addTo(lmMap);
+        lmAccCircle = L.circle(ll, { radius: c.accuracy || 30, weight: 1, color: '#1a73e8', fillColor: '#1a73e8', fillOpacity: 0.12, interactive: false }).addTo(lmMap);
+    } else {
+        lmMeMarker.setLatLng(ll);
+        lmAccCircle.setLatLng(ll);
+        lmAccCircle.setRadius(c.accuracy || 30);
+    }
+    const root = lmMeMarker.getElement && lmMeMarker.getElement();
+    const me = root && root.querySelector('.lm-me');
+    if (me) {
+        const moving = Number.isFinite(c.heading) && (c.speed || 0) > 0.8;
+        me.classList.toggle('has-heading', moving);
+        const arrow = me.querySelector('.lm-me-arrow');
+        if (arrow && moving) arrow.style.transform = `rotate(${c.heading}deg)`;
+    }
+}
+
+// ---------- লাইভ GPS ----------
+function lmOnPos(pos) {
+    if (currentTab !== 'map') { lmStopWatch(); return; }
+    const c = pos.coords;
+    let speed = Number.isFinite(c.speed) && c.speed >= 0 ? c.speed : null;
+    if (speed === null && lmPrev) {
+        const dt = (pos.timestamp - lmPrev.ts) / 1000;
+        if (dt >= 0.5 && dt <= 30 && (c.accuracy || 0) < 60) speed = lmDist([lmPrev.lat, lmPrev.lng], [c.latitude, c.longitude]) / dt;
+    }
+    if (speed !== null && speed < 0.5) speed = 0;
+    lmPrev = lmLast;
+    lmLast = { lat: c.latitude, lng: c.longitude, acc: c.accuracy, speed: speed || 0, heading: c.heading, ts: pos.timestamp };
+    lmHideGuide();
+    const weak = (c.accuracy || 0) > 150;
+    const wasStatus = lmStatus;
+    lmStatus = weak ? 'weak' : 'live';
+    if (wasStatus !== lmStatus || !document.getElementById('lmStatAcc')) lmRenderSheet(); else lmUpdateStats();
+    if (!lmMap) return;
+    lmUpdateMarker({ latitude: c.latitude, longitude: c.longitude, accuracy: c.accuracy, heading: c.heading, speed: speed || 0 });
+    const ll = [c.latitude, c.longitude];
+    if (!lmHasFix) {
+        lmHasFix = true; lmFollow = true;
+        lmMap.setView(ll, Math.max(lmMap.getZoom(), 16), { animate: true });
+        lmUpdateLocateBtn();
+    } else if (lmFollow) {
+        lmMap.panTo(ll, { animate: true, duration: 0.8, easeLinearity: 0.5 });
+    }
+}
+function lmOnPosErr(err) {
+    if (currentTab !== 'map') return;
+    if (err && err.code === 1) { lmStopWatch(); lmStatus = 'off'; lmRenderSheet(); lmShowGuide('denied'); return; }
+    if (err && err.code === 2 && !lmHasFix) { lmStatus = 'weak'; lmRenderSheet(); lmShowGuide('unavailable'); return; }
+    lmSetStatus(lmHasFix ? 'weak' : 'searching');
+}
+function lmStartWatch() {
+    if (lmWatchId !== null) return;
+    if (!lmLast) lmSetStatus('searching');
+    try {
+        lmWatchId = navigator.geolocation.watchPosition(lmOnPos, lmOnPosErr, { enableHighAccuracy: true, maximumAge: 1000, timeout: 20000 });
+    } catch (e) { lmShowGuide('unsupported'); }
+}
+function lmStopWatch() {
+    if (lmWatchId !== null) { try { navigator.geolocation.clearWatch(lmWatchId); } catch (e) {} lmWatchId = null; }
+}
+async function lmWatchPermission() {
+    try {
+        if (!navigator.permissions || !navigator.permissions.query) return null;
+        const st = await navigator.permissions.query({ name: 'geolocation' });
+        if (!lmPermBound) {
+            lmPermBound = true;
+            st.addEventListener('change', () => {
+                if (currentTab !== 'map') return;
+                if (st.state === 'granted') { lmHideGuide(); lmStopWatch(); lmStartWatch(); }
+                else if (st.state === 'denied') { lmStopWatch(); lmStatus = 'off'; lmRenderSheet(); lmShowGuide('denied'); }
+            });
+        }
+        return st.state;
+    } catch (e) { return null; }
+}
+async function lmStartTracking() {
+    if (!window.isSecureContext) { lmStatus = 'off'; lmRenderSheet(); lmShowGuide('insecure'); return; }
+    if (!('geolocation' in navigator)) { lmStatus = 'off'; lmRenderSheet(); lmShowGuide('unsupported'); return; }
+    const perm = await lmWatchPermission();
+    if (currentTab !== 'map') return;
+    if (perm === 'denied') { lmStatus = 'off'; lmRenderSheet(); lmShowGuide('denied'); return; }
+    lmHideGuide();
+    lmStartWatch();
+}
+
+// ---------- নির্দেশনা (পারমিশন না দিলে) ----------
+function lmShowGuide(kind) {
+    const g = document.getElementById('lmGuide');
+    const d = LM_GUIDE[kind];
+    if (!g || !d) return;
+    lmGuideKind = kind;
+    const icon = kind === 'loadfail' ? 'wifi-off' : (kind === 'unavailable' ? 'satellite' : 'map-pin-off');
+    const steps = d.steps.length ? `<ol>${d.steps.map(s => `<li>${esc(lmL(s[0], s[1]))}</li>`).join('')}</ol>` : '';
+    g.innerHTML = `<div class="lm-guide-card" role="alertdialog" aria-live="polite">
+        <div class="lm-guide-ic"><i data-lucide="${icon}"></i></div>
+        <h3>${esc(lmL(d.t[0], d.t[1]))}</h3>
+        <p>${esc(lmL(d.p[0], d.p[1]))}</p>
+        ${steps}
+        <div class="lm-guide-actions">
+            <button type="button" class="lm-btn lm-btn-primary" onclick="lmRetry()"><i data-lucide="refresh-cw"></i><span>${esc(lmTx('retry'))}</span></button>
+            ${kind === 'loadfail' ? '' : `<button type="button" class="lm-btn" onclick="lmHideGuide()"><span>${esc(lmTx('mapOnly'))}</span></button>`}
+        </div>
+    </div>`;
+    g.classList.remove('hidden');
+    const load = document.getElementById('lmLoading'); if (load) load.classList.add('hidden');
+    refreshIcons();
+}
+function lmHideGuide() {
+    const g = document.getElementById('lmGuide');
+    if (g) g.classList.add('hidden');
+    lmGuideKind = null;
+}
+
+// ---------- খোঁজা (Nominatim) ----------
+function lmHideResults() { const r = document.getElementById('lmResults'); if (r) r.classList.add('hidden'); }
+function lmShowResults(items, heading) {
+    const r = document.getElementById('lmResults');
+    if (!r) return;
+    lmResultItems = items;
+    r.innerHTML = (heading ? `<div class="lm-res-head"><span>${esc(heading)}</span><button type="button" class="lm-ib" onclick="lmHideResults()" aria-label="${esc(lmTx('clear'))}"><i data-lucide="x"></i></button></div>` : '') +
+        items.map((it, i) => `<button type="button" class="lm-res" onclick="lmPickResult(${i})">
+            <span class="lm-res-ic" style="--c:${esc(it.color || '#64748b')}"><i data-lucide="${esc(it.icon || 'map-pin')}"></i></span>
+            <span class="lm-res-tx"><b>${esc(it.name)}</b><small>${esc(it.sub || '')}</small></span>
+            ${it.dist != null ? `<span class="lm-res-d">${esc(lmFmtDist(it.dist))}</span>` : ''}
+        </button>`).join('');
+    r.classList.remove('hidden');
+    refreshIcons();
+}
+function lmShowMessage(text) {
+    const r = document.getElementById('lmResults');
+    if (!r) return;
+    lmResultItems = [];
+    r.innerHTML = `<div class="lm-res-msg">${esc(text)}</div>`;
+    r.classList.remove('hidden');
+}
+async function lmSearchSubmit() {
+    const input = document.getElementById('lmSearchInput');
+    const q = (input && input.value || '').trim();
+    if (!q || lmSearching || !lmMap) return;
+    input.blur();
+    lmSearching = true;
+    lmShowMessage(lmTx('searching'));
+    if (lmSearchCtl) lmSearchCtl.abort();
+    lmSearchCtl = new AbortController();
+    const signal = lmSearchCtl.signal;
+    try {
+        const base = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=7&accept-language=' + encodeURIComponent(currentLang === 'en' ? 'en' : 'bn,en') + '&q=' + encodeURIComponent(q);
+        const get = async (url) => { const r = await fetch(url, { signal }); if (!r.ok) throw new Error('http ' + r.status); return r.json(); };
+        let data = await get(base + '&countrycodes=bd');
+        if (!data.length) data = await get(base);
+        if (!data.length) { lmShowMessage(lmTx('res_none')); return; }
+        lmShowResults(data.map(r => ({
+            kind: 'place', lat: +r.lat, lng: +r.lon,
+            name: (r.name || String(r.display_name || '').split(',')[0] || lmTx('unnamed')).trim(),
+            sub: r.display_name || '',
+            bbox: Array.isArray(r.boundingbox) ? r.boundingbox.map(Number) : null,
+            icon: 'map-pin', color: '#ea4335'
+        })));
+    } catch (e) {
+        if (e && e.name === 'AbortError') return;
+        lmShowMessage(lmTx('res_err'));
+    } finally { lmSearching = false; }
+}
+function lmSelectPlace(p, opts = {}) {
+    if (!lmMap) return;
+    lmSelected = p;
+    if (lmPinMarker) { lmMap.removeLayer(lmPinMarker); lmPinMarker = null; }
+    lmPinMarker = L.marker([p.lat, p.lng], {
+        icon: L.divIcon({ className: 'lm-pin-wrap', html: `<div class="lm-pin" style="--c:${esc(p.color || '#ea4335')}"></div>`, iconSize: [26, 26], iconAnchor: [13, 28] }),
+        keyboard: false, zIndexOffset: 800
+    }).addTo(lmMap);
+    lmFollow = false; lmUpdateLocateBtn();
+    const b = p.bbox;
+    if (!opts.noFit && b && b.length === 4 && b.every(Number.isFinite) && (b[1] - b[0]) > 0.002) {
+        lmMap.fitBounds([[b[0], b[2]], [b[1], b[3]]], { maxZoom: 17, padding: [40, 40] });
+    } else if (opts.noFit) {
+        lmMap.panTo([p.lat, p.lng], { animate: true });
+    } else {
+        lmMap.flyTo([p.lat, p.lng], Math.max(lmMap.getZoom(), 17), { duration: 0.8 });
+    }
+    lmHideResults();
+    lmRenderSheet();
+}
+window.lmPickResult = (i) => { const it = lmResultItems[i]; if (it) lmSelectPlace(it, { noFit: it.kind === 'poi' }); };
+window.lmHideResults = lmHideResults;
+window.lmClearSearch = () => {
+    const i = document.getElementById('lmSearchInput');
+    if (i) { i.value = ''; i.focus(); }
+    const c = document.getElementById('lmSearchClear'); if (c) c.classList.add('hidden');
+    lmHideResults();
+};
+window.lmClearSelected = () => {
+    lmSelected = null;
+    if (lmPinMarker && lmMap) { lmMap.removeLayer(lmPinMarker); lmPinMarker = null; }
+    lmRenderSheet();
+};
+
+// ---------- কাছের জায়গা (Overpass) ----------
+window.lmPickCat = async (id) => {
+    const cat = LM_CATS.find(c => c.id === id);
+    if (!cat || !lmMap) return;
+    if (lmCat === id) { lmCat = null; lmPoiLayer.clearLayers(); lmHideResults(); lmRenderChips(); return; }
+    lmCat = id; lmRenderChips();
+    lmPoiLayer.clearLayers();
+    lmShowMessage(lmTx('searching'));
+    if (lmPoiCtl) lmPoiCtl.abort();
+    lmPoiCtl = new AbortController();
+    const signal = lmPoiCtl.signal;
+    const center = lmMap.getCenter(), z = lmMap.getZoom();
+    const r = z >= 16 ? 1200 : z >= 15 ? 2200 : z >= 14 ? 3500 : 5000;
+    const parts = cat.f.map(pairs => `nwr${pairs.map(([k, v]) => `["${k}"="${v}"]`).join('')}(around:${r},${center.lat.toFixed(5)},${center.lng.toFixed(5)});`).join('');
+    const body = 'data=' + encodeURIComponent(`[out:json][timeout:20];(${parts});out center 80;`);
+    let data = null;
+    for (const ep of LM_OVERPASS) {
+        try {
+            const res = await fetch(ep, { method: 'POST', body, headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, signal });
+            if (!res.ok) continue;
+            data = await res.json();
+            break;
+        } catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    if (lmCat !== id) return;
+    if (!data) { lmShowMessage(lmTx('poi_err')); return; }
+    const ref = lmLast ? [lmLast.lat, lmLast.lng] : [center.lat, center.lng];
+    const seen = new Set();
+    const items = [];
+    (data.elements || []).forEach(el => {
+        const lat = el.lat != null ? el.lat : (el.center && el.center.lat), lng = el.lon != null ? el.lon : (el.center && el.center.lon);
+        if (lat == null || lng == null) return;
+        const key = el.type + el.id;
+        if (seen.has(key)) return; seen.add(key);
+        const tg = el.tags || {};
+        const name = (currentLang === 'en' ? (tg['name:en'] || tg.name || tg['name:bn']) : (tg['name:bn'] || tg.name || tg['name:en'])) || lmL(cat.bn, cat.en);
+        const sub = [tg['addr:street'], tg['addr:city'] || tg['addr:suburb']].filter(Boolean).join(', ') || tg.operator || '';
+        items.push({ kind: 'poi', lat, lng, name, sub, color: cat.color, icon: cat.icon, dist: lmDist(ref, [lat, lng]) });
+    });
+    if (!items.length) { lmShowMessage(lmTx('poi_none')); return; }
+    items.sort((a, b) => a.dist - b.dist);
+    const top = items.slice(0, 60);
+    top.forEach((it, i) => {
+        const m = L.marker([it.lat, it.lng], {
+            icon: L.divIcon({ className: 'lm-pin-wrap', html: `<div class="lm-pin" style="--c:${cat.color}"></div>`, iconSize: [26, 26], iconAnchor: [13, 28] }),
+            title: it.name, keyboard: false
+        });
+        m.on('click', () => lmSelectPlace(it, { noFit: true }));
+        lmPoiLayer.addLayer(m);
+    });
+    lmShowResults(top.slice(0, 10), `${lmL(cat.bn, cat.en)} · ${lmNum(top.length)} ${lmTx('found')}`);
+};
+
+// ---------- বাটন ----------
+window.lmZoom = (d) => { if (lmMap) { d > 0 ? lmMap.zoomIn() : lmMap.zoomOut(); } };
+window.lmToggleLayer = () => {
+    if (!lmMap) return;
+    lmMap.removeLayer(lmLayers[lmLayerKey]);
+    lmLayerKey = lmLayerKey === 'osm' ? 'topo' : 'osm';
+    lmLayers[lmLayerKey].addTo(lmMap);
+    showToast(lmTx(lmLayerKey === 'osm' ? 'layer_osm' : 'layer_topo'), 'layers', 'text-emerald-400');
+};
+window.lmLocate = () => {
+    if (!lmMap) return;
+    if (lmLast) {
+        lmFollow = true;
+        lmMap.flyTo([lmLast.lat, lmLast.lng], Math.max(lmMap.getZoom(), 16), { duration: 0.8 });
+        lmUpdateLocateBtn();
+    } else {
+        window.lmRetry();
+    }
+};
+window.lmRetry = () => {
+    if (lmGuideKind === 'loadfail') { lmHideGuide(); mapOnOpen(); return; }
+    lmHideGuide(); lmStopWatch(); lmStartTracking();
+};
+window.lmHideGuide = lmHideGuide;
+window.lmDirections = () => {
+    if (!lmSelected) { showToast(lmTx('pick_first'), 'map-pin', 'text-amber-400'); return; }
+    const to = `${lmSelected.lat.toFixed(6)},${lmSelected.lng.toFixed(6)}`;
+    const from = lmLast ? `${lmLast.lat.toFixed(6)},${lmLast.lng.toFixed(6)}` : '';
+    window.open(`https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=${from};${to}`, '_blank', 'noopener');
+};
+window.lmCopyCoords = () => {
+    if (!lmLast) return;
+    const txt = `${lmLast.lat.toFixed(6)}, ${lmLast.lng.toFixed(6)}`;
+    const done = () => showToast(lmTx('copied'), 'copy', 'text-emerald-400');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(() => {});
+    else done();
+};
+
+// ---------- ট্যাব খোলা/বন্ধ ----------
+function lmBindGlobal() {
+    if (lmGlobalBound) return;
+    lmGlobalBound = true;
+    const fix = () => {
+        clearTimeout(lmResizeTimer);
+        lmResizeTimer = setTimeout(() => { if (lmMap && currentTab === 'map') lmMap.invalidateSize(); }, 150);
+    };
+    window.addEventListener('resize', fix);
+    window.addEventListener('orientationchange', fix);
+    // ব্যাটারি বাঁচাতে: অ্যাপ/ব্রাউজার ব্যাকগ্রাউন্ডে গেলে GPS বন্ধ, ফিরলে আবার চালু
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) lmStopWatch();
+        else if (currentTab === 'map' && lmMap) lmStartTracking();
+    });
+}
+async function mapOnOpen() {
+    lmBuildShell();
+    lmBindGlobal();
+    lmApplyTexts();
+    lmRenderChips();
+    lmRenderSheet();
+    lmUpdateLocateBtn();
+    const ok = await lmInitMap();
+    if (!ok || currentTab !== 'map') return;
+    setTimeout(() => { try { lmMap.invalidateSize(); } catch (e) {} }, 60);
+    setTimeout(() => { try { lmMap.invalidateSize(); } catch (e) {} }, 400);
+    if (lmLast && lmFollow) lmMap.setView([lmLast.lat, lmLast.lng], Math.max(lmMap.getZoom(), 16), { animate: false });
+    lmStartTracking();
+}
+function mapOnClose() { lmStopWatch(); }

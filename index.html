@@ -390,6 +390,7 @@
                     <button type="button" onclick="sidebarNav('weather')" class="sidebar-item"><i data-lucide="cloud-sun"></i><span>আবহাওয়া</span></button>
                     <button type="button" onclick="sidebarNav('news')" class="sidebar-item"><i data-lucide="newspaper"></i><span data-i18n="nav.news">খবর</span></button>
                     <button type="button" onclick="sidebarNav('launch')" class="sidebar-item"><i data-lucide="ship"></i><span data-i18n="nav.launch">লঞ্চের সময়সূচী</span></button>
+                    <button type="button" onclick="sidebarNav('map')" class="sidebar-item"><i data-lucide="map-pinned"></i><span data-i18n="nav.map">লাইভ ম্যাপ</span></button>
                 </div>
             </div>
 
@@ -1070,6 +1071,11 @@
             <!-- LAUNCH VIEW -->
             <div id="view-launch" class="tab-view hidden">
                 <div id="launchRoot"></div>
+            </div>
+
+            <!-- LIVE MAP VIEW (সেবাসমূহ > লাইভ ম্যাপ) -->
+            <div id="view-map" class="tab-view hidden">
+                <div id="lmRoot"></div>
             </div>
 
             <!-- NEWS VIEW -->

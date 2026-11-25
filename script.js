@@ -1098,7 +1098,7 @@
                 'nav.support': 'Admin Support',
                 'nav.favorites': 'পছন্দ',
                 'nav.notif': 'নোটিফিকেশন',
-                'nav.news': 'খবর', 'news.bd': 'বাংলাদেশ', 'news.world': 'বিশ্ব',
+                'nav.news': 'খবর', 'nav.launch': 'লঞ্চের সময়সূচী', 'news.bd': 'বাংলাদেশ', 'news.world': 'বিশ্ব',
                 'news.empty': 'এখন কোনো খবর পাওয়া যায়নি', 'news.loading': 'খবর লোড হচ্ছে...',
                 'news.error': 'খবর আনা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।', 'news.retry': 'আবার চেষ্টা করুন',
                 'sidebar.settings': 'সেটিংস',
@@ -1225,7 +1225,7 @@
                 'nav.support': 'Admin Support',
                 'nav.favorites': 'Favorites',
                 'nav.notif': 'Notifications',
-                'nav.news': 'News', 'news.bd': 'Bangladesh', 'news.world': 'World',
+                'nav.news': 'News', 'nav.launch': 'Launch Schedule', 'news.bd': 'Bangladesh', 'news.world': 'World',
                 'news.empty': 'No news available right now', 'news.loading': 'Loading news...',
                 'news.error': 'Could not load news. Check your connection and try again.', 'news.retry': 'Try again',
                 'sidebar.settings': 'Settings',
@@ -2031,7 +2031,7 @@
             setTimeout(() => { if (b.classList.contains('opacity-0')) b.classList.add('hidden'); }, 320);
         };
         window.sidebarNav = (action) => {
-            if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
+            if (!currentUser && !['news', 'launch'].includes(action)) { showAuthScreen(); switchAuthTab('login'); return; }
             closeSidebar();
             setTimeout(() => {
                 if (action === 'subscription' && !isPremiumSystemLive()) {
@@ -3510,7 +3510,7 @@
                 showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
                 return;
             }
-            if (!currentUser && !['services', 'emergency', 'blood', 'news'].includes(tabName)) {
+            if (!currentUser && !['services', 'emergency', 'blood', 'news', 'launch'].includes(tabName)) {
                 showAuthScreen(); switchAuthTab('login'); return;
             }
             currentTab = tabName;
@@ -3584,6 +3584,7 @@
                 loadUserFavorites();
             }
             if (tabName === 'news' && typeof newsOnOpen === 'function') { try { newsOnOpen(); } catch (e) {} }
+            if (tabName === 'launch' && typeof launchOnOpen === 'function') { try { launchOnOpen(); } catch (e) {} }
             if (tabName === 'weather') {
                 try { weatherOnOpen(); } catch (e) { console.warn('weather open', e); }
             }
@@ -8647,7 +8648,7 @@
             if (savedTab && document.getElementById('view-' + savedTab)) {
                 // delay slightly so DOM & auth are ready; guests can only use public tabs
                 setTimeout(() => {
-                    const publicTabs = ['services', 'emergency', 'blood', 'news'];
+                    const publicTabs = ['services', 'emergency', 'blood', 'news', 'launch'];
                     if (currentUser || publicTabs.includes(savedTab)) {
                         switchTab(savedTab);
                     }
@@ -9466,4 +9467,172 @@ window.newsSetCat = (cat) => {
     newsLoad(false);
 };
 function newsOnOpen() { newsLoad(false); }
+
+// ========== LAUNCH SCHEDULE (লঞ্চের সময়সূচী) ==========
+// নতুন রুট যোগ করতে LAUNCH_ROUTES এ আরেকটি { id, from, to, list: [...] } যোগ করুন।
+// প্রতিটি লঞ্চ: n = নাম, d = দেখানোর সময়, t = ২৪ ঘণ্টার সময় (HH:MM), p = মোবাইল নম্বর (ফাঁকা থাকলে কল বাটন আসবে না)
+const LAUNCH_UPDATED = '২৫ নভেম্বর ২০২৬';
+const LAUNCH_ROUTES = [
+    {
+        id: 'chd-dhk', from: 'চাঁদপুর', to: 'ঢাকা', fromEn: 'Chandpur', toEn: 'Dhaka',
+        list: [
+            { n: 'সোনার তরী/বাঘের হাট', d: 'সকাল ৬:৪৫', t: '06:45', p: '' },
+            { n: 'এম.ভি সোনার তরী', d: 'সকাল ৭:২০', t: '07:20', p: '' },
+            { n: 'এম.ভি মেঘনারানী', d: 'সকাল ৮:০০', t: '08:00', p: '' },
+            { n: 'এম.ভি মেঘনা রাণী', d: 'সকাল ৮:০০', t: '08:00', p: '' },
+            { n: 'এম.ভি বোগদাদীয়া ৭', d: 'সকাল ৮:৩০', t: '08:30', p: '' },
+            { n: 'এম.ভি আব এ জমজম-১ / এম.ভি তাকওয়া', d: 'সকাল ৯:১৫', t: '09:15', p: '' },
+            { n: 'এম.ভি মিতালী-২', d: 'সকাল ৯:৫০', t: '09:50', p: '' },
+            { n: 'এম.ভি স্বর্ণদ্বীপ-৮', d: 'সকাল ১০:১৫', t: '10:15', p: '' },
+            { n: 'এম.ভি ইমাম হাসান-২', d: 'সকাল ১১:০০', t: '11:00', p: '' },
+            { n: 'এম.ভি ইমাম হাসান-৫', d: 'সকাল ১১:৪৫', t: '11:45', p: '' },
+            { n: 'এম.ভি ময়ূর-২', d: 'দুপুর ১২:৩০', t: '12:30', p: '' },
+            { n: 'এম.ভি ময়ূর-৭', d: 'দুপুর ১:৩০', t: '13:30', p: '' },
+            { n: 'এম.ভি ঈগল-২/৩', d: 'দুপুর ২:৩০', t: '14:30', p: '' },
+            { n: 'এম.ভি রফ রফ', d: 'দুপুর ৩:৩০', t: '15:30', p: '' },
+            { n: 'এম.ভি ঈগল-৭', d: 'বিকাল ৪:৩০', t: '16:30', p: '' },
+            { n: 'এম.ভি সোনারতরী-১', d: 'বিকাল ৫:২০', t: '17:20', p: '' },
+            { n: 'এম.ভি নিউ আল বোরাক', d: 'বিকাল ৬:৪৫', t: '18:45', p: '' },
+            { n: 'এম.ভি রিপল / সোনার তরী', d: 'বিকাল ৭:৪৫', t: '19:45', p: '' },
+            { n: 'এম.ভি আব এ জমজম', d: 'রাত ১১:৩০', t: '23:30', p: '' },
+            { n: 'এম.ভি রফরফ', d: 'রাত ১২:০০', t: '00:00', p: '' },
+            { n: 'এম.ভি শম্পা / এম.ভি প্রিন্স অব রাসেল-৩', d: 'রাত ১২:৩০', t: '00:30', p: '' }
+        ]
+    }
+];
+
+let launchRouteIdx = 0, launchFilter = 'all', launchQuery = '', launchShellLang = '';
+
+function launchL(bn, en) { return currentLang === 'en' ? en : bn; }
+function launchDigits(v) { return currentLang === 'en' ? String(v) : String(v).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]); }
+function launchMin(t) { const p = t.split(':'); return (+p[0]) * 60 + (+p[1]); }
+// রাত ১২টার পরের লঞ্চগুলোকে আগের দিনের সার্ভিসের শেষে ধরা হয়
+function launchKey(m) { return m < 240 ? m + 1440 : m; }
+function launchNowMin() { const n = new Date(); return n.getHours() * 60 + n.getMinutes(); }
+
+function launchTimeParts(item) {
+    if (currentLang === 'en') {
+        const m = launchMin(item.t), h = Math.floor(m / 60), mm = m % 60;
+        return { time: `${h % 12 || 12}:${String(mm).padStart(2, '0')}`, period: h < 12 ? 'AM' : 'PM' };
+    }
+    const sp = item.d.indexOf(' ');
+    return { time: item.d.slice(sp + 1), period: item.d.slice(0, sp) };
+}
+function launchGroup(item) {
+    const m = launchMin(item.t);
+    if (m >= 240 && m < 720) return 'morning';
+    if (m >= 720 && m < 1080) return 'afternoon';
+    return 'night';
+}
+function launchEta(diff) {
+    const h = Math.floor(diff / 60), m = diff % 60;
+    if (diff <= 0) return launchL('এখনই', 'Now');
+    if (h === 0) return launchL(`${launchDigits(m)} মিনিট পরে`, `in ${m} min`);
+    if (m === 0) return launchL(`${launchDigits(h)} ঘণ্টা পরে`, `in ${h} hr`);
+    return launchL(`${launchDigits(h)} ঘণ্টা ${launchDigits(m)} মিনিট পরে`, `in ${h} hr ${m} min`);
+}
+function launchRoute() { return LAUNCH_ROUTES[launchRouteIdx] || LAUNCH_ROUTES[0]; }
+
+function launchBuildShell() {
+    const root = document.getElementById('launchRoot');
+    if (!root) return;
+    const r = launchRoute();
+    const routeName = launchL(`${r.from} → ${r.to}`, `${r.fromEn || r.from} → ${r.toEn || r.to}`);
+    const routeChips = LAUNCH_ROUTES.length > 1
+        ? `<div class="flex gap-2 overflow-x-auto pb-1">${LAUNCH_ROUTES.map((x, i) => `<button type="button" onclick="launchSetRoute(${i})" class="news-cat-btn ${i === launchRouteIdx ? 'active' : ''} whitespace-nowrap">${esc(launchL(`${x.from} → ${x.to}`, `${x.fromEn || x.from} → ${x.toEn || x.to}`))}</button>`).join('')}</div>`
+        : '';
+    const filters = [['all', 'সব', 'All'], ['morning', 'সকাল', 'Morning'], ['afternoon', 'দুপুর-বিকাল', 'Afternoon'], ['night', 'সন্ধ্যা-রাত', 'Night']]
+        .map(f => `<button type="button" data-lf="${f[0]}" onclick="launchSetFilter('${f[0]}')" class="news-cat-btn ${launchFilter === f[0] ? 'active' : ''} whitespace-nowrap">${esc(launchL(f[1], f[2]))}</button>`).join('');
+    root.innerHTML = `
+    <div class="space-y-4 pb-8">
+        <div class="info-card p-4 space-y-3">
+            <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center border border-sky-500/30 shrink-0"><i data-lucide="ship" class="w-5 h-5"></i></div>
+                <div class="min-w-0 flex-1">
+                    <h3 class="text-sm sm:text-base font-bold text-slate-100">${esc(launchL('লঞ্চের সময়সূচী', 'Launch Schedule'))}</h3>
+                    <p class="text-[11px] text-slate-400">${esc(routeName)} · ${esc(launchL(`হালনাগাদ: ${LAUNCH_UPDATED}`, 'Updated: ' + LAUNCH_UPDATED))}</p>
+                </div>
+            </div>
+            ${routeChips}
+            <div class="lc-search">
+                <i data-lucide="search" class="w-4 h-4"></i>
+                <input id="launchSearch" type="text" value="${esc(launchQuery)}" oninput="launchSetQuery(this.value)" placeholder="${esc(launchL('লঞ্চের নাম খুঁজুন...', 'Search launch name...'))}" autocomplete="off">
+            </div>
+            <div id="launchFilters" class="flex gap-2 overflow-x-auto pb-1">${filters}</div>
+        </div>
+        <div id="launchHero"></div>
+        <div id="launchList" class="space-y-2.5"></div>
+        <div class="lc-note">
+            <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
+            <p>${esc(launchL('আবহাওয়া ও অন্যান্য কারণে লঞ্চের সময়সূচি পরিবর্তিত হতে পারে। যাত্রার আগে লঞ্চের কাউন্টার বা কাস্টমার কেয়ারে ফোন করে সময় নিশ্চিত করুন।', 'Schedules may change due to weather or other reasons. Please confirm the departure time with the launch counter or customer care before travelling.'))}</p>
+        </div>
+    </div>`;
+    launchShellLang = currentLang;
+    try { lucide.createIcons(); } catch (e) {}
+}
+
+function launchRenderDynamic() {
+    const listEl = document.getElementById('launchList'), heroEl = document.getElementById('launchHero');
+    if (!listEl || !heroEl) return;
+    const r = launchRoute();
+    const now = launchNowMin(), nowKey = launchKey(now);
+
+    // পরবর্তী লঞ্চ (সবচেয়ে কাছের ছাড়ার সময়, রাত পেরিয়ে পরদিনও ধরে)
+    let next = null, nextDiff = 1e9;
+    r.list.forEach(it => {
+        const diff = (launchMin(it.t) - now + 1440) % 1440;
+        if (diff < nextDiff) { nextDiff = diff; next = it; }
+    });
+    if (next) {
+        const p = launchTimeParts(next);
+        const soon = nextDiff <= 30;
+        heroEl.innerHTML = `<div class="lc-hero ${soon ? 'soon' : ''}">
+            <div class="flex items-center justify-between gap-2">
+                <span class="lc-pill">${esc(launchL('পরবর্তী লঞ্চ', 'Next launch'))}</span>
+                <span class="lc-eta">${esc(launchEta(nextDiff))}</span>
+            </div>
+            <div class="lc-hero-time">${esc(p.period)} ${esc(p.time)}</div>
+            <div class="lc-hero-name">${esc(next.n)}</div>
+            ${next.p ? `<a href="tel:${esc(next.p)}" class="lc-hero-call"><i data-lucide="phone" class="w-4 h-4"></i> ${esc(launchL('কল করুন', 'Call'))}</a>` : ''}
+        </div>`;
+    }
+
+    const q = launchQuery.trim().toLowerCase();
+    const rows = r.list.filter(it => (launchFilter === 'all' || launchGroup(it) === launchFilter) && (!q || it.n.toLowerCase().includes(q)));
+    if (!rows.length) {
+        listEl.innerHTML = `<div class="info-card p-6 text-center text-xs text-slate-400">${esc(launchL('কোনো লঞ্চ পাওয়া যায়নি', 'No launches found'))}</div>`;
+    } else {
+        listEl.innerHTML = rows.map(it => {
+            const p = launchTimeParts(it);
+            const passed = launchKey(launchMin(it.t)) < nowKey;
+            const isNext = it === next;
+            return `<div class="lc-row ${passed ? 'passed' : ''} ${isNext ? 'is-next' : ''}">
+                <div class="lc-time"><b>${esc(p.time)}</b><small>${esc(p.period)}</small></div>
+                <div class="lc-info">
+                    <h4>${esc(it.n)}</h4>
+                    <p>${esc(launchL(`${r.from} থেকে ${r.to}`, `${r.fromEn || r.from} to ${r.toEn || r.to}`))}${isNext ? ' · <span class="lc-tag">' + esc(launchL('পরবর্তী', 'Next')) + '</span>' : (passed ? ' · ' + esc(launchL('ছেড়ে গেছে', 'Departed')) : '')}</p>
+                </div>
+                ${it.p ? `<a href="tel:${esc(it.p)}" class="lc-call" aria-label="Call"><i data-lucide="phone" class="w-4 h-4"></i></a>` : ''}
+            </div>`;
+        }).join('');
+    }
+    try { lucide.createIcons(); } catch (e) {}
+}
+
+window.launchSetQuery = (v) => { launchQuery = v || ''; launchRenderDynamic(); };
+window.launchSetFilter = (f) => {
+    launchFilter = f;
+    document.querySelectorAll('#launchFilters [data-lf]').forEach(b => b.classList.toggle('active', b.getAttribute('data-lf') === f));
+    launchRenderDynamic();
+};
+window.launchSetRoute = (i) => { launchRouteIdx = i; launchBuildShell(); launchRenderDynamic(); };
+function launchOnOpen() {
+    if (!document.getElementById('launchSearch') || launchShellLang !== currentLang) launchBuildShell();
+    launchRenderDynamic();
+}
+// খোলা থাকলে প্রতি ৩০ সেকেন্ডে "পরবর্তী লঞ্চ" আপডেট
+setInterval(() => {
+    const v = document.getElementById('view-launch');
+    if (v && !v.classList.contains('hidden')) launchRenderDynamic();
+}, 30000);
 

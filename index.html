@@ -389,6 +389,7 @@
                     <button type="button" onclick="sidebarNav('blood')" class="sidebar-item"><i data-lucide="droplet"></i><span>রক্ত</span></button>
                     <button type="button" onclick="sidebarNav('weather')" class="sidebar-item"><i data-lucide="cloud-sun"></i><span>আবহাওয়া</span></button>
                     <button type="button" onclick="sidebarNav('news')" class="sidebar-item"><i data-lucide="newspaper"></i><span data-i18n="nav.news">খবর</span></button>
+                    <button type="button" onclick="sidebarNav('launch')" class="sidebar-item"><i data-lucide="ship"></i><span data-i18n="nav.launch">লঞ্চের সময়সূচী</span></button>
                 </div>
             </div>
 
@@ -1064,6 +1065,11 @@
                         </button>
                     </form>
                 </div>
+            </div>
+
+            <!-- LAUNCH VIEW -->
+            <div id="view-launch" class="tab-view hidden">
+                <div id="launchRoot"></div>
             </div>
 
             <!-- NEWS VIEW -->

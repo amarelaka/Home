@@ -3444,6 +3444,68 @@ body.light-mode .lc-time { background:#ecfdf5; }
 body.light-mode .lc-time b { color:#047857; }
 body.light-mode .lc-note { color:#92400e; background:#fffbeb; }
 
+/* ===== লঞ্চের সময়সূচী — ভেক্টর (SVG) এনিমেশন দৃশ্য, কোনো স্টিকার/ছবি নেই ===== */
+.lc-scene { position:relative; width:100%; height:118px; border-radius:20px; overflow:hidden; border:1px solid rgba(16,185,129,.2); box-shadow:0 10px 26px -16px rgba(5,150,105,.55); background:#042f2e; }
+.lc-scene svg { display:block; width:100%; height:100%; }
+.lc-wave-layer-back { animation: lc-wave-drift-back 15s linear infinite; }
+.lc-wave-layer-front { animation: lc-wave-drift-front 7.5s linear infinite; }
+.lc-boat { animation: lc-boat-bob 2.6s ease-in-out infinite; transform-origin: 170px 100px; }
+.lc-cloud-a { animation: lc-cloud-drift-a 18s ease-in-out infinite alternate; }
+.lc-cloud-b { animation: lc-cloud-drift-b 22s ease-in-out infinite alternate; }
+@keyframes lc-wave-drift-back { from { transform: translateX(0); } to { transform: translateX(-600px); } }
+@keyframes lc-wave-drift-front { from { transform: translateX(0); } to { transform: translateX(-600px); } }
+@keyframes lc-boat-bob { 0%, 100% { transform: translate(0,0) rotate(-1.5deg); } 50% { transform: translate(0,-6px) rotate(1.5deg); } }
+@keyframes lc-cloud-drift-a { from { transform: translateX(0); } to { transform: translateX(-40px); } }
+@keyframes lc-cloud-drift-b { from { transform: translateX(0); } to { transform: translateX(30px); } }
+@media (prefers-reduced-motion: reduce) {
+    .lc-wave-layer-back, .lc-wave-layer-front, .lc-boat, .lc-cloud-a, .lc-cloud-b { animation: none !important; }
+}
+body.light-mode .lc-scene { border-color:#d1fae5; background:#a7f3d0; }
+body.light-mode .lc-scene { --lc-sky-1:#a7f3d0; --lc-sky-2:#5eead4; --lc-wave-back:#0d9488; --lc-wave-front:#059669; --lc-sun:#fbbf24; }
+
+/* ========== TRAIN SCHEDULE (ট্রেনের সময়সূচী) — লঞ্চের lc-* স্টাইল পুনর্ব্যবহার করে ========== */
+.tc-scene { --tc-hill:#065f46; --tc-ground:#0b3d2e; }
+.tc-train { animation: tc-train-run 9s linear infinite; }
+.tc-sleepers { animation: tc-sleepers-move .6s linear infinite; }
+@keyframes tc-train-run { from { transform: translateX(-440px); } to { transform: translateX(660px); } }
+@keyframes tc-sleepers-move { to { stroke-dashoffset: -24; } }
+@media (prefers-reduced-motion: reduce) {
+    .tc-train, .tc-sleepers { animation: none !important; }
+    .tc-train { transform: translateX(60px); }
+}
+body.light-mode .tc-scene { --tc-hill:#34d399; --tc-ground:#a7f3d0; }
+.tc-no { font-size:10.5px; font-weight:700; color:#94a3b8; margin-left:4px; }
+.tc-tag { display:inline-block; font-size:10px; font-weight:700; padding:1px 7px; border-radius:999px; margin-left:4px; vertical-align:middle; }
+.tc-new { background:rgba(16,185,129,.2); color:#34d399; }
+.tc-off { background:rgba(244,63,94,.18); color:#fb7185; }
+.tc-warn { background:rgba(245,158,11,.18); color:#fbbf24; }
+.tc-detail { color:#7dd3c0 !important; }
+.tc-numbox { display:flex; align-items:center; justify-content:center; min-height:44px; }
+.tc-numbox b { font-size:13px !important; line-height:1.3; word-break:break-word; }
+.tc-sec { font-size:12px; font-weight:800; color:#34d399; margin:6px 2px 0; letter-spacing:.2px; }
+.tc-card { padding:14px; border-radius:16px; border:1px solid rgba(16,185,129,.18); background:rgba(8,24,16,.65); }
+.tc-card h4 { font-size:14px; font-weight:800; color:#f1f5f9; }
+.tc-sub { font-size:11px; color:#94a3b8; margin-top:3px; }
+.tc-line { font-size:12px; color:#cbd5e1; margin-top:6px; line-height:1.55; }
+.tc-line b { color:#34d399; }
+.tc-ul { margin:8px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px; }
+.tc-ul li { position:relative; padding-left:14px; font-size:12px; line-height:1.55; color:#cbd5e1; }
+.tc-ul li::before { content:''; position:absolute; left:2px; top:8px; width:5px; height:5px; border-radius:50%; background:#10b981; }
+.tc-link { color:#34d399; font-weight:700; text-decoration:underline; text-underline-offset:2px; word-break:break-all; }
+.tc-table-wrap { overflow-x:auto; margin-top:8px; -webkit-overflow-scrolling:touch; }
+.tc-table { width:100%; min-width:520px; border-collapse:collapse; font-size:11.5px; }
+.tc-table th { text-align:left; padding:8px 8px; color:#34d399; font-weight:800; border-bottom:1px solid rgba(16,185,129,.3); white-space:nowrap; }
+.tc-table td { padding:8px 8px; color:#e2e8f0; border-bottom:1px solid rgba(16,185,129,.12); vertical-align:top; }
+body.light-mode .tc-card { background:#fff; border-color:#d1fae5; }
+body.light-mode .tc-card h4 { color:#0f172a; }
+body.light-mode .tc-line, body.light-mode .tc-ul li { color:#334155; }
+body.light-mode .tc-table td { color:#0f172a; }
+body.light-mode .tc-line b, body.light-mode .tc-sec, body.light-mode .tc-link, body.light-mode .tc-table th { color:#047857; }
+body.light-mode .tc-detail { color:#0f766e !important; }
+body.light-mode .tc-new { color:#047857; background:#d1fae5; }
+body.light-mode .tc-off { color:#be123c; background:#ffe4e6; }
+body.light-mode .tc-warn { color:#b45309; background:#fef3c7; }
+
 /* ========== লাইভ ম্যাপ (Live Map) — সেবাসমূহ > লাইভ ম্যাপ ========== */
 #view-map {
     --lm-surface: rgba(10, 26, 19, .95);

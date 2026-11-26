@@ -372,6 +372,39 @@
         document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
         document.addEventListener('gesturestart', (e) => e.preventDefault());
 
+
+        // ========== ANTI-COPY / SELECT PROTECTION (Update 1) ==========
+        (function () {
+            const isEditable = (el) => {
+                if (!el || el.nodeType !== 1) return false;
+                const tag = el.tagName;
+                if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
+                if (el.isContentEditable) return true;
+                if (el.closest && el.closest('input, textarea, select, [contenteditable="true"]')) return true;
+                return false;
+            };
+            document.addEventListener('contextmenu', (e) => {
+                if (!isEditable(e.target)) e.preventDefault();
+            }, true);
+            document.addEventListener('copy', (e) => {
+                if (!isEditable(e.target)) e.preventDefault();
+            }, true);
+            document.addEventListener('cut', (e) => {
+                if (!isEditable(e.target)) e.preventDefault();
+            }, true);
+            document.addEventListener('selectstart', (e) => {
+                if (!isEditable(e.target)) e.preventDefault();
+            }, true);
+            document.addEventListener('dragstart', (e) => {
+                if (!isEditable(e.target)) e.preventDefault();
+            }, true);
+            // Block long-press callout on non-editable elements (extra safety)
+            document.addEventListener('touchstart', (e) => {
+                // do nothing here; CSS -webkit-touch-callout handles most cases
+            }, { passive: true });
+        })();
+
+
         const firebaseConfig = {
           apiKey: "AIzaSyCQUjnlabQIa7kAaNnDaYvjyAf9eY_yoRo",
           authDomain: "amaralakas.firebaseapp.com",
@@ -5121,15 +5154,26 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">`;
                 items.forEach(item => {
                     const c = /^bg-[a-z]+-\d{2,3}$/.test(String(item.color || '')) ? item.color : 'bg-rose-600';
-                    html += `<div class="bg-[#181127] p-3.5 rounded-2xl border border-violet-900/40 emergency-card-hover hover:border-violet-600/50 flex items-center justify-between gap-2.5">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <div class="w-11 h-11 ${c} text-white rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-black/30"><i data-lucide="phone" class="w-5 h-5"></i></div>
-                            <div class="min-w-0">
+                    const numClean = String(item.number || '').replace(/[^0-9+]/g, '');
+                    const itemId = item.id || numClean || Math.random().toString(36).slice(2);
+                    html += `<div class="ae-flip-card" data-section="emergency" data-id="${esc(itemId)}" data-name="${esc(item.title || '')}" data-number="${esc(numClean)}">
+                      <div class="ae-flip-inner">
+                        <div class="ae-flip-front">
+                          <div class="bg-[#181127] p-3.5 rounded-2xl border border-violet-900/40 emergency-card-hover hover:border-violet-600/50 flex items-center justify-between gap-2.5">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                              <div class="w-11 h-11 ${c} text-white rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-black/30"><i data-lucide="phone" class="w-5 h-5"></i></div>
+                              <div class="min-w-0">
                                 <h4 class="font-bold text-slate-200 text-xs sm:text-sm truncate">${esc(item.title || '')}</h4>
                                 <p class="text-[10px] text-slate-400 line-clamp-2">${esc(item.desc || '')}</p>
+                              </div>
                             </div>
+                            <a href="${currentUser ? `tel:${esc(numClean)}` : '#guest-login'}" data-service-name="Emergency: ${esc(item.title || '')}" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action w-11 h-11 bg-violet-600 hover:bg-violet-700 text-white rounded-full flex items-center justify-center shrink-0 border-2 border-violet-300/40 touch-target shadow-lg shadow-violet-600/30"><i data-lucide="phone" class="w-4 h-4"></i></a>
+                          </div>
                         </div>
-                        <a href="${currentUser ? `tel:${esc(String(item.number || '').replace(/[^0-9+]/g, ''))}` : '#guest-login'}" data-service-name="Emergency: ${esc(item.title || '')}" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action w-11 h-11 bg-violet-600 hover:bg-violet-700 text-white rounded-full flex items-center justify-center shrink-0 border-2 border-violet-300/40 touch-target shadow-lg shadow-violet-600/30"><i data-lucide="phone" class="w-4 h-4"></i></a>
+                        <div class="ae-flip-back">
+                          <button type="button" class="ae-report-btn" onclick="aeSubmitReport(this)"><i data-lucide="flag" class="w-4 h-4"></i> রিপোর্ট</button>
+                        </div>
+                      </div>
                     </div>`;
                 });
                 html += `</div></div>`;
@@ -5444,13 +5488,24 @@
             grid.innerHTML = filtered.map(d => {
                 const locLine = [d.upazila, d.district].filter(Boolean).join(', ') || d.location || '';
                 const extra = d.address ? ` · ${d.address}` : '';
-                return `<div class="bg-[#0b0714] p-3.5 rounded-2xl border border-violet-900/40 flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-10 h-10 bg-gradient-to-br from-rose-600 to-red-600 text-white font-black text-sm rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-rose-600/30">${esc(d.group || '?')}</div>
-                    <div class="min-w-0"><h4 data-user-content="true" class="font-bold text-slate-200 text-xs truncate">${esc(d.name || '')}</h4><p data-user-content="true" class="text-[10px] text-slate-400 truncate">${esc(locLine + extra)}</p></div>
-                </div>
-                <a href="${currentUser ? `tel:${esc(String(d.phone || '').replace(/[^0-9+]/g, ''))}` : '#guest-login'}" data-service-name="Blood Donor: ${esc(d.name || '')} (${esc(d.group || '')})" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action bg-violet-600 hover:bg-violet-700 text-white text-[11px] font-bold px-3 py-2 rounded-xl touch-target flex items-center gap-1 shadow-lg shadow-violet-600/30"><i data-lucide="phone" class="w-3 h-3"></i> কল</a>
-            </div>`;
+                const numClean = String(d.phone || '').replace(/[^0-9+]/g, '');
+                const itemId = d.id || numClean || Math.random().toString(36).slice(2);
+                return `<div class="ae-flip-card" data-section="blood" data-id="${esc(itemId)}" data-name="${esc(d.name || '')}" data-number="${esc(numClean)}">
+                  <div class="ae-flip-inner">
+                    <div class="ae-flip-front">
+                      <div class="bg-[#0b0714] p-3.5 rounded-2xl border border-violet-900/40 flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                          <div class="w-10 h-10 bg-gradient-to-br from-rose-600 to-red-600 text-white font-black text-sm rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-rose-600/30">${esc(d.group || '?')}</div>
+                          <div class="min-w-0"><h4 data-user-content="true" class="font-bold text-slate-200 text-xs truncate">${esc(d.name || '')}</h4><p data-user-content="true" class="text-[10px] text-slate-400 truncate">${esc(locLine + extra)}</p></div>
+                        </div>
+                        <a href="${currentUser ? `tel:${esc(numClean)}` : '#guest-login'}" data-service-name="Blood Donor: ${esc(d.name || '')} (${esc(d.group || '')})" onclick="if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return false; }" class="call-action bg-violet-600 hover:bg-violet-700 text-white text-[11px] font-bold px-3 py-2 rounded-xl touch-target flex items-center gap-1 shadow-lg shadow-violet-600/30"><i data-lucide="phone" class="w-3 h-3"></i> কল</a>
+                      </div>
+                    </div>
+                    <div class="ae-flip-back">
+                      <button type="button" class="ae-report-btn" onclick="aeSubmitReport(this)"><i data-lucide="flag" class="w-4 h-4"></i> রিপোর্ট</button>
+                    </div>
+                  </div>
+                </div>`;
             }).join('');
             refreshIcons();
         };
@@ -10873,6 +10928,183 @@ async function mapOnOpen() {
 function mapOnClose() { lmStopWatch(); }
 
 
+
+// ========== REPORT SYSTEM (Update 2) – Long-press flip + Firebase ==========
+(function aeReportSystem() {
+    const HOLD_MS = 3000;
+    const MOVE_TOL = 12; // px – if finger moves more than this, cancel
+    let timer = null;
+    let startX = 0, startY = 0;
+    let activeCard = null;
+    let didLongPress = false;
+
+    function clearTimer() {
+        if (timer) { clearTimeout(timer); timer = null; }
+    }
+
+    function isReportBtn(el) {
+        return el && (el.classList.contains('ae-report-btn') || (el.closest && el.closest('.ae-report-btn')));
+    }
+
+    function getCard(el) {
+        return el && el.closest ? el.closest('.ae-flip-card') : null;
+    }
+
+    function flipCard(card) {
+        if (!card) return;
+        card.classList.toggle('is-flipped');
+        try { if (typeof refreshIcons === 'function') refreshIcons(); } catch (e) {}
+    }
+
+    function onPointerDown(e) {
+        // Only primary button / single touch
+        if (e.type === 'mousedown' && e.button !== 0) return;
+        if (e.type === 'touchstart' && e.touches.length !== 1) return;
+
+        const card = getCard(e.target);
+        if (!card) return;
+
+        // Don't start hold if already on the report button itself
+        if (isReportBtn(e.target)) return;
+
+        // Cancel any previous
+        clearTimer();
+        activeCard = card;
+        didLongPress = false;
+
+        const pt = e.type === 'touchstart' ? e.touches[0] : e;
+        startX = pt.clientX;
+        startY = pt.clientY;
+
+        timer = setTimeout(() => {
+            timer = null;
+            didLongPress = true;
+            flipCard(activeCard);
+            // Haptic feedback if available
+            try { if (navigator.vibrate) navigator.vibrate(30); } catch (err) {}
+        }, HOLD_MS);
+    }
+
+    function onPointerMove(e) {
+        if (!timer || !activeCard) return;
+        const pt = e.type.startsWith('touch') ? (e.touches[0] || e.changedTouches[0]) : e;
+        if (!pt) return;
+        const dx = Math.abs(pt.clientX - startX);
+        const dy = Math.abs(pt.clientY - startY);
+        if (dx > MOVE_TOL || dy > MOVE_TOL) {
+            clearTimer();
+            activeCard = null;
+        }
+    }
+
+    function onPointerUp(e) {
+        clearTimer();
+        // If we just long-pressed, prevent the click from firing on the call link
+        if (didLongPress) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Reset after a short delay so next normal tap works
+            setTimeout(() => { didLongPress = false; }, 50);
+        }
+        activeCard = null;
+    }
+
+    function onPointerCancel() {
+        clearTimer();
+        activeCard = null;
+        didLongPress = false;
+    }
+
+    // Use capture so we catch events before other handlers
+    document.addEventListener('touchstart', onPointerDown, { passive: true, capture: true });
+    document.addEventListener('mousedown', onPointerDown, true);
+    document.addEventListener('touchmove', onPointerMove, { passive: true, capture: true });
+    document.addEventListener('mousemove', onPointerMove, true);
+    document.addEventListener('touchend', onPointerUp, { passive: false, capture: true });
+    document.addEventListener('mouseup', onPointerUp, true);
+    document.addEventListener('touchcancel', onPointerCancel, true);
+
+    // Also cancel on scroll
+    document.addEventListener('scroll', () => { clearTimer(); activeCard = null; }, true);
+
+    // Prevent accidental click on call link right after a long-press
+    document.addEventListener('click', (e) => {
+        if (didLongPress) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }, true);
+
+    // ---------- Submit report to Firebase ----------
+    window.aeSubmitReport = async function (btn) {
+        if (!btn) return;
+        const card = getCard(btn);
+        if (!card) return;
+
+        if (typeof currentUser === 'undefined' || !currentUser) {
+            if (typeof showToast === 'function') showToast('রিপোর্ট করতে লগইন করুন', 'circle-x', 'text-rose-400');
+            if (typeof showAuthScreen === 'function') { showAuthScreen(); if (typeof switchAuthTab === 'function') switchAuthTab('login'); }
+            return;
+        }
+
+        const section = card.getAttribute('data-section') || '';
+        const name = card.getAttribute('data-name') || '';
+        const number = card.getAttribute('data-number') || '';
+        const itemId = card.getAttribute('data-id') || '';
+
+        if (!number) {
+            if (typeof showToast === 'function') showToast('নম্বর পাওয়া যায়নি', 'alert-circle', 'text-rose-400');
+            return;
+        }
+
+        btn.disabled = true;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<span class="animate-pulse">জমা হচ্ছে...</span>';
+
+        try {
+            // Prevent duplicate report by same user for same number+section
+            const q = query(
+                collection(db, 'reports'),
+                where('reporterUid', '==', currentUser.uid),
+                where('number', '==', number),
+                where('section', '==', section),
+                limit(1)
+            );
+            const existing = await getDocs(q);
+            if (!existing.empty) {
+                if (typeof showToast === 'function') showToast('আপনি ইতিমধ্যে এই নম্বরটি রিপোর্ট করেছেন', 'info', 'text-amber-400');
+                card.classList.remove('is-flipped');
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                return;
+            }
+
+            await addDoc(collection(db, 'reports'), {
+                name: name,
+                number: number,
+                section: section,          // 'blood' | 'emergency'
+                itemId: itemId,
+                reporterUid: currentUser.uid,
+                reporterName: (typeof userProfile !== 'undefined' && userProfile) ? (userProfile.fullName || '') : '',
+                reporterPhone: (typeof userProfile !== 'undefined' && userProfile) ? (userProfile.phone || '') : '',
+                createdAt: serverTimestamp(),
+                status: 'pending'
+            });
+
+            if (typeof showToast === 'function') showToast('রিপোর্ট সফলভাবে জমা হয়েছে', 'circle-check', 'text-emerald-400');
+            card.classList.remove('is-flipped');
+        } catch (err) {
+            console.error('Report error:', err);
+            if (typeof showToast === 'function') showToast('রিপোর্ট জমা ব্যর্থ হয়েছে', 'circle-x', 'text-rose-400');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+            try { if (typeof refreshIcons === 'function') refreshIcons(); } catch (e) {}
+        }
+    };
+})();
+
+
 // ========== GLASS SIDEBAR: selected (active) item sync ==========
 // Highlights the sidebar option that matches the current section, and
 // keeps it selected after the drawer is closed / reopened.
@@ -10922,4 +11154,126 @@ function mapOnClose() { lmStopWatch(); }
     });
 
     syncSidebarActive();
+})();
+
+// ========== সোয়াইপ পেজ নেভিগেশন (মোবাইল) ==========
+// নিচের নেভের ৫ অপশন: হোম → জরুরী → রক্ত → নোটিফিকেশন → খবর
+// ডান থেকে বামে সোয়াইপ = পরের পেজ, বাম থেকে ডানে = আগের পেজ। শেষ পেজে ঘুরে প্রথমে যাবে না।
+(function aeSwipeNavigation() {
+    const ORDER = ['services', 'emergency', 'blood', 'notif', 'news'];
+    const MIN_DX = 60;        // কমপক্ষে এত px পাশে টানতে হবে
+    const RATIO = 1.6;        // পাশে টান উপর-নিচ টানের চেয়ে স্পষ্ট বেশি হতে হবে
+    const MAX_MS = 900;       // সর্বোচ্চ সময়
+    const EDGE = 20;          // স্ক্রিনের কিনারা (ব্রাউজার/সিস্টেম ব্যাক জেসচার) বাদ
+    const BLOCK_SELECTOR = 'input, textarea, select, [contenteditable="true"], #view-map, .leaflet-container, canvas, video, iframe, [data-no-swipe]';
+
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function isVisible(el) {
+        if (!el || el.classList.contains('hidden')) return false;
+        const cs = getComputedStyle(el);
+        return cs.display !== 'none' && cs.visibility !== 'hidden';
+    }
+    function isMobileLayout() {
+        const nav = document.getElementById('bottomNav');
+        return !!nav && getComputedStyle(nav).display !== 'none' && window.matchMedia('(max-width: 767px)').matches;
+    }
+    function inHorizontalScroller(el) {
+        while (el && el !== document.body && el !== document.documentElement) {
+            if (el.nodeType === 1 && el.scrollWidth > el.clientWidth + 2) {
+                const ox = getComputedStyle(el).overflowX;
+                if (ox === 'auto' || ox === 'scroll') return true;
+            }
+            el = el.parentElement;
+        }
+        return false;
+    }
+    function overlayOpen() {
+        const body = document.body;
+        if (body.classList.contains('overflow-hidden') && !body.classList.contains('notif-page-open')) return true;
+        const drawer = document.getElementById('sidebarDrawer');
+        if (drawer && drawer.classList.contains('translate-x-0')) return true;
+        if (isVisible(document.getElementById('authSection'))) return true;
+        if (isVisible(document.getElementById('splashScreen'))) return true;
+        let open = false;
+        document.querySelectorAll('[id$="Modal"], .modal-sheet-parent').forEach(el => {
+            if (open || !isVisible(el)) return;
+            if (getComputedStyle(el).position === 'fixed') open = true;
+        });
+        return open;
+    }
+    function currentKey() {
+        if (document.body.classList.contains('notif-page-open')) return 'notif';
+        return (typeof currentTab !== 'undefined') ? currentTab : null;
+    }
+    function activeOrder() {
+        const loggedIn = (typeof currentUser !== 'undefined') && !!currentUser;
+        // লগইন ছাড়া নোটিফিকেশন পেজ খোলে না, তাই গেস্টের সোয়াইপে সেটা বাদ
+        return ORDER.filter(k => k !== 'notif' || loggedIn);
+    }
+    function animateIn(tab, dir) {
+        try {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const view = document.getElementById('view-' + tab);
+            if (!view || typeof view.animate !== 'function') return;
+            if (typeof view.getAnimations === 'function') view.getAnimations().forEach(a => a.cancel());
+            view.animate(
+                [
+                    { opacity: 0, transform: 'translate3d(' + (dir > 0 ? 40 : -40) + 'px,0,0)' },
+                    { opacity: 1, transform: 'translate3d(0,0,0)' }
+                ],
+                { duration: 320, easing: 'cubic-bezier(.22,.8,.3,1)' }
+            );
+        } catch (e) {}
+    }
+    function go(dir) {
+        const order = activeOrder();
+        const idx = order.indexOf(currentKey());
+        if (idx === -1) return;
+        const next = order[idx + dir];
+        if (!next) return; // প্রথম/শেষ পেজে আর কিছু হবে না
+        if (next === 'notif') {
+            if (typeof window.openNotifPanel === 'function') window.openNotifPanel();
+            return;
+        }
+        if (typeof window.switchTab !== 'function') return;
+        window.switchTab(next);
+        animateIn(next, dir);
+    }
+
+    document.addEventListener('touchstart', (e) => {
+        tracking = false;
+        if (e.touches.length !== 1) return;
+        if (typeof isForcedProfileMode !== 'undefined' && isForcedProfileMode) return;
+        if (!isMobileLayout()) return;
+        if (activeOrder().indexOf(currentKey()) === -1) return;
+        const t = e.touches[0];
+        if (t.clientX < EDGE || t.clientX > window.innerWidth - EDGE) return;
+        const target = e.target;
+        if (!target || !target.closest) return;
+        if (target.closest(BLOCK_SELECTOR)) return;
+        if (inHorizontalScroller(target)) return;
+        if (overlayOpen()) return;
+        sx = t.clientX; sy = t.clientY; st = Date.now();
+        tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+        if (!tracking) return;
+        tracking = false;
+        const t = e.changedTouches && e.changedTouches[0];
+        if (!t) return;
+        const dx = t.clientX - sx;
+        const dy = t.clientY - sy;
+        if (Date.now() - st > MAX_MS) return;
+        if (Math.abs(dx) < MIN_DX) return;
+        if (Math.abs(dx) < Math.abs(dy) * RATIO) return;
+        try {
+            const sel = window.getSelection && window.getSelection();
+            if (sel && sel.type === 'Range') return; // টেক্সট সিলেক্ট করা থাকলে সোয়াইপ নয়
+        } catch (err) {}
+        go(dx < 0 ? 1 : -1);
+    }, { passive: true });
+
+    document.addEventListener('touchcancel', () => { tracking = false; }, { passive: true });
 })();

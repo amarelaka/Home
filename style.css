@@ -3957,3 +3957,110 @@ body.light-mode #sidebarDrawer.ae-glass-sb .sidebar-item.ae-dl-btn { color: #fff
 .social-logo-google:hover { background: #f9fafb; }
 .social-logo-github { background: #24292e; color: #ffffff; border: 1px solid #444c56; }
 .social-logo-github:hover { background: #1b1f23; }
+
+/* =====================================================================
+   UPDATE 1: COPY / SELECT PROTECTION
+   Blocks text selection & long-press callout site-wide.
+   Inputs / textareas / contenteditable remain selectable.
+   ===================================================================== */
+html, body {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+body *:not(input):not(textarea):not([contenteditable="true"]):not(input *):not(textarea *) {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+input, textarea, [contenteditable="true"],
+input *, textarea *,
+.allow-select, .allow-select * {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
+
+/* =====================================================================
+   UPDATE 2: REPORT SYSTEM – Flip Card Animation
+   ===================================================================== */
+.ae-flip-card {
+  perspective: 1000px;
+  position: relative;
+  width: 100%;
+}
+.ae-flip-inner {
+  position: relative;
+  width: 100%;
+  transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.ae-flip-card.is-flipped .ae-flip-inner {
+  transform: rotateY(180deg);
+}
+.ae-flip-front,
+.ae-flip-back {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 1rem;
+}
+.ae-flip-front {
+  position: relative;
+}
+.ae-flip-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e1035 0%, #2a1448 50%, #1a0d2e 100%);
+  border: 1px solid rgba(244, 63, 94, 0.45);
+  box-shadow: 0 4px 20px rgba(244, 63, 94, 0.15);
+  padding: 12px;
+}
+body.light-mode .ae-flip-back {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 50%, #fff1f2 100%);
+  border-color: rgba(244, 63, 94, 0.35);
+}
+.ae-report-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.ae-report-btn:active {
+  transform: scale(0.96);
+}
+.ae-report-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.ae-report-btn svg {
+  width: 18px;
+  height: 18px;
+}
+/* Keep emergency/blood original card look when inside flip front */
+.ae-flip-front > .bg-\[\#181127\],
+.ae-flip-front > .bg-\[\#0b0714\] {
+  height: 100%;
+}

@@ -2318,6 +2318,36 @@
 
     <div id="apDock" role="button" tabindex="0" aria-label="Download progress" onclick="openDownloadAppModal()"><div class="ap-df" id="apDF"></div><div class="ap-t1" id="apT1">0%</div><div class="ap-t2" id="apT2">0%</div></div>
 
+    <!-- AE REPORT MODAL (blood / emergency long-press report) -->
+    <div id="aeReportModal" class="hidden fixed inset-0 z-[195] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog" aria-modal="true" aria-labelledby="aeReportTitle">
+        <div class="bg-[#130d1f] text-slate-100 rounded-3xl shadow-2xl w-full max-w-md border border-rose-700/40 modal-sheet overflow-hidden flex flex-col max-h-[92dvh]">
+            <div class="bg-gradient-to-r from-rose-700 via-rose-600 to-red-600 p-4 px-5 text-white flex items-center justify-between shrink-0">
+                <div class="min-w-0">
+                    <h3 id="aeReportTitle" class="font-bold text-base flex items-center gap-1.5"><i data-lucide="flag" class="w-4 h-4"></i> রিপোর্ট করুন</h3>
+                    <p id="aeReportMeta" class="text-[10px] text-rose-100/90 mt-0.5 truncate"></p>
+                </div>
+                <button type="button" onclick="closeAeReportModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center touch-target shrink-0" aria-label="বন্ধ"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form id="aeReportForm" onsubmit="handleAeReportSubmit(event)" class="p-4 sm:p-5 space-y-3.5 overflow-y-auto flex-1">
+                <div>
+                    <label for="aeReportProblem" class="block text-[11px] font-bold text-rose-300 uppercase tracking-wider mb-1.5">সমস্যাটি কী? *</label>
+                    <textarea id="aeReportProblem" rows="3" required maxlength="500" placeholder="যেমন: নম্বরটি ভুল / কাজ করে না / অনুপযুক্ত তথ্য..." class="w-full bg-[#0b0714] border border-rose-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-rose-500 placeholder:text-slate-500 resize-none"></textarea>
+                </div>
+                <div>
+                    <label for="aeReportSuggestion" class="block text-[11px] font-bold text-rose-300 uppercase tracking-wider mb-1.5">সমাধানের জন্য আপনার পরামর্শ *</label>
+                    <textarea id="aeReportSuggestion" rows="3" required maxlength="500" placeholder="যেমন: সঠিক নম্বর দিন / তথ্য আপডেট করুন..." class="w-full bg-[#0b0714] border border-rose-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-rose-500 placeholder:text-slate-500 resize-none"></textarea>
+                </div>
+                <p class="text-[10px] text-slate-500">দুটি ঘরই পূরণ করে সাবমিট করুন। আপনার রিপোর্ট অ্যাডমিন পর্যালোচনা করবেন।</p>
+                <div class="flex gap-2 pt-1">
+                    <button type="button" onclick="closeAeReportModal()" class="px-4 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm font-bold text-slate-200">বাতিল</button>
+                    <button type="submit" id="aeReportSubmitBtn" class="flex-1 h-11 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 text-white text-sm font-bold flex items-center justify-center gap-1.5 shadow-lg shadow-rose-600/30">
+                        <i data-lucide="send" class="w-4 h-4"></i> রিপোর্ট জমা দিন
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div id="toast" class="fixed bottom-24 md:bottom-5 right-3 sm:right-5 left-3 sm:left-auto z-[200] bg-[#181127] border border-violet-700/60 text-white px-4 py-3 rounded-2xl shadow-2xl shadow-violet-900/40 flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <span id="toastIconWrap" class="shrink-0 flex items-center justify-center"><i data-lucide="circle-check" class="w-5 h-5 text-violet-400"></i></span>

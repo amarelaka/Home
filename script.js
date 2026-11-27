@@ -7545,10 +7545,13 @@
 
         // ========== CHAT INFO MODAL ==========
         window.openChatInfoModal = () => {
-            const m = document.getElementById('chatInfoModal');
-            m.classList.remove('hidden'); m.classList.add('flex');
-            document.body.classList.add('overflow-hidden');
-            refreshIcons();
+            // Directly open Website Feedback (no intermediate options modal)
+            if (typeof openFeedbackModal === 'function') openFeedbackModal();
+            else {
+                const m = document.getElementById('chatInfoModal');
+                if (m) { m.classList.remove('hidden'); m.classList.add('flex'); document.body.classList.add('overflow-hidden'); }
+                if (typeof refreshIcons === 'function') refreshIcons();
+            }
         };
         window.closeChatInfoModal = () => {
             const m = document.getElementById('chatInfoModal');
@@ -11023,6 +11026,8 @@ function mapOnClose() { lmStopWatch(); }
     let startX = 0, startY = 0;
     let activeCard = null;
     let didLongPress = false;
+    let flippedCard = null; // currently flipped card (only one allowed)
+    let pendingReportData = null;
 
     function clearTimer() {
         if (timer) { clearTimeout(timer); timer = null; }
@@ -11036,9 +11041,25 @@ function mapOnClose() { lmStopWatch(); }
         return el && el.closest ? el.closest('.ae-flip-card') : null;
     }
 
+    function unflipAll(except) {
+        document.querySelectorAll('.ae-flip-card.is-flipped').forEach(c => {
+            if (c !== except) c.classList.remove('is-flipped');
+        });
+        flippedCard = except || null;
+        try { if (typeof refreshIcons === 'function') refreshIcons(); } catch (e) {}
+    }
+
     function flipCard(card) {
         if (!card) return;
-        card.classList.toggle('is-flipped');
+        if (card.classList.contains('is-flipped')) {
+            card.classList.remove('is-flipped');
+            if (flippedCard === card) flippedCard = null;
+        } else {
+            // Only one card may be flipped at a time
+            unflipAll(card);
+            card.classList.add('is-flipped');
+            flippedCard = card;
+        }
         try { if (typeof refreshIcons === 'function') refreshIcons(); } catch (e) {}
     }
 
@@ -11113,16 +11134,23 @@ function mapOnClose() { lmStopWatch(); }
     // Also cancel on scroll
     document.addEventListener('scroll', () => { clearTimer(); activeCard = null; }, true);
 
-    // Prevent accidental click on call link right after a long-press
+    // Prevent accidental click on call link right after a long-press,
+    // and cancel flipped state when clicking anywhere outside the flipped card / report modal.
     document.addEventListener('click', (e) => {
         if (didLongPress) {
             e.preventDefault();
             e.stopPropagation();
+            return;
         }
+        if (!flippedCard) return;
+        // Keep flipped if click is inside the flipped card or inside the report modal
+        if (flippedCard.contains(e.target)) return;
+        if (e.target.closest && e.target.closest('#aeReportModal')) return;
+        unflipAll(null);
     }, true);
 
-    // ---------- Submit report to Firebase ----------
-    window.aeSubmitReport = async function (btn) {
+    // ---------- Open report modal (instead of immediate submit) ----------
+    window.aeSubmitReport = function (btn) {
         if (!btn) return;
         const card = getCard(btn);
         if (!card) return;
@@ -11143,9 +11171,87 @@ function mapOnClose() { lmStopWatch(); }
             return;
         }
 
-        btn.disabled = true;
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<span class="animate-pulse">জমা হচ্ছে...</span>';
+        pendingReportData = { section, name, number, itemId, card };
+
+        const modal = document.getElementById('aeReportModal');
+        const form = document.getElementById('aeReportForm');
+        const problemEl = document.getElementById('aeReportProblem');
+        const suggestionEl = document.getElementById('aeReportSuggestion');
+        const metaEl = document.getElementById('aeReportMeta');
+        if (!modal || !form) return;
+
+        form.reset();
+        if (problemEl) problemEl.value = '';
+        if (suggestionEl) suggestionEl.value = '';
+        if (metaEl) {
+            const sectionLabel = section === 'blood' ? 'রক্ত' : (section === 'emergency' ? 'জরুরী' : section);
+            metaEl.textContent = (name ? name + ' · ' : '') + number + (sectionLabel ? ' · ' + sectionLabel : '');
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        // Lock background scroll + hide bottom navigation while report modal is open
+        document.body.classList.add('overflow-hidden', 'ae-report-open');
+        const bn = document.getElementById('bottomNav');
+        if (bn) bn.classList.add('nav-hidden');
+        try { if (typeof refreshIcons === 'function') refreshIcons(); } catch (e) {}
+        setTimeout(() => { if (problemEl) problemEl.focus(); }, 80);
+    };
+
+    window.closeAeReportModal = function () {
+        const modal = document.getElementById('aeReportModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        document.body.classList.remove('overflow-hidden', 'ae-report-open');
+        // Restore bottom nav unless chat-thread or other mode still hides it
+        const bn = document.getElementById('bottomNav');
+        if (bn && !document.body.classList.contains('chat-thread') && !document.body.classList.contains('notif-page-open')) {
+            bn.classList.remove('nav-hidden');
+        }
+        pendingReportData = null;
+        // Unflip any remaining flipped card when modal closes without submit
+        unflipAll(null);
+    };
+
+    // ---------- Submit report form to Firebase ----------
+    window.handleAeReportSubmit = async function (e) {
+        if (e) e.preventDefault();
+
+        if (!pendingReportData) {
+            if (typeof showToast === 'function') showToast('রিপোর্ট ডেটা পাওয়া যায়নি', 'alert-circle', 'text-rose-400');
+            return;
+        }
+
+        if (typeof currentUser === 'undefined' || !currentUser) {
+            if (typeof showToast === 'function') showToast('রিপোর্ট করতে লগইন করুন', 'circle-x', 'text-rose-400');
+            if (typeof showAuthScreen === 'function') { showAuthScreen(); if (typeof switchAuthTab === 'function') switchAuthTab('login'); }
+            return;
+        }
+
+        const problemEl = document.getElementById('aeReportProblem');
+        const suggestionEl = document.getElementById('aeReportSuggestion');
+        const problem = (problemEl && problemEl.value || '').trim();
+        const suggestion = (suggestionEl && suggestionEl.value || '').trim();
+
+        if (!problem) {
+            if (typeof showToast === 'function') showToast('সমস্যাটি লিখুন', 'alert-circle', 'text-amber-400');
+            if (problemEl) problemEl.focus();
+            return;
+        }
+        if (!suggestion) {
+            if (typeof showToast === 'function') showToast('সমাধানের পরামর্শ লিখুন', 'alert-circle', 'text-amber-400');
+            if (suggestionEl) suggestionEl.focus();
+            return;
+        }
+
+        const { section, name, number, itemId, card } = pendingReportData;
+        const submitBtn = document.getElementById('aeReportSubmitBtn');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="animate-pulse">জমা হচ্ছে...</span>';
+        }
 
         try {
             // Prevent duplicate report by same user for same number+section
@@ -11159,9 +11265,9 @@ function mapOnClose() { lmStopWatch(); }
             const existing = await getDocs(q);
             if (!existing.empty) {
                 if (typeof showToast === 'function') showToast('আপনি ইতিমধ্যে এই নম্বরটি রিপোর্ট করেছেন', 'info', 'text-amber-400');
-                card.classList.remove('is-flipped');
-                btn.disabled = false;
-                btn.innerHTML = originalHTML;
+                if (card) card.classList.remove('is-flipped');
+                flippedCard = null;
+                window.closeAeReportModal();
                 return;
             }
 
@@ -11170,6 +11276,8 @@ function mapOnClose() { lmStopWatch(); }
                 number: number,
                 section: section,          // 'blood' | 'emergency'
                 itemId: itemId,
+                problem: problem,
+                suggestion: suggestion,
                 reporterUid: currentUser.uid,
                 reporterName: (typeof userProfile !== 'undefined' && userProfile) ? (userProfile.fullName || '') : '',
                 reporterPhone: (typeof userProfile !== 'undefined' && userProfile) ? (userProfile.phone || '') : '',
@@ -11178,14 +11286,19 @@ function mapOnClose() { lmStopWatch(); }
             });
 
             if (typeof showToast === 'function') showToast('রিপোর্ট সফলভাবে জমা হয়েছে', 'circle-check', 'text-emerald-400');
-            card.classList.remove('is-flipped');
+            if (card) card.classList.remove('is-flipped');
+            flippedCard = null;
+            pendingReportData = null;
+            window.closeAeReportModal();
         } catch (err) {
             console.error('Report error:', err);
             if (typeof showToast === 'function') showToast('রিপোর্ট জমা ব্যর্থ হয়েছে', 'circle-x', 'text-rose-400');
         } finally {
-            btn.disabled = false;
-            btn.innerHTML = originalHTML;
-            try { if (typeof refreshIcons === 'function') refreshIcons(); } catch (e) {}
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> রিপোর্ট জমা দিন';
+                try { if (typeof refreshIcons === 'function') refreshIcons(); } catch (e) {}
+            }
         }
     };
 })();

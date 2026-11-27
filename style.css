@@ -173,6 +173,7 @@
         body.light-mode #editProfileModal > div,
         body.light-mode #userEmergencyRequestModal > div,
         body.light-mode #userBloodRequestModal > div,
+        body.light-mode #aeReportModal > div,
         body.light-mode #premiumActionModal > div,
         body.light-mode #providerModal > div,
         
@@ -221,6 +222,9 @@
         body.light-mode #userEmergencyRequestModal .bg-\[\#0b0714\],
         body.light-mode #userBloodRequestModal .bg-\[\#181127\],
         body.light-mode #userBloodRequestModal .bg-\[\#0b0714\],
+        body.light-mode #aeReportModal .bg-\[\#181127\],
+        body.light-mode #aeReportModal .bg-\[\#0b0714\],
+        body.light-mode #aeReportModal .bg-\[\#130d1f\],
         body.light-mode #premiumActionModal .bg-\[\#181127\],
         body.light-mode #premiumActionModal .bg-\[\#0b0714\],
         body.light-mode #providerModal .bg-\[\#181127\],
@@ -269,7 +273,10 @@
         body.light-mode #userEmergencyRequestModal .text-slate-300,
         body.light-mode #userBloodRequestModal .text-slate-100,
         body.light-mode #userBloodRequestModal .text-slate-200,
-        body.light-mode #userBloodRequestModal .text-slate-300 {
+        body.light-mode #userBloodRequestModal .text-slate-300,
+        body.light-mode #aeReportModal .text-slate-100,
+        body.light-mode #aeReportModal .text-slate-200,
+        body.light-mode #aeReportModal .text-slate-300 {
             color: #0f172a !important;
         }
         
@@ -279,7 +286,8 @@
         body.light-mode #editProfileModal .text-slate-400,
         body.light-mode #providerModal .text-slate-400,
         body.light-mode #userEmergencyRequestModal .text-slate-400,
-        body.light-mode #userBloodRequestModal .text-slate-400 {
+        body.light-mode #userBloodRequestModal .text-slate-400,
+        body.light-mode #aeReportModal .text-slate-400 {
             color: #64748b !important;
         }
 
@@ -4195,3 +4203,87 @@ body.light-mode .home-temp-badge {
   color: #0f172a;
 }
 body.light-mode .home-temp-badge .home-temp-icon { color: #6d28d9; }
+
+
+/* ===== AE Report Modal light mode ===== */
+body.light-mode #aeReportModal > div {
+    background: #ffffff !important;
+    border-color: #fecdd3 !important;
+    color: #0f172a !important;
+}
+body.light-mode #aeReportModal .bg-\[\#0b0714\],
+body.light-mode #aeReportModal textarea {
+    background: #f8fafc !important;
+    border-color: #fecdd3 !important;
+    color: #0f172a !important;
+}
+body.light-mode #aeReportModal label {
+    color: #be123c !important;
+}
+body.light-mode #aeReportModal .text-slate-500 {
+    color: #94a3b8 !important;
+}
+body.light-mode #aeReportModal button[type="button"]:not(.bg-gradient-to-r) {
+    background: #f1f5f9 !important;
+    color: #334155 !important;
+}
+
+
+/* ===== AE Report Modal: full cover, no bleed, hide bottom nav, lock scroll ===== */
+body.ae-report-open {
+  overflow: hidden !important;
+  touch-action: none;
+}
+body.ae-report-open #bottomNav {
+  display: none !important;
+  pointer-events: none !important;
+}
+#aeReportModal {
+  z-index: 200 !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+#aeReportModal.flex {
+  display: flex !important;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 !important;
+}
+@media (min-width: 640px) {
+  #aeReportModal.flex {
+    align-items: center;
+    padding: 0.75rem !important;
+  }
+}
+#aeReportModal > div {
+  width: 100%;
+  max-width: 28rem;
+  max-height: min(92dvh, 100%);
+  margin: 0;
+  border-radius: 1.25rem 1.25rem 0 0;
+  background: #130d1f !important;
+  box-shadow: 0 -8px 40px rgba(0,0,0,.45);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 640px) {
+  #aeReportModal > div {
+    border-radius: 1.5rem;
+    margin: 0 auto;
+  }
+}
+#aeReportModal form {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+/* Solid opaque panel so underlying emergency/blood cards never show through */
+body.light-mode #aeReportModal > div {
+  background: #ffffff !important;
+}
+body.light-mode #aeReportModal form {
+  background: #ffffff !important;
+}

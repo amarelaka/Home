@@ -148,14 +148,6 @@
         <div class="aurora-blob w-96 h-96 bg-violet-600/15 animate-float" style="bottom:-10%; right:-20%; animation-delay:-4s;"></div>
         <div class="aurora-blob w-64 h-64 bg-violet-500/20 animate-float" style="top:40%; right:-8%; animation-delay:-2s;"></div>
 
-        <div id="firebaseWarning" class="hidden absolute top-3 left-1/2 -translate-x-1/2 z-[110] max-w-[92%] w-full sm:max-w-md bg-rose-950/95 border border-rose-700/70 px-4 py-3 rounded-2xl flex items-start gap-2 text-rose-200 text-[11px] shadow-2xl backdrop-blur-md">
-            <i data-lucide="triangle-alert" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
-            <div>
-                <p class="font-bold">Firebase কনফিগারেশন নেই!</p>
-                <p class="text-rose-300/85 mt-0.5 leading-relaxed">কোডের ভেতরে <code class="bg-rose-900/60 px-1 rounded text-rose-100">firebaseConfig</code> এ আপনার Firebase প্রজেক্টের API key বসান।</p>
-            </div>
-        </div>
-
         <div class="relative z-10 min-h-[100dvh] flex items-center justify-center p-3 py-6 w-full max-w-[100vw]">
             <div class="glass-card w-full max-w-md rounded-3xl overflow-hidden flex flex-col max-h-[calc(100dvh-1.5rem)] animate-card-in">
                 <div class="glass-card-header shrink-0 px-5 pt-5 pb-3 border-b border-violet-500/20">
@@ -426,7 +418,7 @@
                         <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-violet-600 via-violet-600 to-violet-700 flex items-center justify-center text-white shadow-lg shadow-violet-600/40 ring-1 ring-violet-400/30">
                             <i data-lucide="house" class="w-5 h-5"></i>
                         </div>
-                        <h1 class="text-base sm:text-lg font-extrabold leading-tight tracking-tight notranslate" translate="no" data-brand="split">
+                        <h1 class="brand-title-text font-extrabold leading-tight tracking-tight notranslate" translate="no" data-brand="split">
                             <span class="brand-text-1">আমার</span><span class="brand-text-2"> এলাকা</span>
                         </h1>
                     </div>
@@ -445,15 +437,16 @@
                         </button>
                     </div>
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                        <button type="button" id="headerPlusBtn" onclick="openPremiumActionModal()" class="top-app-icon-btn text-violet-400 hover:bg-violet-500/15 premium-feature" title="প্রিমিয়াম অ্যাকশন" aria-label="প্রিমিয়াম অ্যাকশন">
+                        <button type="button" id="headerPlusBtn" onclick="openPremiumActionModal()" class="top-app-icon-btn text-violet-400 hover:bg-violet-500/15" title="প্রিমিয়াম অ্যাকশন" aria-label="প্রিমিয়াম অ্যাকশন">
                             <i data-lucide="plus-circle" class="w-5 h-5"></i>
                         </button>
-                        <button type="button" id="headerChatBtn" onclick="switchTab('chat')" class="top-app-icon-btn relative" title="অ্যাডমিন সাপোর্ট" aria-label="অ্যাডমিন সাপোর্ট">
-                            <!-- Facebook Messenger-style vector logo -->
-                            <svg class="w-5 h-5 messenger-header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path fill="currentColor" d="M12 2C6.48 2 2 6.16 2 11.28c0 2.9 1.43 5.49 3.67 7.2V22l3.36-1.85c.94.26 1.94.4 2.97.4 5.52 0 10-4.16 10-9.28S17.52 2 12 2zm1.06 12.47l-2.55-2.72-4.98 2.72 5.48-5.82 2.61 2.72 4.92-2.72-5.48 5.82z"/>
+                        <button type="button" id="headerNotifBtn" onclick="openNotifPanel()" class="top-app-icon-btn relative" title="নোটিফিকেশন" aria-label="নোটিফিকেশন">
+                            <!-- Notification bell (SVG) -->
+                            <svg class="w-5 h-5 header-notif-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
                             </svg>
-                            <span id="adminUnreadBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 ring-2 ring-[#130d1f]">0</span>
+                            <span id="notifBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 ring-2 ring-[#130d1f]">0</span>
                         </button>
                         <button type="button" id="hamburgerBtn" onclick="openSidebar()" class="top-app-icon-btn" title="মেনু" aria-label="মেনু">
                             <i data-lucide="menu" class="w-5 h-5"></i>
@@ -494,6 +487,10 @@
                 <div class="relative flex-1">
                     <input type="text" id="searchInputMobile" oninput="handleSearch(this)" placeholder="সেবা, হাসপাতাল বা টেকনিশিয়ান খুঁজুন..." class="w-full pl-10 pr-4 py-3 text-sm bg-[#181127] border border-violet-900/50 text-white rounded-2xl focus:border-violet-500 outline-none placeholder:text-slate-500">
                     <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500 pointer-events-none"></i>
+                </div>
+                <div id="homeTempBadge" class="home-temp-badge" role="button" tabindex="0" onclick="if(typeof sidebarNav==='function')sidebarNav('weather')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();if(typeof sidebarNav==='function')sidebarNav('weather')}" aria-label="Current temperature" title="Current temperature — open weather">
+                    <svg class="home-temp-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg>
+                    <span id="homeTempValue">--°C</span>
                 </div>
                 <button id="shareEmergencyBtnMobile" onclick="shareProtectedSection('emergency')" class="hidden w-12 h-12 shrink-0 bg-violet-600/20 border border-violet-400/40 text-violet-200 rounded-2xl flex items-center justify-center" title="জরুরি বিভাগ শেয়ার করুন" aria-label="জরুরি বিভাগ শেয়ার করুন"><i data-lucide="share-2" class="w-5 h-5"></i></button>
                 <button id="shareBloodBtnMobile" onclick="shareProtectedSection('blood')" class="hidden w-12 h-12 shrink-0 bg-violet-600/20 border border-violet-400/40 text-violet-200 rounded-2xl flex items-center justify-center" title="রক্তদাতা বিভাগ শেয়ার করুন" aria-label="রক্তদাতা বিভাগ শেয়ার করুন"><i data-lucide="share-2" class="w-5 h-5"></i></button>
@@ -1079,6 +1076,58 @@
                 <div id="newsList" class="space-y-3"></div>
             </div>
 
+            <!-- CREATE / PREMIUM ACTION VIEW (আগে মোডাল ছিল, এখন পেজ) -->
+            <div id="view-create" class="tab-view hidden space-y-4">
+                <button onclick="openProviderModal();" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="briefcase" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">সেবা যোগ করুন</h4>
+                            <p class="text-[10px] text-slate-400">সেবাদাতা হিসেবে আবেদন করুন</p>
+                        </div>
+                    </div>
+                    <span class="bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
+                </button>
+                <button onclick="openUserBloodRequestModal();" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="droplet" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">রক্তদাতা হিসেবে যোগ দিন</h4>
+                            <p class="text-[10px] text-slate-400">অ্যাডমিন যাচাই করে রক্তদাতা তালিকায় যোগ করবেন</p>
+                        </div>
+                    </div>
+                    <span class="bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
+                </button>
+                <button onclick="openUserEmergencyRequestModal();" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="phone-call" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">জরুরি তথ্য যোগ করুন</h4>
+                            <p class="text-[10px] text-slate-400">অ্যাডমিন যাচাই করে হেল্পলাইনে যোগ করবেন</p>
+                        </div>
+                    </div>
+                    <span class="bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
+                </button>
+                <button onclick="handleRunAdClick()" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="megaphone" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">বিজ্ঞাপন চালান</h4>
+                            <p class="text-[10px] text-slate-400">আপনার পোস্ট প্রমোট করুন</p>
+                        </div>
+                    </div>
+                    <span class="bg-gradient-to-r from-amber-400 to-orange-500 text-black border border-amber-500/30 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider">প্রিমিয়াম</span>
+                </button>
+            </div>
+
             <!-- PROFILE VIEW -->
             <div id="view-profile" class="tab-view hidden space-y-4">
                 <div class="info-card p-5 sm:p-6 max-w-xl mx-auto">
@@ -1248,15 +1297,37 @@
 
         <nav id="bottomNav" class="md:hidden fixed bottom-0 left-0 right-0 z-40 bottom-nav safe-bottom">
             <div class="relative flex items-stretch justify-around px-1 pt-2 pb-1">
-                <button id="bnav-services" onclick="switchTab('services')" class="bottom-nav-btn active"><i data-lucide="house" class="w-[22px] h-[22px]"></i><span>হোম</span></button>
-                <button id="bnav-emergency" onclick="switchTab('emergency')" class="bottom-nav-btn"><i data-lucide="phone-call" class="w-[22px] h-[22px]"></i><span>জরুরী</span></button>
-                <button id="bnav-blood" onclick="switchTab('blood')" class="bottom-nav-btn"><i data-lucide="droplet" class="w-[22px] h-[22px]"></i><span>রক্ত</span></button>
-                <button id="bnav-notif" type="button" onclick="openNotifPanel()" class="bottom-nav-btn relative" aria-label="নোটিফিকেশন">
-                    <i data-lucide="bell" class="w-[22px] h-[22px]" stroke-width="2"></i>
-                    <span data-i18n="nav.notif">নোটিফিকেশন</span>
-                    <span id="notifBadge" class="hidden absolute top-0 right-1/2 translate-x-3 min-w-[16px] h-[16px] bg-rose-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center px-0.5 ring-2 ring-[#130d1f]">0</span>
+                <button id="bnav-services" onclick="switchTab('services')" class="bottom-nav-btn active" aria-label="হোম" title="হোম"><i data-lucide="house" class="w-[22px] h-[22px]"></i></button>
+                <button id="bnav-emergency" onclick="switchTab('emergency')" class="bottom-nav-btn" aria-label="জরুরী" title="জরুরী"><i data-lucide="phone-call" class="w-[22px] h-[22px]"></i></button>
+                <button id="bnav-blood" onclick="switchTab('blood')" class="bottom-nav-btn" aria-label="রক্ত" title="রক্ত"><i data-lucide="droplet" class="w-[22px] h-[22px]"></i></button>
+                <button id="bnav-create" type="button" onclick="openPremiumActionModal()" class="bottom-nav-create" aria-label="প্রিমিয়াম অ্যাকশন" title="প্রিমিয়াম অ্যাকশন">
+                    <span class="bnav-create-icon">
+                        <!-- Create (+) button: কালো প্লাস, বেগুনি ব্যাকগ্রাউন্ড -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M12 5v14"/>
+                            <path d="M5 12h14"/>
+                        </svg>
+                    </span>
                 </button>
-                <button id="bnav-news" onclick="switchTab('news')" class="bottom-nav-btn"><i data-lucide="newspaper" class="w-[22px] h-[22px]"></i><span data-i18n="nav.news">খবর</span></button>
+                <button id="bnav-chat" type="button" onclick="switchTab('chat')" class="bottom-nav-btn relative" aria-label="মেসেজ" title="মেসেজ">
+                    <!-- Message / chat icon (SVG) -->
+                    <svg class="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+                        <path d="M8 12h.01"/>
+                        <path d="M12 12h.01"/>
+                        <path d="M16 12h.01"/>
+                    </svg>
+                    <span id="adminUnreadBadge" class="hidden absolute top-0 right-1/2 translate-x-3 min-w-[16px] h-[16px] bg-rose-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center px-0.5 ring-2 ring-[#130d1f]">0</span>
+                </button>
+                <button id="bnav-news" onclick="switchTab('news')" class="bottom-nav-btn" aria-label="খবর" title="খবর"><i data-lucide="newspaper" class="w-[22px] h-[22px]"></i></button>
+                <button id="bnav-profile" type="button" onclick="switchTab('profile')" class="bottom-nav-btn" aria-label="প্রোফাইল" title="প্রোফাইল">
+                    <!-- লগইন + ছবি থাকলে প্রোফাইল ছবি (script.js আগের মতো bnavProfilePic সেট করে); নইলে User আইকন -->
+                    <img id="bnavProfilePic" class="hidden" alt="" onerror="this.classList.add('hidden');document.getElementById('bnavProfileIcon')?.classList.remove('hidden')">
+                    <svg id="bnavProfileIcon" class="w-[22px] h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </button>
             </div>
         </nav>
     </div>
@@ -2183,52 +2254,6 @@
     </div>
 
     <!-- PREMIUM ACTION MODAL -->
-    <div id="premiumActionModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
-        <div class="w-full max-w-lg rounded-3xl border border-violet-800/50 bg-[#181127] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
-            <div class="bg-gradient-to-r from-violet-800 via-violet-700 to-violet-900 p-4 px-5 text-white flex items-center justify-between shrink-0">
-                <div>
-                    <h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="sparkles" class="w-4 h-4"></i> প্রিমিয়াম অ্যাকশন</h3>
-                    <p class="text-[10px] text-violet-200">আপনার পছন্দমতো অপশন বেছে নিন</p>
-                </div>
-                <button onclick="closePremiumActionModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
-            </div>
-            <div class="p-4 sm:p-5 overflow-y-auto space-y-4">
-                <button onclick="closePremiumActionModal(); openProviderModal();" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <i data-lucide="briefcase" class="w-5 h-5"></i>
-                        </div>
-                        <div class="text-left">
-                            <h4 class="text-sm font-bold text-white">সেবা যোগ করুন</h4>
-                            <p class="text-[10px] text-slate-400">সেবাদাতা হিসেবে আবেদন করুন</p>
-                        </div>
-                    </div>
-                    <span class="bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
-                </button>
-                <button onclick="handleRunAdClick()" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <i data-lucide="megaphone" class="w-5 h-5"></i>
-                        </div>
-                        <div class="text-left">
-                            <h4 class="text-sm font-bold text-white">বিজ্ঞাপন চালান</h4>
-                            <p class="text-[10px] text-slate-400">আপনার পোস্ট প্রমোট করুন</p>
-                        </div>
-                    </div>
-                    <span class="bg-gradient-to-r from-amber-400 to-orange-500 text-black border border-amber-500/30 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider">প্রিমিয়াম</span>
-                </button>
-                <div class="mt-4 p-4 bg-[#0b0714] border border-violet-900/40 rounded-2xl space-y-2">
-                    <h4 class="text-sm font-bold text-amber-400 flex items-center gap-1.5">
-                        <i data-lucide="help-circle" class="w-4 h-4"></i> কেন আপনি বিজ্ঞাপন চালাবেন ?
-                    </h4>
-                    <p class="text-[11px] text-slate-300 leading-relaxed text-justify">
-                        আমাদের ওয়েবসাইটে সেবাগুলো রেনডমলি ভাবে হোম পেজে দেখা যায়। এর মানে আপনি এই মাত্র যে সেবাটি দেখেছেন সেটা একটু পর আবার নাও দেখতে পারেন যদি না আপনি সংরক্ষণ করে রাখেন। বিজ্ঞাপনের সুবিধাটি হলো যত বেশি সম্ভব বিজ্ঞাপন করা পোস্টটি হোমপেজে দেখানো। আপনি প্রতিদিন একটি প্রমোশন পোস্ট করতে পারবেন যার মেয়াদ থাকবে ২৪ ঘন্টা অর্থাৎ একদিন। তাহলে আর দেরি কেন এখনই করুন আপনার প্রমোশন পোস্ট।
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- ===== APP STORE STYLE DOWNLOAD PAGE ===== -->
 
     <div id="downloadAppModal" class="hidden fixed inset-0 z-[180]" role="dialog" aria-modal="true">

@@ -420,7 +420,7 @@
                 app = initializeApp(firebaseConfig);
                 try {
                     // Offline cache (replaces deprecated enableIndexedDbPersistence)
-                    db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+                    db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }), experimentalAutoDetectLongPolling: true });
                 } catch (cacheErr) {
                     console.warn('Offline setup:', cacheErr);
                     db = getFirestore(app);
@@ -429,11 +429,10 @@
                 firebaseReady = true;
                 console.log('Firebase connected');
             } else {
-                document.getElementById('firebaseWarning').classList.remove('hidden');
+                console.warn('Firebase configuration missing or invalid API key');
             }
         } catch (e) {
             console.warn('Firebase init failed', e);
-            document.getElementById('firebaseWarning').classList.remove('hidden');
         }
 
 
@@ -2296,13 +2295,35 @@
                 renderNotifications();
                 updateNotifBadge();
             }
-            const action = (item && item.clickAction) || 'home';
+            let action = (item && item.clickAction) || 'home';
+            // নোটিশের নোটিফিকেশন (পুরোনোগুলোসহ): নির্দিষ্ট নোটিশের মডাল খুলবে
+            if (item && item.type === 'notice' && String(item.id || '').startsWith('ntc-') && (action === 'home' || action === 'notice')) {
+                action = 'notice:' + String(item.id).slice(4);
+            }
             navigateFromNotification(action);
             closeNotifPanel();
+        }
+        window.handleNotificationClick = handleNotificationClick;
+
+        // হোমপেজে গিয়ে নির্দিষ্ট নোটিশের মডাল খোলা (নোটিশ লোড না হওয়া পর্যন্ত অল্প অপেক্ষা করে)
+        function openNoticeFromNotification(noticeId) {
+            try { switchTab('services'); } catch (e) { console.warn(e); }
+            let tries = 0;
+            const tick = () => {
+                const ready = notices.some(n => n.id === noticeId && isNoticeVisible(n));
+                if (ready || tries >= 20) {
+                    if (typeof window.openNoticeModal === 'function') window.openNoticeModal(noticeId);
+                    return;
+                }
+                tries++;
+                setTimeout(tick, 250);
+            };
+            setTimeout(tick, 150);
         }
 
         function navigateFromNotification(action) {
             if (typeof action === 'string' && action.startsWith('chat:')) { window.mesesuOpenFromPush(action.slice(5)); return; }
+            if (typeof action === 'string' && action.startsWith('notice:')) { openNoticeFromNotification(action.slice(7)); return; }
             const map = {
                 'subscription': 'subscription',
                 'chat': 'chat',
@@ -2414,6 +2435,7 @@
             document.getElementById('appContent').classList.remove('flex');
             document.body.classList.add('overflow-hidden');
         }
+        window.showAuthScreen = showAuthScreen;
         function hideAuthScreen() {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('appContent').classList.remove('hidden');
@@ -3275,6 +3297,7 @@
 
         // ========== PROFILE UI ==========
         function updateProfileUI() {
+            try { updateHomeTemp(); } catch (e) {}
             const nameEl = document.getElementById('sidebarUserName');
             const emailEl = document.getElementById('sidebarUserEmail');
             if (!userProfile) {
@@ -3595,6 +3618,12 @@
             const showSearch = ['services', 'emergency', 'blood', 'favorites'].includes(tabName);
             document.getElementById('searchContainerDesktop')?.classList.toggle('show', showSearch);
             document.getElementById('searchContainerMobile')?.classList.toggle('hidden', !showSearch);
+            // তাপমাত্রা ব্যাজ শুধু হোমপেজে (services) দেখাবে
+            const homeTempBadge = document.getElementById('homeTempBadge');
+            if (homeTempBadge) {
+                homeTempBadge.hidden = tabName !== 'services';
+                if (tabName === 'services') { try { updateHomeTemp(); } catch (e) {} }
+            }
             const isEmergencyTab = tabName === 'emergency';
             const isBloodTab = tabName === 'blood';
             ['shareEmergencyBtnDesktop','shareEmergencyBtnMobile'].forEach(id => document.getElementById(id)?.classList.toggle('hidden', !isEmergencyTab));
@@ -5754,13 +5783,13 @@
             if (dot) {
                 dot.classList.remove('hidden');
                 dot.className = online
-                    ? 'w-3 h-3 bg-violet-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse'
+                    ? 'w-3 h-3 bg-emerald-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse'
                     : 'w-3 h-3 bg-slate-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
             }
             const label = document.getElementById('adminStatusLabel');
             if (label) {
                 label.textContent = online ? 'অনলাইন' : mesesuActiveAgoText(u);
-                label.className = online ? 'text-[10px] text-violet-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
+                label.className = online ? 'text-[10px] text-emerald-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
             }
         }
         function mesesuStopPeerWatch() {
@@ -6248,7 +6277,7 @@
             if (statusDot) {
                 statusDot.classList.remove('hidden');
                 if (isAdminOnline) {
-                    statusDot.className = 'w-3 h-3 bg-violet-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
+                    statusDot.className = 'w-3 h-3 bg-emerald-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
                 } else {
                     statusDot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
                 }
@@ -6256,7 +6285,7 @@
             const statusLabel = document.getElementById('adminStatusLabel');
             if (statusLabel) {
                 statusLabel.textContent = isAdminOnline ? 'অনলাইন' : 'অফলাইন';
-                statusLabel.className = isAdminOnline ? 'text-[10px] text-violet-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
+                statusLabel.className = isAdminOnline ? 'text-[10px] text-emerald-500 font-medium' : 'text-[10px] text-slate-400 font-medium';
             }
             const img = document.getElementById('threadAvatarImg');
             const ic = document.getElementById('threadAvatarIcon');
@@ -6345,7 +6374,7 @@
             if (statusDot) {
                 statusDot.classList.remove('hidden');
                 if (peerOnline) {
-                    statusDot.className = 'w-3 h-3 bg-violet-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
+                    statusDot.className = 'w-3 h-3 bg-emerald-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
                 } else {
                     statusDot.className = 'w-3 h-3 bg-slate-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10';
                 }
@@ -7031,7 +7060,7 @@
             if (typeof mesesuMode !== 'undefined' && mesesuMode === 'dm') return;
             if (isOnline) {
                 dot.classList.remove('hidden');
-                dot.className = 'w-3 h-3 bg-violet-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
+                dot.className = 'w-3 h-3 bg-emerald-500 border-2 border-[#181127] rounded-full absolute -bottom-0.5 -right-0.5 z-10 animate-pulse';
                 label.textContent = 'অনলাইন';
                 label.className = 'text-[10px] text-violet-500 font-medium';
             } else {
@@ -7324,15 +7353,16 @@
         window.openPremiumActionModal = () => {
             if (!isPremiumSystemLive()) return showToast('প্রিমিয়াম সাবস্ক্রিপশন বর্তমানে উপলব্ধ নয়', 'crown', 'text-slate-400');
             if (isForcedProfileMode) return;
-            if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
-            const m = document.getElementById('premiumActionModal');
-            m.classList.remove('hidden'); m.classList.add('flex');
-            document.body.classList.add('overflow-hidden');
-            refreshIcons();
+            if (!currentUser) { showAuthScreen(); switchAuthTab('login'); return; }
+            // আগে এখানে মোডাল (পপ-আপ) খুলতো, এখন একটি পূর্ণ পেজে (tab) নিয়ে যাওয়া হচ্ছে
+            // যাতে নিচের নেভিগেশন বার সবসময় দেখা যায়।
+            switchTab('create');
         };
         window.closePremiumActionModal = () => {
+            // মোডাল আর ব্যবহার হয় না, তাই এটি এখন শুধু হোম পেজে ফিরিয়ে নেয়
+            // (ভুলক্রমে কোথাও এখনো কল হলে অ্যাপ যেন ভেঙে না পড়ে, তার জন্য রাখা হলো)।
             const m = document.getElementById('premiumActionModal');
-            m.classList.add('hidden'); m.classList.remove('flex');
+            if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
             document.body.classList.remove('overflow-hidden');
         };
 
@@ -7448,7 +7478,7 @@
                 renderNotices();
                 if (currentUser) {
                     trackCollectionUpdates('notices', notices, (item) => {
-                        addNotification({ id: `ntc-${item.id}`, type: 'notice', title: 'নতুন নোটিশ প্রকাশিত', body: item.title || item.heading || 'নতুন ঘোষণা', icon: 'megaphone', clickAction: 'home' });
+                        addNotification({ id: `ntc-${item.id}`, type: 'notice', title: 'নতুন নোটিশ প্রকাশিত', body: item.title || item.heading || 'নতুন ঘোষণা', icon: 'megaphone', clickAction: `notice:${item.id}` });
                     });
                 }
             }, err => console.warn('notices listener:', err.code || err.message));
@@ -8542,6 +8572,54 @@
             weatherLoad(dh.lat, dh.lon, { label: dh.bn, kind: 'search' }, { force });
         }
 
+        /* ---------- হোমপেজ সার্চ বারের পাশের তাপমাত্রা ব্যাজ ---------- */
+        let homeTempReqId = 0;
+        let homeTempLast = { key: '', t: 0 };
+        const HOME_TEMP_CACHE_MS = 10 * 60 * 1000;
+        function homeTempBn(n) { return String(n); /* always English digits for homepage badge */ }
+        function setHomeTempText(text, hint) {
+            const val = document.getElementById('homeTempValue');
+            const badge = document.getElementById('homeTempBadge');
+            if (val) val.textContent = text;
+            if (badge && hint) { badge.title = hint; badge.setAttribute('aria-label', hint); }
+        }
+        async function updateHomeTemp() {
+            const badge = document.getElementById('homeTempBadge');
+            if (!badge || badge.hidden) return;
+            const reqId = ++homeTempReqId;
+            // গেস্ট মোড: সবসময় ০০°C
+            if (!currentUser) {
+                homeTempLast = { key: 'guest', t: Date.now() };
+                setHomeTempText('00°C', 'Guest mode');
+                return;
+            }
+            try {
+                if (homeTempLast.key === 'guest' || !homeTempLast.key) setHomeTempText('--°C', 'Loading temperature');
+                const d = await wxWaitDistrict();
+                if (reqId !== homeTempReqId) return;
+                const upz = (userProfile && userProfile.upazila) ? String(userProfile.upazila).trim() : '';
+                let loc = wxFindUpazila(d, upz);
+                if (!loc) {
+                    const info = wxFindDistrict(d);
+                    if (info) loc = { lat: info.lat, lon: info.lon, label: info.bn };
+                }
+                if (!loc) { homeTempLast = { key: '', t: 0 }; setHomeTempText('--°C', 'Location not found'); return; }
+                const key = `${currentUser.uid}|${d}|${upz}`;
+                const fresh = homeTempLast.key === key && (Date.now() - homeTempLast.t) < HOME_TEMP_CACHE_MS;
+                if (fresh) return;
+                const data = await weatherFetchJson('/current.json', { q: `${loc.lat},${loc.lon}`, aqi: 'no' });
+                if (reqId !== homeTempReqId || !currentUser) return;
+                const t = Number(data && data.current && data.current.temp_c);
+                if (!Number.isFinite(t)) throw new Error('no temp');
+                homeTempLast = { key, t: Date.now() };
+                setHomeTempText(`${homeTempBn(Math.round(t))}°C`, `Current temperature in ${loc.label}`);
+            } catch (e) {
+                if (reqId !== homeTempReqId) return;
+                homeTempLast = { key: '', t: 0 };
+                setHomeTempText('--°C', 'Temperature unavailable');
+            }
+        }
+
         /* ---------- লাইভ লোকেশন ---------- */
         async function wxReverseName(lat, lon) {
             try {
@@ -8949,6 +9027,7 @@
                     }
                 } else {
                     userProfile = null; currentUser = null; chatInitialLoadDone = false; adminChatMessages = []; chatMessages = [];
+                    try { updateHomeTemp(); } catch (e) {}
                     isForcedProfileMode = false;
                     document.body.classList.remove('force-profile-mode');
                     if (unsubscribeChat) { unsubscribeChat(); unsubscribeChat = null; }
@@ -8990,6 +9069,13 @@
                     currentTab = 'services';
                     document.body.classList.remove('chat-active');
 
+                    // নিচের নেভের প্রোফাইল ছবি রিসেট: আগের ব্যবহারকারীর ছবি গেস্টকে দেখাবে না
+                    try {
+                        const bnavPic = document.getElementById('bnavProfilePic');
+                        const bnavIcon = document.getElementById('bnavProfileIcon');
+                        if (bnavPic) { bnavPic.classList.add('hidden'); bnavPic.removeAttribute('src'); }
+                        if (bnavIcon) bnavIcon.classList.remove('hidden');
+                    } catch (e) {}
                     renderChatMessages(); renderNotifications(); updateNotifBadge(); updateCurrentPlanDisplay(); renderFavorites();
                     showGuestApp();
                     // Public preview data: guests may read only the collections shown in the public sections.
@@ -11157,10 +11243,10 @@ function mapOnClose() { lmStopWatch(); }
 })();
 
 // ========== সোয়াইপ পেজ নেভিগেশন (মোবাইল) ==========
-// নিচের নেভের ৫ অপশন: হোম → জরুরী → রক্ত → নোটিফিকেশন → খবর
+// নিচের নেভের অপশন: হোম → জরুরী → রক্ত → (+ পেজ) → মেসেজ → খবর → প্রোফাইল
 // ডান থেকে বামে সোয়াইপ = পরের পেজ, বাম থেকে ডানে = আগের পেজ। শেষ পেজে ঘুরে প্রথমে যাবে না।
 (function aeSwipeNavigation() {
-    const ORDER = ['services', 'emergency', 'blood', 'notif', 'news'];
+    const ORDER = ['services', 'emergency', 'blood', 'create', 'chat', 'news', 'profile'];
     const MIN_DX = 60;        // কমপক্ষে এত px পাশে টানতে হবে
     const RATIO = 1.6;        // পাশে টান উপর-নিচ টানের চেয়ে স্পষ্ট বেশি হতে হবে
     const MAX_MS = 900;       // সর্বোচ্চ সময়
@@ -11208,8 +11294,8 @@ function mapOnClose() { lmStopWatch(); }
     }
     function activeOrder() {
         const loggedIn = (typeof currentUser !== 'undefined') && !!currentUser;
-        // লগইন ছাড়া নোটিফিকেশন পেজ খোলে না, তাই গেস্টের সোয়াইপে সেটা বাদ
-        return ORDER.filter(k => k !== 'notif' || loggedIn);
+        // লগইন ছাড়া "+" পেজ, মেসেজ ও প্রোফাইল পেজ খোলে না, তাই গেস্টের সোয়াইপে সেগুলো বাদ
+        return ORDER.filter(k => (k !== 'create' && k !== 'chat' && k !== 'profile') || loggedIn);
     }
     function animateIn(tab, dir) {
         try {
@@ -11246,6 +11332,7 @@ function mapOnClose() { lmStopWatch(); }
         if (e.touches.length !== 1) return;
         if (typeof isForcedProfileMode !== 'undefined' && isForcedProfileMode) return;
         if (!isMobileLayout()) return;
+        if (document.body.classList.contains('chat-thread')) return; // চ্যাট থ্রেডের ভেতরে সোয়াইপ নয়
         if (activeOrder().indexOf(currentKey()) === -1) return;
         const t = e.touches[0];
         if (t.clientX < EDGE || t.clientX > window.innerWidth - EDGE) return;

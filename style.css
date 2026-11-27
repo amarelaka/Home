@@ -26,7 +26,6 @@
         /* ========== premium launch off ========== */
         body.premium-off .premium-feature { display: none !important; }
         body.premium-off #sidebarPremiumBtn { display: none !important; }
-        body.premium-off #headerPlusBtn { display: none !important; }
         body.premium-off #profileBlueBadge,
         body.premium-off #sidebarBlueBadge { display: none !important; }
         body.premium-off #profileVerifyBtn { display: none !important; }
@@ -608,11 +607,14 @@
         }
         .top-app-icon-btn:hover { background: rgba(139, 92, 246, 0.15); }
         .top-app-icon-btn:active { transform: scale(0.94); }
-        /* Header Admin Support — Messenger-style icon */
-        #headerChatBtn .messenger-header-icon { color: #0084FF; width: 22px; height: 22px; }
-        #headerChatBtn.header-chat-active { background: rgba(0, 132, 255, 0.15) !important; }
-        body.light-mode #headerChatBtn .messenger-header-icon { color: #0084FF; }
-        body.light-mode #headerChatBtn.header-chat-active { background: rgba(0, 132, 255, 0.12) !important; }
+        /* Header Notification bell */
+        #headerNotifBtn .header-notif-icon { color: #8b5cf6; width: 22px; height: 22px; }
+        body.light-mode #headerNotifBtn .header-notif-icon { color: #6d28d9; }
+        body.notif-page-open #headerNotifBtn { background: rgba(139, 92, 246, 0.18) !important; }
+        body.light-mode.notif-page-open #headerNotifBtn { background: rgba(123, 54, 232, 0.12) !important; }
+        /* Bottom nav: শুধু আইকন, মাঝখানে সাজানো */
+        #bottomNav .bottom-nav-btn { gap: 0; }
+        #bottomNav .bottom-nav-btn > svg { margin: 0 auto; }
         #bnav-notif { position: relative; }
 
         .brand-text-1 {
@@ -1180,7 +1182,7 @@
         .mesesu-online-dot {
             position: absolute; bottom: 1px; right: 1px;
             width: 14px; height: 14px; border-radius: 50%;
-            background: #8b5cf6;
+            background: #22c55e;
             border: 2.5px solid #181127;
             box-sizing: border-box;
             z-index: 2;
@@ -1222,7 +1224,7 @@
             width: 12px; height: 12px; border-radius: 50%;
             border: 2px solid #181127; box-sizing: border-box; z-index: 2;
         }
-        .mesesu-admin-online-dot.on { background: #8b5cf6; }
+        .mesesu-admin-online-dot.on { background: #22c55e; }
         .mesesu-admin-online-dot.off { background: #94a3b8; }
         body.light-mode .mesesu-admin-online-dot { border-color: #ffffff; }
         /* Mesesu: ইনবক্স রো-র আনরিড ব্যাজ */
@@ -1828,8 +1830,8 @@ select:focus-visible, textarea:focus-visible {
   border: 1px solid rgba(255,255,255,.22) !important;
   border-radius: 29px !important;
   overflow: visible !important;
-  -webkit-backdrop-filter: blur(34px) saturate(190%) !important;
-  backdrop-filter: blur(34px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
+  backdrop-filter: blur(22px) saturate(170%) !important;
   box-shadow: 0 12px 38px rgba(0,0,0,.22),
               inset 0 1px 0 rgba(255,255,255,.22) !important;
   transform-origin: center bottom;
@@ -1966,10 +1968,10 @@ body.light-mode .sidebar-item {
 /* notif-item kept solid opaque for readability — see dedicated block */
 
 body.light-mode #bottomNav.bottom-nav {
-  background: rgba(250,248,255,.76) !important;
-  border-color: rgba(255,255,255,.96) !important;
+  background: rgba(250,248,255,.42) !important;
+  border-color: rgba(255,255,255,.55) !important;
   box-shadow: 0 12px 38px rgba(55,37,83,.13),
-              inset 0 1px 0 rgba(255,255,255,.98) !important;
+              inset 0 1px 0 rgba(255,255,255,.60) !important;
 }
 body.light-mode #bottomNav .bottom-nav-btn { color: #77878a !important; }
 body.light-mode #bottomNav .bottom-nav-btn.active {
@@ -1986,7 +1988,7 @@ body.light-mode #bottomNav .admin-fab-label { color: #6b617a !important; }
 
 /* Dark appearance */
 body:not(.light-mode) #bottomNav.bottom-nav {
-  background: rgba(19,12,31,.78) !important;
+  background: rgba(19,12,31,.40) !important;
   border-color: rgba(232,221,254,.15) !important;
 }
 body:not(.light-mode) .glass-card,
@@ -2014,6 +2016,21 @@ body:not(.light-mode) .notice-card {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
+}
+
+/* Bottom nav glass: আইকনের স্পষ্টতা (হালকা ব্যাকগ্রাউন্ডের ওপর) */
+body.light-mode #bottomNav .bottom-nav-btn:not(.active) svg { stroke: #475569 !important; color: #475569 !important; }
+body:not(.light-mode) #bottomNav .bottom-nav-btn:not(.active) svg { filter: drop-shadow(0 1px 2px rgba(0,0,0,.45)); }
+body:not(.light-mode) #bottomNav .bottom-nav-btn:not(.active) { color: #cbd5e1; }
+
+/* Bottom nav glass: ব্লার বন্ধ/অসমর্থিত হলে ঘন ব্যাকগ্রাউন্ডে ফিরে যাবে */
+@media (prefers-reduced-transparency: reduce) {
+  body.light-mode #bottomNav.bottom-nav { background: rgba(250,248,255,.94) !important; }
+  body:not(.light-mode) #bottomNav.bottom-nav { background: rgba(19,12,31,.94) !important; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body.light-mode #bottomNav.bottom-nav { background: rgba(250,248,255,.94) !important; }
+  body:not(.light-mode) #bottomNav.bottom-nav { background: rgba(19,12,31,.94) !important; }
 }
 
 
@@ -4064,3 +4081,117 @@ body.light-mode .ae-flip-back {
 .ae-flip-front > .bg-\[\#0b0714\] {
   height: 100%;
 }
+
+/* ===== Create (+) বাটন: হেডার থেকে নিচের Navigation Bar-এ (মোবাইল) ===== */
+/* মোবাইলে হেডারের Plus সরে যায়; ডেস্কটপে (নিচের বার নেই) হেডারেই থাকে */
+@media (max-width: 767px) {
+  #headerPlusBtn { display: none !important; }
+}
+#bottomNav .bottom-nav-create {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 57px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+#bottomNav .bnav-create-icon {
+  width: 40px;
+  height: 34px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 45%, #8b5cf6 100%);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, .45),
+              inset 0 1px 0 rgba(255, 255, 255, .45);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+#bottomNav .bnav-create-icon svg { width: 22px; height: 22px; }
+#bottomNav .bottom-nav-create:active .bnav-create-icon { transform: scale(.92); }
+body.light-mode #bottomNav .bnav-create-icon {
+  box-shadow: 0 6px 16px rgba(109, 40, 217, .32),
+              inset 0 1px 0 rgba(255, 255, 255, .55);
+}
+@media (max-width: 360px) {
+  #bottomNav .bnav-create-icon { width: 36px; height: 32px; border-radius: 11px; }
+}
+
+/* "+" পেজ সিলেক্ট থাকলে আইকন অন্য আইকনের মতো রঙ না বদলে উজ্জ্বল/গ্লো দেখাবে */
+#bottomNav .bottom-nav-create.active .bnav-create-icon {
+  box-shadow: 0 0 0 4px rgba(196, 181, 253, .35),
+              0 8px 22px rgba(139, 92, 246, .75),
+              inset 0 1px 0 rgba(255, 255, 255, .6);
+  filter: brightness(1.12);
+}
+body.light-mode #bottomNav .bottom-nav-create.active .bnav-create-icon {
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, .3),
+              0 8px 22px rgba(109, 40, 217, .55),
+              inset 0 1px 0 rgba(255, 255, 255, .6);
+}
+
+/* ===== হেডারের ব্র্যান্ড-নাম (আমার এলাকা / Amar Elaka) — আগের চেয়ে বড় ===== */
+.brand-title-text {
+  font-size: 1.6rem;
+  line-height: 1.25;
+}
+@media (min-width: 640px) {
+  .brand-title-text { font-size: 2.15rem; }
+}
+
+/* ===== Profile (নিচের বারের শেষ আইকন): ছোট গোল ছবি ===== */
+#bottomNav #bnavProfilePic {
+  width: 26px;
+  height: 26px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(139, 92, 246, .45);
+  background: rgba(139, 92, 246, .12);
+  flex: 0 0 auto;
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1), border-color .2s, box-shadow .2s;
+}
+#bottomNav .bottom-nav-btn.active #bnavProfilePic {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, .25);
+  transform: scale(1.1);
+}
+body.light-mode #bottomNav #bnavProfilePic { border-color: rgba(109, 40, 217, .4); }
+body.light-mode #bottomNav .bottom-nav-btn.active #bnavProfilePic { border-color: #6d28d9; box-shadow: 0 0 0 2px rgba(109, 40, 217, .22); }
+
+/* ===== হোমপেজ সার্চ বারের পাশের তাপমাত্রা ব্যাজ ===== */
+.home-temp-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  min-width: 66px;
+  height: 46px;
+  padding: 0 10px;
+  border-radius: 16px;
+  background: #181127;
+  border: 1px solid rgba(76, 29, 149, .5);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .15s ease, border-color .15s ease, transform .12s ease;
+}
+.home-temp-badge:active { transform: scale(0.96); }
+.home-temp-badge[hidden] { display: none !important; }
+.home-temp-badge .home-temp-icon { color: #a78bfa; flex: 0 0 auto; }
+body.light-mode .home-temp-badge {
+  background: rgba(255, 255, 255, .7);
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+body.light-mode .home-temp-badge .home-temp-icon { color: #6d28d9; }

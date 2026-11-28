@@ -5287,9 +5287,6 @@
             if (isForcedProfileMode) return;
             if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
             document.getElementById('userEmergencyForm').reset();
-            if (userProfile && userProfile.phone) {
-                document.getElementById('reqUserPhone').value = userProfile.phone;
-            }
             const m = document.getElementById('userEmergencyRequestModal');
             m.classList.remove('hidden'); m.classList.add('flex');
             document.body.classList.add('overflow-hidden');
@@ -5359,8 +5356,8 @@
             const emergencyPhone = document.getElementById('reqEmergencyPhone').value.trim();
             const category = document.getElementById('reqCategory').value.trim();
             const description = document.getElementById('reqDescription').value.trim();
-            const userPhone = document.getElementById('reqUserPhone').value.trim();
-            if (!/^01[3-9]\d{8}$/.test(userPhone)) return showToast('আপনার সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন', 'circle-x', 'text-rose-400');
+            const userPhone = String(userProfile?.phone || '').trim();
+            if (!/^01[3-9]\d{8}$/.test(userPhone)) return showToast('আপনার প্রোফাইলে সঠিক মোবাইল নম্বর পাওয়া যায়নি। প্রোফাইলে নম্বর যোগ করুন।', 'circle-x', 'text-rose-400');
             const btn = document.getElementById('userEmergencySubmitBtn');
             btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> যাচাই করা হচ্ছে...'; refreshIcons();
             try {
@@ -5501,7 +5498,6 @@
             news:   { modal: 'userNewsRequestModal',   form: 'userNewsForm',   btn: 'userNewsSubmitBtn',   coll: 'newsSubmissions' },
             notice: { modal: 'userNoticeRequestModal', form: 'userNoticeForm', btn: 'userNoticeSubmitBtn', coll: 'noticeRequests' }
         };
-        const COMMUNITY_PHONE_FIELD = { train: 'trnPhone', launch: 'lchPhone', news: 'nwsPhone', notice: 'ntcPhone' };
         const COMMUNITY_IMG_PREFIX = { news: 'nws', notice: 'ntc' };
         const communityImageFiles = { news: null, notice: null };
         const COMMUNITY_DAILY_LIMIT = 2;
@@ -5548,8 +5544,6 @@
             const form = document.getElementById(cfg.form);
             if (form) form.reset();
             communityResetImage(kind);
-            const ph = document.getElementById(COMMUNITY_PHONE_FIELD[kind]);
-            if (ph && userProfile && userProfile.phone) ph.value = userProfile.phone;
             if (kind === 'news') {
                 const area = document.getElementById('nwsArea');
                 if (area && userProfile) area.value = [userProfile.upazila, userProfile.district].filter(Boolean).join(', ');
@@ -5589,12 +5583,11 @@
             const bad = (msg) => showToast(msg, 'circle-x', 'text-rose-400');
             const phoneOk = (x) => /^01[3-9]\d{8}$/.test(x);
             let data = {};
-            let userPhone = '';
+            const userPhone = String(userProfile?.phone || '').trim();
 
             if (kind === 'train') {
                 data = { trainName: v('trnName'), trainNumber: v('trnNumber'), fromStation: v('trnFrom'), departTime: v('trnDepart'),
                          toStation: v('trnTo'), arriveTime: v('trnArrive'), weeklyOffDay: v('trnOffDay'), note: v('trnNote') };
-                userPhone = v('trnPhone');
                 if (data.trainName.length < 2) return bad('ট্রেনের নাম দিন');
                 if (!data.fromStation) return bad('ছাড়ার স্টেশনের নাম দিন');
                 if (!data.departTime) return bad('ছাড়ার সময় দিন');
@@ -5603,7 +5596,6 @@
             } else if (kind === 'launch') {
                 data = { fromGhat: v('lchFrom'), toGhat: v('lchTo'), launchName: v('lchName'), departTime: v('lchDepart'),
                          authorityPhone: v('lchAuthPhone'), note: v('lchNote') };
-                userPhone = v('lchPhone');
                 if (!data.fromGhat) return bad('ছাড়ার ঘাটের নাম দিন');
                 if (!data.toGhat) return bad('গন্তব্য ঘাটের নাম দিন');
                 if (data.launchName.length < 2) return bad('লঞ্চের নাম দিন');
@@ -5611,16 +5603,14 @@
                 if (data.authorityPhone && !phoneOk(data.authorityPhone)) return bad('লঞ্চ কর্তৃপক্ষের সঠিক ১১ ডিজিটের নম্বর দিন');
             } else if (kind === 'news') {
                 data = { title: v('nwsTitle'), body: v('nwsBody'), area: v('nwsArea') };
-                userPhone = v('nwsPhone');
                 if (data.title.length < 5) return bad('খবরের শিরোনাম কমপক্ষে ৫ অক্ষরের দিন');
                 if (data.body.length < 20) return bad('খবরের বিস্তারিত বিবরণ কমপক্ষে ২০ অক্ষরের দিন');
             } else if (kind === 'notice') {
                 data = { title: v('ntcTitle'), body: v('ntcBody') };
-                userPhone = v('ntcPhone');
                 if (data.title.length < 5) return bad('নোটিশের শিরোনাম কমপক্ষে ৫ অক্ষরের দিন');
                 if (data.body.length < 10) return bad('নোটিশের বিস্তারিত কমপক্ষে ১০ অক্ষরের দিন');
             }
-            if (!phoneOk(userPhone)) return bad('আপনার সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন');
+            if (!phoneOk(userPhone)) return bad('আপনার প্রোফাইলে সঠিক মোবাইল নম্বর পাওয়া যায়নি। প্রোফাইলে নম্বর যোগ করুন।');
 
             const btn = document.getElementById(cfg.btn);
             const setBtn = (html) => { if (btn) { btn.innerHTML = html; refreshIcons(); } };

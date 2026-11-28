@@ -2185,11 +2185,6 @@
                     <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">বিবরণ (ঐচ্ছিক)</label>
                     <textarea id="reqDescription" rows="2" placeholder="অতিরিক্ত তথ্য..." class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 resize-none"></textarea>
                 </div>
-                <div class="pt-2 border-t border-violet-900/40">
-                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">আপনার মোবাইল নাম্বার *</label>
-                    <input type="tel" id="reqUserPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
-                    <p class="text-[10px] text-slate-500 mt-1">যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।</p>
-                </div>
                 <button type="submit" id="userEmergencySubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
                     <i data-lucide="send" class="w-4 h-4"></i> অনুরোধ পাঠান
                 </button>
@@ -2298,11 +2293,6 @@
                     <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">অতিরিক্ত তথ্য/মন্তব্য (ঐচ্ছিক)</label>
                     <textarea id="trnNote" rows="3" maxlength="1000" placeholder="যেমন: সময় পরিবর্তন হয়েছে..." class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 resize-none"></textarea>
                 </div>
-                <div class="pt-2 border-t border-violet-900/40">
-                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">আপনার মোবাইল নাম্বার *</label>
-                    <input type="tel" id="trnPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 font-mono">
-                    <p class="text-[10px] text-slate-500 mt-1">যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।</p>
-                </div>
                 <button type="submit" id="userTrainSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
                     <i data-lucide="send" class="w-4 h-4"></i> জমা দিন
                 </button>
@@ -2349,11 +2339,6 @@
                     <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">অতিরিক্ত তথ্য (ঐচ্ছিক)</label>
                     <textarea id="lchNote" rows="3" maxlength="1000" placeholder="অতিরিক্ত তথ্য..." class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 resize-none"></textarea>
                 </div>
-                <div class="pt-2 border-t border-violet-900/40">
-                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">আপনার মোবাইল নাম্বার *</label>
-                    <input type="tel" id="lchPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 font-mono">
-                    <p class="text-[10px] text-slate-500 mt-1">যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।</p>
-                </div>
                 <button type="submit" id="userLaunchSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
                     <i data-lucide="send" class="w-4 h-4"></i> জমা দিন
                 </button>
@@ -2394,12 +2379,7 @@
                         <img id="nwsImgPreview" class="ae-img-preview hidden" alt="">
                         <span id="nwsImgPrompt" class="ae-img-prompt"><i data-lucide="image-plus" class="w-5 h-5"></i><span>ছবি বাছাই করতে ক্লিক করুন</span><span class="text-[10px]">সর্বোচ্চ ৩MB</span></span>
                     </label>
-                    <input type="file" id="nwsImgInput" accept="image/*" class="hidden" onchange="previewCommunityImage(event,'nws')">
-                </div>
-                <div class="pt-2 border-t border-violet-900/40">
-                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">আপনার মোবাইল নাম্বার *</label>
-                    <input type="tel" id="nwsPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 font-mono">
-                    <p class="text-[10px] text-slate-500 mt-1">যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।</p>
+                    <input type="file" id="nwsImgInput" accept="image/*" class="hidden" onchange="previewCommunityImage(event,'news')">
                 </div>
                 <button type="submit" id="userNewsSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
                     <i data-lucide="send" class="w-4 h-4"></i> জমা দিন
@@ -2437,12 +2417,7 @@
                         <img id="ntcImgPreview" class="ae-img-preview hidden" alt="">
                         <span id="ntcImgPrompt" class="ae-img-prompt"><i data-lucide="image-plus" class="w-5 h-5"></i><span>ছবি বাছাই করতে ক্লিক করুন</span><span class="text-[10px]">সর্বোচ্চ ৩MB</span></span>
                     </label>
-                    <input type="file" id="ntcImgInput" accept="image/*" class="hidden" onchange="previewCommunityImage(event,'ntc')">
-                </div>
-                <div class="pt-2 border-t border-violet-900/40">
-                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">আপনার মোবাইল নাম্বার *</label>
-                    <input type="tel" id="ntcPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 font-mono">
-                    <p class="text-[10px] text-slate-500 mt-1">যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।</p>
+                    <input type="file" id="ntcImgInput" accept="image/*" class="hidden" onchange="previewCommunityImage(event,'notice')">
                 </div>
                 <button type="submit" id="userNoticeSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
                     <i data-lucide="send" class="w-4 h-4"></i> জমা দিন

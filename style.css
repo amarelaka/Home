@@ -2295,6 +2295,41 @@ body.light-mode a:focus-visible {
             #amarElakaPullRefresh, #amarElakaPullRefresh * { transition: none !important; animation-duration: 1.8s !important; }
         }
 
+        /* ========== AMAR ELAKA: NEWS — CONSISTENT THUMBNAILS, REFRESH SPIN, ARTICLE MODAL ========== */
+        .news-thumb-wrap { width: 96px; height: 96px; flex-shrink: 0; }
+        .news-thumb-wrap .news-thumb {
+            width: 96px; height: 96px; border-radius: 0.75rem; object-fit: cover; display: block;
+        }
+        .news-thumb-ph {
+            width: 96px; height: 96px; border-radius: 0.75rem;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, rgba(56,189,248,.18), rgba(124,58,237,.18));
+            border: 1px solid rgba(56,189,248,.28);
+            color: #38bdf8;
+        }
+        .news-thumb-ph i { width: 30px; height: 30px; stroke-width: 1.75; }
+        @media (max-width: 420px) {
+            .news-thumb-wrap, .news-thumb-wrap .news-thumb, .news-thumb-ph { width: 80px; height: 80px; }
+        }
+
+        #newsRefreshBtn:disabled { opacity: .6; cursor: default; }
+        .news-refresh-spin { display: inline-block; animation: amarElakaPtrSpin .7s linear infinite; transform-origin: 50% 50%; }
+
+        #newsArticleModal .news-modal-frame-wrap { position: relative; flex: 1 1 auto; min-height: 0; background: #0b0714; }
+        #newsArticleModal .news-modal-frame-wrap iframe#newsModalFrame { width: 100%; height: 100%; border: 0; display: block; min-height: 60dvh; }
+        #newsArticleModal #newsModalLoading {
+            position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem;
+            background: #0b0714; min-height: 60dvh;
+        }
+        #newsArticleModal .news-modal-spinner {
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 3px solid rgba(167,139,250,.25); border-top-color: #a78bfa;
+            animation: amarElakaPtrSpin .8s linear infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .news-refresh-spin, #newsArticleModal .news-modal-spinner { animation-duration: 1.8s !important; }
+        }
+
 
 /* ============================================================
    AMAR ELAKA — TARGETED LIGHT MODE CONTRAST REPAIR

@@ -9187,13 +9187,8 @@
             }
 
             function findEligibleScrollTarget(target) {
-                if (currentTab === 'chat') {
-                    const chatBox = document.getElementById('chatMessages');
-                    if (chatBox && (target === chatBox || chatBox.contains(target))) {
-                        return chatBox.scrollTop <= 0 ? chatBox : null;
-                    }
-                    return null;
-                }
+                // শুধুমাত্র হোমপেজে (সেবাসমূহ ট্যাব) পুল-টু-রিফ্রেশ সক্রিয় থাকবে — অন্য কোনো পেজে নয়।
+                if (currentTab !== 'services') return null;
                 return (window.scrollY <= 0 || document.documentElement.scrollTop <= 0) ? window : null;
             }
 
@@ -9349,7 +9344,7 @@
         (function aeBackNavigation() {
             const TAB_HOME = 'services';
             const EXIT_WINDOW_MS = 2000;
-            const MODAL_IDS = ['aeVideoModal','providerModal','serviceDetailModal','promotionDetailModal','categoryModal','noticeModal','feedbackModal','ratingModal','aboutModal','termsModal','resultModal','contactModal','editProfileModal','changePasswordModal','chatInfoModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','premiumActionModal','downloadAppModal','otherDownloadSourcesModal'];
+            const MODAL_IDS = ['aeVideoModal','providerModal','serviceDetailModal','promotionDetailModal','categoryModal','noticeModal','feedbackModal','ratingModal','aboutModal','termsModal','resultModal','contactModal','editProfileModal','changePasswordModal','chatInfoModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','premiumActionModal','downloadAppModal','otherDownloadSourcesModal','newsArticleModal'];
             let tabStack = [{ tab: TAB_HOME, scroll: 0 }];
             let internalNav = false;
             let armed = false;
@@ -9556,6 +9551,7 @@ const NEWS_API = 'https://script.google.com/macros/s/AKfycbzlhp2lCR99K__qkaRX2Bw
 let newsCat = 'bd';
 let newsReqId = 0;
 const newsCache = {};
+let newsCurrentItems = []; // বর্তমানে স্ক্রিনে দেখানো খবরের তালিকা (মোডালে খোলার জন্য ইনডেক্স দিয়ে রেফার করা হয়)
 
 function newsTimeAgo(ms) {
     if (!ms) return '';
@@ -9571,17 +9567,27 @@ function newsTimeAgo(ms) {
 }
 function newsSafeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
 
+// ছবি না থাকা বা ছবি লোড ব্যর্থ হওয়া খবরের জন্য একই রকম ডিজাইনের প্লেসহোল্ডার থাম্বনেইল
+function newsPlaceholderThumbHtml() {
+    return `<div class="news-thumb-ph"><i data-lucide="newspaper"></i></div>`;
+}
+window.newsPlaceholderThumbHtml = newsPlaceholderThumbHtml;
+
 function newsRender(items) {
     const box = document.getElementById('newsList');
     if (!box) return;
-    if (!items || !items.length) {
+    newsCurrentItems = Array.isArray(items) ? items : [];
+    if (!newsCurrentItems.length) {
         box.innerHTML = `<div class="info-card p-6 text-center text-xs text-slate-400">${esc(t('news.empty'))}</div>`;
         return;
     }
-    box.innerHTML = items.map(n => {
+    box.innerHTML = newsCurrentItems.map((n, idx) => {
         const link = newsSafeUrl(n.link), img = newsSafeUrl(n.img);
-        return `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer" class="info-card flex gap-3 p-3">
-            ${img ? `<img src="${esc(img)}" loading="lazy" referrerpolicy="no-referrer" alt="" class="w-24 h-24 rounded-xl object-cover shrink-0" onerror="this.remove()">` : ''}
+        const thumb = img
+            ? `<img src="${esc(img)}" loading="lazy" referrerpolicy="no-referrer" alt="" class="news-thumb" onerror="this.parentElement.innerHTML = newsPlaceholderThumbHtml(); if (typeof refreshIcons === 'function') refreshIcons();">`
+            : newsPlaceholderThumbHtml();
+        return `<a href="${esc(link)}" onclick="return newsOpenArticle(event, ${idx})" class="info-card flex gap-3 p-3">
+            <div class="news-thumb-wrap">${thumb}</div>
             <div class="min-w-0 flex-1">
                 <h4 class="text-sm font-bold text-slate-100 leading-snug line-clamp-3">${esc(n.title)}</h4>
                 ${n.summary ? `<p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${esc(n.summary)}</p>` : ''}
@@ -9589,6 +9595,7 @@ function newsRender(items) {
             </div>
         </a>`;
     }).join('');
+    if (typeof refreshIcons === 'function') refreshIcons();
 }
 
 function newsShowUpdated(at) {
@@ -9597,9 +9604,10 @@ function newsShowUpdated(at) {
     el.textContent = (currentLang === 'en' ? 'Updated ' : 'আপডেট: ') + newsTimeAgo(at);
 }
 
+// force=true হলে ক্যাশ এড়িয়ে জোর করে নতুন ডেটা আনা হয় (ক্যাশ-বাস্টিং সহ); রিটার্ন ভ্যালু true/false বলে দেয় নেটওয়ার্ক রিকোয়েস্ট সফল হয়েছে কিনা।
 async function newsLoad(force) {
     const box = document.getElementById('newsList');
-    if (!box) return;
+    if (!box) return false;
     const cat = newsCat;
     const myReq = ++newsReqId;
     let cached = newsCache[cat];
@@ -9608,19 +9616,24 @@ async function newsLoad(force) {
         if (cached) newsCache[cat] = cached;
     }
     if (cached) { newsRender(cached.items); newsShowUpdated(cached.at); }
-    if (cached && !force && Date.now() - cached.at < 10 * 60 * 1000) return;
+    if (cached && !force && Date.now() - cached.at < 10 * 60 * 1000) return true;
     if (!cached) box.innerHTML = `<div class="info-card p-6 text-center text-xs text-slate-400">${esc(t('news.loading'))}</div>`;
     try {
-        const res = await fetch(`${NEWS_API}?cat=${cat}`);
+        // limit=30: আরও বেশি খবর চাওয়ার চেষ্টা — ব্যাকএন্ড এই প্যারামিটার সাপোর্ট না করলে এর কোনো প্রভাব পড়বে না।
+        // বাস্টার (_=timestamp): জোর করে রিফ্রেশের সময় পুরোনো/ক্যাশড রেসপন্স এড়ানোর জন্য।
+        const bust = force ? `&_=${Date.now()}` : '';
+        const res = await fetch(`${NEWS_API}?cat=${cat}&limit=30${bust}`);
         const data = await res.json();
         const fresh = { items: Array.isArray(data.items) ? data.items : [], at: Date.now() };
         newsCache[cat] = fresh;
         try { localStorage.setItem('ae-news-' + cat, JSON.stringify(fresh)); } catch (e) {}
         if (myReq === newsReqId && cat === newsCat) { newsRender(fresh.items); newsShowUpdated(fresh.at); }
+        return true;
     } catch (e) {
         if (myReq === newsReqId && !cached) {
             box.innerHTML = `<div class="info-card p-6 text-center space-y-3"><p class="text-xs text-slate-400">${esc(t('news.error'))}</p><button type="button" onclick="newsLoad(true)" class="news-cat-btn active">${esc(t('news.retry'))}</button></div>`;
         }
+        return false;
     }
 }
 
@@ -9632,6 +9645,67 @@ window.newsSetCat = (cat) => {
     newsLoad(false);
 };
 function newsOnOpen() { newsLoad(false); }
+
+// রিফ্রেশ বাটনে ক্লিক করলে: আইকন ঘোরা অ্যানিমেশন + জোর করে নতুন ডেটা আনা + সফল/ব্যর্থ টোস্ট বার্তা
+window.newsRefreshClick = async () => {
+    const btn = document.getElementById('newsRefreshBtn');
+    const icon = document.getElementById('newsRefreshIcon');
+    if (!btn || btn.disabled) return;
+    btn.disabled = true;
+    if (icon) icon.classList.add('news-refresh-spin');
+    let ok = false;
+    try { ok = await newsLoad(true); }
+    finally {
+        if (icon) icon.classList.remove('news-refresh-spin');
+        btn.disabled = false;
+    }
+    if (ok) {
+        try { showToast(currentLang === 'en' ? 'News refreshed' : 'খবর রিফ্রেশ করা হয়েছে', 'check-check', 'text-emerald-400'); } catch (e) {}
+    } else if (!navigator.onLine) {
+        try { showToast(currentLang === 'en' ? 'Offline — check your connection' : 'অফলাইন — ইন্টারনেট সংযোগ পরীক্ষা করুন', 'wifi-off', 'text-amber-400'); } catch (e) {}
+    } else {
+        try { showToast(currentLang === 'en' ? 'Could not fetch news — try again' : 'নতুন খবর আনা যায়নি — আবার চেষ্টা করুন', 'wifi-off', 'text-rose-400'); } catch (e) {}
+    }
+};
+
+// খবরে ক্লিক করলে ব্রাউজারে না গিয়ে ওয়েবসাইটের ভেতরেই মোডালে (iframe) খোলা হবে
+window.newsOpenArticle = (event, idx) => {
+    if (event) event.preventDefault();
+    const item = newsCurrentItems[idx];
+    const link = item ? newsSafeUrl(item.link) : '';
+    if (!link) {
+        try { showToast(currentLang === 'en' ? 'Link unavailable' : 'লিঙ্কটি পাওয়া যায়নি', 'link-2-off', 'text-amber-400'); } catch (e) {}
+        return false;
+    }
+    const titleEl = document.getElementById('newsModalTitle');
+    const sourceEl = document.getElementById('newsModalSource');
+    const openExternal = document.getElementById('newsModalOpenExternal');
+    const frame = document.getElementById('newsModalFrame');
+    const loading = document.getElementById('newsModalLoading');
+    if (titleEl) titleEl.textContent = item.title || (currentLang === 'en' ? 'News' : 'খবরের বিস্তারিত');
+    if (sourceEl) sourceEl.textContent = item.source || '';
+    if (openExternal) openExternal.setAttribute('href', link);
+    if (loading) loading.classList.remove('hidden');
+    if (frame) {
+        frame.classList.add('hidden');
+        frame.src = link;
+    }
+    const m = document.getElementById('newsArticleModal');
+    if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
+    document.body.classList.add('overflow-hidden');
+    if (typeof refreshIcons === 'function') refreshIcons();
+    return false;
+};
+window.closeNewsArticleModal = () => {
+    const m = document.getElementById('newsArticleModal');
+    if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+    document.body.classList.remove('overflow-hidden');
+    const frame = document.getElementById('newsModalFrame');
+    if (frame) { frame.src = 'about:blank'; frame.classList.add('hidden'); } // মোডাল বন্ধ হলে পেজ লোড/অডিও চলতে থাকা বন্ধ করা
+    const loading = document.getElementById('newsModalLoading');
+    if (loading) loading.classList.remove('hidden');
+};
+document.getElementById('newsArticleModal')?.addEventListener('click', (e) => { if (e.target.id === 'newsArticleModal') closeNewsArticleModal(); });
 
 // ========== LAUNCH SCHEDULE (লঞ্চের সময়সূচী) ==========
 // নতুন রুট যোগ করতে LAUNCH_ROUTES এ আরেকটি { id, from, to, list: [...] } যোগ করুন।

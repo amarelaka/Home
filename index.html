@@ -1064,8 +1064,8 @@
                             <h3 class="text-sm sm:text-base font-bold text-slate-100" data-i18n="nav.news">খবর</h3>
                             <p class="text-[11px] text-slate-400" id="newsUpdated">—</p>
                         </div>
-                        <button type="button" onclick="newsLoad(true)" class="top-app-icon-btn shrink-0" aria-label="Refresh">
-                            <i data-lucide="refresh-cw" class="w-5 h-5 text-violet-400"></i>
+                        <button type="button" id="newsRefreshBtn" onclick="newsRefreshClick()" class="top-app-icon-btn shrink-0" aria-label="Refresh">
+                            <i data-lucide="refresh-cw" id="newsRefreshIcon" class="w-5 h-5 text-violet-400"></i>
                         </button>
                     </div>
                     <div class="flex gap-2">
@@ -1552,6 +1552,31 @@
                 <button type="button" onclick="closeNoticeModal()" class="w-9 h-9 rounded-xl bg-violet-950/80 hover:bg-violet-900 text-slate-200 flex items-center justify-center touch-target"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
             <div id="noticeModalContent" class="p-4 sm:p-5 text-sm text-slate-200 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <!-- NEWS ARTICLE MODAL (খবরে ক্লিক করলে ব্রাউজারে না গিয়ে ভেতরেই দেখানোর জন্য) -->
+    <div id="newsArticleModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog" aria-modal="true">
+        <div class="w-full max-w-2xl rounded-3xl border border-violet-800/50 bg-[#181127] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
+            <div class="flex items-center justify-between gap-2 border-b border-violet-900/50 bg-[#181127] p-4 shrink-0">
+                <div class="min-w-0 flex-1">
+                    <h2 id="newsModalTitle" class="font-bold text-white text-sm sm:text-base leading-snug line-clamp-2">খবরের বিস্তারিত</h2>
+                    <p id="newsModalSource" class="text-[11px] text-violet-400 font-semibold mt-0.5">—</p>
+                </div>
+                <a id="newsModalOpenExternal" href="#" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-xl bg-violet-950/80 hover:bg-violet-900 text-slate-200 flex items-center justify-center touch-target shrink-0" aria-label="ব্রাউজারে দেখুন" title="ব্রাউজারে দেখুন">
+                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+                <button type="button" onclick="closeNewsArticleModal()" class="w-9 h-9 rounded-xl bg-violet-950/80 hover:bg-violet-900 text-slate-200 flex items-center justify-center touch-target shrink-0" aria-label="বন্ধ করুন">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="news-modal-frame-wrap">
+                <div id="newsModalLoading">
+                    <span class="news-modal-spinner"></span>
+                    <span class="text-[11px] text-slate-400">লোড হচ্ছে...</span>
+                </div>
+                <iframe id="newsModalFrame" class="hidden" referrerpolicy="no-referrer" onload="document.getElementById('newsModalLoading')?.classList.add('hidden'); this.classList.remove('hidden');"></iframe>
+            </div>
         </div>
     </div>
 

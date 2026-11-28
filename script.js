@@ -1,5 +1,5 @@
 /* ============================================================
-   আমার এলাকা — ওয়েবসাইটের সম্পূর্ণ JavaScript
+   Amar Elaka — ওয়েবসাইটের সম্পূর্ণ JavaScript
    (index.html থেকে আলাদা করা হয়েছে, কোনো ফিচার পরিবর্তন হয়নি)
    টাইপ module, কারণ এতে Firebase এর import স্টেটমেন্ট আছে
    ============================================================ */
@@ -1373,13 +1373,13 @@
         // descriptions, notices, chat messages, etc.) are excluded below.
         const STATIC_UI_EN = {
             'আগামী ৩ দিন': 'Next 3 days', 'পরশু': 'Day after tomorrow',
-            'আমার এলাকা - সকল সেবা এখন হাতের মুঠোয়': 'Amar Elaka - All Services at Your Fingertips',
-            'আমার এলাকা': 'Amar Elaka',
+            'Amar Elaka - সকল সেবা এখন হাতের মুঠোয়': 'Amar Elaka - All Services at Your Fingertips',
+            'Amar Elaka': 'Amar Elaka',
             'ইউজার সেবা পোর্টাল': 'User Service Portal',
-            'আমার এলাকা - ইউজার সার্ভিস পোর্টাল': 'Amar Elaka - User Service Portal',
+            'Amar Elaka - ইউজার সার্ভিস পোর্টাল': 'Amar Elaka - User Service Portal',
             'স্থানীয় পরিষেবা ও তথ্যের নির্ভরযোগ্য প্ল্যাটফর্ম': 'A trusted platform for local services and information',
-            'আমার এলাকা। সর্বস্বত্ব সংরক্ষিত।': 'Amar Elaka. All rights reserved.',
-            'আমার এলাকা — সর্বস্বত্ব সংরক্ষিত।': 'Amar Elaka — All rights reserved.',
+            'Amar Elaka। সর্বস্বত্ব সংরক্ষিত।': 'Amar Elaka. All rights reserved.',
+            'Amar Elaka — সর্বস্বত্ব সংরক্ষিত।': 'Amar Elaka — All rights reserved.',
             'লোড হচ্ছে...': 'Loading...', 'প্যাকেজ লোড হচ্ছে...': 'Loading packages...',
             'লগইন': 'Login', 'রেজিস্ট্রেশন': 'Register', 'স্বাগতম!': 'Welcome!',
             'আপনার অ্যাকাউন্টে প্রবেশ করুন': 'Sign in to your account', 'ইমেইল': 'Email',
@@ -1490,10 +1490,10 @@
             '৮. আচরণবিধি (নিষিদ্ধ কাজসমূহ)': '8. Code of Conduct (Prohibited Activities)', '৯. অভিযোগ ও সহযোগিতা': '9. Complaints and Support',
             '১০. দায়বদ্ধতা ও সীমাবদ্ধতা': '10. Liability and Limitations', '১১. নীতিমালা পরিবর্তন': '11. Policy Changes', '১২. যোগাযোগ': '12. Contact',
             'যেকোনো প্রশ্ন, অভিযোগ, সহযোগিতা বা তথ্য সংশোধনের জন্য আমাদের সাথে যোগাযোগ করতে পারেন:': 'For questions, complaints, support, or information corrections, you can contact us:',
-            'আমার এলাকা ফেসবুক পেজ': 'Amar Elaka Facebook Page', 'আমি বুঝেছি ও সম্মত আছি': 'I Understand and Agree',
+            'Amar Elaka ফেসবুক পেজ': 'Amar Elaka Facebook Page', 'আমি বুঝেছি ও সম্মত আছি': 'I Understand and Agree',
             'BTEB রেজাল্ট সার্চ': 'BTEB Result Search', 'রেজাল্ট পেজ লোড হচ্ছে...': 'Loading result page...', 'PDF ডাউনলোড': 'Download PDF',
             'যোগাযোগ করুন': 'Contact Us', 'যেকোনো প্রয়োজনে বা সাহায্যের জন্য আমাদের সাথে যোগাযোগ করুন:': 'Contact us for any assistance or help:',
-            'ইমেইল করুন': 'Email Us', 'ফেসবুক পেজ': 'Facebook Page', 'আমার এলাকা - Amar Elaka': 'Amar Elaka',
+            'ইমেইল করুন': 'Email Us', 'ফেসবুক পেজ': 'Facebook Page',
             'আপনার তথ্য আপডেট করুন': 'Update Your Information', 'পাসওয়ার্ড পরিবর্তন': 'Change Password', 'নতুন পাসওয়ার্ড সেট করুন': 'Set a New Password',
             'সমস্যা রিপোর্ট করুন': 'Report a Problem', 'ওয়েবসাইট ফিডব্যাক': 'Website Feedback', 'মতামত ও পরামর্শ দিন': 'Share Feedback and Suggestions',
             'সেবা যোগ করুন': 'Add a Service', 'সেবাদাতা হিসেবে আবেদন করুন': 'Apply as a Service Provider',
@@ -1518,9 +1518,9 @@
             'শেয়ার করা যায়নি, লিংকটি ম্যানুয়ালি কপি করুন।': 'Could not share. Please copy the link manually.',
             'শেয়ার লিংক কপি হয়েছে': 'Share link copied', 'লিংক কপি করা যায়নি। আবার চেষ্টা করুন।': 'Could not copy the link. Please try again.',
             'শেয়ার করতে প্রথমে লগইন বা রেজিস্ট্রেশন করুন': 'Please log in or register to share',
-            'রক্তদাতা খুঁজতে আমার এলাকার রক্তদাতা বিভাগটি দেখুন।': 'Visit the Blood Donors section to find donors.',
-            'জরুরি যোগাযোগের নম্বর ও সহায়তার জন্য আমার এলাকার জরুরি বিভাগটি দেখুন।': 'Visit the Emergency section for emergency contact numbers and assistance.',
-            'আমার এলাকার সেবা': 'Amar Elaka Services', 'এইমাত্র': 'Just now', 'সব নোটিফিকেশন পড়া হিসেবে চিহ্নিত হয়েছে': 'All notifications marked as read',
+            'রক্তদাতা খুঁজতে Amar Elaka-এর রক্তদাতা বিভাগটি দেখুন।': 'Visit the Blood Donors section to find donors.',
+            'জরুরি যোগাযোগের নম্বর ও সহায়তার জন্য Amar Elaka-এর জরুরি বিভাগটি দেখুন।': 'Visit the Emergency section for emergency contact numbers and assistance.',
+            'Amar Elaka-এর সেবা': 'Amar Elaka Services', 'এইমাত্র': 'Just now', 'সব নোটিফিকেশন পড়া হিসেবে চিহ্নিত হয়েছে': 'All notifications marked as read',
             'সব নোটিফিকেশন আগেই পড়া হয়েছে': 'All notifications were already read', 'ব্যবহারকারী': 'User',
             'আপনার অ্যাকাউন্ট তৈরি হয়েছে। এখন সব সেবা ব্যবহার করতে পারবেন।': 'Your account has been created. You can now use all services.',
             'সফলভাবে লগইন করেছেন।': 'You have logged in successfully.', 'ইন্টারনেট ফিরেছে — sync হচ্ছে': 'Internet restored — syncing',
@@ -1610,16 +1610,16 @@
             'কোনো ক্যাটাগরি নেই।': 'No categories available.', 'নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে': 'New password must be at least 6 characters long.',
             'অ্যাডমিন সাপোর্ট': 'Admin Support', 'প্রোফাইল লোড ব্যর্থ:': 'Profile loading failed:', 'জরুরী': 'Emergency',
             'একটি জনকল্যাণমূলক ডিজিটাল উদ্যোগ, যার মূল উদ্দেশ্য হলো প্রযুক্তির মাধ্যমে মানুষের কাছে প্রয়োজনীয় তথ্য, সেবা ও সহযোগিতা সহজলভ্য করে তোলা। আমরা বিশ্বাস করি, সঠিক সময়ে সঠিক তথ্য এবং মানুষের পারস্পরিক সহযোগিতা অনেকের জীবনে ইতিবাচক পরিবর্তন আনতে পারে।': 'A public-welfare digital initiative whose main purpose is to make essential information, services, and support more accessible through technology. We believe that timely information and mutual support can bring positive change to many lives.',
-            'মানুষের জরুরি প্রয়োজনে রক্তদাতা খুঁজে পেতে ভোগান্তি এবং প্রয়োজনীয় তথ্য সহজে পাওয়ার সীমাবদ্ধতা থেকেই “আমার এলাকা” গড়ে তোলার চিন্তা আসে। বিশেষ করে জরুরি মুহূর্তে রক্তের প্রয়োজন হলে মানুষকে বিভিন্ন জায়গায় যোগাযোগ করতে হয় এবং প্রয়োজনীয় তথ্য খুঁজতে সময় ব্যয় করতে হয়। এই বাস্তবতা থেকে অনুপ্রাণিত হয়ে এমন একটি প্ল্যাটফর্ম গড়ে তোলার উদ্যোগ নেওয়া হয়েছে, যেখানে মানুষের প্রয়োজনীয় তথ্য ও সেবা সহজে খুঁজে পাওয়ার সুযোগ থাকবে।': 'The idea for Amar Elaka grew from the difficulties people face when searching for blood donors during urgent situations and from the limited access to essential information. In emergencies, people often have to contact many places and spend valuable time finding the information they need. Inspired by this reality, we set out to build a platform where people can find useful information and services more easily.',
+            'মানুষের জরুরি প্রয়োজনে রক্তদাতা খুঁজে পেতে ভোগান্তি এবং প্রয়োজনীয় তথ্য সহজে পাওয়ার সীমাবদ্ধতা থেকেই “Amar Elaka” গড়ে তোলার চিন্তা আসে। বিশেষ করে জরুরি মুহূর্তে রক্তের প্রয়োজন হলে মানুষকে বিভিন্ন জায়গায় যোগাযোগ করতে হয় এবং প্রয়োজনীয় তথ্য খুঁজতে সময় ব্যয় করতে হয়। এই বাস্তবতা থেকে অনুপ্রাণিত হয়ে এমন একটি প্ল্যাটফর্ম গড়ে তোলার উদ্যোগ নেওয়া হয়েছে, যেখানে মানুষের প্রয়োজনীয় তথ্য ও সেবা সহজে খুঁজে পাওয়ার সুযোগ থাকবে।': 'The idea for Amar Elaka grew from the difficulties people face when searching for blood donors during urgent situations and from the limited access to essential information. In emergencies, people often have to contact many places and spend valuable time finding the information they need. Inspired by this reality, we set out to build a platform where people can find useful information and services more easily.',
             'আমাদের লক্ষ্য হলো মানুষের দৈনন্দিন প্রয়োজন ও জরুরি পরিস্থিতিতে কাজে লাগে এমন তথ্য ও সেবা একটি সহজলভ্য ডিজিটাল প্ল্যাটফর্মে একত্রিত করা। রক্তদাতা খুঁজতে সহায়তা, জরুরি যোগাযোগ নম্বর, স্থানীয় সেবাদাতা এবং বিভিন্ন প্রয়োজনীয় সেবার তথ্য মানুষের কাছে পৌঁছে দেওয়ার মাধ্যমে আমরা পারস্পরিক সহযোগিতা ও জনকল্যাণে অবদান রাখতে চাই।': 'Our goal is to bring together information and services that help with everyday needs and emergencies in one accessible digital platform. By helping people find blood donors, emergency contact numbers, local service providers, and other essential services, we aim to encourage mutual support and contribute to public welfare.',
-            '“আমার এলাকা”র মাধ্যমে আমরা এমন একটি সহযোগিতামূলক পরিবেশ গড়ে তুলতে চাই, যেখানে মানুষ প্রয়োজনীয় তথ্য খুঁজে পেতে পারবেন, নিজেদের উপকারী তথ্য অন্যদের সঙ্গে ভাগ করে নিতে পারবেন এবং বিভিন্ন সেবার সঙ্গে সহজে পরিচিত হতে পারবেন। আমাদের পরিকল্পনার মধ্যে রয়েছে দৈনন্দিন যাতায়াতের প্রয়োজনীয় সেবা, যেমন সিএনজি, অটোরিকশা ও ব্যক্তিগত গাড়ির তথ্য যুক্ত করা, যাতে মানুষ সহজে প্রয়োজনীয় পরিবহন খুঁজে পান।': 'Through Amar Elaka, we want to build a collaborative environment where people can find essential information, share useful information with others, and discover different services easily. Our plans include adding everyday transport options such as CNGs, auto-rickshaws, and private cars so people can find suitable transportation more easily.',
-            'আমরা মনে করি, সমাজের উন্নয়নে প্রত্যেক মানুষের ছোট ছোট উদ্যোগও গুরুত্বপূর্ণ ভূমিকা রাখতে পারে। মানুষের পাশে দাঁড়ানো, প্রয়োজনের সময় সহযোগিতার হাত বাড়িয়ে দেওয়া এবং প্রযুক্তিকে ইতিবাচক কাজে ব্যবহার করাই আমাদের চিন্তার মূল ভিত্তি। আমরা চাই, “আমার এলাকা” মানুষের পারস্পরিক সহযোগিতা ও জনকল্যাণে একটি কার্যকর মাধ্যম হয়ে উঠুক।': 'We believe that small initiatives by individuals can play an important role in social progress. Supporting people, offering help when it is needed, and using technology for positive purposes are the foundations of our vision. We hope Amar Elaka will become a useful channel for mutual support and public welfare.',
-            '“আমার এলাকা” উদ্যোগের পরিকল্পনা, ধারণা সাজানো, লেখালেখি এবং ডিজিটাল উন্নয়নের বিভিন্ন কাজে': 'For planning the Amar Elaka initiative, organizing ideas, writing content, and various aspects of digital development, assistance is being taken from',
+            '“Amar Elaka”-এর মাধ্যমে আমরা এমন একটি সহযোগিতামূলক পরিবেশ গড়ে তুলতে চাই, যেখানে মানুষ প্রয়োজনীয় তথ্য খুঁজে পেতে পারবেন, নিজেদের উপকারী তথ্য অন্যদের সঙ্গে ভাগ করে নিতে পারবেন এবং বিভিন্ন সেবার সঙ্গে সহজে পরিচিত হতে পারবেন। আমাদের পরিকল্পনার মধ্যে রয়েছে দৈনন্দিন যাতায়াতের প্রয়োজনীয় সেবা, যেমন সিএনজি, অটোরিকশা ও ব্যক্তিগত গাড়ির তথ্য যুক্ত করা, যাতে মানুষ সহজে প্রয়োজনীয় পরিবহন খুঁজে পান।': 'Through Amar Elaka, we want to build a collaborative environment where people can find essential information, share useful information with others, and discover different services easily. Our plans include adding everyday transport options such as CNGs, auto-rickshaws, and private cars so people can find suitable transportation more easily.',
+            'আমরা মনে করি, সমাজের উন্নয়নে প্রত্যেক মানুষের ছোট ছোট উদ্যোগও গুরুত্বপূর্ণ ভূমিকা রাখতে পারে। মানুষের পাশে দাঁড়ানো, প্রয়োজনের সময় সহযোগিতার হাত বাড়িয়ে দেওয়া এবং প্রযুক্তিকে ইতিবাচক কাজে ব্যবহার করাই আমাদের চিন্তার মূল ভিত্তি। আমরা চাই, “Amar Elaka” মানুষের পারস্পরিক সহযোগিতা ও জনকল্যাণে একটি কার্যকর মাধ্যম হয়ে উঠুক।': 'We believe that small initiatives by individuals can play an important role in social progress. Supporting people, offering help when it is needed, and using technology for positive purposes are the foundations of our vision. We hope Amar Elaka will become a useful channel for mutual support and public welfare.',
+            '“Amar Elaka” উদ্যোগের পরিকল্পনা, ধারণা সাজানো, লেখালেখি এবং ডিজিটাল উন্নয়নের বিভিন্ন কাজে': 'For planning the Amar Elaka initiative, organizing ideas, writing content, and various aspects of digital development, assistance is being taken from',
             '-এর সহযোগিতা নেওয়া হচ্ছে। কৃত্রিম বুদ্ধিমত্তাকে সহায়ক মাধ্যম হিসেবে ব্যবহার করে উদ্যোগটির পরিকল্পনা ও উন্নয়নের কাজকে আরও সহজ ও কার্যকর করার চেষ্টা করা হচ্ছে। আমরা বিশ্বাস করি, মানুষের চিন্তা, সৃজনশীলতা এবং আধুনিক প্রযুক্তির যথাযথ সমন্বয় সমাজের কল্যাণে ইতিবাচক ভূমিকা রাখতে পারে।': '. Artificial intelligence is being used as a supporting tool to make the planning and development of this initiative easier and more effective. We believe that combining human ideas, creativity, and modern technology can contribute positively to society.',
-            'মানুষের প্রয়োজনকে গুরুত্ব দেওয়া, তথ্যের যথার্থতা ও গোপনীয়তার প্রতি যত্নশীল থাকা, অন্যের অধিকারকে সম্মান করা এবং প্রযুক্তিকে জনকল্যাণে কাজে লাগানোর প্রচেষ্টা অব্যাহত রাখাই “আমার এলাকা”র অঙ্গীকার। এই পথচলায় মানুষের মতামত, সহযোগিতা এবং সম্মিলিত অংশগ্রহণ আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ।': 'Our commitment is to prioritize people’s needs, care about information accuracy and privacy, respect the rights of others, and continue using technology for public welfare. Feedback, support, and community participation are very important to us on this journey.',
+            'মানুষের প্রয়োজনকে গুরুত্ব দেওয়া, তথ্যের যথার্থতা ও গোপনীয়তার প্রতি যত্নশীল থাকা, অন্যের অধিকারকে সম্মান করা এবং প্রযুক্তিকে জনকল্যাণে কাজে লাগানোর প্রচেষ্টা অব্যাহত রাখাই “Amar Elaka”-এর অঙ্গীকার। এই পথচলায় মানুষের মতামত, সহযোগিতা এবং সম্মিলিত অংশগ্রহণ আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ।': 'Our commitment is to prioritize people’s needs, care about information accuracy and privacy, respect the rights of others, and continue using technology for public welfare. Feedback, support, and community participation are very important to us on this journey.',
             'একটি জনকল্যাণমূলক উদ্যোগ। আমাদের মূল লক্ষ্য মানুষের পাশে দাঁড়ানো, সমাজসেবায় অবদান রাখা এবং বিভিন্ন প্রয়োজনীয় সেবা মানুষের কাছে সহজে পৌঁছে দেওয়া। এই প্ল্যাটফর্মের প্রতিষ্ঠাতা': 'is a public-welfare initiative. Our main goal is to support people, contribute to social service, and make essential services easier to access. The founder of this platform is',
             ', চাঁদপুর টেকনিক্যাল স্কুল ও কলেজের একজন শিক্ষার্থী। একজন শিক্ষার্থী হয়েও মানুষের কল্যাণে প্রযুক্তিকে কাজে লাগিয়ে একটি উপকারী প্ল্যাটফর্ম গড়ে তোলার চেষ্টা করছেন তিনি। আমাদের অনুপ্রেরণা হলো বিপদের সময় মানুষের পাশে থাকা এবং রক্তদাতা খুঁজে পেতে সহায়তা করা।': ', a student of Chandpur Technical School and College. While still a student, he is working to use technology to build a helpful platform for people. Our inspiration is to support people in difficult times and help them find blood donors.',
-            '"আমার এলাকা" ওয়েবসাইটের মূল উদ্দেশ্য হলো স্থানীয় সেবা, জরুরি হেল্পলাইন এবং রক্তদাতাদের তথ্য একই প্ল্যাটফর্মে একত্রিত করা। এটি কোনো বাণিজ্যিক প্রতিষ্ঠান নয়, বরং একটি সমাজসেবামূলক উদ্যোগ। মানুষের সহযোগিতায় এই প্ল্যাটফর্মকে আরও উপকারী করে তোলার আমাদের অঙ্গীকার।': 'The main purpose of the Amar Elaka website is to bring local services, emergency helplines, and blood donor information together on one platform. It is not a commercial organization; it is a social-service initiative. We are committed to making this platform more useful with the support of the community.',
+            '"Amar Elaka" ওয়েবসাইটের মূল উদ্দেশ্য হলো স্থানীয় সেবা, জরুরি হেল্পলাইন এবং রক্তদাতাদের তথ্য একই প্ল্যাটফর্মে একত্রিত করা। এটি কোনো বাণিজ্যিক প্রতিষ্ঠান নয়, বরং একটি সমাজসেবামূলক উদ্যোগ। মানুষের সহযোগিতায় এই প্ল্যাটফর্মকে আরও উপকারী করে তোলার আমাদের অঙ্গীকার।': 'The main purpose of the Amar Elaka website is to bring local services, emergency helplines, and blood donor information together on one platform. It is not a commercial organization; it is a social-service initiative. We are committed to making this platform more useful with the support of the community.',
             'ব্যবহারকারীদের সঠিক ও সত্য তথ্য প্রদান করতে হবে। ওয়েবসাইটটি ব্যবহারের সময় অন্যদের প্রতি সম্মান বজায় রাখতে হবে। কোনো অশ্লীল, হিংসাত্মক বা বিভ্রান্তিকর তথ্য বা পোস্ট করা যাবে না। প্ল্যাটফর্মের ক্ষতিসাধন করে এমন কোনো কার্যকলাপ করা থেকে বিরত থাকতে হবে।': 'Users must provide accurate and truthful information and treat others respectfully while using the website. Obscene, violent, or misleading information and posts are not allowed. Users must not engage in activities that could harm the platform.',
             'আপনার ব্যক্তিগত তথ্য (নাম, ফোন নম্বর, প্রোফাইল) আমাদের কাছে অত্যন্ত সুরক্ষিত। আমরা আপনার তথ্য তৃতীয় কোনো পক্ষের কাছে বিক্রি বা বিপণন করি না। শুধুমাত্র সেবা প্রদানের স্বার্থে (যেমন: রক্তদাতা বা জরুরি সেবার সাথে সংযোগ করতে) প্রয়োজনীয় তথ্য ব্যবহার করা হয়।': 'Your personal information (name, phone number, and profile) is treated with care. We do not sell or market your information to third parties. Information is used only when necessary to provide services, such as connecting you with blood donors or emergency services.',
             'রক্তদাতাদের দেওয়া তথ্য শুধুমাত্র রক্তের প্রয়োজনে ব্যবহার করতে হবে। রক্তদাতার অনুমতি ছাড়া তার নম্বর কোনো প্রকার প্রচার বা অপব্যবহার করা সম্পূর্ণ নিষিদ্ধ। রক্তদাতাদেরও সঠিক ও সর্বশেষ তথ্য দেওয়ার জন্য অনুরোধ করা হচ্ছে।': 'Blood donor information must only be used for blood-related needs. Sharing or misusing a donor’s phone number without permission is strictly prohibited. Donors are also requested to provide accurate and up-to-date information.',
@@ -1628,7 +1628,7 @@
             'সেবা, দোকান বা পণ্যের প্রচারের জন্য দেওয়া পোস্ট অবশ্যই সত্য এবং আইনসম্মত হতে হবে। কোনো প্রকার ভুয়া অফার বা প্রতারণামূলক বিজ্ঞাপন অনুমোদন করা হবে না। অ্যাডমিন যেকোনো পোস্ট যাচাইয়ের পর তা প্রকাশ বা বাতিল করার অধিকার রাখে।': 'Posts promoting services, shops, or products must be truthful and lawful. Fake offers and deceptive advertisements will not be approved. The admin reserves the right to review and publish or reject any post.',
             'প্ল্যাটফর্মে ভুয়া তথ্য দেওয়া, প্রতারণা করা, কাউকে হয়রানি করা, স্প্যাম করা এবং অন্যের ব্যক্তিগত তথ্য চুরি বা অপব্যবহার করা সম্পূর্ণ নিষিদ্ধ। এমন কাজ প্রমাণিত হলে অ্যাকাউন্টটি ব্লক করা হবে।': 'Providing false information, committing fraud, harassing others, spamming, or stealing or misusing someone else’s personal information is strictly prohibited. Accounts found engaging in such activities may be blocked.',
             "যদি আপনি কোনো ভুল তথ্য, অনুপযুক্ত পোস্ট বা গোপনীয়তা লঙ্ঘনের বিষয় লক্ষ্য করেন, তবে অনুগ্রহ করে আমাদের 'অভিযোগ ও পরামর্শ' সেকশনের মাধ্যমে জানান। আপনার একটি ছোট রিপোর্ট প্ল্যাটফর্মটিকে নিরাপদ রাখতে সাহায্য করবে।": "If you notice incorrect information, an inappropriate post, or a privacy violation, please report it through our 'Complaints and Suggestions' section. Your report can help keep the platform safe.",
-            '"আমার এলাকা" একটি তথ্য প্রদানকারী প্ল্যাটফর্ম। তৃতীয় পক্ষের (যেমন: ডাক্তার, টেকনিশিয়ান) দেওয়া সেবার মান বা ফলাফলের জন্য প্ল্যাটফর্ম সরাসরি দায়ী নয়। যেকোনো সেবা নেওয়ার আগে নিজ দায়িত্বে যাচাই করে নেওয়ার জন্য অনুরোধ করা হচ্ছে।': 'Amar Elaka is an information platform. The platform is not directly responsible for the quality or results of services provided by third parties, such as doctors or technicians. Users are advised to verify details independently before using any service.',
+            '"Amar Elaka" একটি তথ্য প্রদানকারী প্ল্যাটফর্ম। তৃতীয় পক্ষের (যেমন: ডাক্তার, টেকনিশিয়ান) দেওয়া সেবার মান বা ফলাফলের জন্য প্ল্যাটফর্ম সরাসরি দায়ী নয়। যেকোনো সেবা নেওয়ার আগে নিজ দায়িত্বে যাচাই করে নেওয়ার জন্য অনুরোধ করা হচ্ছে।': 'Amar Elaka is an information platform. The platform is not directly responsible for the quality or results of services provided by third parties, such as doctors or technicians. Users are advised to verify details independently before using any service.',
             'ভবিষ্যতে প্রয়োজন অনুযায়ী এই নীতিমালা সংশোধন বা পরিবর্তন করা হতে পারে। পরিবর্তনগুলো এই পেজেই আপডেট করা হবে। প্ল্যাটফর্মের নিয়মিত ব্যবহারের মানে হলো আপনি নতুন নীতিমালার সাথেও সম্মত আছেন।': 'These policies may be revised or changed as needed in the future. Any changes will be updated on this page. Continued use of the platform means that you agree to the updated policies.',
             'আমাদের ওয়েবসাইটে সেবাগুলো রেনডমলি ভাবে হোম পেজে দেখা যায়। এর মানে আপনি এই মাত্র যে সেবাটি দেখেছেন সেটা একটু পর আবার নাও দেখতে পারেন যদি না আপনি সংরক্ষণ করে রাখেন। বিজ্ঞাপনের সুবিধাটি হলো যত বেশি সম্ভব বিজ্ঞাপন করা পোস্টটি হোমপেজে দেখানো। আপনি প্রতিদিন একটি প্রমোশন পোস্ট করতে পারবেন যার মেয়াদ থাকবে ২৪ ঘন্টা অর্থাৎ একদিন। তাহলে আর দেরি কেন এখনই করুন আপনার প্রমোশন পোস্ট।': 'Services on our website are displayed randomly on the homepage, so a service you just viewed may not appear again unless you save it. Promotion helps your post appear on the homepage more frequently. You can submit one promotional post per day, and each promotion remains active for 24 hours. Create your promotion when you are ready.',
             'যেমন: মো: আরিফুল ইসলাম': 'e.g. Md. Ariful Islam', 'সেবা, হাসপাতাল বা টেকনিশিয়ান খুঁজুন...': 'Search services, hospitals, or technicians...',
@@ -1654,11 +1654,11 @@
             'এডমিন চ্যাট': 'Admin Chat', 'অভিযোগ ও পরামর্শ': 'Complaints & Suggestions',
             'প্রতিষ্ঠাতা:Akror karmaker': 'Founder: Akror Karmaker', 'ইমেইল:': 'Email:', 'ফেসবুক:': 'Facebook:',
             'অনুরোধ পাঠান': 'Send Request', 'ছবি *': 'Image *', 'আপনার আগের রেটিং: 0/5': 'Your previous rating: 0/5',
-            '“আমার এলাকা”র মাধ্যমে আমরা এমন একটি সহযোগিতামূলক পরিবেশ গড়ে তুলতে চাই, যেখানে মানুষ প্রয়োজনীয় তথ্য খুঁজে পেতে পারবেন, নিজেদের উপকারী তথ্য অন্যদের সঙ্গে ভাগ করে নিতে পারবেন এবং বিভিন্ন সেবার সঙ্গে সহজে পরিচিত হতে পারবেন। আমাদের পরিকল্পনার মধ্যে রয়েছে রক্তদাতা খুঁজতে সহায়তা, জরুরি যোগাযোগের তথ্য, স্থানীয় সেবা ও সেবাদাতাদের পরিচিতি, বিভিন্ন প্রয়োজনীয় তথ্য এবং সামাজিক ও ব্যবসায়িক প্রচারের সুযোগ তৈরি করা। এসব সেবা মানুষের প্রকৃত চাহিদা, যথাযথ অনুমতি এবং বাস্তবসম্মত পরিকল্পনার ভিত্তিতে ধাপে ধাপে উন্নত করার প্রত্যাশা রয়েছে।': 'Through Amar Elaka, we want to create a collaborative environment where people can find essential information, share useful information with others, and discover different services. Our plans include helping people find blood donors, providing emergency contact information, introducing local services and providers, sharing other useful information, and creating opportunities for community and business promotion. We aim to improve these services gradually based on people’s real needs, proper permissions, and practical planning.',
-            'আমরা মনে করি, সমাজের উন্নয়নে প্রত্যেক মানুষের ছোট ছোট উদ্যোগও গুরুত্বপূর্ণ ভূমিকা রাখতে পারে। মানুষের পাশে দাঁড়ানো, প্রয়োজনের সময় সহযোগিতার হাত বাড়িয়ে দেওয়া এবং প্রযুক্তিকে ইতিবাচক কাজে ব্যবহার করাই আমাদের চিন্তার মূল ভিত্তি। আমরা চাই, “আমার এলাকা” শুধু তথ্য খোঁজার একটি মাধ্যম না হয়ে মানুষের পারস্পরিক সহযোগিতা ও জনকল্যাণের একটি কার্যকর প্ল্যাটফর্ম হিসেবে গড়ে উঠুক।': 'We believe that small initiatives by individuals can play an important role in social progress. Supporting people, offering help when needed, and using technology for positive purposes are the foundations of our vision. We want Amar Elaka to become more than an information-search tool: a practical platform for mutual support and public welfare.',
-            '“আমার এলাকা” উদ্যোগের পরিকল্পনা, ধারণা সাজানো, লেখালেখি এবং ডিজিটাল উন্নয়নের বিভিন্ন কাজে ': 'For planning the Amar Elaka initiative, organizing ideas, writing content, and various aspects of digital development, assistance is being provided by ',
+            '“Amar Elaka”-এর মাধ্যমে আমরা এমন একটি সহযোগিতামূলক পরিবেশ গড়ে তুলতে চাই, যেখানে মানুষ প্রয়োজনীয় তথ্য খুঁজে পেতে পারবেন, নিজেদের উপকারী তথ্য অন্যদের সঙ্গে ভাগ করে নিতে পারবেন এবং বিভিন্ন সেবার সঙ্গে সহজে পরিচিত হতে পারবেন। আমাদের পরিকল্পনার মধ্যে রয়েছে রক্তদাতা খুঁজতে সহায়তা, জরুরি যোগাযোগের তথ্য, স্থানীয় সেবা ও সেবাদাতাদের পরিচিতি, বিভিন্ন প্রয়োজনীয় তথ্য এবং সামাজিক ও ব্যবসায়িক প্রচারের সুযোগ তৈরি করা। এসব সেবা মানুষের প্রকৃত চাহিদা, যথাযথ অনুমতি এবং বাস্তবসম্মত পরিকল্পনার ভিত্তিতে ধাপে ধাপে উন্নত করার প্রত্যাশা রয়েছে।': 'Through Amar Elaka, we want to create a collaborative environment where people can find essential information, share useful information with others, and discover different services. Our plans include helping people find blood donors, providing emergency contact information, introducing local services and providers, sharing other useful information, and creating opportunities for community and business promotion. We aim to improve these services gradually based on people’s real needs, proper permissions, and practical planning.',
+            'আমরা মনে করি, সমাজের উন্নয়নে প্রত্যেক মানুষের ছোট ছোট উদ্যোগও গুরুত্বপূর্ণ ভূমিকা রাখতে পারে। মানুষের পাশে দাঁড়ানো, প্রয়োজনের সময় সহযোগিতার হাত বাড়িয়ে দেওয়া এবং প্রযুক্তিকে ইতিবাচক কাজে ব্যবহার করাই আমাদের চিন্তার মূল ভিত্তি। আমরা চাই, “Amar Elaka” শুধু তথ্য খোঁজার একটি মাধ্যম না হয়ে মানুষের পারস্পরিক সহযোগিতা ও জনকল্যাণের একটি কার্যকর প্ল্যাটফর্ম হিসেবে গড়ে উঠুক।': 'We believe that small initiatives by individuals can play an important role in social progress. Supporting people, offering help when needed, and using technology for positive purposes are the foundations of our vision. We want Amar Elaka to become more than an information-search tool: a practical platform for mutual support and public welfare.',
+            '“Amar Elaka” উদ্যোগের পরিকল্পনা, ধারণা সাজানো, লেখালেখি এবং ডিজিটাল উন্নয়নের বিভিন্ন কাজে ': 'For planning the Amar Elaka initiative, organizing ideas, writing content, and various aspects of digital development, assistance is being provided by ',
             '-এর সহযোগিতা নেওয়া হচ্ছে। কৃত্রিম বুদ্ধিমত্তাকে সহায়ক মাধ্যম হিসেবে ব্যবহার করে উদ্যোগটির পরিকল্পনা ও উন্নয়নের কাজকে আরও সহজ ও কার্যকর করার চেষ্টা করা হচ্ছে। আমরা বিশ্বাস করি, মানুষের চিন্তা, সৃজনশীলতা এবং আধুনিক প্রযুক্তির যথাযথ সমন্বয় সমাজের কল্যাণে নতুন সম্ভাবনা তৈরি করতে পারে।': '. Artificial intelligence is being used as a supporting tool to make the planning and development of this initiative easier and more effective. We believe that combining human ideas, creativity, and modern technology can create new opportunities for the good of society.',
-            'মানুষের প্রয়োজনকে গুরুত্ব দেওয়া, তথ্যের যথার্থতা ও গোপনীয়তার প্রতি যত্নশীল থাকা, অন্যের অধিকারকে সম্মান করা এবং প্রযুক্তিকে জনকল্যাণে কাজে লাগানোর প্রচেষ্টা অব্যাহত রাখাই “আমার এলাকা”র অঙ্গীকার। এই পথচলায় মানুষের মতামত, সহযোগিতা এবং সম্মিলিত অংশগ্রহণ আমাদের এগিয়ে যাওয়ার অনুপ্রেরণা।': 'Our commitment is to prioritize people’s needs, protect information accuracy and privacy, respect the rights of others, and continue using technology for public welfare. Feedback, support, and community participation inspire us to keep moving forward.',
+            'মানুষের প্রয়োজনকে গুরুত্ব দেওয়া, তথ্যের যথার্থতা ও গোপনীয়তার প্রতি যত্নশীল থাকা, অন্যের অধিকারকে সম্মান করা এবং প্রযুক্তিকে জনকল্যাণে কাজে লাগানোর প্রচেষ্টা অব্যাহত রাখাই “Amar Elaka”-এর অঙ্গীকার। এই পথচলায় মানুষের মতামত, সহযোগিতা এবং সম্মিলিত অংশগ্রহণ আমাদের এগিয়ে যাওয়ার অনুপ্রেরণা।': 'Our commitment is to prioritize people’s needs, protect information accuracy and privacy, respect the rights of others, and continue using technology for public welfare. Feedback, support, and community participation inspire us to keep moving forward.',
             "যদি আপনি কোনো ভুল তথ্য, অনুপযুক্ত পোস্ট বা গোপনীয়তা লঙ্ঘনের বিষয় লক্ষ্য করেন, তবে অনুগ্রহ করে আমাদের 'অভিযোগ ও পরামর্শ' সেকশনের মাধ্যমে জানান। আপনার একটি ছোট রিপোর্ট প্ল্যাটফর্মটিকে নিরাপদ রাখতে সাহায্য করবে।": "If you notice incorrect information, an inappropriate post, or a privacy violation, please let us know through our 'Complaints and Suggestions' section. Even a small report can help keep the platform safe.",
             'সেবাদাতা:': 'Provider:', 'কল': 'Call', 'এডমিন': 'Admin', 'কোনো সংরক্ষিত সেবা নেই': 'No saved services yet',
             'আপনি এখনো কোনো সেবা "আমার পছন্দ" তালিকায় যুক্ত করেননি। সেবার উপরে থাকা হার্ট আইকনে ক্লিক করে সেভ করুন।': 'You have not added any services to My Favorites yet. Tap the heart icon on a service card to save it.',
@@ -1844,9 +1844,9 @@
         }
 
         // ========== BRAND NAME (never translated to "My Area") ==========
-        const BRAND_NAME_BN = 'আমার এলাকা';
+        const BRAND_NAME_BN = 'Amar Elaka';
         const BRAND_NAME_EN = 'Amar Elaka';
-        const BRAND_TITLE_BN = 'আমার এলাকা - সকল সেবা এখন হাতের মুঠোয়';
+        const BRAND_TITLE_BN = 'Amar Elaka - সকল সেবা এখন হাতের মুঠোয়';
         const BRAND_TITLE_EN = 'Amar Elaka - All Services at Your Fingertips';
         function applyBrandName() {
             const en = currentLang === 'en';
@@ -1857,7 +1857,7 @@
             document.querySelectorAll('[data-brand="split"]').forEach(el => {
                 el.innerHTML = en
                     ? '<span class="brand-text-1">Amar</span><span class="brand-text-2"> Elaka</span>'
-                    : '<span class="brand-text-1">আমার</span><span class="brand-text-2"> এলাকা</span>';
+                    : '<span class="brand-text-1">Amar</span><span class="brand-text-2"> Elaka</span>';
             });
             const title = en ? BRAND_TITLE_EN : BRAND_TITLE_BN;
             document.title = title;
@@ -2154,7 +2154,7 @@
         window.shareApp = () => {
             if (navigator.share) {
                 navigator.share({
-                    title: 'আমার এলাকা',
+                    title: 'Amar Elaka',
                     text: 'সকল সেবা এখন হাতের মুঠোয়। স্থানীয় পরিষেবা, জরুরি হেল্পলাইন এবং রক্তদাতা খুঁজুন একই প্ল্যাটফর্মে।',
                     url: window.location.origin
                 }).then(() => {
@@ -2202,10 +2202,10 @@
             }
             const url = new URL(window.location.href);
             url.hash = section;
-            const title = section === 'blood' ? 'আমার এলাকা — রক্তদাতা সন্ধান' : 'আমার এলাকা — জরুরি হেল্পলাইন';
+            const title = section === 'blood' ? 'Amar Elaka — রক্তদাতা সন্ধান' : 'Amar Elaka — জরুরি হেল্পলাইন';
             const text = section === 'blood'
-                ? 'রক্তদাতা খুঁজতে আমার এলাকার রক্তদাতা বিভাগটি দেখুন।'
-                : 'জরুরি যোগাযোগের নম্বর ও সহায়তার জন্য আমার এলাকার জরুরি বিভাগটি দেখুন।';
+                ? 'রক্তদাতা খুঁজতে Amar Elaka-এর রক্তদাতা বিভাগটি দেখুন।'
+                : 'জরুরি যোগাযোগের নম্বর ও সহায়তার জন্য Amar Elaka-এর জরুরি বিভাগটি দেখুন।';
             if (navigator.share) {
                 try {
                     await navigator.share({ title, text, url: url.toString() });
@@ -2221,8 +2221,8 @@
             const url = new URL(window.location.href);
             url.searchParams.set('service', serviceId);
             const service = servicesCache.find(x => x.id === serviceId) || favoritesCache.find(x => x.id === serviceId) || (allServicesFullCache || []).find(x => x.id === serviceId);
-            const title = service?.title || 'আমার এলাকার সেবা';
-            const payload = { title, text: `${title} — আমার এলাকা`, url: url.toString() };
+            const title = service?.title || 'Amar Elaka-এর সেবা';
+            const payload = { title, text: `${title} — Amar Elaka`, url: url.toString() };
             if (navigator.share) {
                 try { await navigator.share(payload); showToast('সেবা শেয়ার সফল হয়েছে', 'check-circle', 'text-violet-400'); }
                 catch (err) { if (err?.name !== 'AbortError') await copyShareUrl(url.toString()); }
@@ -7869,7 +7869,7 @@
         window.closeOtherDownloadSources = () => {};
         window.handleMainAppDownload = () => { openDownloadAppModal(); };
         window.aeShareApp = async () => {
-            const d = { title: 'আমার এলাকা', text: aeL('আমার এলাকা অ্যাপ ডাউনলোড করুন', 'Download the Amar Elaka app'), url: location.origin };
+            const d = { title: 'Amar Elaka', text: aeL('Amar Elaka অ্যাপ ডাউনলোড করুন', 'Download the Amar Elaka app'), url: location.origin };
             try {
                 if (navigator.share) await navigator.share(d);
                 else if (navigator.clipboard) { await navigator.clipboard.writeText(d.url); showToast(aeL('লিংক কপি হয়েছে', 'Link copied')); }
@@ -10817,7 +10817,7 @@ const LM_GUIDE = {
         steps: [
             ['Android (Chrome): ঠিকানা বারের বামের আইকনে চাপুন → অনুমতি → লোকেশন → “অনুমতি দিন”।', 'Android (Chrome): tap the icon left of the address bar → Permissions → Location → Allow.'],
             ['iPhone (Safari): সেটিংস → প্রাইভেসি ও সিকিউরিটি → লোকেশন সার্ভিস → Safari Websites → “অ্যাপ ব্যবহারের সময়”।', 'iPhone (Safari): Settings → Privacy & Security → Location Services → Safari Websites → While Using.'],
-            ['অ্যাপ (APK) ব্যবহার করলে: ফোনের সেটিংস → অ্যাপ → আমার এলাকা → অনুমতি → লোকেশন।', 'In the app (APK): phone Settings → Apps → Amar Elaka → Permissions → Location.'],
+            ['অ্যাপ (APK) ব্যবহার করলে: ফোনের সেটিংস → অ্যাপ → Amar Elaka → অনুমতি → লোকেশন।', 'In the app (APK): phone Settings → Apps → Amar Elaka → Permissions → Location.'],
             ['ফোনের লোকেশন (GPS) চালু আছে কিনা দেখে নিন, তারপর নিচের বোতামে চাপুন।', 'Make sure phone Location (GPS) is on, then tap the button below.']
         ]
     },

@@ -33,7 +33,7 @@ messaging.onBackgroundMessage((payload) => {
 //    (index.html তিনভাগে (html/css/js) ভাগ হওয়ার পর নতুন ফাইলগুলো যোগ করা হলো,
 //     এবং lucide এর ভার্সন ঠিক করা হলো যাতে আসল সাইটের সাথে মিলে)
 // ==========================================
-const CACHE_NAME = 'amar-elaka-v6'; // ভার্সন বাড়ানো হলো যাতে ব্রাউজার নতুন কোড ধরে
+const CACHE_NAME = 'amar-elaka-v7'; // ভার্সন বাড়ানো হলো যাতে ব্রাউজার নতুন কোড ধরে
 const CACHE_URLS = [
   '/',
   '/index.html',

@@ -4322,3 +4322,84 @@ body.light-mode #aeReportModal > div {
 body.light-mode #aeReportModal form {
   background: #ffffff !important;
 }
+
+/* ============================================================
+   ক্রিয়েট পেজ: নতুন ৪টি অপশন + প্রিমিয়াম "বিজ্ঞাপন চালান" কার্ড + কমিউনিটি খবর মোডাল
+   (সব সিলেক্টর নতুন ক্লাসে সীমাবদ্ধ — পুরোনো কোনো স্টাইলে প্রভাব ফেলে না)
+   ============================================================ */
+.ae-create-ico.ae-ico-sky   { background: rgba(56,189,248,.18);  color: #38bdf8; }
+.ae-create-ico.ae-ico-teal  { background: rgba(20,184,166,.18);  color: #2dd4bf; }
+.ae-create-ico.ae-ico-amber { background: rgba(245,158,11,.18);  color: #fbbf24; }
+.ae-create-ico.ae-ico-rose  { background: rgba(244,63,94,.18);   color: #fb7185; }
+body.light-mode .ae-create-ico.ae-ico-sky   { color: #0369a1; }
+body.light-mode .ae-create-ico.ae-ico-teal  { color: #0f766e; }
+body.light-mode .ae-create-ico.ae-ico-amber { color: #b45309; }
+body.light-mode .ae-create-ico.ae-ico-rose  { color: #be123c; }
+
+/* প্রিমিয়াম গ্রেডিয়েন্ট কার্ড (সবার নিচে, বাকি অপশন থেকে আলাদা) */
+.ae-premium-ad {
+    position: relative; overflow: hidden; margin-top: .25rem;
+    border: 1.5px solid transparent;
+    background:
+        linear-gradient(135deg, #1a1030 0%, #231441 55%, #2a1538 100%) padding-box,
+        linear-gradient(120deg, #fbbf24, #f97316, #ec4899, #8b5cf6, #fbbf24) border-box;
+    background-size: 100% 100%, 300% 300%;
+    box-shadow: 0 0 0 1px rgba(251,191,36,.10), 0 10px 30px -10px rgba(249,115,22,.45), 0 0 26px -8px rgba(139,92,246,.55);
+    animation: aePremiumBorder 6s linear infinite;
+}
+.ae-premium-ad::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 140% at 0% 0%, rgba(251,191,36,.22), transparent 55%),
+                radial-gradient(100% 120% at 100% 100%, rgba(236,72,153,.20), transparent 55%);
+}
+.ae-premium-ad:hover { box-shadow: 0 0 0 1px rgba(251,191,36,.25), 0 14px 36px -10px rgba(249,115,22,.65), 0 0 34px -6px rgba(139,92,246,.7); }
+.ae-premium-ad:active { transform: scale(.985); }
+.ae-premium-ico {
+    background: linear-gradient(135deg, #fbbf24, #f97316 55%, #ec4899);
+    color: #1a1030; box-shadow: 0 6px 16px -4px rgba(249,115,22,.7);
+}
+@keyframes aePremiumBorder { 0% { background-position: 0 0, 0% 50%; } 100% { background-position: 0 0, 300% 50%; } }
+@media (prefers-reduced-motion: reduce) { .ae-premium-ad { animation: none; } }
+body.light-mode .ae-premium-ad {
+    background:
+        linear-gradient(135deg, #fffbeb 0%, #fff7ed 55%, #fdf2f8 100%) padding-box,
+        linear-gradient(120deg, #f59e0b, #f97316, #ec4899, #8b5cf6, #f59e0b) border-box;
+    background-size: 100% 100%, 300% 300%;
+    box-shadow: 0 10px 26px -12px rgba(249,115,22,.5);
+}
+body.light-mode .ae-premium-ad h4 { color: #78350f !important; }
+body.light-mode .ae-premium-ad p  { color: #9a3412 !important; }
+
+/* নতুন ফর্মের সতর্কবার্তা ব্যানার */
+.ae-note-banner { background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.35); color: #fcd34d; }
+.ae-note-banner i { color: #fbbf24; }
+body.light-mode .ae-note-banner { background: #fffbeb; border-color: #fcd34d; color: #92400e; }
+body.light-mode .ae-note-banner i { color: #d97706; }
+
+/* সময় বাছাইয়ের ইনপুট */
+.ae-time-input { color-scheme: dark; }
+body.light-mode .ae-time-input { color-scheme: light; }
+
+/* ছবি আপলোড জোন (খবর ও নোটিশ ফর্ম) */
+.ae-img-zone {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .35rem;
+    width: 100%; min-height: 96px; padding: .75rem; cursor: pointer; overflow: hidden;
+    border: 2px dashed rgba(139,92,246,.45); border-radius: .75rem; background: #0b0714; color: #94a3b8;
+    transition: border-color .2s, background .2s;
+}
+.ae-img-zone:hover { border-color: rgba(167,139,250,.8); }
+.ae-img-zone .ae-img-prompt { display: flex; flex-direction: column; align-items: center; gap: .2rem; font-size: 11px; text-align: center; }
+.ae-img-zone .ae-img-preview { width: 100%; max-height: 190px; object-fit: cover; border-radius: .5rem; display: block; }
+.ae-img-zone.has-image { padding: .35rem; border-style: solid; }
+body.light-mode .ae-img-zone { background: #f5f3ff; color: #64748b; border-color: #c4b5fd; }
+
+/* কমিউনিটি খবর পড়ার মোডাল (আগের iframe মোডালের জায়গায়) */
+.ae-news-modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 1rem; -webkit-overflow-scrolling: touch; }
+.ae-news-modal-body .ae-news-hero { width: 100%; max-height: 260px; object-fit: cover; border-radius: .75rem; display: block; margin-bottom: .75rem; }
+.ae-news-modal-body .ae-news-meta { font-size: 11px; color: #a78bfa; font-weight: 600; margin-bottom: .6rem; }
+.ae-news-modal-body .ae-news-text { font-size: .875rem; line-height: 1.75; color: #e2e8f0; white-space: pre-wrap; word-break: break-word; }
+body.light-mode .ae-news-modal-body .ae-news-text { color: #1e293b; }
+.ae-local-badge {
+    display: inline-block; padding: 1px 7px; margin-right: 4px; border-radius: 999px; font-size: 9px; font-weight: 800;
+    letter-spacing: .02em; color: #1a1030; background: linear-gradient(90deg, #fbbf24, #f97316); vertical-align: middle;
+}

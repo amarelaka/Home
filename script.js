@@ -582,6 +582,7 @@
         let unsubBlood = null;
         let unsubNotices = null;
         let unsubPromotions = null;
+        let unsubCommunityNews = null;
         let promotionsCache = [];
 
         let chatInitialLoadDone = false;
@@ -1665,6 +1666,76 @@
             'কোনো নোটিফিকেশন নেই': 'No notifications', 'নতুন আপডেট বা ঘোষণা এলে এখানে দেখা যাবে।': 'New updates and announcements will appear here.',
             'সব পড়া হয়েছে': 'All caught up', 'সকল': 'All'
         };
+
+        Object.assign(STATIC_UI_EN, {
+            "ট্রেনের সময়সূচী জমা দিন": "Submit Train Schedule",
+            "সঠিক সময়সূচীর তথ্য অ্যাডমিনকে পাঠান": "Send correct schedule info to the admin",
+            "লঞ্চের সময়সূচী জমা দিন": "Submit Launch Schedule",
+            "নতুন খবর পাঠান": "Send News",
+            "আপনার এলাকার খবর অ্যাডমিনের কাছে পাঠান": "Send news from your area to the admin",
+            "নোটিশ পাঠান": "Send Notice",
+            "অ্যাডমিন যাচাই করে নোটিশ প্রকাশ করবেন": "The admin will verify and publish the notice",
+            "ট্রেনের সময়সূচী সংক্রান্ত তথ্য দিন": "Provide Train Schedule Information",
+            "লঞ্চের সময়সূচী সংক্রান্ত তথ্য দিন": "Provide Launch Schedule Information",
+            "অ্যাডমিন যাচাই করে সময়সূচীতে যুক্ত/সংশোধন করবেন": "The admin will verify and add/correct the schedule",
+            "আপনার এলাকার খবর পাঠান": "Send News From Your Area",
+            "অ্যাডমিন যাচাই করে খবর প্রকাশ করবেন": "The admin will verify and publish the news",
+            "আপনার তথ্য অ্যাডমিন যাচাই করার পর প্রকাশিত হবে।": "Your information will be published after admin verification.",
+            "জমা দিন": "Submit",
+            "ট্রেনের নাম *": "Train Name *",
+            "ট্রেন নম্বর (ঐচ্ছিক)": "Train Number (Optional)",
+            "ছাড়ার স্টেশন *": "Departure Station *",
+            "ছাড়ার সময় *": "Departure Time *",
+            "গন্তব্য স্টেশন *": "Destination Station *",
+            "পৌঁছানোর সময় *": "Arrival Time *",
+            "সাপ্তাহিক বন্ধের দিন": "Weekly Off Day",
+            "নেই": "None",
+            "রবিবার": "Sunday",
+            "সোমবার": "Monday",
+            "মঙ্গলবার": "Tuesday",
+            "বুধবার": "Wednesday",
+            "বৃহস্পতিবার": "Thursday",
+            "শুক্রবার": "Friday",
+            "শনিবার": "Saturday",
+            "অতিরিক্ত তথ্য/মন্তব্য (ঐচ্ছিক)": "Additional Info / Comments (Optional)",
+            "ছাড়ার ঘাট *": "Departure Ghat *",
+            "গন্তব্য ঘাট *": "Destination Ghat *",
+            "লঞ্চের নাম *": "Launch Name *",
+            "লঞ্চ কর্তৃপক্ষের যোগাযোগ নম্বর (ঐচ্ছিক)": "Launch Authority Contact Number (Optional)",
+            "অতিরিক্ত তথ্য (ঐচ্ছিক)": "Additional Info (Optional)",
+            "খবরের শিরোনাম *": "News Headline *",
+            "এলাকা/স্থান (ঐচ্ছিক)": "Area / Place (Optional)",
+            "ছবি সংযুক্ত করুন (ঐচ্ছিক)": "Attach a Photo (Optional)",
+            "ছবি বাছাই করতে ক্লিক করুন": "Click to choose a photo",
+            "সর্বোচ্চ ৩MB": "Max 3MB",
+            "নোটিশের শিরোনাম *": "Notice Title *",
+            "যেমন: সুন্দরবন এক্সপ্রেস": "e.g. Sundarban Express",
+            "যেমন: ৭২৫": "e.g. 725",
+            "ছাড়ার স্টেশনের নাম": "Departure station name",
+            "গন্তব্য স্টেশনের নাম": "Destination station name",
+            "যেমন: সময় পরিবর্তন হয়েছে...": "e.g. The timing has changed...",
+            "ছাড়ার ঘাটের নাম": "Departure ghat name",
+            "গন্তব্য ঘাটের নাম": "Destination ghat name",
+            "লঞ্চের নাম": "Launch name",
+            "অতিরিক্ত তথ্য...": "Additional information...",
+            "খবরের শিরোনাম লিখুন": "Write the news headline",
+            "খবরের বিস্তারিত লিখুন...": "Write the full news...",
+            "যেমন: শাহবাজপুর বাজার": "e.g. Shahbazpur Bazar",
+            "নোটিশের শিরোনাম লিখুন": "Write the notice title",
+            "নোটিশের বিস্তারিত লিখুন...": "Write the notice details...",
+            "এলাকার খবর": "Local News",
+            "সময়সূচীর তথ্য জমা হয়েছে! অ্যাডমিন যাচাই করে প্রকাশ করবেন।": "Schedule information submitted! The admin will verify and publish it.",
+            "খবর জমা হয়েছে! অ্যাডমিন যাচাই করার পর প্রকাশিত হবে।": "News submitted! It will be published after admin verification.",
+            "নোটিশ জমা হয়েছে! অ্যাডমিন যাচাই করার পর প্রকাশিত হবে।": "Notice submitted! It will be published after admin verification.",
+            "আপনি আজ ইতিমধ্যে ২টি তথ্য জমা দিয়েছেন। আগামীকাল আবার চেষ্টা করুন।": "You have already submitted 2 items today. Please try again tomorrow.",
+            "শুধু ছবি ফাইল দিন": "Please choose an image file only",
+            "ছবির সাইজ ৩MB এর কম হতে হবে": "Image size must be under 3MB",
+            "ছবি আপলোড ব্যর্থ হয়েছে, আবার চেষ্টা করুন": "Image upload failed, please try again",
+            "আপনার সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন": "Enter your valid 11-digit mobile number",
+            "পাঠানো হচ্ছে...": "Sending...",
+            "যাচাই করা হচ্ছে...": "Verifying...",
+            "ছবি আপলোড হচ্ছে...": "Uploading photo..."
+        });
 
         const uiOriginalTextNodes = new WeakMap();
         const uiOriginalAttributes = new WeakMap();
@@ -3271,7 +3342,7 @@
                 // লগআউটের পর লগইন পেজ নয় — গেস্ট মোডে হোম পেজ, নতুন করে ৩ মিনিট
                 try { sessionStorage.removeItem('ae_guest_started_at'); sessionStorage.removeItem('ae_guest_preview_expired'); } catch (e) {}
                 try { stopGuestPreviewTimer(); } catch (e) {}
-                ['contactModal','aboutModal','termsModal','feedbackModal','ratingModal','editProfileModal','changePasswordModal','premiumActionModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','providerModal','chatInfoModal','noticeModal','categoryModal','downloadAppModal'].forEach(id => {
+                ['contactModal','aboutModal','termsModal','feedbackModal','ratingModal','editProfileModal','changePasswordModal','premiumActionModal','userEmergencyRequestModal','userBloodRequestModal','userTrainRequestModal','userLaunchRequestModal','userNewsRequestModal','userNoticeRequestModal','promotionFormModal','providerModal','chatInfoModal','noticeModal','categoryModal','downloadAppModal'].forEach(id => {
                     const fn = window['close' + id.charAt(0).toUpperCase() + id.slice(1)];
                     const el = document.getElementById(id);
                     if (el && !el.classList.contains('hidden') && typeof fn === 'function') { try { fn(); } catch (e) {} }
@@ -5422,6 +5493,186 @@
             }
         };
 
+        // ========== কমিউনিটি সাবমিশন: ট্রেন / লঞ্চ / খবর / নোটিশ ==========
+        // সবগুলোই ব্লাড/ইমার্জেন্সির মতো status:'pending' অবস্থায় Firestore-এ জমা হয়; অ্যাডমিন অনুমোদন না দেওয়া পর্যন্ত লাইভ হয় না।
+        const COMMUNITY_FORMS = {
+            train:  { modal: 'userTrainRequestModal',  form: 'userTrainForm',  btn: 'userTrainSubmitBtn',  coll: 'trainScheduleRequests' },
+            launch: { modal: 'userLaunchRequestModal', form: 'userLaunchForm', btn: 'userLaunchSubmitBtn', coll: 'launchScheduleRequests' },
+            news:   { modal: 'userNewsRequestModal',   form: 'userNewsForm',   btn: 'userNewsSubmitBtn',   coll: 'newsSubmissions' },
+            notice: { modal: 'userNoticeRequestModal', form: 'userNoticeForm', btn: 'userNoticeSubmitBtn', coll: 'noticeRequests' }
+        };
+        const COMMUNITY_PHONE_FIELD = { train: 'trnPhone', launch: 'lchPhone', news: 'nwsPhone', notice: 'ntcPhone' };
+        const COMMUNITY_IMG_PREFIX = { news: 'nws', notice: 'ntc' };
+        const communityImageFiles = { news: null, notice: null };
+        const COMMUNITY_DAILY_LIMIT = 2;
+        const COMMUNITY_SEND_LABEL = '<i data-lucide="send" class="w-4 h-4"></i> জমা দিন';
+
+        function communityResetImage(kind) {
+            const pre = COMMUNITY_IMG_PREFIX[kind];
+            if (!pre) return;
+            communityImageFiles[kind] = null;
+            const input = document.getElementById(pre + 'ImgInput');
+            const prev = document.getElementById(pre + 'ImgPreview');
+            const prompt = document.getElementById(pre + 'ImgPrompt');
+            const zone = document.getElementById(pre + 'ImgZone');
+            if (input) input.value = '';
+            if (prev) { prev.removeAttribute('src'); prev.classList.add('hidden'); }
+            if (prompt) prompt.classList.remove('hidden');
+            if (zone) zone.classList.remove('has-image');
+        }
+
+        window.previewCommunityImage = (e, kind) => {
+            const pre = COMMUNITY_IMG_PREFIX[kind];
+            const file = e.target.files && e.target.files[0];
+            if (!pre || !file) return;
+            if (!file.type.startsWith('image/')) { showToast('শুধু ছবি ফাইল দিন', 'circle-x', 'text-rose-400'); e.target.value = ''; return; }
+            if (file.size > 3 * 1024 * 1024) { showToast('ছবির সাইজ ৩MB এর কম হতে হবে', 'circle-x', 'text-rose-400'); e.target.value = ''; return; }
+            communityImageFiles[kind] = file;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const prev = document.getElementById(pre + 'ImgPreview');
+                const prompt = document.getElementById(pre + 'ImgPrompt');
+                const zone = document.getElementById(pre + 'ImgZone');
+                if (prev) { prev.src = ev.target.result; prev.classList.remove('hidden'); }
+                if (prompt) prompt.classList.add('hidden');
+                if (zone) zone.classList.add('has-image');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.openCommunityModal = (kind) => {
+            const cfg = COMMUNITY_FORMS[kind];
+            if (!cfg) return;
+            if (isForcedProfileMode) return;
+            if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            const form = document.getElementById(cfg.form);
+            if (form) form.reset();
+            communityResetImage(kind);
+            const ph = document.getElementById(COMMUNITY_PHONE_FIELD[kind]);
+            if (ph && userProfile && userProfile.phone) ph.value = userProfile.phone;
+            if (kind === 'news') {
+                const area = document.getElementById('nwsArea');
+                if (area && userProfile) area.value = [userProfile.upazila, userProfile.district].filter(Boolean).join(', ');
+            }
+            const m = document.getElementById(cfg.modal);
+            if (!m) return;
+            m.classList.remove('hidden'); m.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+            refreshIcons();
+        };
+
+        window.closeCommunityModal = (kind) => {
+            const cfg = COMMUNITY_FORMS[kind];
+            if (!cfg) return;
+            const m = document.getElementById(cfg.modal);
+            if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+            document.body.classList.remove('overflow-hidden');
+        };
+        // ব্যাক-বাটন/Escape/লগআউট সিস্টেম 'close' + মোডাল-আইডি নামে ফাংশন খোঁজে, তাই এই নামগুলোও দরকার
+        window.closeUserTrainRequestModal = () => window.closeCommunityModal('train');
+        window.closeUserLaunchRequestModal = () => window.closeCommunityModal('launch');
+        window.closeUserNewsRequestModal = () => window.closeCommunityModal('news');
+        window.closeUserNoticeRequestModal = () => window.closeCommunityModal('notice');
+        Object.keys(COMMUNITY_FORMS).forEach(kind => {
+            const id = COMMUNITY_FORMS[kind].modal;
+            document.getElementById(id)?.addEventListener('click', (ev) => { if (ev.target.id === id) window.closeCommunityModal(kind); });
+        });
+
+        window.handleCommunitySubmit = async (e, kind) => {
+            e.preventDefault();
+            const cfg = COMMUNITY_FORMS[kind];
+            if (!cfg) return;
+            if (isForcedProfileMode) return;
+            if (!currentUser) return showToast('প্রথমে লগইন করুন', 'circle-x', 'text-rose-400');
+            if (!firebaseReady) return showToast('Firebase কনফিগার হয়নি', 'triangle-alert', 'text-rose-400');
+            const v = (id) => (document.getElementById(id)?.value || '').trim();
+            const bad = (msg) => showToast(msg, 'circle-x', 'text-rose-400');
+            const phoneOk = (x) => /^01[3-9]\d{8}$/.test(x);
+            let data = {};
+            let userPhone = '';
+
+            if (kind === 'train') {
+                data = { trainName: v('trnName'), trainNumber: v('trnNumber'), fromStation: v('trnFrom'), departTime: v('trnDepart'),
+                         toStation: v('trnTo'), arriveTime: v('trnArrive'), weeklyOffDay: v('trnOffDay'), note: v('trnNote') };
+                userPhone = v('trnPhone');
+                if (data.trainName.length < 2) return bad('ট্রেনের নাম দিন');
+                if (!data.fromStation) return bad('ছাড়ার স্টেশনের নাম দিন');
+                if (!data.departTime) return bad('ছাড়ার সময় দিন');
+                if (!data.toStation) return bad('গন্তব্য স্টেশনের নাম দিন');
+                if (!data.arriveTime) return bad('পৌঁছানোর সময় দিন');
+            } else if (kind === 'launch') {
+                data = { fromGhat: v('lchFrom'), toGhat: v('lchTo'), launchName: v('lchName'), departTime: v('lchDepart'),
+                         authorityPhone: v('lchAuthPhone'), note: v('lchNote') };
+                userPhone = v('lchPhone');
+                if (!data.fromGhat) return bad('ছাড়ার ঘাটের নাম দিন');
+                if (!data.toGhat) return bad('গন্তব্য ঘাটের নাম দিন');
+                if (data.launchName.length < 2) return bad('লঞ্চের নাম দিন');
+                if (!data.departTime) return bad('ছাড়ার সময় দিন');
+                if (data.authorityPhone && !phoneOk(data.authorityPhone)) return bad('লঞ্চ কর্তৃপক্ষের সঠিক ১১ ডিজিটের নম্বর দিন');
+            } else if (kind === 'news') {
+                data = { title: v('nwsTitle'), body: v('nwsBody'), area: v('nwsArea') };
+                userPhone = v('nwsPhone');
+                if (data.title.length < 5) return bad('খবরের শিরোনাম কমপক্ষে ৫ অক্ষরের দিন');
+                if (data.body.length < 20) return bad('খবরের বিস্তারিত বিবরণ কমপক্ষে ২০ অক্ষরের দিন');
+            } else if (kind === 'notice') {
+                data = { title: v('ntcTitle'), body: v('ntcBody') };
+                userPhone = v('ntcPhone');
+                if (data.title.length < 5) return bad('নোটিশের শিরোনাম কমপক্ষে ৫ অক্ষরের দিন');
+                if (data.body.length < 10) return bad('নোটিশের বিস্তারিত কমপক্ষে ১০ অক্ষরের দিন');
+            }
+            if (!phoneOk(userPhone)) return bad('আপনার সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন');
+
+            const btn = document.getElementById(cfg.btn);
+            const setBtn = (html) => { if (btn) { btn.innerHTML = html; refreshIcons(); } };
+            if (btn) btn.disabled = true;
+            setBtn('<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> যাচাই করা হচ্ছে...');
+            try {
+                // দিনে সর্বোচ্চ ২টি জমাদানের সীমা (বিদ্যমান ব্লাড/ইমার্জেন্সি ফর্মের মতো)
+                const startOfDay = new Date();
+                startOfDay.setHours(0, 0, 0, 0);
+                const snap = await getDocs(query(collection(db, cfg.coll), where('submitterUid', '==', currentUser.uid)));
+                let todayCount = 0;
+                snap.forEach(d => {
+                    const x = d.data();
+                    if (x.createdAt) {
+                        const dt = x.createdAt.toDate ? x.createdAt.toDate() : new Date(x.createdAt.seconds * 1000);
+                        if (dt >= startOfDay) todayCount++;
+                    }
+                });
+                if (todayCount >= COMMUNITY_DAILY_LIMIT) {
+                    return showToast('আপনি আজ ইতিমধ্যে ২টি তথ্য জমা দিয়েছেন। আগামীকাল আবার চেষ্টা করুন।', 'alert-circle', 'text-rose-400');
+                }
+                if ((kind === 'news' || kind === 'notice') && communityImageFiles[kind]) {
+                    setBtn('<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> ছবি আপলোড হচ্ছে...');
+                    try { data.imageUrl = await uploadToCloudinary(communityImageFiles[kind]); }
+                    catch (imgErr) { return bad('ছবি আপলোড ব্যর্থ হয়েছে, আবার চেষ্টা করুন'); }
+                } else if (kind === 'news' || kind === 'notice') {
+                    data.imageUrl = '';
+                }
+                setBtn('<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> পাঠানো হচ্ছে...');
+                await addDoc(collection(db, cfg.coll), {
+                    ...data,
+                    submitterUid: currentUser.uid,
+                    submitterName: userProfile?.fullName || '',
+                    submitterPhone: userPhone,
+                    submitterEmail: userProfile?.email || currentUser.email || '',
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+                const okMsg = (kind === 'train' || kind === 'launch')
+                    ? 'সময়সূচীর তথ্য জমা হয়েছে! অ্যাডমিন যাচাই করে প্রকাশ করবেন।'
+                    : (kind === 'news' ? 'খবর জমা হয়েছে! অ্যাডমিন যাচাই করার পর প্রকাশিত হবে।' : 'নোটিশ জমা হয়েছে! অ্যাডমিন যাচাই করার পর প্রকাশিত হবে।');
+                showToast(okMsg, 'check-circle', 'text-violet-400');
+                window.closeCommunityModal(kind);
+                communityResetImage(kind);
+            } catch (err) {
+                showToast('পাঠাতে ব্যর্থ: ' + (err.code || err.message), 'circle-x', 'text-rose-400');
+            } finally {
+                if (btn) btn.disabled = false;
+                setBtn(COMMUNITY_SEND_LABEL);
+            }
+        };
+
         // ========== BLOOD ==========
         let bloodDistrictFilterOn = false;
 
@@ -7389,6 +7640,7 @@
                 closeSidebar(); closeNotifPanel(); closeServiceDetailModal();
                 closeUserEmergencyRequestModal();
                 closeUserBloodRequestModal();
+                closeUserTrainRequestModal(); closeUserLaunchRequestModal(); closeUserNewsRequestModal(); closeUserNoticeRequestModal();
                 closePremiumActionModal();
                 closePromotionFormModal();
                 closeContactModal();
@@ -7482,6 +7734,16 @@
                     });
                 }
             }, err => console.warn('notices listener:', err.code || err.message));
+
+            // অ্যাডমিন-অনুমোদিত কমিউনিটি খবর (status == 'approved') — খবর ট্যাবের উপরে দেখানো হয়, ক্লিকে ওয়েবসাইটের ভেতরের মোডালে খোলে
+            if (unsubCommunityNews) unsubCommunityNews();
+            unsubCommunityNews = onSnapshot(query(collection(db, 'newsSubmissions'), where('status', '==', 'approved')), snap => {
+                const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                const ms = (x) => (x.createdAt && x.createdAt.toMillis) ? x.createdAt.toMillis() : ((x.createdAt && x.createdAt.seconds) ? x.createdAt.seconds * 1000 : 0);
+                list.sort((a, b) => ms(b) - ms(a));
+                list.forEach(x => { x._ms = ms(x); });
+                if (typeof window.aeSetCommunityNews === 'function') window.aeSetCommunityNews(list);
+            }, err => console.warn('community news listener:', err.code || err.message));
 
             if (unsubscribeAdminStatus) unsubscribeAdminStatus();
             unsubscribeAdminStatus = onSnapshot(doc(db, 'adminStatus', 'current'), (snap) => {
@@ -9040,8 +9302,9 @@
                     mesesuBadgeSeenMs = 0; mesesuBadgeSavedMs = 0;
                     try { mesesuStopPeerWatchers(); mesesuStopPeerWatch(); } catch (e) {}
                     if (unsubscribeAdminStatus) { unsubscribeAdminStatus(); unsubscribeAdminStatus = null; }
-                    [unsubCategories, unsubEmergency, unsubBlood, unsubNotices, unsubPromotions].forEach(fn => { try { fn?.(); } catch(e){} });
-                    unsubCategories = unsubEmergency = unsubBlood = unsubNotices = unsubPromotions = null;
+                    [unsubCategories, unsubEmergency, unsubBlood, unsubNotices, unsubPromotions, unsubCommunityNews].forEach(fn => { try { fn?.(); } catch(e){} });
+                    unsubCategories = unsubEmergency = unsubBlood = unsubNotices = unsubPromotions = unsubCommunityNews = null;
+                    try { if (typeof window.aeSetCommunityNews === 'function') window.aeSetCommunityNews([]); } catch(e){}
                     // Stop account/payment configuration listener for guests.
                     if (unsubAppSettings) { try { unsubAppSettings(); } catch (e) {} unsubAppSettings = null; }
                     promotionsCache = []; closePromotionFormModal();
@@ -9344,7 +9607,7 @@
         (function aeBackNavigation() {
             const TAB_HOME = 'services';
             const EXIT_WINDOW_MS = 2000;
-            const MODAL_IDS = ['aeVideoModal','providerModal','serviceDetailModal','promotionDetailModal','categoryModal','noticeModal','feedbackModal','ratingModal','aboutModal','termsModal','resultModal','contactModal','editProfileModal','changePasswordModal','chatInfoModal','userEmergencyRequestModal','userBloodRequestModal','promotionFormModal','premiumActionModal','downloadAppModal','otherDownloadSourcesModal','newsArticleModal'];
+            const MODAL_IDS = ['aeVideoModal','providerModal','serviceDetailModal','promotionDetailModal','categoryModal','noticeModal','feedbackModal','ratingModal','aboutModal','termsModal','resultModal','contactModal','editProfileModal','changePasswordModal','chatInfoModal','userEmergencyRequestModal','userBloodRequestModal','userTrainRequestModal','userLaunchRequestModal','userNewsRequestModal','userNoticeRequestModal','promotionFormModal','premiumActionModal','downloadAppModal','otherDownloadSourcesModal','newsArticleModal'];
             let tabStack = [{ tab: TAB_HOME, scroll: 0 }];
             let internalNav = false;
             let armed = false;
@@ -9573,30 +9836,61 @@ function newsPlaceholderThumbHtml() {
 }
 window.newsPlaceholderThumbHtml = newsPlaceholderThumbHtml;
 
+let communityNewsItems = []; // অ্যাডমিন-অনুমোদিত ইউজার/অ্যাডমিনের খবর (Firestore: newsSubmissions, status=approved)
+let newsHasRendered = false;
+
 function newsRender(items) {
     const box = document.getElementById('newsList');
     if (!box) return;
+    newsHasRendered = true;
     newsCurrentItems = Array.isArray(items) ? items : [];
-    if (!newsCurrentItems.length) {
+    // কমিউনিটি খবর শুধু "বাংলাদেশ" ট্যাবের উপরে দেখানো হয়
+    const local = (newsCat === 'bd') ? communityNewsItems : [];
+    if (!newsCurrentItems.length && !local.length) {
         box.innerHTML = `<div class="info-card p-6 text-center text-xs text-slate-400">${esc(t('news.empty'))}</div>`;
         return;
     }
-    box.innerHTML = newsCurrentItems.map((n, idx) => {
+    const localHtml = local.map(n => {
+        const img = newsSafeUrl(n.imageUrl);
+        const thumb = img
+            ? `<img src="${esc(img)}" loading="lazy" referrerpolicy="no-referrer" alt="" class="news-thumb" onerror="this.parentElement.innerHTML = newsPlaceholderThumbHtml(); if (typeof refreshIcons === 'function') refreshIcons();">`
+            : newsPlaceholderThumbHtml();
+        const summary = String(n.body || '').replace(/\s+/g, ' ').slice(0, 140);
+        return `<button type="button" onclick="openCommunityNews('${esc(n.id)}')" class="info-card flex gap-3 p-3 w-full text-left">
+            <div class="news-thumb-wrap">${thumb}</div>
+            <div class="min-w-0 flex-1">
+                <h4 class="text-sm font-bold text-slate-100 leading-snug line-clamp-3">${esc(n.title)}</h4>
+                ${summary ? `<p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${esc(summary)}</p>` : ''}
+                <p class="text-[10px] text-violet-400 mt-1.5 font-semibold"><span class="ae-local-badge">${esc(currentLang === 'en' ? 'Local News' : 'এলাকার খবর')}</span>${n.area ? esc(n.area) + ' · ' : ''}<span class="text-slate-500 font-normal">${esc(newsTimeAgo(n._ms))}</span></p>
+            </div>
+        </button>`;
+    }).join('');
+    // বাইরের (Google Apps Script) খবর: আগের মতোই ক্লিক করলে ব্রাউজারে (নতুন ট্যাবে) মূল লিঙ্কে নিয়ে যাবে
+    const extHtml = newsCurrentItems.map((n) => {
         const link = newsSafeUrl(n.link), img = newsSafeUrl(n.img);
         const thumb = img
             ? `<img src="${esc(img)}" loading="lazy" referrerpolicy="no-referrer" alt="" class="news-thumb" onerror="this.parentElement.innerHTML = newsPlaceholderThumbHtml(); if (typeof refreshIcons === 'function') refreshIcons();">`
             : newsPlaceholderThumbHtml();
-        return `<a href="${esc(link)}" onclick="return newsOpenArticle(event, ${idx})" class="info-card flex gap-3 p-3">
+        const inner = `
             <div class="news-thumb-wrap">${thumb}</div>
             <div class="min-w-0 flex-1">
                 <h4 class="text-sm font-bold text-slate-100 leading-snug line-clamp-3">${esc(n.title)}</h4>
                 ${n.summary ? `<p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${esc(n.summary)}</p>` : ''}
                 <p class="text-[10px] text-violet-400 mt-1.5 font-semibold">${esc(n.source)} · <span class="text-slate-500 font-normal">${esc(newsTimeAgo(n.time))}</span></p>
-            </div>
-        </a>`;
+            </div>`;
+        return link
+            ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer" class="info-card flex gap-3 p-3">${inner}</a>`
+            : `<div class="info-card flex gap-3 p-3">${inner}</div>`;
     }).join('');
+    box.innerHTML = localHtml + extHtml;
     if (typeof refreshIcons === 'function') refreshIcons();
 }
+
+// Firestore লিসনার থেকে অনুমোদিত কমিউনিটি খবরের তালিকা আপডেট হলে খবর পেজ নতুন করে আঁকা হয়
+window.aeSetCommunityNews = (list) => {
+    communityNewsItems = Array.isArray(list) ? list : [];
+    if (newsHasRendered) newsRender(newsCurrentItems);
+};
 
 function newsShowUpdated(at) {
     const el = document.getElementById('newsUpdated');
@@ -9668,27 +9962,23 @@ window.newsRefreshClick = async () => {
     }
 };
 
-// খবরে ক্লিক করলে ব্রাউজারে না গিয়ে ওয়েবসাইটের ভেতরেই মোডালে (iframe) খোলা হবে
-window.newsOpenArticle = (event, idx) => {
-    if (event) event.preventDefault();
-    const item = newsCurrentItems[idx];
-    const link = item ? newsSafeUrl(item.link) : '';
-    if (!link) {
-        try { showToast(currentLang === 'en' ? 'Link unavailable' : 'লিঙ্কটি পাওয়া যায়নি', 'link-2-off', 'text-amber-400'); } catch (e) {}
-        return false;
-    }
+// ইউজার/অ্যাডমিনের পাঠানো (অনুমোদিত) খবরে ক্লিক করলে ওয়েবসাইটের ভেতরেই মোডালে খোলা হবে
+// (বাইরের নিউজ সাইটের খবর আর iframe-এ খোলে না — সেগুলো সরাসরি ব্রাউজারে যায়)
+window.openCommunityNews = (id) => {
+    const item = communityNewsItems.find(n => n.id === id);
+    if (!item) return false;
     const titleEl = document.getElementById('newsModalTitle');
     const sourceEl = document.getElementById('newsModalSource');
-    const openExternal = document.getElementById('newsModalOpenExternal');
-    const frame = document.getElementById('newsModalFrame');
-    const loading = document.getElementById('newsModalLoading');
+    const bodyEl = document.getElementById('newsModalBody');
     if (titleEl) titleEl.textContent = item.title || (currentLang === 'en' ? 'News' : 'খবরের বিস্তারিত');
-    if (sourceEl) sourceEl.textContent = item.source || '';
-    if (openExternal) openExternal.setAttribute('href', link);
-    if (loading) loading.classList.remove('hidden');
-    if (frame) {
-        frame.classList.add('hidden');
-        frame.src = link;
+    if (sourceEl) sourceEl.textContent = (currentLang === 'en' ? 'Local News' : 'এলাকার খবর') + (item.area ? ' · ' + item.area : '');
+    if (bodyEl) {
+        const img = newsSafeUrl(item.imageUrl);
+        bodyEl.innerHTML =
+            (img ? `<img class="ae-news-hero" src="${esc(img)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : '') +
+            `<p class="ae-news-meta">${esc(newsTimeAgo(item._ms))}</p>` +
+            `<div class="ae-news-text">${esc(item.body || '')}</div>`;
+        bodyEl.scrollTop = 0;
     }
     const m = document.getElementById('newsArticleModal');
     if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
@@ -9700,10 +9990,8 @@ window.closeNewsArticleModal = () => {
     const m = document.getElementById('newsArticleModal');
     if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
     document.body.classList.remove('overflow-hidden');
-    const frame = document.getElementById('newsModalFrame');
-    if (frame) { frame.src = 'about:blank'; frame.classList.add('hidden'); } // মোডাল বন্ধ হলে পেজ লোড/অডিও চলতে থাকা বন্ধ করা
-    const loading = document.getElementById('newsModalLoading');
-    if (loading) loading.classList.remove('hidden');
+    const bodyEl = document.getElementById('newsModalBody');
+    if (bodyEl) bodyEl.innerHTML = '';
 };
 document.getElementById('newsArticleModal')?.addEventListener('click', (e) => { if (e.target.id === 'newsArticleModal') closeNewsArticleModal(); });
 

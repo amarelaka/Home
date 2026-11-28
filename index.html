@@ -1114,9 +1114,57 @@
                     </div>
                     <span class="bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
                 </button>
-                <button onclick="handleRunAdClick()" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
+                                <button type="button" onclick="openCommunityModal('train')" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div class="ae-create-ico ae-ico-sky w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="train-front" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">ট্রেনের সময়সূচী জমা দিন</h4>
+                            <p class="text-[10px] text-slate-400">সঠিক সময়সূচীর তথ্য অ্যাডমিনকে পাঠান</p>
+                        </div>
+                    </div>
+                    <span class="bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
+                </button>
+                <button type="button" onclick="openCommunityModal('launch')" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
+                    <div class="flex items-center gap-3">
+                        <div class="ae-create-ico ae-ico-teal w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="ship" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">লঞ্চের সময়সূচী জমা দিন</h4>
+                            <p class="text-[10px] text-slate-400">সঠিক সময়সূচীর তথ্য অ্যাডমিনকে পাঠান</p>
+                        </div>
+                    </div>
+                    <span class="bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
+                </button>
+                <button type="button" onclick="openCommunityModal('news')" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
+                    <div class="flex items-center gap-3">
+                        <div class="ae-create-ico ae-ico-amber w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="newspaper" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">নতুন খবর পাঠান</h4>
+                            <p class="text-[10px] text-slate-400">আপনার এলাকার খবর অ্যাডমিনের কাছে পাঠান</p>
+                        </div>
+                    </div>
+                    <span class="bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
+                </button>
+                <button type="button" onclick="openCommunityModal('notice')" class="w-full flex items-center justify-between p-4 bg-[#0b0714] border border-violet-900/50 hover:border-violet-500/60 rounded-2xl transition group">
+                    <div class="flex items-center gap-3">
+                        <div class="ae-create-ico ae-ico-rose w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="bell" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-sm font-bold text-white">নোটিশ পাঠান</h4>
+                            <p class="text-[10px] text-slate-400">অ্যাডমিন যাচাই করে নোটিশ প্রকাশ করবেন</p>
+                        </div>
+                    </div>
+                    <span class="bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">ফ্রি</span>
+                </button>
+                <button onclick="handleRunAdClick()" class="ae-premium-ad w-full flex items-center justify-between p-4 rounded-2xl transition group">
+                    <div class="flex items-center gap-3 relative">
+                        <div class="ae-premium-ico w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                             <i data-lucide="megaphone" class="w-5 h-5"></i>
                         </div>
                         <div class="text-left">
@@ -1124,7 +1172,7 @@
                             <p class="text-[10px] text-slate-400">আপনার পোস্ট প্রমোট করুন</p>
                         </div>
                     </div>
-                    <span class="bg-gradient-to-r from-amber-400 to-orange-500 text-black border border-amber-500/30 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider">প্রিমিয়াম</span>
+                    <span class="bg-gradient-to-r from-amber-400 to-orange-500 text-black border border-amber-500/30 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider relative">প্রিমিয়াম</span>
                 </button>
             </div>
 
@@ -1555,7 +1603,7 @@
         </div>
     </div>
 
-    <!-- NEWS ARTICLE MODAL (খবরে ক্লিক করলে ব্রাউজারে না গিয়ে ভেতরেই দেখানোর জন্য) -->
+    <!-- NEWS ARTICLE MODAL (ইউজার/অ্যাডমিনের পাঠানো খবর ভেতরেই দেখানোর জন্য) -->
     <div id="newsArticleModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog" aria-modal="true">
         <div class="w-full max-w-2xl rounded-3xl border border-violet-800/50 bg-[#181127] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
             <div class="flex items-center justify-between gap-2 border-b border-violet-900/50 bg-[#181127] p-4 shrink-0">
@@ -1563,20 +1611,11 @@
                     <h2 id="newsModalTitle" class="font-bold text-white text-sm sm:text-base leading-snug line-clamp-2">খবরের বিস্তারিত</h2>
                     <p id="newsModalSource" class="text-[11px] text-violet-400 font-semibold mt-0.5">—</p>
                 </div>
-                <a id="newsModalOpenExternal" href="#" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-xl bg-violet-950/80 hover:bg-violet-900 text-slate-200 flex items-center justify-center touch-target shrink-0" aria-label="ব্রাউজারে দেখুন" title="ব্রাউজারে দেখুন">
-                    <i data-lucide="external-link" class="w-4 h-4"></i>
-                </a>
                 <button type="button" onclick="closeNewsArticleModal()" class="w-9 h-9 rounded-xl bg-violet-950/80 hover:bg-violet-900 text-slate-200 flex items-center justify-center touch-target shrink-0" aria-label="বন্ধ করুন">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
-            <div class="news-modal-frame-wrap">
-                <div id="newsModalLoading">
-                    <span class="news-modal-spinner"></span>
-                    <span class="text-[11px] text-slate-400">লোড হচ্ছে...</span>
-                </div>
-                <iframe id="newsModalFrame" class="hidden" referrerpolicy="no-referrer" onload="document.getElementById('newsModalLoading')?.classList.add('hidden'); this.classList.remove('hidden');"></iframe>
-            </div>
+            <div id="newsModalBody" class="ae-news-modal-body"></div>
         </div>
     </div>
 
@@ -2207,6 +2246,206 @@
                 </div>
                 <button type="submit" id="userBloodSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
                     <i data-lucide="send" class="w-4 h-4"></i> অনুরোধ পাঠান
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- USER TRAIN SUBMISSION MODAL -->
+    <div id="userTrainRequestModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
+        <div class="w-full max-w-lg rounded-3xl border border-violet-800/50 bg-[#181127] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
+            <div class="bg-gradient-to-r from-violet-700 to-violet-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="train-front" class="w-4 h-4"></i> ট্রেনের সময়সূচী সংক্রান্ত তথ্য দিন</h3>
+                    <p class="text-[10px] text-violet-200">অ্যাডমিন যাচাই করে সময়সূচীতে যুক্ত/সংশোধন করবেন</p>
+                </div>
+                <button type="button" onclick="closeUserTrainRequestModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form id="userTrainForm" onsubmit="handleCommunitySubmit(event,'train')" class="p-4 space-y-3.5 overflow-y-auto">
+                <div class="ae-note-banner rounded-xl p-2.5 flex items-start gap-2 text-[11px]">
+                    <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
+                    <span>আপনার তথ্য অ্যাডমিন যাচাই করার পর প্রকাশিত হবে।</span>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">ট্রেনের নাম *</label>
+                    <input type="text" id="trnName" required maxlength="60" placeholder="যেমন: সুন্দরবন এক্সপ্রেস" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">ট্রেন নম্বর (ঐচ্ছিক)</label>
+                    <input type="text" id="trnNumber" maxlength="20" placeholder="যেমন: ৭২৫" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">ছাড়ার স্টেশন *</label>
+                    <input type="text" id="trnFrom" required maxlength="60" placeholder="ছাড়ার স্টেশনের নাম" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">ছাড়ার সময় *</label>
+                    <input type="time" id="trnDepart" required class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 ae-time-input">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">গন্তব্য স্টেশন *</label>
+                    <input type="text" id="trnTo" required maxlength="60" placeholder="গন্তব্য স্টেশনের নাম" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">পৌঁছানোর সময় *</label>
+                    <input type="time" id="trnArrive" required class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 ae-time-input">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">সাপ্তাহিক বন্ধের দিন</label>
+                    <select id="trnOffDay" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500"><option value="">নেই</option><option value="রবিবার">রবিবার</option><option value="সোমবার">সোমবার</option><option value="মঙ্গলবার">মঙ্গলবার</option><option value="বুধবার">বুধবার</option><option value="বৃহস্পতিবার">বৃহস্পতিবার</option><option value="শুক্রবার">শুক্রবার</option><option value="শনিবার">শনিবার</option></select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">অতিরিক্ত তথ্য/মন্তব্য (ঐচ্ছিক)</label>
+                    <textarea id="trnNote" rows="3" maxlength="1000" placeholder="যেমন: সময় পরিবর্তন হয়েছে..." class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 resize-none"></textarea>
+                </div>
+                <div class="pt-2 border-t border-violet-900/40">
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">আপনার মোবাইল নাম্বার *</label>
+                    <input type="tel" id="trnPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 font-mono">
+                    <p class="text-[10px] text-slate-500 mt-1">যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।</p>
+                </div>
+                <button type="submit" id="userTrainSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
+                    <i data-lucide="send" class="w-4 h-4"></i> জমা দিন
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- USER LAUNCH SUBMISSION MODAL -->
+    <div id="userLaunchRequestModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
+        <div class="w-full max-w-lg rounded-3xl border border-violet-800/50 bg-[#181127] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
+            <div class="bg-gradient-to-r from-violet-700 to-violet-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="ship" class="w-4 h-4"></i> লঞ্চের সময়সূচী সংক্রান্ত তথ্য দিন</h3>
+                    <p class="text-[10px] text-violet-200">অ্যাডমিন যাচাই করে সময়সূচীতে যুক্ত/সংশোধন করবেন</p>
+                </div>
+                <button type="button" onclick="closeUserLaunchRequestModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form id="userLaunchForm" onsubmit="handleCommunitySubmit(event,'launch')" class="p-4 space-y-3.5 overflow-y-auto">
+                <div class="ae-note-banner rounded-xl p-2.5 flex items-start gap-2 text-[11px]">
+                    <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
+                    <span>আপনার তথ্য অ্যাডমিন যাচাই করার পর প্রকাশিত হবে।</span>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">ছাড়ার ঘাট *</label>
+                    <input type="text" id="lchFrom" required maxlength="60" placeholder="ছাড়ার ঘাটের নাম" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">গন্তব্য ঘাট *</label>
+                    <input type="text" id="lchTo" required maxlength="60" placeholder="গন্তব্য ঘাটের নাম" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">লঞ্চের নাম *</label>
+                    <input type="text" id="lchName" required maxlength="60" placeholder="লঞ্চের নাম" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">ছাড়ার সময় *</label>
+                    <input type="time" id="lchDepart" required class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 ae-time-input">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">লঞ্চ কর্তৃপক্ষের যোগাযোগ নম্বর (ঐচ্ছিক)</label>
+                    <input type="tel" id="lchAuthPhone" maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 font-mono">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">অতিরিক্ত তথ্য (ঐচ্ছিক)</label>
+                    <textarea id="lchNote" rows="3" maxlength="1000" placeholder="অতিরিক্ত তথ্য..." class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 resize-none"></textarea>
+                </div>
+                <div class="pt-2 border-t border-violet-900/40">
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">আপনার মোবাইল নাম্বার *</label>
+                    <input type="tel" id="lchPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 font-mono">
+                    <p class="text-[10px] text-slate-500 mt-1">যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।</p>
+                </div>
+                <button type="submit" id="userLaunchSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
+                    <i data-lucide="send" class="w-4 h-4"></i> জমা দিন
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- USER NEWS SUBMISSION MODAL -->
+    <div id="userNewsRequestModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
+        <div class="w-full max-w-lg rounded-3xl border border-violet-800/50 bg-[#181127] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
+            <div class="bg-gradient-to-r from-violet-700 to-violet-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="newspaper" class="w-4 h-4"></i> আপনার এলাকার খবর পাঠান</h3>
+                    <p class="text-[10px] text-violet-200">অ্যাডমিন যাচাই করে খবর প্রকাশ করবেন</p>
+                </div>
+                <button type="button" onclick="closeUserNewsRequestModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form id="userNewsForm" onsubmit="handleCommunitySubmit(event,'news')" class="p-4 space-y-3.5 overflow-y-auto">
+                <div class="ae-note-banner rounded-xl p-2.5 flex items-start gap-2 text-[11px]">
+                    <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
+                    <span>আপনার তথ্য অ্যাডমিন যাচাই করার পর প্রকাশিত হবে।</span>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">খবরের শিরোনাম *</label>
+                    <input type="text" id="nwsTitle" required maxlength="150" placeholder="খবরের শিরোনাম লিখুন" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">বিস্তারিত বিবরণ *</label>
+                    <textarea id="nwsBody" rows="5" required maxlength="3000" placeholder="খবরের বিস্তারিত লিখুন..." class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">এলাকা/স্থান (ঐচ্ছিক)</label>
+                    <input type="text" id="nwsArea" maxlength="100" placeholder="যেমন: শাহবাজপুর বাজার" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">ছবি সংযুক্ত করুন (ঐচ্ছিক)</label>
+                    <label for="nwsImgInput" class="ae-img-zone" id="nwsImgZone">
+                        <img id="nwsImgPreview" class="ae-img-preview hidden" alt="">
+                        <span id="nwsImgPrompt" class="ae-img-prompt"><i data-lucide="image-plus" class="w-5 h-5"></i><span>ছবি বাছাই করতে ক্লিক করুন</span><span class="text-[10px]">সর্বোচ্চ ৩MB</span></span>
+                    </label>
+                    <input type="file" id="nwsImgInput" accept="image/*" class="hidden" onchange="previewCommunityImage(event,'nws')">
+                </div>
+                <div class="pt-2 border-t border-violet-900/40">
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">আপনার মোবাইল নাম্বার *</label>
+                    <input type="tel" id="nwsPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 font-mono">
+                    <p class="text-[10px] text-slate-500 mt-1">যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।</p>
+                </div>
+                <button type="submit" id="userNewsSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
+                    <i data-lucide="send" class="w-4 h-4"></i> জমা দিন
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- USER NOTICE SUBMISSION MODAL -->
+    <div id="userNoticeRequestModal" class="hidden fixed inset-0 z-[180] bg-black/85 backdrop-blur-sm items-center justify-center p-3 modal-sheet-parent" role="dialog">
+        <div class="w-full max-w-lg rounded-3xl border border-violet-800/50 bg-[#181127] shadow-2xl modal-sheet overflow-hidden flex flex-col max-h-[90dvh]">
+            <div class="bg-gradient-to-r from-violet-700 to-violet-700 p-4 px-5 text-white flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-bold text-sm flex items-center gap-1.5"><i data-lucide="bell" class="w-4 h-4"></i> নোটিশ পাঠান</h3>
+                    <p class="text-[10px] text-violet-200">অ্যাডমিন যাচাই করে নোটিশ প্রকাশ করবেন</p>
+                </div>
+                <button type="button" onclick="closeUserNoticeRequestModal()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form id="userNoticeForm" onsubmit="handleCommunitySubmit(event,'notice')" class="p-4 space-y-3.5 overflow-y-auto">
+                <div class="ae-note-banner rounded-xl p-2.5 flex items-start gap-2 text-[11px]">
+                    <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
+                    <span>আপনার তথ্য অ্যাডমিন যাচাই করার পর প্রকাশিত হবে।</span>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">নোটিশের শিরোনাম *</label>
+                    <input type="text" id="ntcTitle" required maxlength="150" placeholder="নোটিশের শিরোনাম লিখুন" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">বিস্তারিত *</label>
+                    <textarea id="ntcBody" rows="5" required maxlength="3000" placeholder="নোটিশের বিস্তারিত লিখুন..." class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">ছবি সংযুক্ত করুন (ঐচ্ছিক)</label>
+                    <label for="ntcImgInput" class="ae-img-zone" id="ntcImgZone">
+                        <img id="ntcImgPreview" class="ae-img-preview hidden" alt="">
+                        <span id="ntcImgPrompt" class="ae-img-prompt"><i data-lucide="image-plus" class="w-5 h-5"></i><span>ছবি বাছাই করতে ক্লিক করুন</span><span class="text-[10px]">সর্বোচ্চ ৩MB</span></span>
+                    </label>
+                    <input type="file" id="ntcImgInput" accept="image/*" class="hidden" onchange="previewCommunityImage(event,'ntc')">
+                </div>
+                <div class="pt-2 border-t border-violet-900/40">
+                    <label class="block text-[11px] font-bold text-violet-300 uppercase tracking-wider mb-1.5">আপনার মোবাইল নাম্বার *</label>
+                    <input type="tel" id="ntcPhone" required maxlength="11" placeholder="017XXXXXXXX" oninput="this.value=this.value.replace(/[^0-9]/g,'')" class="w-full bg-[#0b0714] border border-violet-900/50 text-white rounded-xl px-3 py-2.5 text-sm outline-none focus:border-violet-500 placeholder:text-slate-500 font-mono">
+                    <p class="text-[10px] text-slate-500 mt-1">যাচাইয়ের প্রয়োজনে অ্যাডমিন আপনাকে কল করতে পারেন।</p>
+                </div>
+                <button type="submit" id="userNoticeSubmitBtn" class="btn-glow w-full text-white font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 mt-2">
+                    <i data-lucide="send" class="w-4 h-4"></i> জমা দিন
                 </button>
             </form>
         </div>
